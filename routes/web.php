@@ -6,12 +6,25 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use Illuminate\Support\Facades\Mail;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
 Auth::routes();
+Route::get('/test-mail', function () {
+    try {
+        //code...
+        Mail::raw('This is a test email', function ($message) {
+            $message->to('dharaj.gc@gmail.com')
+                ->subject('Test Email');
+        });
+        return 'Test email sent!';
+    } catch (\Throwable $th) {
+        dd($th);
+    }
+});
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
     // Artisan::call('storage:link');
