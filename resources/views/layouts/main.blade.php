@@ -30,7 +30,7 @@
         <div class="header">
             <!-- Logo -->
             <div class="header-left active">
-                <a href="index.html" class="logo logo-normal"><img src="images/logo.png" alt="Logo"></a>
+                <a href="index.html" class="logo logo-normal"><img src="{{ asset('images/logo.png')}}" alt="Logo"></a>
                 <a id="toggle_btn" href="javascript:void(0);"><i class="ti ti-arrow-bar-to-left"></i></a>
             </div>
             <!-- /Logo -->

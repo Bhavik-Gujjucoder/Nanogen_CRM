@@ -70,10 +70,10 @@
                                     {{ __('Sign In') }}
                                 </button>
                             </div>
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
                                 <h6>New on our platform?<a href="register.html" class="text-purple link-hover"> Create
                                         an account</a></h6>
-                            </div>
+                            </div> --}}
 
                             <div class="text-center">
                                 <p class="fw-medium text-gray">Copyright &copy; 2025 - Nanogen Agrochem Private Limited </p>

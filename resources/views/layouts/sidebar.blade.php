@@ -4,7 +4,7 @@
             <ul>
                 <li class="clinicdropdown">
                     <a href="dashboard.html">
-                        <img src="images/avatar-14.png" class="img-fluid" alt="Profile">
+                        <img src="{{ asset('images/avatar-14.png')}}" class="img-fluid" alt="Profile">
                         <div class="user-names">
                             <h5>{{auth()->user()->name}}</h5>
                             <h6>{{auth()->user()->getRoleNames()->first()}}</h6>

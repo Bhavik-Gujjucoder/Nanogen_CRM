@@ -11,7 +11,7 @@
    
 
     <!-- Title -->
-    <title> Login | Nanogen Agrochem PVT. LTD. </title>
+    <title> Login | {{ config('app.name') }} </title>
    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('tabler-icons/tabler-icons.css')}}">
