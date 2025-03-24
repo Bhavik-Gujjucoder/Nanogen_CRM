@@ -315,7 +315,7 @@
                         <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
                             <span class="user-info">
                                 <span class="user-letter">
-                                    <img src="images/avatar-14.png" alt="Profile">
+                                    <img src="{{ asset('images/default-user.png') }}" alt="Profile">
                                 </span>
                                 <span class="badge badge-success rounded-pill"></span>
                             </span>
@@ -385,7 +385,7 @@
                                         @yield('title')
                                     </h3>
                                 </div>
-                                <div class="col-md-8 float-end ms-auto">
+                                {{-- <div class="col-md-8 float-end ms-auto">
                                     <div class="d-flex title-head">
                                         <div class="daterange-picker d-flex align-items-center justify-content-center">
                                             <div class="form-sort me-2">
@@ -394,7 +394,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -421,6 +421,9 @@
     <!-- only use dashboard Custom Json Js -->
     <!-- <script src="js/jsonscript.js"></script> -->
     <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/sweetalert2@11.js') }}"></script>
+    <script src="{{ asset('js/toastify.js') }}"></script>
+    @yield('script')
 </body>
 
 </html>

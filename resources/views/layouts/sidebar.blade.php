@@ -4,7 +4,7 @@
             <ul>
                 <li class="clinicdropdown">
                     <a href="dashboard.html">
-                        <img src="{{ asset('images/avatar-14.png')}}" class="img-fluid" alt="Profile">
+                        <img src="{{ asset('images/default-user.png') }}" class="img-fluid" alt="Profile">
                         <div class="user-names">
                             <h5>{{auth()->user()->name}}</h5>
                             <h6>{{auth()->user()->getRoleNames()->first()}}</h6>
@@ -93,7 +93,7 @@
                         <li><a href="roles-permissions.html"><i class="ti ti-navigation-cog"></i><span>Roles
                                     Permissions</span></a>
                         </li>
-                        <li><a href="manage-users.html"><i class="ti ti-users"></i><span>Manage
+                        <li><a href="{{ route('users.index') }}" class="{{ request()->is('users*') ? 'active' : '' }}"><i class="ti ti-users"></i><span>Manage
                                     Users</span></a></li>
                     </ul>
                 </li>

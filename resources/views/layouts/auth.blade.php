@@ -2,22 +2,22 @@
 <html lang="en">
 
 <head>
-   <meta charset="utf-8" />
-   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-   <meta name="viewport" content="width=device-width, initial-scale=1" />
-   <meta name="author" content="NANOGEN - AGROCHEM PVT. LTD. " />
-   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-   <link rel="shortcut icon" href="{{ asset('images/favicon.png')}}" />
-   
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="NANOGEN - AGROCHEM PVT. LTD. " />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
+
 
     <!-- Title -->
     <title> Login | {{ config('app.name') }} </title>
-   <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('tabler-icons/tabler-icons.css')}}">
-    <link rel="stylesheet" href="{{asset('fontawesome/css/fontawesome.min.css')}}">
-    <link rel="stylesheet" href="{{asset('fontawesome/css/all.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('tabler-icons/tabler-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 </head>
 
@@ -26,7 +26,7 @@
         @yield('content')
     </div>
 
-     <!-- /Main Wrapper -->
+    <!-- /Main Wrapper -->
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
@@ -44,4 +44,5 @@
     <script src="{{ asset('js/script.js') }}"></script>
 
 </body>
+
 </html>

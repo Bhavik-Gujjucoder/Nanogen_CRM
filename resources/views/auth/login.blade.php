@@ -20,14 +20,14 @@
                                 <p>Access the Nanogen panel using your email and passcode.</p>
                             </div>
                             <div class="mb-3">
-                                <label class="col-form-label">Email Address</label>
+                                <label class="col-form-label">Email Address/Phone No.</label>
                                 <div class="position-relative">
                                     <span class="input-icon-addon">
                                         <i class="ti ti-mail"></i>
                                     </span>
-                                    <input id="email" type="email"
+                                    <input id="email" type="text"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                        value="{{ old('email') }}"  autofocus>
 
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">

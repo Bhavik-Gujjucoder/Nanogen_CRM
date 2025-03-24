@@ -14,19 +14,26 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
 
-        if (!Auth::check() || !Auth::user()->hasRole($role)) {
-            if(Auth::user()->hasRole('superadmin')){
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+      $user = Auth::user();
+
+        // Check if user has at least one of the required roles
+        if (!$user->hasAnyRole($roles)) {
+            // Redirect based on role
+            if ($user->hasRole('superadmin')) {
                 return redirect()->route('superadmin.dashboard');
-            }else if(Auth::user()->hasRole('admin')){
+            } elseif ($user->hasRole('admin')) {
                 return redirect()->route('admin.dashboard');
-            }else if(Auth::user()->hasRole('sales')){
+            } elseif ($user->hasRole('sales')) {
                 return redirect()->route('sales.dashboard');
-            }else{
-                // return $next($request);
-                abort(403, 'Unauthorized');
+            } else {
+                abort(403, 'Unauthorized Access');
             }
         }
         return $next($request);

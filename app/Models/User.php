@@ -6,12 +6,13 @@ namespace App\Models;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasRoles;
+    use HasFactory, Notifiable,HasRoles,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +22,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone_no',
+        'profile_picture',
+        'status',
         'password',
+        'deleted_at'
     ];
 
     /**
@@ -45,5 +50,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function statusBadge()
+    {
+        return $this->status == 1 ? '<span class="badge badge-pill badge-status bg-success">Active</span>' : '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
     }
 }

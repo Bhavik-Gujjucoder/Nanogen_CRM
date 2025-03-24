@@ -31264,8 +31264,8 @@ ul .btn-primary:not(:disabled):not(.disabled):active:focus, ul .btn-primary:not(
   display: flex;
 }
 .profile-pic-upload .profile-pic img {
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   border-radius: 5px;
 }
 .profile-pic-upload .profile-pic .close-img {
@@ -31292,6 +31292,7 @@ ul .btn-primary:not(:disabled):not(.disabled):active:focus, ul .btn-primary:not(
   margin-bottom: 10px;
 }
 .profile-pic-upload .upload-btn {
+  cursor: pointer;
   background: #F3EDFF;
   border-radius: 5px;
   position: relative;
