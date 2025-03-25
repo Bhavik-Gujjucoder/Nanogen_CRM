@@ -36679,7 +36679,7 @@ select.select.addfileddrop{border-color: #E8E8E8;color: #6F6F6F; background-colo
    transition: color 0.3s  !important;
  }
  .toggleCheckbox + .toggleContainer div:first-child{
-   color: #000 !important; 
+   color: #000 !important;
    transition: color 0.3s  !important;
  }
  .toggleCheckbox + .toggleContainer div:last-child{
@@ -36691,5 +36691,31 @@ select.select.addfileddrop{border-color: #E8E8E8;color: #6F6F6F; background-colo
 
 
 @media (max-width: 767px) {
-   
+
 }
+
+
+
+
+
+/* */
+
+.nav-tabs .nav-link.active {
+    border-color: #1a4f9e;
+    background: #1a4f9e;
+    color: #fff;
+    margin-bottom: 10px;
+ }
+
+ .nav-tabs .nav-link.active {
+    color: #fff;
+ }
+
+ .nav-tabs .nav-link:hover {
+    color: #2851a0;
+ }
+
+ .nav-tabs .nav-link.active:hover {
+    color: #fff;
+ }
+ .nav-tabs .nav-link{color: #2750a0;}
