@@ -66,3 +66,13 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
         Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
     });
 });
+
+Route::get('/run-composer', function () {
+    if (!request()->has('key') || request()->key !== env('APP_KEY')) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    Artisan::call('composer:dump-autoload');
+
+    return 'Composer Dump Autoload Executed!';
+});
