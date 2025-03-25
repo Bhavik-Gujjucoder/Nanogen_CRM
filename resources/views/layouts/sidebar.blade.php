@@ -87,7 +87,7 @@
                         <li><a href="{{ route('users.index') }}" class="{{ request()->is('users*') ? 'active' : '' }}">
                                 <i class="ti ti-users"></i><span>Manage Users</span></a></li>
 
-                        <li><a href="#" class="">
+                        <li><a href="{{ route('admin.generalsetting.create')}}" class="{{ request()->is('general-setting*') ? 'active' : '' }}">
                             <i class="ti ti-users"></i><span>General Setting</span></a></li>
                     </ul>
                 </li>
