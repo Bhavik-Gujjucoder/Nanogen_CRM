@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="NANOGEN - AGROCHEM PVT. LTD. " />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <link rel="shortcut icon" href="{{ asset('images/favicon.png')}}" />
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
     <!-- Title -->
     <title>{{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+    <link href="{{ asset('css/toastify.css') }}" rel="stylesheet">
+
+    <!-- include summernote css/js -->
+    <link rel="stylesheet" href="{{ asset('css/summernote-bs4.min.css') }}">
 </head>
 
 <body>
@@ -30,7 +34,13 @@
         <div class="header">
             <!-- Logo -->
             <div class="header-left active">
-                <a href="index.html" class="logo logo-normal"><img src="{{ asset('images/logo.png')}}" alt="Logo"></a>
+                <a href="javascript:void(0)" class="logo logo-normal">
+                    @if (getSetting('company_logo') && !empty(getSetting('company_logo')) )
+                        <img src="{{ asset('storage/company_logo/'.getSetting('company_logo')) }}" alt="Logo">
+                    @else
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo">
+                    @endif
+                </a>
                 <a id="toggle_btn" href="javascript:void(0);"><i class="ti ti-arrow-bar-to-left"></i></a>
             </div>
             <!-- /Logo -->
@@ -423,6 +433,62 @@
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="{{ asset('js/sweetalert2@11.js') }}"></script>
     <script src="{{ asset('js/toastify.js') }}"></script>
+
+    {{-- summernote --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.0.4/popper.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="{{ asset('js/summernote-bs4.min.js') }}"></script>
+    {{-- End summernote --}}
+
+    @if (session('success'))
+        <script>
+            Toastify({
+                text: "{{ session('success') }}",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#4fbe87",
+            }).showToast();
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Toastify({
+                text: "{{ session('error') }}",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#f27474",
+            }).showToast();
+        </script>
+    @endif
+
+    <script>
+        function show_success(msg) {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#4fbe87",
+            }).showToast();
+        }
+
+        function show_error(msg) {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#f27474",
+            }).showToast();
+        }
+    </script>
     @yield('script')
 </body>
 

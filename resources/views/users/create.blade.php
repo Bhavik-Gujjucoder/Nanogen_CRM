@@ -14,7 +14,7 @@
                     <div class="col-md-12">
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
-                                <img id="profilePreview" src="{{  asset('images/default-user.png') }}" 
+                                <img id="profilePreview" src="{{  asset('images/default-user.png') }}"
                                 alt="Profile Picture"  class="img-thumbnail mb-2">
                                 {{-- <span><i class="ti ti-photo"></i></span> --}}
                             </div>
