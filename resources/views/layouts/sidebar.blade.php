@@ -65,7 +65,7 @@
                             </a>
                             <ul>
                                 <li><a href="product-catelog.html">Products and Catalogue</a></li>
-                                <li><a href="product-category.html">Products Category</a></li>
+                                <li><a href="{{ route('product_category.index') }}">Products Category</a></li>
                                 <li><a href="pricing-product-variation.html">Pricing and Product Variation</a></li>
                             </ul>
                         </li>
