@@ -50,8 +50,8 @@ class GradeManagementController extends Controller
                     return $action_btn . ' </div></div>';
                 })
 
-                ->editColumn('status', function ($user) {
-                    return $user->statusBadge(); // Get user roles
+                ->editColumn('status', function ($grade) {
+                    return $grade->statusBadge(); // Get user roles
                 })
 
                 ->rawColumns(['action', 'status'])
@@ -66,7 +66,10 @@ class GradeManagementController extends Controller
     public function store(Request $request)
     {
         $request->validate(['name' => 'required|unique:grade_management,name']);
-        GradeManagement::create(['name' => $request->name]);
+        GradeManagement::create([
+            'name' => $request->name,
+            'status' => $request->status
+        ]);
 
         return redirect()->route('grade.index')->with('success', 'Grade created successfully.');
     }
@@ -87,7 +90,10 @@ class GradeManagementController extends Controller
 
     {
         $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id]);
-        $grade->update(['name' => $request->name]);
+        $grade->update([
+            'name' => $request->name,
+            'status' => $request->status
+        ]);
         return response()->json(['success' => true, 'message' => 'Grade updated successfully']);
 
         // return redirect()->route('grade.index')->with('success', 'Grade updated successfully.');

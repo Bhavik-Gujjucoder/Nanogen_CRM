@@ -33,7 +33,8 @@
                         <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">Status</th>
-                        <th class="text-end" scope="col">Action</th>
+                        <th  scope="col">Action</th>
+                        {{-- class="text-end" --}}
                     </tr>
                 </thead>
 
@@ -48,7 +49,7 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Add Grade</h5>
+                <h5 class="modal-title" id="modalTitle">Grade Management</h5>
                 <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -57,9 +58,28 @@
                     <input type="hidden" name="user_id">
 
                     <div class="mb-3">
-                        <label>Grade Name</label>
+                        <label class="col-form-label">Grade Name *</label>
                         <input type="text" name="name" class="form-control" placeholder="Enter Grade name">
                         <span class="name_error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Status</label>
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">
+                                <input type="radio" class="status-radio" id="active1" name="status" value="1"
+                                    {{ old('status', '1') == '1' ? 'checked' : '' }}>
+                                <label for="active1">Active</label>
+                            </div>
+                            <div>
+                                <input type="radio" class="status-radio" id="inactive1" name="status" value="0"
+                                    {{ old('status') == '0' ? 'checked' : '' }}>
+                                <label for="inactive1">Inactive</label>
+                            </div>
+                        </div>
+                        @error('status')
+                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="float-end">
@@ -120,7 +140,7 @@
     //  Open Modal for Adding a New Grade
     $('#openModal').click(function() {
         $('#adminForm')[0].reset();
-        $('#modalTitle').text('Add Grade');
+        $('#modalTitle').text('Grade Management');
         $('#submitBtn').text('Create');
         $('input[name="user_id"]').val('');
         $('#adminModal').modal('show');
@@ -136,7 +156,7 @@
         $('#adminForm').find('.is-invalid').removeClass('is-invalid');
 
         $.get('{{ route('grade.edit', ':id') }}'.replace(':id', user_id), function(user) {
-            $('#modalTitle').text('Edit Grade');
+            $('#modalTitle').text('Edit Grade Management');
             $('#submitBtn').text('Update');
             $('input[name="user_id"]').val(user_id);
             $('input[name="name"]').val(user.name);
