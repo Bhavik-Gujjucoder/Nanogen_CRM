@@ -129,12 +129,12 @@
                             <div class="d-flex align-items-center">
                                 <div class="me-2">
                                     <input type="radio" class="status-radio" id="active1" name="status"
-                                        value="active" {{ old('status', 'active') == 'active' ? 'checked' : '' }}>
+                                        value="1" {{ old('status', '1') == '1' ? 'checked' : '' }}>
                                     <label for="active1">Active</label>
                                 </div>
                                 <div>
                                     <input type="radio" class="status-radio" id="inactive1" name="status"
-                                        value="inactive" {{ old('status') == 'inactive' ? 'checked' : '' }}>
+                                        value="0" {{ old('status') == '0' ? 'checked' : '' }}>
                                     <label for="inactive1">Inactive</label>
                                 </div>
                             </div>

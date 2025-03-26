@@ -96,7 +96,7 @@ class UserController extends Controller
             'phone_no' => 'required|digits_between:10,11|unique:users,phone_no',
             'password' => 'required|min:6|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:1,0'
         ], [
             'role.exists' => 'Invalid role selected.',
             'password.confirmed' => 'Password and Confirm Password must match.'
