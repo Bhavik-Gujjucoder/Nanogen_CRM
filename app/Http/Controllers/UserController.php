@@ -21,6 +21,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Users';
+
         if ($request->ajax()) {
             $data = User::role(['admin', 'staff']);
             return DataTables::of($data)
