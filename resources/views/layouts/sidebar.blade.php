@@ -73,7 +73,7 @@
                 </li>
                 <li>
                     <ul>
-                        <li><a href="grade-management.html"><i class="ti ti-list-check"></i><span>Grade Management</span></a></li>
+                        <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade Management</span></a></li>
                         <li><a href="state-management.html"><i class="ti ti-map-pin-pin"></i><span>State Management</span></a>
                         </li>
                         <li><a href="city-management.html"><i class="ti ti-map-pin-pin"></i><span>City Management</span></a></li>

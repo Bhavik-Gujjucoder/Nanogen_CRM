@@ -9,6 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Http\Controllers\GradeManagementController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -58,7 +59,9 @@ Route::middleware(['auth', 'role:sales'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
+    /* Users */
     Route::resource('users', UserController::class);
+    Route::resource('grade', GradeManagementController::class);
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
