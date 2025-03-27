@@ -161,6 +161,7 @@
         $('#modalTitle').text('Add Product Category');
         $('#submitBtn').text('Create');
         $('input[name="category_id"]').val('');
+        $('select[name="parent_category_id"]').parent().show();
         $("#categoryForm .text-danger").text('');
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
 
