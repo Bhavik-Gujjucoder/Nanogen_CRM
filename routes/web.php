@@ -31,7 +31,7 @@ Route::get('/test-mail', function () {
 });
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
-    Artisan::call('storage:link');
+    // Artisan::call('storage:link');
     Artisan::call('config:cache');
     Artisan::call('optimize:clear');
     return 'Cache Clear Succesfully...';
