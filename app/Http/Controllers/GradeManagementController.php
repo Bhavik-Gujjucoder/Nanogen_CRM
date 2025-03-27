@@ -14,7 +14,7 @@ class GradeManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
+    */
     public function index(Request $request)
     {
         $data['page_title'] = 'Grade management';
@@ -24,8 +24,8 @@ class GradeManagementController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $show_btn = '<a href="' . route('users.show', $row->id) . '"
-                    class="btn btn-outline-info btn-sm"><i class="bi bi-eye-fill"></i> ' . __('Show') . '</a>';
+                    // $show_btn = '<a href="' . route('users.show', $row->id) . '"
+                    // class="btn btn-outline-info btn-sm"><i class="bi bi-eye-fill"></i> ' . __('Show') . '</a>';
 
                     $edit_btn = '<a href="javascript:void(0)" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
@@ -50,8 +50,8 @@ class GradeManagementController extends Controller
                     return $action_btn . ' </div></div>';
                 })
 
-                ->editColumn('status', function ($grade) {
-                    return $grade->statusBadge(); // Get user roles
+                ->editColumn('status', function ($product) {
+                    return $product->statusBadge(); // Get user roles
                 })
 
                 ->rawColumns(['action', 'status'])
@@ -62,7 +62,7 @@ class GradeManagementController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
+    */
     public function store(Request $request)
     {
         $request->validate(['name' => 'required|unique:grade_management,name']);
@@ -71,13 +71,13 @@ class GradeManagementController extends Controller
             'status' => $request->status
         ]);
 
-        return redirect()->route('grade.index')->with('success', 'Grade created successfully.');
+        return redirect()->route('product_category.index')->with('success', 'Product category created successfully.');
     }
 
 
     /**
      * Show the form for editing the specified resource.
-     */
+    */
     public function edit(GradeManagement $grade)
     {
         return response()->json($grade);

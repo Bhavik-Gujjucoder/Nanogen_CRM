@@ -171,18 +171,18 @@
                 icon.removeClass("ti-eye").addClass("ti-eye-off");
             }
         });
-
-        function previewProfilePicture(event) {
-            const file = event.target.files[0]; // Get the selected file
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('profilePreview').src = e.target
-                    .result; // Set image preview source
-                }
-                reader.readAsDataURL(file); // Read the file as a Data URL
-            }
-        }
     });
+
+    function previewProfilePicture(event) {
+        const file = event.target.files[0]; // Get the selected file
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profilePreview').src = e.target
+                .result; // Set image preview source
+            }
+            reader.readAsDataURL(file); // Read the file as a Data URL
+        }
+    }
 </script>
 @endsection

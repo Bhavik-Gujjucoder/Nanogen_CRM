@@ -27,105 +27,29 @@
 
         <!-- Manage Users List -->
         <div class="table-responsive custom-table">
-            <table class="table" id="catalougemngTable">
+            <table class="table" id="category_table">
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort" scope="col"><label class="checkboxs"><input type="checkbox"
-                                    id="select-all"><span class="checkmarks"></span></label></th>
-                        <th class="no-sort" scope="col"></th>
+                        {{-- <th class="no-sort" scope="col">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all"><span class="checkmarks"></span>
+                            </label>
+                        </th> --}}
+                        <th class="no-sort" scope="col">Id</th>
                         <th scope="col">Category Name</th>
-                        <th scope="col">Numbers of product</th>
-                        <th class="no-sort" scope="col">Action</th>
+                        <th scope="col">Parent Category Name</th>
+                        <th scope="col">Status</th>
+                        <th  scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox" id="select-all"><span
-                                    class="checkmarks"></span></label></td>
-                        <td data-label="Rating">
-                            <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                        </td>
-                        <td data-label="Category Name">
-                            <h2 class="d-flex align-items-center">
-                                <a href="#" class="d-flex flex-column">Water Soluble Fertilizer<span
-                                        class="text-default"></span></a>
-                            </h2>
-                        </td>
-                        <td data-label="Numbers of product"><a href="leads-details.html" class="title-name">50</a></td>
-                        <td data-label="Action">
-                            <div class="dropdown table-action">
-                                <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                        class="fa fa-ellipsis-v"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right" style=""><a class="dropdown-item"
-                                        href="#" data-bs-toggle="modal" data-bs-target="#edit_productcategory"><i
-                                            class="ti ti-edit text-blue"></i> Edit</a><a class="dropdown-item"
-                                        href="#" data-bs-toggle="modal" data-bs-target="#delete_faq"><i
-                                            class="ti ti-trash text-danger"></i> Delete</a></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox" id="select-all"><span
-                                    class="checkmarks"></span></label></td>
-                        <td data-label="Rating">
-                            <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                        </td>
-                        <td data-label="Category Name">
-                            <h2 class="d-flex align-items-center">
-                                <a href="#" class="d-flex flex-column">Speciality Grade<span
-                                        class="text-default"></span></a>
-                            </h2>
-                        </td>
-                        <td data-label="Numbers of product"><a href="leads-details.html" class="title-name">30</a></td>
-                        <td data-label="Action">
-                            <div class="dropdown table-action">
-                                <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                        class="fa fa-ellipsis-v"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right" style=""><a class="dropdown-item"
-                                        href="#" data-bs-toggle="modal" data-bs-target="#edit_productcategory"><i
-                                            class="ti ti-edit text-blue"></i> Edit</a><a class="dropdown-item"
-                                        href="#" data-bs-toggle="modal" data-bs-target="#delete_faq"><i
-                                            class="ti ti-trash text-danger"></i> Delete</a></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox"
-                                    id="select-all"><span class="checkmarks"></span></label></td>
-                        <td data-label="Rating">
-                            <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                        </td>
-                        <td data-label="Category Name">
-                            <h2 class="d-flex align-items-center">
-                                <a href="#" class="d-flex flex-column">Micronutrient<span
-                                        class="text-default"></span></a>
-                            </h2>
-                        </td>
-                        <td data-label="Numbers of product"><a href="leads-details.html" class="title-name">45</a>
-                        </td>
-                        <td data-label="Action">
-                            <div class="dropdown table-action">
-                                <a href="#" class="action-icon" data-bs-toggle="dropdown"
-                                    aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right" style=""><a
-                                        class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit_productcategory"><i class="ti ti-edit text-blue"></i>
-                                        Edit</a><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#delete_faq"><i class="ti ti-trash text-danger"></i>
-                                        Delete</a></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+
             </table>
         </div>
-
-        <!-- /Manage Users List -->
     </div>
 </div>
 
 <!--  Single Modal for Add & Edit -->
-{{-- <div class="modal fade" id="adminModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="adminModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -133,14 +57,24 @@
                 <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="adminForm">
+                <form id="categoryForm">
                     @csrf
-                    <input type="hidden" name="user_id">
+                    <input type="hidden" name="category_id">
 
                     <div class="mb-3">
-                        <label class="col-form-label">Grade Name *</label>
-                        <input type="text" name="name" class="form-control" placeholder="Enter Grade name">
-                        <span class="name_error"></span>
+                        <label class="col-form-label">Select Parent Category</label>
+                        <select class="select" name="parent_category_id" style="height: 210px;" ">
+                            <option value="0">{{ __('Select Parent Category') }}</option>
+                            @foreach ($category as $c)
+                                <option value="{{ $c->id }}">{{ $c->category_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="col-form-label">Category name</label>
+                        <input type="text" name="category_name" value="" class="form-control" placeholder="Enter category name">
+                        <span class="category_name_error"></span>
                     </div>
 
                     <div class="mb-3">
@@ -172,27 +106,33 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 
 @endsection
 @section('script')
 <script>
-    var grade_table = $('#users').DataTable({
+    var category_table_show = $('#category_table').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
         processing: true,
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        ajax: "{{ route('grade.index') }}",
+        ajax: "{{ route('product_category.index') }}",
         columns: [{
                 data: 'id',
                 name: 'id',
                 searchable: true
             }, {
-                data: 'name',
-                name: 'name',
+                data: 'category_name',
+                name: 'category_name',
                 searchable: true
+            },
+            {
+                data: 'parent_category_id',
+                name: 'parent_category_id',
+                searchable: true,
+                orderable:false
             },
             {
                 data: 'status',
@@ -209,48 +149,53 @@
 
     });
 
-    // Custom Search Box
+    /***** Search Box *****/
     $('#customSearch').on('keyup', function() {
-        grade_table.search(this.value).draw();
+        category_table_show.search(this.value).draw();
     });
 
-
-
-
-    //  Open Modal for Adding a New Grade
+    /***** Open Modal for Add a New product category *****/
     $('#openModal').click(function() {
-        $('#adminForm')[0].reset();
-        $('#modalTitle').text('Grade Management');
-        $('#submitBtn').text('Create');
-        $('input[name="user_id"]').val('');
+        $('#categoryForm')[0].reset();
         $('#adminModal').modal('show');
-        $("#adminForm .text-danger").text('');
-        $('#adminForm').find('.is-invalid').removeClass('is-invalid');
+        $('#modalTitle').text('Add Product Category');
+        $('#submitBtn').text('Create');
+        $('input[name="category_id"]').val('');
+        $("#categoryForm .text-danger").text('');
+        $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
 
     });
 
-    //  Open Modal for Editing an Admin
+    /***** Open Modal for Editing an Admin *****/
     $(document).on('click', '.edit-btn', function() {
-        let user_id = $(this).data('id');
-        $("#adminForm .text-danger").text('');
-        $('#adminForm').find('.is-invalid').removeClass('is-invalid');
+        let category_id = $(this).data('id');
+        // alert(category_id);
+        $("#categoryForm .text-danger").text('');
+        $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
 
-        $.get('{{ route('grade.edit', ':id') }}'.replace(':id', user_id), function(user) {
-            $('#modalTitle').text('Edit Grade Management');
+        $.get('{{ route('product_category.edit', ':id') }}'.replace(':id', category_id), function(category) {
+            console.log(category);
+            $('#modalTitle').text('Edit Product Category');
             $('#submitBtn').text('Update');
-            $('input[name="user_id"]').val(user_id);
-            $('input[name="name"]').val(user.name);
+            $('input[name="category_id"]').val(category_id);
+            if(category.parent_category_id){
+                $('select[name="parent_category_id"]').val(category.parent_category_id).trigger('change');
+            }else{
+                $('select[name="parent_category_id"]').parent().hide();
+            }
+            $('input[name="category_name"]').val(category.category_name);
+            $('input[name="status"][value="' + category.status + '"]').prop('checked', true);
             $('#adminModal').modal('show');
         });
     });
 
-    //  Handle Add & Edit Form Submission
-    $('#adminForm').submit(function(e) {
+    /***** Add & Edit Form Submission *****/
+    $('#categoryForm').submit(function(e) {
         e.preventDefault();
-        let user_id = $('input[name="user_id"]').val();
-        let url = user_id ? '{{ route('grade.update', ':id') }}'.replace(':id', user_id) :
-            "{{ route('grade.store') }}";
-        let method = user_id ? "PUT" : "POST";
+        let category_id = $('input[name="category_id"]').val();
+        let url = category_id ? '{{ route('product_category.update', ':id') }}'.replace(':id', category_id) :
+            "{{ route('product_category.store') }}";
+        let method = category_id ? "PUT" : "POST";
 
         $.ajax({
             url: url,
@@ -258,24 +203,25 @@
             data: $(this).serialize() + "&_method=" + method,
             success: function(response) {
                 $('#adminModal').modal('hide');
-                grade_table.ajax.reload();
+                category_table_show.ajax.reload();
+                location.reload();
                 show_success(response.message);
             },
             error: function(response) {
                 display_errors(response.responseJSON.errors);
-                // show_error('Error occurred!');
             }
         });
     });
 
-    $(document).on('click', '.deleteGrade', function(event) {
+    /***** Delete *****/
+    $(document).on('click', '.deleteCategory', function(event) {
         event.preventDefault();
-        let userId = $(this).data('id'); // Get the user ID
-        let form = $('#delete-form-' + userId); // Select the correct form
+        let categoryId = $(this).data('id');
+        let form = $('#delete-form-' + categoryId); // Select the correct form
         console.log(form);
         Swal.fire({
             title: "Are you sure?",
-            text: "You want to remove this Grade? Once deleted, it cannot be recovered.",
+            text: "You want to remove this category? Once deleted, it cannot be recovered.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
@@ -295,9 +241,10 @@
     });
 
     function display_errors(errors) {
-        $("#adminForm .error-text").text('');
+        $("#categoryForm .error-text").text('');
         $.each(errors, function(key, value) {
             $('input[name=' + key + ']').addClass('is-invalid');
+            console.log( $('input[name=' + key + ']'));
             $('.' + key + '_error').text(value[0]).addClass('text-danger');
         });
     }
