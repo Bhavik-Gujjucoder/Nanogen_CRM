@@ -20,6 +20,12 @@ class ProductCategoryController extends Controller
             $data = ProductCategory::query();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($row) {
+                    return '<label class="checkboxs">
+                            <input type="checkbox" class="checkbox-item category_checkbox" data-id="' . $row->id . '">
+                            <span class="checkmarks"></span>
+                        </label>';
+                })
                 ->addColumn('action', function ($row) {
 
                     $edit_btn = '<a href="javascript:void(0)" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
@@ -48,7 +54,7 @@ class ProductCategoryController extends Controller
                     return $category->statusBadge(); //Get user roles
                 })
 
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
         return view('admin.productcategory.index', $data);
@@ -85,7 +91,7 @@ class ProductCategoryController extends Controller
      */
     public function update(Request $request, ProductCategory $product_category)
     {
-        $request->validate(['category_name' => 'required|unique:product_categories,category_name,' . $product_category->id .',id,deleted_at,NULL']);
+        $request->validate(['category_name' => 'required|unique:product_categories,category_name,' . $product_category->id . ',id,deleted_at,NULL']);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
             $is_parent = 0;
@@ -107,5 +113,22 @@ class ProductCategoryController extends Controller
     {
         $product_category->delete();
         return redirect()->route('product_category.index')->with('success', 'Category deleted successfully.');
+    }
+
+
+    /*****  Bulk delete method  *****/
+    public function bulkDelete(Request $request, ProductCategory $product_category)
+    {
+        //   // Validate the incoming request
+        $validated = $request->validate([
+            'ids' => 'required|array', // Ensure ids is an array
+            'ids.*' => 'integer|exists:items,id', // Ensure each ID is valid and exists in the "items" table
+        ]);
+
+        // Delete the items based on the provided IDs
+        // Item::destroy($validated['ids']);
+
+        // Return a success message
+        return response()->json(['message' => 'Selected items have been deleted successfully.']);
     }
 }

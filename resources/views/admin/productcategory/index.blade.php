@@ -28,18 +28,21 @@
         <!-- Manage Users List -->
         <div class="table-responsive custom-table">
             <table class="table" id="category_table">
+                <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
+
                 <thead class="thead-light">
                     <tr>
-                        {{-- <th class="no-sort" scope="col">
+                        <th class="no-sort" scope="col">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all"><span class="checkmarks"></span>
+                                <input type="checkbox" id="select-all" class="category_checkbox"><span
+                                    class="checkmarks"></span>
                             </label>
-                        </th> --}}
+                        </th>
                         <th class="no-sort" scope="col">Id</th>
                         <th scope="col">Category Name</th>
                         <th scope="col">Parent Category Name</th>
                         <th scope="col">Status</th>
-                        <th  scope="col">Action</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
 
@@ -65,15 +68,16 @@
                         <label class="col-form-label">Select Parent Category</label>
                         <select class="select" name="parent_category_id" style="height: 210px;" ">
                             <option value="0">{{ __('Select Parent Category') }}</option>
-                            @foreach ($category as $c)
-                                <option value="{{ $c->id }}">{{ $c->category_name }}</option>
+                              @foreach ($category as $c)
+                            <option value="{{ $c->id }}">{{ $c->category_name }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="col-form-label">Category name</label>
-                        <input type="text" name="category_name" value="" class="form-control" placeholder="Enter category name">
+                        <input type="text" name="category_name" value="" class="form-control"
+                            placeholder="Enter category name">
                         <span class="category_name_error"></span>
                     </div>
 
@@ -81,13 +85,13 @@
                         <label class="col-form-label">Status</label>
                         <div class="d-flex align-items-center">
                             <div class="me-2">
-                                <input type="radio" class="status-radio" id="active1" name="status"
-                                    value="1" {{ old('status', '1') == '1' ? 'checked' : '' }}>
+                                <input type="radio" class="status-radio" id="active1" name="status" value="1"
+                                    {{ old('status', '1') == '1' ? 'checked' : '' }}>
                                 <label for="active1">Active</label>
                             </div>
                             <div>
-                                <input type="radio" class="status-radio" id="inactive1" name="status"
-                                    value="0" {{ old('status') == '0' ? 'checked' : '' }}>
+                                <input type="radio" class="status-radio" id="inactive1" name="status" value="0"
+                                    {{ old('status') == '0' ? 'checked' : '' }}>
                                 <label for="inactive1">Inactive</label>
                             </div>
                         </div>
@@ -120,6 +124,11 @@
         dom: 'lrtip',
         ajax: "{{ route('product_category.index') }}",
         columns: [{
+                data: 'checkbox',
+                name: 'checkbox',
+                orderable: false,
+                searchable: false
+            }, {
                 data: 'id',
                 name: 'id',
                 searchable: true
@@ -132,7 +141,7 @@
                 data: 'parent_category_id',
                 name: 'parent_category_id',
                 searchable: true,
-                orderable:false
+                orderable: false
             },
             {
                 data: 'status',
@@ -179,9 +188,10 @@
             $('#modalTitle').text('Edit Product Category');
             $('#submitBtn').text('Update');
             $('input[name="category_id"]').val(category_id);
-            if(category.parent_category_id){
-                $('select[name="parent_category_id"]').val(category.parent_category_id).trigger('change');
-            }else{
+            if (category.parent_category_id) {
+                $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
+                    'change');
+            } else {
                 $('select[name="parent_category_id"]').parent().hide();
             }
             $('input[name="category_name"]').val(category.category_name);
@@ -245,12 +255,71 @@
         $("#categoryForm .error-text").text('');
         $.each(errors, function(key, value) {
             $('input[name=' + key + ']').addClass('is-invalid');
-            console.log( $('input[name=' + key + ']'));
+            console.log($('input[name=' + key + ']'));
             $('.' + key + '_error').text(value[0]).addClass('text-danger');
         });
     }
 
     // $(".dataTables_filter").hide();
     // $(".dataTables_length").hide();
+
+
+    /***** Bulk Delete *****/
+    $(document).ready(function() {
+        $('.category_checkbox').change(function() {
+
+            // Handle checkbox change event to show/hide the bulk delete button
+            $('#select-all').change(function() {
+                // Check/uncheck all checkboxes when the select-all checkbox is clicked
+                $('.category_checkbox').prop('checked', this.checked);
+                toggleBulkDeleteButton();
+            });
+
+            // Handle individual checkbox change event
+            $('.category_checkbox').change(function() {
+                toggleBulkDeleteButton();
+            });
+
+            function toggleBulkDeleteButton() {
+                var selectedCheckboxes = $('.category_checkbox:checked').length;
+
+                if (selectedCheckboxes > 0) {
+                    $('#bulk_delete_button').show(); // Show delete button
+                } else {
+                    $('#bulk_delete_button').hide(); // Hide delete button
+                }
+            }
+        });
+
+        // Handle Bulk Delete button click
+        $('#bulk_delete_button').click(function() {
+            // Get the IDs of selected checkboxes
+            var selectedIds = $('.category_checkbox:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedIds.length > 0) {
+                // Make an AJAX request to delete the selected items
+                $.ajax({
+                    url: '/bulk-delete', // The route where the delete request will be sent
+                    method: 'POST',
+                    data: {
+                        ids: selectedIds, // Send the selected IDs
+                        _token: '{{ csrf_token() }}' // CSRF token for security
+                    },
+                    success: function(response) {
+                        alert(response.message); // Show a success message
+                        // Optionally, reload the page to reflect changes
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred while deleting.");
+                    }
+                });
+            } else {
+                alert("No items selected.");
+            }
+        });
+    });
 </script>
 @endsection
