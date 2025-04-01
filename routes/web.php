@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use App\Models\Variation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -8,11 +9,12 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
-use App\Http\Controllers\ProductCategoryController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -65,20 +67,29 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Users */
     Route::resource('users', UserController::class);
 
+    /* Grade */
     Route::resource('grade', GradeManagementController::class);
 
-    Route::resource('product_category', ProductCategoryController::class);
-    Route::post('/bulk-delete', [ProductCategoryController::class, 'bulkDelete'])->name('product_category.bulk_delete');
+    /* Category */
+    Route::resource('category', CategoryController::class);
+    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('product_category.bulk_delete');
 
-
+    /* Variation */
     Route::resource('variation', VariationController::class);
     Route::post('/variation/bulk-delete', [VariationController::class, 'bulkDelete'])->name('variation.bulkDelete');
+
+    /* Product */
+    Route::resource('product', ProductController::class);
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
         Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
         Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
     });
+
+    Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
+
+
 });
 
 Route::get('/run-composer', function () {

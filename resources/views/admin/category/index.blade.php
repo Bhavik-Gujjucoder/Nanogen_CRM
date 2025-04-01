@@ -10,7 +10,7 @@
             <div class="col-sm-4">
                 <div class="icon-form mb-3 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
-                    <input type="text" class="form-control" id="customSearch" placeholder="Search User">
+                    <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
             </div>
             <div class="col-sm-8">
@@ -122,7 +122,7 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        ajax: "{{ route('product_category.index') }}",
+        ajax: "{{ route('category.index') }}",
         columns: [{
                 data: 'checkbox',
                 name: 'checkbox',
@@ -183,7 +183,7 @@
         $("#categoryForm .text-danger").text('');
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
 
-        $.get('{{ route('product_category.edit', ':id') }}'.replace(':id', category_id), function(category) {
+        $.get('{{ route('category.edit', ':id') }}'.replace(':id', category_id), function(category) {
             console.log(category);
             $('#modalTitle').text('Edit Product Category');
             $('#submitBtn').text('Update');
@@ -204,8 +204,8 @@
     $('#categoryForm').submit(function(e) {
         e.preventDefault();
         let category_id = $('input[name="category_id"]').val();
-        let url = category_id ? '{{ route('product_category.update', ':id') }}'.replace(':id', category_id) :
-            "{{ route('product_category.store') }}";
+        let url = category_id ? '{{ route('category.update', ':id') }}'.replace(':id', category_id) :
+            "{{ route('category.store') }}";
         let method = category_id ? "PUT" : "POST";
 
         $.ajax({

@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ProductCategory;
+use App\Models\Category;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 
-class ProductCategoryController extends Controller
+class CategoryController extends Controller
 {
     public function index(Request $request)
     {
         $data['page_title'] = 'Product Category';
-        // $data['category'] = ProductCategory::where('is_parent', 1)->orWhereHas('children')->get();
-        $data['category'] = ProductCategory::where('is_parent', 1)->get()->all();
+        // $data['category'] = Category::where('is_parent', 1)->orWhereHas('children')->get();
+        $data['category'] = Category::where('is_parent', 1)->get()->all();
         // dd($data['category']->pluck('category_name')->toArray());
 
         if ($request->ajax()) {
-            $data = ProductCategory::query();
+            $data = Category::query();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -32,7 +32,7 @@ class ProductCategoryController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteCategory"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('product_category.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('category.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
                     $action_btn = '<div class="dropdown table-action">
@@ -50,6 +50,12 @@ class ProductCategoryController extends Controller
                     return $category->parent->category_name ?? '-'; //Get user roles
                 })
 
+                ->filterColumn('parent_category_id', function($query, $keyword) {
+                    $query->whereHas('parent', function($query) use ($keyword) {
+                        $query->where('category_name', 'like', "%$keyword%");
+                    });
+                })
+
                 ->editColumn('status', function ($category) {
                     return $category->statusBadge(); //Get user roles
                 })
@@ -57,46 +63,46 @@ class ProductCategoryController extends Controller
                 ->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
-        return view('admin.productcategory.index', $data);
+        return view('admin.category.index', $data);
     }
 
     public function store(Request $request)
     {
-        $request->validate(['category_name' => 'required|unique:product_categories,category_name,NULL,id,deleted_at,NULL']);
+        $request->validate(['category_name' => 'required|unique:categories,category_name,NULL,id,deleted_at,NULL']);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
             $is_parent = 0;
         }
-        ProductCategory::create([
+        Category::create([
             'parent_category_id' => $request->parent_category_id,
             'category_name' => $request->category_name,
             'status' => $request->status,
             'is_parent' =>  $is_parent
         ]);
 
-        return redirect()->route('product_category.index')->with('success', 'Product Category created successfully.');
+        return redirect()->route('category.index')->with('success', 'Product Category created successfully.');
     }
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductCategory $product_category)
+    public function edit(Category $category)
     {
-        return response()->json($product_category);
+        return response()->json($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductCategory $product_category)
+    public function update(Request $request, Category $category)
     {
-        $request->validate(['category_name' => 'required|unique:product_categories,category_name,' . $product_category->id . ',id,deleted_at,NULL']);
+        $request->validate(['category_name' => 'required|unique:categories,category_name,' . $category->id . ',id,deleted_at,NULL']);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
             $is_parent = 0;
         }
-        $product_category->update([
+        $category->update([
             'parent_category_id' => $request->parent_category_id,
             'category_name' => $request->category_name,
             'status' => $request->status,
@@ -109,15 +115,15 @@ class ProductCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductCategory $product_category)
+    public function destroy(Category $category)
     {
-        $product_category->delete();
-        return redirect()->route('product_category.index')->with('success', 'Category deleted successfully.');
+        $category->delete();
+        return redirect()->route('category.index')->with('success', 'Category deleted successfully.');
     }
 
 
     /*****  Bulk delete method  *****/
-    public function bulkDelete(Request $request, ProductCategory $product_category)
+    public function bulkDelete(Request $request, Category $category)
     {
         //   // Validate the incoming request
         $validated = $request->validate([

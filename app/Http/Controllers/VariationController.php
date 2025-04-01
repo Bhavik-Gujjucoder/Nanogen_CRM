@@ -163,4 +163,16 @@ class VariationController extends Controller
 
         return response()->json(['message' => 'No records selected!'], 400);
     }
+
+
+    public function get_variation_value(Request $request)
+{
+    $VariationOption = VariationOption::where('variation_id', $request->variation_id)->get();
+
+    if ($VariationOption->isNotEmpty()) {
+        return response()->json(['success' => true, 'variations' => $VariationOption]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'No sizes found']);
+    }
+}
 }

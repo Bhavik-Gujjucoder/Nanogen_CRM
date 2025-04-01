@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductCategory extends Model
+class Category extends Model
 {
     use SoftDeletes;
-    protected $table = 'product_categories';
+    protected $table = 'categories';
     protected $guarded = [];
 
     public function statusBadge()
@@ -18,10 +18,10 @@ class ProductCategory extends Model
 
     public function children()
     {
-        return $this->hasMany(ProductCategory::class, 'parent_category_id');
+        return $this->hasMany(Category::class, 'parent_category_id');
     }
     public function parent()
     {
-        return $this->belongsTo(ProductCategory::class, 'parent_category_id');
+        return $this->belongsTo(Category::class, 'parent_category_id');
     }
 }

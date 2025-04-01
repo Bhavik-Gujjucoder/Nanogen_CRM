@@ -13,7 +13,7 @@
                         <div class="mb-3">
                             <label class="col-form-label @error('name') is-invalid @enderror">Variation Name <span
                                     class="text-danger">*</span></label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="form-control">
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Variation Name" class="form-control">
                             <div id="name_error" class="error-message text-danger"></div>
                         </div>
                     </div>
@@ -49,6 +49,8 @@
                             <div id="not_count_match" class="text-danger"></div>
                         </div>
                         <div id="fields-container"></div>
+
+
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-end">

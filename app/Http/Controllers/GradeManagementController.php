@@ -71,7 +71,7 @@ class GradeManagementController extends Controller
             'status' => $request->status
         ]);
 
-        return redirect()->route('product_category.index')->with('success', 'Product category created successfully.');
+        return redirect()->route('category.index')->with('success', 'Product category created successfully.');
     }
 
 

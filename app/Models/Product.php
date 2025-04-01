@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Category;
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $table = 'products';
+    protected $guarded = [];
+
+    public function statusBadge()
+    {
+        return $this->status == 1 ? '<span class="badge badge-pill badge-status bg-success">Active</span>' : '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
+    }
+
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'id','category_id');
+    }
+
+    public function grade()
+    {
+        return $this->hasOne(GradeManagement::class, 'id','grade_id');
+    }
+
+}

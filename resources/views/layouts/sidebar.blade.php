@@ -64,8 +64,8 @@
                                 <i class="ti ti-apps"></i><span>Products</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="product-catelog.html">Products and Catalogue</a></li>
-                                <li><a href="{{ route('product_category.index') }}">Products Category</a></li>
+                                <li><a href="{{route('product.index')}}">Products and Catalogue</a></li>
+                                <li><a href="{{ route('category.index') }}">Products Category</a></li>
                                 <li><a href="{{route('variation.index')}}">Pricing and Product Variation</a></li>
                             </ul>
                         </li>

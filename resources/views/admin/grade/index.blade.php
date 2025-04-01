@@ -10,7 +10,7 @@
             <div class="col-sm-4">
                 <div class="icon-form mb-3 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
-                    <input type="text" class="form-control" id="customSearch" placeholder="Search User">
+                    <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
             </div>
             <div class="col-sm-8">
