@@ -211,15 +211,15 @@
             }
 
             /*** Get selected variation type ****/
-            let variationType = $("input[name='variation']:checked").val();
+            let variationType = '';//$("input[name='variation']:checked").val();
             // alert(variationType == 'yes');
 
             /* onchange variation */
-            $("input[name='variation']").on('change', function() {
-                $("#not_count_match").html("");
-            });
+            // $("input[name='variation']").on('change', function() {
+            //     $("#not_count_match").html("");
+            // });
 
-            if (variationType == 'yes') {
+            if (variationType == '') {
                 /* Check Dealer Prices */
                 $("input[name='dealer_price[]']").each(function() {
                     if (!$(this).val().trim()) {
