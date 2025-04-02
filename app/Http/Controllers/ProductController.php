@@ -7,8 +7,10 @@ use App\Models\Category;
 use App\Models\Variation;
 use Illuminate\Http\Request;
 use App\Models\GradeManagement;
+use App\Models\ProductVariation;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -48,8 +50,8 @@ class ProductController extends Controller
                 })
 
                 ->editColumn('product_name', function ($product) {
-                    return '<a href="'. asset("storage/product_images/".$product->product_image) .'" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
-                                             <img class="" src="'. asset("storage/product_images/".$product->product_image) .'" alt="User Image"></a>  '.$product->product_name;
+                    return '<a href="' . asset("storage/product_images/" . $product->product_image) . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
+                                             <img class="" src="' . asset("storage/product_images/" . $product->product_image) . '" alt="User Image"></a>  ' . $product->product_name;
                 })
                 ->editColumn('category_id', function ($product) {
                     return $product->category ? $product->category->category_name : '-';
@@ -68,7 +70,7 @@ class ProductController extends Controller
                     return $product->statusBadge();
                 })
 
-                ->rawColumns(['checkbox','product_name', 'action', 'status']) //'value',
+                ->rawColumns(['checkbox', 'product_name', 'action', 'status']) //'value',
                 ->make(true);
         }
 
@@ -81,9 +83,9 @@ class ProductController extends Controller
     public function create()
     {
         $data['page_title'] = 'Create Product Catalogue';
-        $data['variations'] = Variation::where('status',1)->get()->all();
-        $data['category'] = Category::where('status',1)->get()->all();
-        $data['grads'] = GradeManagement::where('status',1)->get()->all();
+        $data['variations'] = Variation::where('status', 1)->get()->all();
+        $data['category'] = Category::where('status', 1)->get()->all();
+        $data['grads'] = GradeManagement::where('status', 1)->get()->all();
 
         return view('admin.product.create', $data);
     }
@@ -93,38 +95,33 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
-        $product_name  =  $request->product_name;
-        $category_id   =  $request->category_id;
-        $grade_id      =  $request->grade_id;
-        $status        =  $request->status;
-
-
-        if ($product_name || $category_id || $grade_id  || $status) {
-            $product =  Product::create([
-                'product_name' => $product_name,
-                'category_id' => $category_id,
-                'grade_id' => $grade_id,
-                'status' => $request->status,
-            ]);
-        }
+        $product = Product::create($request->only(['product_name', 'category_id', 'grade_id', 'status']));
         if ($request->hasFile('product_image')) {
             $file = $request->file('product_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('product_images', $filename, 'public'); // Save to storage/app/public/product_images
+            $file->storeAs('product_images', $filename, 'public');
+            /** Save to storage/app/public/product_images **/
             $product->product_image = $filename;
         }
-
         $product->save();
-        return redirect()->route('product.index')->with('success', 'Product created successfully.');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id'])) {
+            $dealer_prices = $request->input('dealer_price');
+            $distributor_price = $request->input('distributor_price');
+            $variation_id = $request->input('variation_id');
+            $variation_option_id = $request->input('variation_option_id');
+
+            foreach ($dealer_prices as $key => $dealer_price) {
+                ProductVariation::create([
+                    'product_id' => $product->id,
+                    'dealer_price' => $dealer_price,
+                    'distributor_price' => $distributor_price[$key],
+                    'variation_id' => $variation_id[$key],
+                    'variation_option_id' => $variation_option_id[$key],
+                ]);
+            }
+        }
+        return redirect()->route('product.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -132,15 +129,57 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $data = [
+            'page_title' => 'Edit Product Catalogue',
+            'product' => $product,
+            'variations' => Variation::where('status', 1)->get()->all(),
+            'category' => Category::where('status', 1)->get()->all(),
+            'grads' => GradeManagement::where('status', 1)->get()->all(),
+        ];
+        return view('admin.product.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->update($request->only(['product_name', 'category_id', 'grade_id', 'status']));
+
+        if ($request->hasFile('product_image')) {
+            if ($product->product_image) {
+                Storage::disk('public')->delete('product_images/' . $product->product_image);
+            }
+
+            $file = $request->file('product_image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('product_images', $filename, 'public');
+            /** Save to storage/app/public/product_images **/
+            $product->product_image = $filename;
+            $product->save();
+        }
+
+        if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id'])) {
+            ProductVariation::where('product_id', $id)->delete();
+
+            $dealer_prices = $request->input('dealer_price');
+            $distributor_prices = $request->input('distributor_price');
+            $variation_ids = $request->input('variation_id');
+            $variation_option_ids = $request->input('variation_option_id');
+
+            foreach ($dealer_prices as $key => $dealer_price) {
+                ProductVariation::create([
+                    'product_id' => $product->id,
+                    'dealer_price' => $dealer_price,
+                    'distributor_price' => $distributor_prices[$key],
+                    'variation_id' => $variation_ids[$key],
+                    'variation_option_id' => $variation_option_ids[$key],
+                ]);
+            }
+        }
+        return redirect()->route('product.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -148,6 +187,34 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        ProductVariation::where('product_id', $id)->delete();
+        if ($product->product_image) {
+          Storage::disk('public')->delete('product_images/' . $product->product_image);
+        }
+        $product->delete();
+        return redirect()->route('product.index')->with('success', 'Variation deleted successfully!');
+    }
+
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+
+        if (!empty($ids)) {
+            $products = Product::whereIn('id', $ids)->get();
+            ProductVariation::whereIn('product_id', $ids)->delete();
+
+            foreach ($products as $product) {
+                if ($product->product_image) {
+                    Storage::disk('public')->delete('product_images/' . $product->product_image);
+                }
+                $product->delete();
+            }
+            return response()->json(['message' => 'Selected products deleted successfully!']);
+        }
+
+        return response()->json(['message' => 'No records selected!'], 400);
     }
 }
+

@@ -30,9 +30,10 @@
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort" scope="col"><label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="variation_checkbox"><span
-                                    class="checkmarks"></span></label>
+                        <th class="no-sort" scope="col">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all" class="variation_checkbox"><span class="checkmarks"></span>
+                            </label>
                         </th>
                         <th scope="col">SR. Number</th>
                         <th scope="col">Variation Name</th>

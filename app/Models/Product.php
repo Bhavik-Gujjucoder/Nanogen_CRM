@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Models\Category;
+use App\Models\Variation;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
     protected $table = 'products';
+
     protected $guarded = [];
 
     public function statusBadge()
@@ -23,6 +25,11 @@ class Product extends Model
     public function grade()
     {
         return $this->hasOne(GradeManagement::class, 'id','grade_id');
+    }
+
+    public function product_variations()
+    {
+        return $this->hasMany(ProductVariation::class);  // 'product_id' is the foreign key in the ProductVariation table
     }
 
 }

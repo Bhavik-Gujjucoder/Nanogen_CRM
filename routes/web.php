@@ -80,6 +80,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
 
     /* Product */
     Route::resource('product', ProductController::class);
+    Route::post('/product/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

@@ -91,40 +91,18 @@
                         <div class="mb-3">
                             <div class="radio-wrap">
                                 <label class="col-form-label">Select Variation</label>
-                                <div class="field-group d-flex flex-wrap">
+                                <div class="d-flex flex-wrap">
 
-                                    {{-- <div class="field-group"> --}}
-                                    <div>
-                                        <label class="col-form-label">Dealers</label>
-                                        <input type="number" name="dealer_price[]" placeholder="Price"
-                                            class="form-control">
+                                    {{-- <div class="me-2">
+                                        <input type="radio" class="status-radio" id="yes" name="variation"
+                                            value="yes">
+                                        <label for="yes">Yes</label>
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Distributors</label>
-                                        <input type="number" name="distributor_price[]" placeholder="Price"
-                                            class="form-control">
-                                    </div>
-                                    <div>
-                                        <label class="col-form-label">Variation name</label>
-                                        <select class="select addfileddrop load_variation_value" name="variation_id[]">
-                                            <option value="">Select Variation</option>
-                                            @foreach ($variations as $v)
-                                                <option value="{{ $v->id }}">{{ $v->name }}</option>
-                                            @endforeach
-
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="col-form-label">Variation Value</label>
-                                        <select class="select addfileddrop" name="variation_option_id[]">
-                                            <option value="">Select option</option>
-                                        </select>
-                                    </div>
-                                    <button type="button" class="add-btn btn btn-primary" onclick="addField('yes')">Add
-                                        New</button>
-                                    <div>
-                                    </div>
-                                    {{-- </div> --}}
+                                        <input type="radio" class="status-radio" id="no" name="variation"
+                                            value="no">
+                                        <label for="no">No</label>
+                                    </div> --}}
 
                                 </div>
                             </div>
@@ -166,7 +144,7 @@
             let product_image_field = $("input[name='product_image']");
             let file = product_image_field[0].files[0]; // Get the selected file
 
-            // if (!product_image_field.val().trim()) {
+                // if (!product_image_field.val().trim()) {
             if (!file) {
                 $("#product_image_error").html("The product image is required.");
                 valid = false;
@@ -239,7 +217,7 @@
                     }
                 });
                 // Check Size Selection
-                $("select[name='variation_option_id[]']").each(function() {
+                $("select[name='variation_value[]']").each(function() {
                     if (!$(this).val()) {
                         variationValid = true;
                     }
@@ -291,7 +269,7 @@
         $(document).on('change', 'select[name="variation_id[]"]', function() {
             let selectedVariationId = $(this).val();
             let sizeDropdown = $(this).closest('.field-group').find(
-                'select[name="variation_option_id[]"]');
+                'select[name="variation_value[]"]');
 
             if (selectedVariationId) {
                 $.ajax({
@@ -303,7 +281,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            let sizeOptions = '<option value="">Select option</option>';
+                            let sizeOptions = '<option value="">Select Size</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
                                     `<option value="${size.id}">${size.value}</option>`;
@@ -337,34 +315,34 @@
                         `<option value="${variation.id}">${variation.name}</option>`;
                 });
 
-                // container.append(`
-                //     <div class="field-group">
-                //         <div>
-                //             <label class="col-form-label">Dealers</label>
-                //             <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
-                //         </div>
-                //         <div>
-                //             <label class="col-form-label">Distributor</label>
-                //             <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
-                //         </div>
-                //         <div>
-                //             <label class="col-form-label">Variation name</label>
-                //             <select class="select addfileddrop load_variation_value" name="variation_id[]">
-                //                 <option value="">Select Variation</option>
-                //                 ${variationOptions}
-                //             </select>
-                //         </div>
-                //         <div>
-                //             <label class="col-form-label">Variation Value</label>
-                //             <select class="select addfileddrop " name="variation_value[]">
-                //                 <option value="">Select Variation</option>
-                //             </select>
-                //         </div>
-                //         <button type="button" class="add-btn btn btn-primary" onclick="addField('yes')">Add New</button>
-                //         <div>
-                //         </div>
-                //     </div>
-                // `);
+                container.append(`
+                    <div class="field-group">
+                        <div>
+                            <label class="col-form-label">Dealers</label>
+                            <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
+                        </div>
+                        <div>
+                            <label class="col-form-label">Distributor</label>
+                            <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
+                        </div>
+                        <div>
+                            <label class="col-form-label">Variation name</label>
+                            <select class="select addfileddrop load_variation_value" name="variation_id[]">
+                                <option value="">Select Variation</option>
+                                ${variationOptions}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="col-form-label">Variation Value</label>
+                            <select class="select addfileddrop " name="variation_value[]">
+                                <option value="">Select Variation</option>
+                            </select>
+                        </div>
+                        <button type="button" class="add-btn btn btn-primary" onclick="addField('yes')">Add New</button>
+                        <div>
+                        </div>
+                    </div>
+                `);
             }
             // else if (selectedValue === "no") {
             //     container.append(`
@@ -372,10 +350,10 @@
             //             <input type="number" name="price[]" placeholder="Price" class="form-control">
             //             </div>
             //             `);
-            // }
-        });
-    });
-    // <button type="button" class="add-btn btn btn-primary" onclick="addField('no')">Add New</button>
+            //         }
+            //     });
+            // });
+            // <button type="button" class="add-btn btn btn-primary" onclick="addField('no')">Add New</button>
 
 
     function addField(type) {
@@ -397,9 +375,11 @@
                             <option value="">Select Variation</option>
                             ${variationOptions}
                         </select>
-                    <select class="select addfileddrop load_variation_value" name="variation_option_id[]">
-                        <option>Select option</option>
-
+                    <select class="select addfileddrop load_variation_value" name="variation_value[]">
+                        <option>1 L</option>
+                        <option>500 ML</option>
+                        <option>1 KG</option>
+                        <option>5 KG</option>
                     </select>
                     <button type="button" class="remove-btn btn btn-danger" onclick="removeField(this)">Remove</button>
                 </div>
