@@ -13,8 +13,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\CityManagementController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
+use App\Http\Controllers\StateManagementController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -72,7 +74,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
 
     /* Category */
     Route::resource('category', CategoryController::class);
-    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('product_category.bulk_delete');
+    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('product_category.bulk_delete'); //
 
     /* Variation */
     Route::resource('variation', VariationController::class);
@@ -81,6 +83,14 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Product */
     Route::resource('product', ProductController::class);
     Route::post('/product/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
+
+    /* States Management */
+    Route::resource('state', StateManagementController::class);
+    Route::post('/state/bulk-delete', [StateManagementController::class, 'bulkDelete'])->name('state.bulkDelete');
+
+    /* City Management */
+    Route::resource('city', CityManagementController::class);
+    Route::post('/city/bulk-delete', [CityManagementController::class, 'bulkDelete'])->name('city.bulkDelete');
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

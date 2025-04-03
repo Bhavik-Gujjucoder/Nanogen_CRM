@@ -33,7 +33,7 @@
                         <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">Status</th>
-                        <th  scope="col">Action</th>
+                        <th scope="col">Action</th>
                         {{-- class="text-end" --}}
                     </tr>
                 </thead>
@@ -51,6 +51,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Grade Management</h5>
                 <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button>
+
             </div>
             <div class="modal-body">
                 <form id="adminForm">
@@ -175,6 +176,9 @@
         $.ajax({
             url: url,
             type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Add this line
+            },
             data: $(this).serialize() + "&_method=" + method,
             success: function(response) {
                 $('#adminModal').modal('hide');

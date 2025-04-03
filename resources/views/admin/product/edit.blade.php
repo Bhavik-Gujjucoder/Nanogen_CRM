@@ -91,18 +91,18 @@
                     </div>
 
                     <div class="col-md-12 mt-2">
-                        <div class="field-group row mb-1">
-                            <label for="col-form-label" class="col-form-label col-md-2">Dealer Price</label>
-                            <label for="col-form-label" class="col-form-label col-md-2">Distributor Price</label>
-                            <label for="col-form-label" class="col-form-label col-md-2">Variation name</label>
-                            <label for="col-form-label" class="col-form-label col-md-2">Variation Value</label>
-                            <button type="button" class="add-btn btn btn-primary col-md-1"
+                        <div class="field-group field-group-new">
+                            <label for="col-form-label" class="col-form-label">Dealer Price</label>
+                            <label for="col-form-label" class="col-form-label">Distributor Price</label>
+                            <label for="col-form-label" class="col-form-label">Variation name</label>
+                            <label for="col-form-label" class="col-form-label">Variation Value</label>
+                            <button type="button" class="add-btn btn btn-primary"
                                 onclick="addField('yes')">Add New</button>
                         </div>
 
                         <div id="fields-container">
                             @foreach ($product->product_variations as $variation)
-                                <div class="field-group row">
+                                <div class="field-group ">
 
                                     <input type="number" name="dealer_price[]" value="{{ $variation->dealer_price }}"
                                         class="form-control" placeholder="Dealer Price">
@@ -127,7 +127,7 @@
                                                 {{ $item->value }}</option>
                                         @endforeach
                                     </select>
-                                    <button type="button" class="remove-btn btn btn-danger"
+                                    <button type="button" class="remove-btn btn btn-danger mb-1"
                                         onclick="removeField(this)">Remove</button>
                                 </div>
                             @endforeach
@@ -197,7 +197,7 @@
                     `<option value="${variation.id}">${variation.name}</option>`;
             });
             container.prepend(`
-            <div class="field-group row">
+            <div class="field-group">
                 <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
                 <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
                 <select class="select addfileddrop" name="variation_id[]">
@@ -208,7 +208,7 @@
                     <option>Select option</option>
 
                 </select>
-                <button type="button" class="remove-btn btn btn-danger" onclick="removeField(this)">Remove</button>
+                <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>
             </div>
         `);
         }

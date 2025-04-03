@@ -88,10 +88,10 @@
                     </div>
 
                     <div class="col-md-12">
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <div class="radio-wrap">
                                 <label class="col-form-label">Select Variation</label>
-                                <div class="field-group d-flex flex-wrap">
+                                <div class="field-group field-group-new">
 
                                     {{-- <div class="field-group"> --}}
                                     <div>
@@ -120,7 +120,7 @@
                                             <option value="">Select option</option>
                                         </select>
                                     </div>
-                                    <button type="button" class="add-btn btn btn-primary" onclick="addField('yes')">Add
+                                    <button type="button" class="add-btn btn btn-primary mb-1" onclick="addField('yes')">Add
                                         New</button>
                                     <div>
                                     </div>
@@ -390,7 +390,7 @@
                     `<option value="${variation.id}">${variation.name}</option>`;
             });
             container.append(`
-                <div class="field-group row">
+                <div class="field-group">
                     <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
                     <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
                     <select class="select addfileddrop" name="variation_id[]">
@@ -401,7 +401,7 @@
                         <option>Select option</option>
 
                     </select>
-                    <button type="button" class="remove-btn btn btn-danger" onclick="removeField(this)">Remove</button>
+                    <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>
                 </div>
             `);
         } else if (type === "no") {

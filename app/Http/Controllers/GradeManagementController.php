@@ -65,13 +65,13 @@ class GradeManagementController extends Controller
     */
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|unique:grade_management,name']);
+        $request->validate(['name' => 'required|unique:grade_management,name,NULL,id,deleted_at,NULL']);
         GradeManagement::create([
             'name' => $request->name,
             'status' => $request->status
         ]);
-
-        return redirect()->route('category.index')->with('success', 'Product category created successfully.');
+        return response()->json(['success' => true, 'message' => 'Grade created successfully']);
+        // return redirect()->route('category.index')->with('success', 'Product category created successfully.');
     }
 
 
@@ -89,7 +89,7 @@ class GradeManagementController extends Controller
     public function update(Request $request, GradeManagement $grade)
 
     {
-        $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id]);
+        $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id. ',id,deleted_at,NULL']);
         $grade->update([
             'name' => $request->name,
             'status' => $request->status

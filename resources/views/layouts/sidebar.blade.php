@@ -64,9 +64,9 @@
                                 <i class="ti ti-apps"></i><span>Products</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{route('product.index')}}">Products and Catalogue</a></li>
+                                <li><a href="{{ route('product.index') }}">Products and Catalogue</a></li>
                                 <li><a href="{{ route('category.index') }}">Products Category</a></li>
-                                <li><a href="{{route('variation.index')}}">Pricing and Product Variation</a></li>
+                                <li><a href="{{ route('variation.index') }}">Pricing and Product Variation</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -74,9 +74,9 @@
                 <li>
                     <ul>
                         <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade Management</span></a></li>
-                        <li><a href="state-management.html"><i class="ti ti-map-pin-pin"></i><span>State Management</span></a>
+                        <li><a href="{{ route('state.index') }}"><i class="ti ti-map-pin-pin"></i><span>State Management</span></a>
                         </li>
-                        <li><a href="city-management.html"><i class="ti ti-map-pin-pin"></i><span>City Management</span></a></li>
+                        <li><a href="{{ route('city.index') }}"><i class="ti ti-map-pin-pin"></i><span>City Management</span></a></li>
                         <!-- <li><a href="contacts.html"><i class="ti ti-steam"></i><span>Contacts</span></a></li> -->
                         <!-- <li><a href="tasks.html"><i class="ti ti-list-check"></i><span>Task</span></a></li> -->
                         <li><a href="sales-reports.html"><i class="ti ti-file-invoice"></i><span>Sales Reports</span></a></li>
