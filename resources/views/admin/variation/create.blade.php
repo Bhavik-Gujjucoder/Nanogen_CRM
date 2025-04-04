@@ -55,7 +55,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-end">
                     <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
-                    <button type="submit" class="btn btn-primary submit-btn" data-bs-toggle="modal"
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
                         data-bs-target="#create_success">Create</button>
                 </div>
             </form>

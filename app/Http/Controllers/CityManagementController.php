@@ -16,7 +16,7 @@ class CityManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $data['page_title'] = 'City management';
+        $data['page_title'] = 'City Management';
 
         $data['states'] = StateManagement::where('status',1)->get();
         if ($request->ajax()) {
@@ -52,14 +52,16 @@ class CityManagementController extends Controller
                 ->editColumn('state_id', function ($row) {
                     return $row->state->state_name; // Get user roles
                 })
-
+                ->filterColumn('state_id', function($query, $keyword) {
+                    $query->whereHas('state', function($q) use ($keyword) {
+                        $q->where('state_name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->rawColumns(['action', 'status','checkbox'])
                 ->make(true);
         }
         return view('admin.city.index',$data);
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -69,6 +71,9 @@ class CityManagementController extends Controller
         $request->validate([
             'state_id' => 'required',
             'city_name' => 'required|unique:city_management,city_name,NULL,id,deleted_at,NULL'
+        ],[
+            'state_id.required' => 'The state name field is required.
+'
         ]);
         CityManagement::create([
             'state_id' => $request->state_id,
@@ -81,9 +86,9 @@ class CityManagementController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CityManagement $city_management)
+    public function edit(CityManagement $city)
     {
-        return response()->json($city_management);
+        return response()->json($city);
     }
 
     /**
@@ -91,7 +96,12 @@ class CityManagementController extends Controller
      */
     public function update(Request $request, CityManagement $city)
     {
-        $request->validate(['state_id' => 'required','city_name' => 'required|unique:state_management,city_name,' . $city->id. ',id,deleted_at,NULL']);
+        $request->validate([
+            'state_id' => 'required',
+            'city_name' => 'required|unique:city_management,city_name,' . $city->id. ',id,deleted_at,NULL'
+        ],[
+            'state_id.required' => 'The state name field is required.'
+        ]);
         $city->update([
             'state_id' => $request->state_id,
             'city_name' => $request->city_name,

@@ -38,6 +38,7 @@
                         </th>
                         <th class="no-sort" scope="col">SR. Number</th>
                         <th scope="col">State Name</th>
+                        <th scope="col">Number of City</th>
                         <th scope="col">Status</th>
                         {{-- <th scope="col">Number of City</th> --}}
                         <th class="text-end" scope="col">Action</th>
@@ -96,7 +97,7 @@
                 <div class="modal-footer">
                     <div class="d-flex align-items-center justify-content-end m-0">
                         <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                     </div>
                 </div>
             </form>
@@ -120,7 +121,6 @@
                 name: 'checkbox',
                 orderable: false,
                 searchable: false
-
             },
             {
                 data: 'DT_RowIndex',
@@ -130,6 +130,10 @@
             }, {
                 data: 'state_name',
                 name: 'state_name',
+                searchable: true
+            }, {
+                data: 'cities_count',
+                name: 'cities_count',
                 searchable: true
             },
             {
@@ -149,7 +153,7 @@
 
     // Custom Search Box
     $('#customSearch').on('keyup', function() {
-        grade_table.search(this.value).draw();
+        state_table.search(this.value).draw();
     });
 
     /* Add state */
@@ -172,9 +176,11 @@
 
         $.get('{{ route('state.edit', ':id') }}'.replace(':id', state_id), function(state) {
             $('#modalTitle').text('Edit State Management');
+            $('#submit_button').text('Update');
             $('#submitBtn').text('Update');
             $('input[name="state_id"]').val(state_id);
             $('input[name="state_name"]').val(state.state_name);
+            $('input[name="status"][value="' + state.status + '"]').prop('checked', true);
             $('#adminModal').modal('show');
         });
     });
@@ -300,7 +306,7 @@
     function confirmDeletion(callback) {
         Swal.fire({
             title: "Are you sure?",
-            text: "You want to remove this State? Once deleted, it cannot be recovered.",
+            text: "You want to remove this State? If you delete this state then relevant cities will be also deleted.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',

@@ -57,7 +57,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Add Product Category</h5>
-                <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button>
+                {{-- <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button> --}}
+                <button class="btn-close custom-btn-close border p-1 me-0 text-dark" data-bs-dismiss="modal"
+                aria-label="Close">
+             <i class="ti ti-x"></i>
             </div>
             <div class="modal-body">
                 <form id="categoryForm">
@@ -75,7 +78,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="col-form-label">Category name</label>
+                        <label class="col-form-label">Category Name *</span></label>
                         <input type="text" name="category_name" value="" class="form-control"
                             placeholder="Enter category name">
                         <span class="category_name_error"></span>
@@ -101,9 +104,9 @@
                     </div>
 
                     <div class="float-end">
-                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                         <button type="button" class="btn btn-light me-2 close_poup"
-                            data-bs-dismiss="modal">Cancel</button>
+                        data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                     </div>
 
                 </form>

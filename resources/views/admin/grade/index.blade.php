@@ -50,7 +50,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Grade Management</h5>
-                <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button>
+                {{-- <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button> --}}
+                <button class="btn-close custom-btn-close border p-1 me-0 text-dark" data-bs-dismiss="modal"
+                aria-label="Close">
+             <i class="ti ti-x"></i>
+             </button>
 
             </div>
             <div class="modal-body">
@@ -84,11 +88,10 @@
                     </div>
 
                     <div class="float-end">
-                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                         <button type="button" class="btn btn-light me-2 close_poup"
-                            data-bs-dismiss="modal">Cancel</button>
+                        data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Create</button>
                     </div>
-                    {{-- <button type="submit" class="btn btn-primary" id="submitBtn">Create</button> --}}
                 </form>
             </div>
         </div>
@@ -161,6 +164,7 @@
             $('#submitBtn').text('Update');
             $('input[name="user_id"]').val(user_id);
             $('input[name="name"]').val(user.name);
+            $('input[name="status"][value="' + user.status + '"]').prop('checked', true);
             $('#adminModal').modal('show');
         });
     });

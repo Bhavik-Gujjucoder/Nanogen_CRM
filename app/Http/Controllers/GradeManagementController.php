@@ -17,7 +17,7 @@ class GradeManagementController extends Controller
     */
     public function index(Request $request)
     {
-        $data['page_title'] = 'Grade management';
+        $data['page_title'] = 'Grade Management';
 
         if ($request->ajax()) {
             $data = GradeManagement::query();
@@ -65,7 +65,12 @@ class GradeManagementController extends Controller
     */
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|unique:grade_management,name,NULL,id,deleted_at,NULL']);
+        $request->validate([
+            'name' => 'required|unique:grade_management,name,NULL,id,deleted_at,NULL'
+        ],[
+            'name.required' => 'The grade name field is required.',
+            'name.unique' => 'This grade name already exists.',
+        ]);
         GradeManagement::create([
             'name' => $request->name,
             'status' => $request->status
@@ -87,9 +92,11 @@ class GradeManagementController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, GradeManagement $grade)
-
     {
-        $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id. ',id,deleted_at,NULL']);
+        $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id. ',id,deleted_at,NULL'],[
+            'name.required' => 'The grade name field is required.',
+            'name.unique' => 'This grade name already exists.',
+        ]);
         $grade->update([
             'name' => $request->name,
             'status' => $request->status

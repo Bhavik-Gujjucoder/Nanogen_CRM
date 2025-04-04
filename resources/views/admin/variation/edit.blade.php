@@ -75,7 +75,7 @@
 
                 <div class="d-flex align-items-center justify-content-end">
                     <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
-                    <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
 

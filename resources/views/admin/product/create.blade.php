@@ -43,7 +43,7 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="col-form-label">Category</label>
+                            <label class="col-form-label">Category <span class="text-danger">*</span></label>
                             <select class="select" name="category_id" value="{{ old('category_id') }}">
                                 <option value="">Select category</option>
                                 @foreach ($category as $c)
@@ -57,7 +57,7 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="col-form-label">Grade</label>
+                            <label class="col-form-label">Grade <span class="text-danger">*</span></label>
                             <select class="select" name="grade_id" value="{{ old('grade_id') }}">
 
                                 <option value="">Select grade</option>
@@ -95,17 +95,17 @@
 
                                     {{-- <div class="field-group"> --}}
                                     <div>
-                                        <label class="col-form-label">Dealers</label>
+                                        <label class="col-form-label">Dealer Price <span class="text-danger">*</span></label>
                                         <input type="number" name="dealer_price[]" placeholder="Price"
                                             class="form-control">
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Distributors</label>
+                                        <label class="col-form-label">Distributor Price <span class="text-danger">*</span></label>
                                         <input type="number" name="distributor_price[]" placeholder="Price"
                                             class="form-control">
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Variation name</label>
+                                        <label class="col-form-label">Variation Name <span class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
                                             @foreach ($variations as $v)
@@ -115,7 +115,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Variation Value</label>
+                                        <label class="col-form-label">Variation Value <span class="text-danger">*</span></label>
                                         <select class="select addfileddrop" name="variation_option_id[]">
                                             <option value="">Select option</option>
                                         </select>

@@ -35,10 +35,11 @@
                                 <input type="checkbox" id="select-all" class="city_checkbox"><span
                                     class="checkmarks"></span>
                             </label>
+
                         </th>
                         <th class="no-sort" scope="col">SR. Number</th>
-                        <th scope="col">City Name</th>
                         <th scope="col">State Name</th>
+                        <th scope="col">City Name</th>
                         <th scope="col">Status</th>
                         <th class="text-end" scope="col">Action</th>
                     </tr>
@@ -64,19 +65,19 @@
                 <input type="hidden" name="city_id">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="col-form-label">State Name<span class="text-danger">*</span></label>
+                        <label class="col-form-label">City Name *</label>
+                        <input type="text" name="city_name" placeholder="City Name" value="" class="form-control">
+                        <span class="city_name_error"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">State Name *</label>
                         <select name="state_id" class="select">
-                            <option value="">Select state</option>
+                            <option value="" selected>Select state</option>
                             @foreach ($states as $state)
                                 <option value="{{$state->id}}">{{$state->state_name}}</option>
                             @endforeach
                         </select>
                         <span class="state_id_error"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-form-label">Name of City <span class="text-danger">*</span></label>
-                        <input type="text" name="city_name" value="" class="form-control">
-                        <span class="city_name_error"></span>
                     </div>
                     <div class="mb-3">
                         <label class="col-form-label">Status</label>
@@ -100,7 +101,7 @@
                 <div class="modal-footer">
                     <div class="d-flex align-items-center justify-content-end m-0">
                         <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                     </div>
                 </div>
             </form>
@@ -124,7 +125,6 @@
                 name: 'checkbox',
                 orderable: false,
                 searchable: false
-
             },
             {
                 data: 'DT_RowIndex',
@@ -137,7 +137,7 @@
                 searchable: true
             }, {
                 data: 'city_name',
-                name: 'state_name',
+                name: 'city_name',
                 searchable: true
             },
             {
@@ -157,7 +157,7 @@
 
     // Custom Search Box
     $('#customSearch').on('keyup', function() {
-        grade_table.search(this.value).draw();
+        city_table.search(this.value).draw();
     });
 
     /* Add state */
@@ -166,23 +166,28 @@
         $('#modalTitle').text('City Management');
         $('#submitBtn').text('Create');
         $('input[name="city_id"]').val('');
+        $('select[name="state_id"]').val('').trigger('change');
         $('#adminModal').modal('show');
         $("#adminForm .text-danger").text('');
         $('#adminForm').find('.is-invalid').removeClass('is-invalid');
-
     });
 
     //  Open Modal for Editing an Admin
     $(document).on('click', '.edit-btn', function() {
+        $('#submitBtn').text('Update');
         let city_id = $(this).data('id');
         $("#adminForm .text-danger").text('');
         $('#adminForm').find('.is-invalid').removeClass('is-invalid');
 
-        $.get('{{ route('state.edit', ':id') }}'.replace(':id', city_id), function(city) {
+        $.get('{{ route('city.edit', ':id') }}'.replace(':id', city_id),
+
+        function(city) {
             $('#modalTitle').text('Edit City Management');
-            $('#submitBtn').text('Update');
+
             $('input[name="city_id"]').val(city_id);
+            $('input[name="status"][value="' + city.status + '"]').prop('checked', true);
             $('input[name="city_name"]').val(city.city_name);
+            $('select[name="state_id"]').val(city.state_id).trigger('change');
             $('#adminModal').modal('show');
         });
     });
@@ -190,6 +195,8 @@
     // Handle Add & Edit Form Submission
     $('#adminForm').submit(function(e) {
         e.preventDefault();
+         $("#adminForm .error-text").text('');
+         $("#adminForm .text-danger").text('');
         let city_id = $('input[name="city_id"]').val();
         let url = city_id ? '{{ route('city.update', ':id') }}'.replace(':id', city_id) :
             "{{ route('city.store') }}";
@@ -224,17 +231,7 @@
         });
     });
 
-    // function display_errors(errors) {
-    //     $("#adminForm .error-text").text('');
-    //     $.each(errors, function(key, value) {
-    //         $('input[name=' + key + ']').addClass('is-invalid');
-    //         $('.' + key + '_error').text(value[0]).addClass('text-danger');
 
-    //         $('select[name=' + key + ']').addClass('is-invalid');
-    //         $('.' + key + '_error').text(value[0]).addClass('text-danger');
-
-    //     });
-    // }
     function display_errors(errors) {
         // Clear previous error messages
         $("#adminForm .error-text").text('');
@@ -297,6 +294,7 @@
                         show_success(response.message);
                         // Optionally, reload the page to reflect changes
                         city_table.ajax.reload();
+                        $('#bulk_delete_button').hide();
                         // location.reload();
                     },
                     error: function(xhr, status, error) {

@@ -44,7 +44,7 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="col-form-label">Category</label>
+                            <label class="col-form-label">Category <span class="text-danger">*</span></label>
                             <select class="select" name="category_id">
                                 <option value="">Select category</option>
                                 @foreach ($category as $c)
@@ -59,7 +59,7 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="col-form-label">Grade</label>
+                            <label class="col-form-label">Grade <span class="text-danger">*</span></label>
                             <select class="select" name="grade_id">
                                 <option value="">Select grade</option>
                                 @foreach ($grads as $g)
@@ -74,7 +74,7 @@
 
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <label class="col-form-label">Status</label>
+                            <label class="col-form-label">Status <span class="text-danger">*</span></label>
                             <div class="d-flex align-items-center">
                                 <div class="me-2">
                                     <input type="radio" class="status-radio" id="active1" name="status"
@@ -92,10 +92,10 @@
 
                     <div class="col-md-12 mt-2">
                         <div class="field-group field-group-new">
-                            <label for="col-form-label" class="col-form-label">Dealer Price</label>
-                            <label for="col-form-label" class="col-form-label">Distributor Price</label>
-                            <label for="col-form-label" class="col-form-label">Variation name</label>
-                            <label for="col-form-label" class="col-form-label">Variation Value</label>
+                            <label for="col-form-label" class="col-form-label">Dealer Price <span class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">Distributor Price <span class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">Variation Name <span class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">Variation Value <span class="text-danger">*</span></label>
                             <button type="button" class="add-btn btn btn-primary"
                                 onclick="addField('yes')">Add New</button>
                         </div>
@@ -103,7 +103,6 @@
                         <div id="fields-container">
                             @foreach ($product->product_variations as $variation)
                                 <div class="field-group ">
-
                                     <input type="number" name="dealer_price[]" value="{{ $variation->dealer_price }}"
                                         class="form-control" placeholder="Dealer Price">
 
@@ -119,11 +118,10 @@
                                                 {{ $v->name }}</option>
                                         @endforeach
                                     </select>
-
                                     <select class="select" name="variation_option_id[]">
                                         @foreach (getVariationOptions($variation->variation_id) as $item)
                                             <option value="{{ $item->id }}"
-                                                {{ $variation->variation_option_value->id == $item->id ? 'selected' : '' }}>
+                                                {{ $variation->variation_option_value ? ($variation->variation_option_value->id == $item->id ? 'selected' : '') : '' }}>
                                                 {{ $item->value }}</option>
                                         @endforeach
                                     </select>
