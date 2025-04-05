@@ -89,15 +89,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="mb-1">
+                            <label class="col-form-label">Select Variation</label>
+                        </div>
+                    </div>
 
-                    <div class="col-md-12 mt-2">
+                    <div class="col-md-12 mt-0">
                         <div class="field-group field-group-new">
-                            <label for="col-form-label" class="col-form-label">Dealer Price <span class="text-danger">*</span></label>
-                            <label for="col-form-label" class="col-form-label">Distributor Price <span class="text-danger">*</span></label>
-                            <label for="col-form-label" class="col-form-label">Variation Name <span class="text-danger">*</span></label>
-                            <label for="col-form-label" class="col-form-label">Variation Value <span class="text-danger">*</span></label>
-                            <button type="button" class="add-btn btn btn-primary"
-                                onclick="addField('yes')">Add New</button>
+                            <label for="col-form-label" class="col-form-label">Dealer Price <span
+                                    class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">Distributor Price <span
+                                    class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">Variation Name <span
+                                    class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">Variation Value <span
+                                    class="text-danger">*</span></label>
+                            <button type="button" class="add-btn btn btn-primary" onclick="addField('yes')">Add
+                                New</button>
                         </div>
 
                         <div id="fields-container">
@@ -247,26 +256,26 @@
             // let product_image_field = $("input[name='product_image']");
             // let file = product_image_field[0].files[0]; // Get the selected file
 
-           // Check if no file is selected
-        //    if (!file) {
-        //         $("#product_image_error").html("The product image is required.");
-        //         valid = false;
-        //     } else {
-        //         // Check file type (JPG, JPEG, GIF, PNG)
-        //         let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
-        //         let fileExtension = file.name.split('.').pop().toLowerCase();
+            // Check if no file is selected
+            //    if (!file) {
+            //         $("#product_image_error").html("The product image is required.");
+            //         valid = false;
+            //     } else {
+            //         // Check file type (JPG, JPEG, GIF, PNG)
+            //         let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+            //         let fileExtension = file.name.split('.').pop().toLowerCase();
 
-        //         if (!validExtensions.includes(fileExtension)) {
-        //             $("#product_image_error").html("Invalid file type. Only JPG, GIF, and PNG are allowed.");
-        //             valid = false;
-        //         }
+            //         if (!validExtensions.includes(fileExtension)) {
+            //             $("#product_image_error").html("Invalid file type. Only JPG, GIF, and PNG are allowed.");
+            //             valid = false;
+            //         }
 
-        //         // Check file size (max 800KB)
-        //         if (file.size > 800000) { // 800KB = 800000 bytes
-        //             $("#product_image_error").html("File size must be less than 800KB.");
-        //             valid = false;
-        //         }
-        //     }
+            //         // Check file size (max 800KB)
+            //         if (file.size > 800000) { // 800KB = 800000 bytes
+            //             $("#product_image_error").html("File size must be less than 800KB.");
+            //             valid = false;
+            //         }
+            //     }
 
 
 

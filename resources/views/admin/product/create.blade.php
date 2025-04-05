@@ -90,22 +90,29 @@
                     <div class="col-md-12">
                         <div class="mb-2">
                             <div class="radio-wrap">
-                                <label class="col-form-label">Select Variation</label>
+                                <div class="col-md-12">
+                                    <div class="mb-1">
+                                        <label class="col-form-label">Select Variation</label>
+                                    </div>
+                                </div>
                                 <div class="field-group field-group-new">
 
                                     {{-- <div class="field-group"> --}}
                                     <div>
-                                        <label class="col-form-label">Dealer Price <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Dealer Price <span
+                                                class="text-danger">*</span></label>
                                         <input type="number" name="dealer_price[]" placeholder="Price"
                                             class="form-control">
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Distributor Price <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Distributor Price <span
+                                                class="text-danger">*</span></label>
                                         <input type="number" name="distributor_price[]" placeholder="Price"
                                             class="form-control">
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Variation Name <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Variation Name <span
+                                                class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
                                             @foreach ($variations as $v)
@@ -115,12 +122,14 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Variation Value <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Variation Value <span
+                                                class="text-danger">*</span></label>
                                         <select class="select addfileddrop" name="variation_option_id[]">
                                             <option value="">Select option</option>
                                         </select>
                                     </div>
-                                    <button type="button" class="add-btn btn btn-primary mb-1" onclick="addField('yes')">Add
+                                    <button type="button" class="add-btn btn btn-primary mb-1"
+                                        onclick="addField('yes')">Add
                                         New</button>
                                     <div>
                                     </div>
@@ -211,7 +220,7 @@
             }
 
             /*** Get selected variation type ****/
-            let variationType = '';//$("input[name='variation']:checked").val();
+            let variationType = ''; //$("input[name='variation']:checked").val();
             // alert(variationType == 'yes');
 
             /* onchange variation */

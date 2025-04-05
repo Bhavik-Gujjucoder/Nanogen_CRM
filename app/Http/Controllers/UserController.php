@@ -85,7 +85,6 @@ class UserController extends Controller
     */
     public function store(Request $request)
     {
-        // Validate request data
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -124,14 +123,6 @@ class UserController extends Controller
         $user->assignRole(Role::find($request->role)->name);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -176,7 +167,6 @@ class UserController extends Controller
             if ($user->profile_picture) {
                 Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
             }
-
             // Upload new profile picture
             $file = $request->file('profile_picture');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -192,7 +182,6 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
-
 
     /**
      * Remove the specified resource from storage.
