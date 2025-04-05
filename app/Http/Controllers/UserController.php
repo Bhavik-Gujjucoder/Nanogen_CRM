@@ -207,6 +207,11 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $user = User::findOrFail($user->id);
+        if ($user->profile_picture) {
+          Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
+        }
+
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
@@ -215,8 +220,20 @@ class UserController extends Controller
     {
         $ids = $request->ids;
 
-        if (!empty($ids)) {
-            User::whereIn('id', $ids)->delete();
+        // if (!empty($ids)) {
+        //     User::whereIn('id', $ids)->delete();
+        //     return response()->json(['message' => 'Selected users deleted successfully!']);
+        // }
+
+        if (!empty($ids) && is_array($ids) ) {
+            $users = User::whereIn('id', $ids)->get();
+
+            foreach ($users as $u) {
+                if ($u->profile_picture) {
+                    Storage::disk('public')->delete('profile_pictures/' . $u->profile_picture);
+                }
+                $u->delete();
+            }
             return response()->json(['message' => 'Selected users deleted successfully!']);
         }
 
