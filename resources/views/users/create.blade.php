@@ -9,7 +9,7 @@
             @csrf
 
             <!-- Basic Info -->
-            <div class="manage-user">
+            <div class="manage-user icon-set">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="profile-pic-upload">
@@ -96,7 +96,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Password <span class="text-danger">*</span></label>
                             <div class="icon-form-end">
-                                <span class="form-icon"><i class="ti ti-eye-off"></i></span>
+                                <span class="form-icon gc-icon-set"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control icone @error('password') is-invalid @enderror"
                                     name="password">
                                     @error('password')
