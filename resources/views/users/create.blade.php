@@ -14,8 +14,8 @@
                     <div class="col-md-12">
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
-                                <img id="profilePreview" src="{{  asset('images/default-user.png') }}"
-                                alt="Profile Picture"  class="img-thumbnail mb-2">
+                                <img id="profilePreview" src="{{ asset('images/default-user.png') }}"
+                                alt="Profile Picture" class="img-thumbnail mb-2">
                                 {{-- <span><i class="ti ti-photo"></i></span> --}}
                             </div>
                             <div class="upload-content">
@@ -25,7 +25,7 @@
                                         <i class="ti ti-file-broken"></i>Upload File
                                     </span>
                                 </div>
-                                <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 @error('profile_picture')
                                     <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                                 @enderror
@@ -97,7 +97,7 @@
                             <label class="col-form-label">Password <span class="text-danger">*</span></label>
                             <div class="icon-form-end">
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                <input type="password" class="form-control icone @error('password') is-invalid @enderror"
                                     name="password">
                                     @error('password')
                                         <span class="invalid-feedback">{{ $message }}</span>

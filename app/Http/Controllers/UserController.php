@@ -26,18 +26,24 @@ class UserController extends Controller
             $data = User::role(['admin', 'staff']);
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($row) {
+                    return '<label class="checkboxs">
+                            <input type="checkbox" class="checkbox-item user_checkbox" data-id="' . $row->id . '">
+                            <span class="checkmarks"></span>
+                        </label>';
+                })
                 ->addColumn('action', function ($row) {
                     $show_btn = '<a href="' . route('users.show', $row->id) . '"
                     class="btn btn-outline-info btn-sm"><i class="bi bi-eye-fill"></i> ' . __('Show') . '</a>';
 
-                    $edit_btn = '<a href="'.route('users.edit',$row->id).'" class="dropdown-item"  data-id="' . $row->id . '"
+                    $edit_btn = '<a href="' . route('users.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     // $delete_btn = '&nbsp;<form action="' . route('users.destroy', $row->id) . '" method="post">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-outline-danger btn-sm"
                     // onclick="return confirm(`' . __('Do you want to delete this admin?') . '`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteUser"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('users.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-'. $row->id.'" >'
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('users.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
 
@@ -55,6 +61,11 @@ class UserController extends Controller
                 ->addColumn('role', function ($user) {
                     return $user->roles->pluck('name')->implode(', '); // Get user roles
                 })
+                ->filterColumn('role', function($query, $keyword) {
+                    $query->whereHas('roles', function($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->editColumn('status', function ($user) {
                     return $user->statusBadge(); // Get user roles
                 })
@@ -64,7 +75,10 @@ class UserController extends Controller
                 ->editColumn('created_at', function ($user) {
                     return  $user->created_at->format('d M Y, h:i A'); // Get user roles
                 })
-                ->rawColumns(['action', 'status'])
+                ->filterColumn('created_at', function ($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(created_at, '%d %b %Y, %h:%i %p') like ?", ["%{$keyword}%"]);
+                })
+                ->rawColumns(['action', 'status','checkbox'])
                 ->make(true);
         }
         return view('users.index', $data);
@@ -76,32 +90,38 @@ class UserController extends Controller
     public function create()
     {
         $data['page_title'] = 'Create User';
-        $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
+        // $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
+        $data['roles'] = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
+
         return view('users.create', $data);
     }
 
     /**
      * Store a newly created resource in storage.
-    */
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
+            'name' => 'required|string|max:255|unique:users,name,NULL,id,deleted_at,NULL',
+            'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'role' => [
                 'required',
                 Rule::exists('roles', 'id')->whereNot('name', 'superadmin') // Exclude superadmin
             ],
-            'phone_no' => 'required|digits_between:10,11|unique:users,phone_no',
+            'phone_no' => 'required|digits_between:10,11|unique:users,phone_no,NULL,id,deleted_at,NULL',
             'password' => 'required|min:6|confirmed',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
+
             'status' => 'required|in:1,0'
         ], [
+            'profile_picture.image' => 'The profile picture must be an image.',
+            'profile_picture.mimes' => 'The profile picture must be a file of type: JPG, JPEG, PNG, or GIF.',
+            'profile_picture.max' => 'The profile picture may not be greater than 2MB.',
+
             'role.exists' => 'Invalid role selected.',
             'password.confirmed' => 'Password and Confirm Password must match.'
         ]);
 
-        // Create user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -121,7 +141,6 @@ class UserController extends Controller
         $user->save();
         // Assign role
         $user->assignRole(Role::find($request->role)->name);
-
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -142,9 +161,9 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone_no' => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id,
+            'name' => 'required|string|max:255|unique:users,name,' . $user->id . ',id,deleted_at,NULL',
+            'email' => 'required|email|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
+            'phone_no' => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
             'role' => 'required|exists:roles,name',
             'password' => 'nullable|min:6|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -190,5 +209,17 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+
+        if (!empty($ids)) {
+            User::whereIn('id', $ids)->delete();
+            return response()->json(['message' => 'Selected users deleted successfully!']);
+        }
+
+        return response()->json(['message' => 'No records selected!'], 400);
     }
 }

@@ -68,6 +68,7 @@ Route::middleware(['auth', 'role:sales'])->group(function () {
 Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Users */
     Route::resource('users', UserController::class);
+    Route::post('/user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete');
 
     /* Grade */
     Route::resource('grade', GradeManagementController::class);

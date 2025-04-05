@@ -36720,3 +36720,8 @@ select.select.addfileddrop{border-color: #E8E8E8;color: #6F6F6F; background-colo
  }
  .nav-tabs .nav-link{color: #2750a0;}
 
+
+ .form-control.icone.is-invalid {
+    background-image: none !important;
+}
+

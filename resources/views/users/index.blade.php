@@ -86,12 +86,14 @@
         <!-- Manage Users List -->
         <div class="table-responsive custom-table">
             <table class="table dataTable no-footer" id="users">
+                <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
-                        {{-- <th class="no-sort"  scope="col">
-                      <label class="checkboxs"> <input type="checkbox" id="select-all"><span class="checkmarks"></span></label>
-                   </th>  --}}
-                        {{-- <th class="no-sort"  scope="col"></th> --}}
+                        <th class="no-sort" scope="col">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all" class="user_checkbox"><span class="checkmarks"></span>
+                            </label>
+                        </th>
                         <th scope="col">Name</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
@@ -102,199 +104,6 @@
                         <th class="text-end" scope="col">Action</th>
                     </tr>
                 </thead>
-                {{-- <tbody>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs">
-                      <input type="checkbox" id="select-all"><span class="checkmarks"></span></label>
-                   </td>
-                   <td data-label="Rating">
-                      <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                   </td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Darlee Robertson <span class="text-default">Facility Manager </span></a></h2>
-                   </td>
-                   <td data-label="Phone">1234567890</td>
-                   <td data-label="Email">robertson@example.com</td>
-                   <td data-label="Role">Admin</td>
-                   <td data-label="Created">25 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-danger">Inactive</span></td>
-                   <td class="text-end" data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs">
-                      <input type="checkbox" id="select-all"><span class="checkmarks"></span></label>
-                   </td>
-                   <td data-label="Rating">
-                      <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                   </td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Sharon Roy<span class="text-default">Installer</span></a></h2>
-                   </td>
-                   <td data-label="Phone">+1 989757485</td>
-                   <td data-label="Email">sharon@example.com</td>
-                   <td data-label="Role">Company Owner</td>
-                   <td data-label="Created">25 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-success">Active</span></td>
-                   <td class="text-end"  data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td  data-label="Checkmark"><label class="checkboxs"> <input type="checkbox" id="select-all"><span class="checkmarks"></span> </label></td>
-                   <td data-label="Rating">
-                      <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                   </td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Darlee Robertson <span class="text-default">Vaughan Lewis </span></a></h2>
-                   </td>
-                   <td data-label="Phone">1235667890</td>
-                   <td data-label="Email">vaughan12@example.com</td>
-                   <td data-label="Role">Deal Owner</td>
-                   <td data-label="Created">26 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-danger">Inactive</span></td>
-                   <td class="text-end" data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span> </label></td>
-                   <td data-label="Rating">
-                      <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                   </td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Jessica Louise<span class="text-default">Test Engineer</span></a></h2>
-                   </td>
-                   <td data-label="Phone">1224567890</td>
-                   <td data-label="Email">robertson@example.com</td>
-                   <td data-label="Role">Project Manager</td>
-                   <td data-label="Created">27 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-success">Active</span></td>
-                   <td class="text-end" data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span></label>
-                   </td>
-                   <td data-label="Rating"><div class="set-star rating-select"><i class="fa fa-star"></i></div></td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Darlee Robertson <span class="text-default">Vaughan Lewis </span></a></h2>
-                   </td>
-                   <td data-label="Phone">1235667890</td>
-                   <td data-label="Email">vaughan12@example.com</td>
-                   <td data-label="Role">Client</td>
-                   <td data-label="Created">26 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-success">Active</span></td>
-                   <td class="text-end" data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span></label></td>
-                   <td data-label="Rating"><div class="set-star rating-select"><i class="fa fa-star"></i></div> </td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Jessica Louise<span class="text-default">Test Engineer</span></a></h2>
-                   </td>
-                   <td data-label="Phone">1224567890</td>
-                   <td data-label="Email">robertson@example.com</td>
-                   <td data-label="Role">Admin</td>
-                   <td data-label="Created">27 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-success">Active</span></td>
-                   <td class="text-end" data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs">
-                      <input type="checkbox" id="select-all"><span class="checkmarks"></span></label>
-                   </td>
-                   <td data-label="Rating"><div class="set-star rating-select"><i class="fa fa-star"></i></div></td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Darlee Robertson <span class="text-default">Vaughan Lewis </span></a></h2>
-                   </td>
-                   <td data-label="Phone">1235667890</td>
-                   <td data-label="Email">vaughan12@example.com</td>
-                   <td data-label="Role">Project Manager</td>
-                   <td data-label="Created">26 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-success">Active</span></td>
-                   <td class="text-end" data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-                <tr>
-                   <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox" id="select-all"><span class="checkmarks"></span></label></td>
-                   <td data-label="Rating"><div class="set-star rating-select"><i class="fa fa-star"></i></div></td>
-                   <td data-label="Name">
-                      <h2 class="d-flex align-items-center"><a href="javascript:void(0);" class="avatar avatar-sm me-2"><img class="w-auto h-auto" src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);" class="d-flex flex-column">Jessica Louise<span class="text-default">Test Engineer</span></a></h2>
-                   </td>
-                   <td data-label="Phone">1224567890</td>
-                   <td data-label="Email">robertson@example.com</td>
-                   <td data-label="Role">Deal Owner</td>
-                   <td data-label="Created">27 Sep 2023, 12:12 pm</td>
-                   <td data-label="Last Activity">2 mins ago</td>
-                   <td data-label="Status"><span class="badge badge-pill badge-status bg-success">Active</span></td>
-                   <td class="text-end"  data-label="Action">
-                      <div class="dropdown table-action">
-                         <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="edit-manage-users.html"><i class="ti ti-edit text-blue"></i> Edit</a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i> Delete</a>
-                         </div>
-                      </div>
-                   </td>
-                </tr>
-             </tbody> --}}
             </table>
         </div>
 
@@ -361,16 +170,6 @@
 @endsection
 @section('script')
 <script>
-    //  $(document).ready(function() {
-    //      $('#users').DataTable({
-    //          "searching": false,
-    //          "paging": false,
-    //          "ordering": true,
-    //           "info": false,
-
-    //      });
-    //  });
-
     var users_table = $('#users').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
@@ -379,7 +178,14 @@
         responsive: true,
         dom: 'lrtip',
         ajax: "{{ route('users.index') }}",
-        columns: [{
+        columns: [
+            {
+                data: 'checkbox',
+                name: 'checkbox',
+                orderable: false,
+                searchable: false
+            },
+            {
                 data: 'name',
                 name: 'name',
                 searchable: true
@@ -481,28 +287,104 @@
         let userId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + userId); // Select the correct form
         console.log(form);
+
+        confirmDeletion(function() {
+            form.submit(); // Submit the form if confirmed
+        });
+
+        // Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "You want to remove this user? Once deleted, it cannot be recovered.",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes, delete it!',
+        //     cancelButtonText: 'Cancel',
+        //     customClass: {
+        //         popup: 'my-custom-popup', // Custom class for the popup
+        //         title: 'my-custom-title', // Custom class for the title
+        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+        //         icon: 'my-custom-icon swal2-warning'
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         form.submit(); // Submit form if confirmed
+        //     }
+        // });
+    });
+
+     /***** Bulk Delete *****/
+     $('#select-all').change(function() {
+        // Check/uncheck all checkboxes when the select-all checkbox is clicked
+        $('.user_checkbox').prop('checked', this.checked);
+
+    });
+
+    $(document).on('change', '.user_checkbox', function () {
+        let count = $('.user_checkbox:checked').length; // Count checked checkboxes
+        $('#checked-count').text(count); // Display count in an element
+        if(count > 0){
+            $('#bulk_delete_button').show();
+        }else{
+            $('#bulk_delete_button').hide();
+        }
+    });
+
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+       confirmDeletion(function() {
+            var selectedIds = $('.user_checkbox:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedIds.length > 0) {
+                // Make an AJAX request to delete the selected items
+                $.ajax({
+                    url: "{{ route('user.bulkDelete') }}",
+                    method: 'POST',
+                    data: {
+                        ids: selectedIds, // Send the selected IDs
+                        _token: '{{ csrf_token() }}' // CSRF token for security
+                    },
+                    success: function(response) {
+                        // Swal.fire("Deleted!", response.message, "success");
+                        show_success(response.message);
+                        // Optionally, reload the page to reflect changes
+                        users_table.ajax.reload();
+                        // location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        show_error('An error occurred while deleting.');
+                        // alert("An error occurred while deleting.");
+                    }
+                });
+            } else {
+                alert("No items selected.");
+            }
+        });
+        // Get the IDs of selected checkboxes
+    });
+
+    function confirmDeletion(callback) {
         Swal.fire({
             title: "Are you sure?",
-            text: "You want to remove this user? Once deleted, it cannot be recovered.",
+            text: "You want to remove this User? Once deleted, it cannot be recovered.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
             customClass: {
-                popup: 'my-custom-popup', // Custom class for the popup
-                title: 'my-custom-title', // Custom class for the title
-                confirmButton: 'btn btn-primary', // Custom class for the confirm button
-                cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
                 icon: 'my-custom-icon swal2-warning'
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit(); // Submit form if confirmed
+                callback(); // Execute callback function if confirmed
             }
         });
-    });
-
-    // $(".dataTables_filter").hide();
-    // $(".dataTables_length").hide();
+    }
 </script>
 @endsection

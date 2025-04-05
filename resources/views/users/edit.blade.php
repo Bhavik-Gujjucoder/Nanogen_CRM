@@ -16,9 +16,9 @@
                     <div class="col-md-12">
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
-                                <img id="profilePreview" src="{{ $user->profile_picture ? asset('storage/profile_pictures/' . $user->profile_picture) : asset('images/default-user.png') }} " 
+                                <img id="profilePreview" src="{{ $user->profile_picture ? asset('storage/profile_pictures/' . $user->profile_picture) : asset('images/default-user.png') }} "
                                 alt="Profile Picture"class="img-thumbnail mb-2" width="100%" height="100%" alt="Profile Picture">
-                                
+
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn @error('profile_picture') is-invalid @enderror">
@@ -27,22 +27,22 @@
                                         <i class="ti ti-file-broken"></i>Upload File
                                     </span>
                                 </div>
-                                <p>JPG, GIF, or PNG. Max size of 2MB</p>
+                                <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 @error('profile_picture')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                    <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Name -->
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="col-form-label"> Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                            <input type="text" class="form-control @error('name') is-invalid @enderror"
                                 name="name" value="{{ old('name', $user->name) }}">
                             @error('name')
-                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -51,10 +51,10 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
                                 name="email" value="{{ old('email', $user->email) }}">
                             @error('email')
-                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                                 @endforeach
                             </select>
                             @error('role')
-                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                             <input type="number" class="form-control @error('phone_no') is-invalid @enderror"
                                 name="phone_no" value="{{ old('phone_no', $user->phone_no) }}" oninput="this.value = this.value.slice(0, 11)">
                             @error('phone_no')
-                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" name="password">
                                 @error('password')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                    <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password">
                                 @error('confirm_password')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                    <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
