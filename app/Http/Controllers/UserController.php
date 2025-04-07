@@ -23,7 +23,7 @@ class UserController extends Controller
         $data['page_title'] = 'Users';
 
         if ($request->ajax()) {
-            $data = User::role(['admin', 'staff']);
+            $data = User::role(['admin', 'staff','reporting manager']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -151,7 +151,8 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Edit User';
         $data['user'] = $user;
-        $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
+        // $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
+        $data['roles'] = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
         return view('users.edit', $data);
     }
 

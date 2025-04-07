@@ -13,23 +13,26 @@ return new class extends Migration
     {
         Schema::create('sales_person_details', function (Blueprint $table) {
             $table->id();
-             // Basic info
-             $table->string('first_name');
-             $table->string('last_name');
+            // Basic info
+            $table->string('first_name');
+            $table->string('last_name');
 
-             // Job details
-             $table->string('employee_id')->unique();
-             $table->string('department')->nullable();
-             $table->string('position')->nullable();
-             $table->bigInteger('reporting_manager')->nullable();
-             $table->date('joining_date')->nullable();
+            // Job details fields badha aavi gya ae conform kari levas
+            $table->string('employee_id')->unique();
+            $table->bigInteger('department_id')->nullable();
+            $table->bigInteger('position_id')->nullable();
+            $table->bigInteger('reporting_manager_id')->nullable();
+            $table->date('date')->nullable();
 
-             // Address
-             $table->text('street_address')->nullable();
-             $table->integer('city')->nullable();
-             $table->integer('state')->nullable();
-             $table->string('postal_code')->nullable();
-             $table->string('country')->nullable();
+            // Address
+            $table->text('street_address')->nullable();
+            $table->bigInteger('city_id')->nullable();
+            $table->bigInteger('state_id')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->bigInteger('country_id')->nullable();
+
+             // timestamps
+            $table->softDeletes();
             $table->timestamps();
         });
     }

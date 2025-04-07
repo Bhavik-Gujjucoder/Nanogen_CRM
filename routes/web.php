@@ -16,6 +16,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\CityManagementController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
+use App\Http\Controllers\SalesPersonController;
 use App\Http\Controllers\StateManagementController;
 
 // Route::get('/', function () {
@@ -43,12 +44,12 @@ Route::get('/clear', function () {
     return 'Cache Clear Succesfully...';
 });
 
+Route::resource('roles', RoleController::class);
+Route::resource('permissions', PermissionController::class);
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class);
 });
 
 Route::middleware(['auth', 'role:staff'])->group(function () {
@@ -92,6 +93,10 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* City Management */
     Route::resource('city', CityManagementController::class);
     Route::post('/city/bulk-delete', [CityManagementController::class, 'bulkDelete'])->name('city.bulkDelete');
+
+    /* Sales Person Details */
+    Route::resource('sales_person', SalesPersonController::class);
+    Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
