@@ -82,7 +82,7 @@ class SalesPersonController extends Controller
 
     /**
      * Show the form for creating a new resource.
-    */
+     */
     public function create()
     {
         $data['page_title']         = 'Basic Information';
@@ -99,6 +99,15 @@ class SalesPersonController extends Controller
 
         return view('admin.sales_person.create', $data);
     }
+
+
+    /***  AJAX to fetch cities by state ID  ***/
+    public function getCitiesByState(Request $request)
+    {
+        $cities = CityManagement::where('state_id', $request->state_id)->where('status', 1)->get();
+        return response()->json($cities);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -123,7 +132,7 @@ class SalesPersonController extends Controller
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
-        ],[
+        ], [
             'department_id.required'        => 'The department field is required.',
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',
@@ -188,9 +197,12 @@ class SalesPersonController extends Controller
         $data['reporting_managers'] = User::role(['reportingmanager'])->get();
         $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
         $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
+        $data['countries']          = Country::where('status', 1)->get()->all();
+
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
-        $data['countries']          = Country::where('status', 1)->get()->all();
+
+
         return view('admin.sales_person.edit', $data);
     }
 
@@ -218,7 +230,7 @@ class SalesPersonController extends Controller
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
-        ],[
+        ], [
             'department_id.required'        => 'The department field is required.',
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',

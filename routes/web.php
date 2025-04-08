@@ -99,6 +99,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Sales Person Details */
     Route::resource('sales_person', SalesPersonController::class);
     Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
+    Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

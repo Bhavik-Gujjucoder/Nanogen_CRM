@@ -257,28 +257,11 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label class="col-form-label">City <span class="text-danger">*</span></label>
-                            <select id="inputCity" class="form-select @error('city_id') is-invalid @enderror"
-                                name="city_id">
-                                <option value="">Select city</option>
-                                @foreach ($cities as $city)
-                                    <option value="{{ $city->id }}"
-                                        {{ old('city_id', $detail->city_id) == $city->id ? 'selected' : '' }}>
-                                        {{ $city->city_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('city_id')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">State/Province <span class="text-danger">*</span></label>
-                            <select id="inputState" class="form-select @error('state_id') is-invalid @enderror"
+                            <select id="stateDropdown" class="form-select @error('state_id') is-invalid @enderror"
                                 name="state_id">
                                 <option value="">Select state</option>
                                 @foreach ($states as $state)
@@ -293,6 +276,26 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="col-form-label">City <span class="text-danger">*</span></label>
+                            <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
+                                name="city_id">
+                                <option value="">Select city</option>
+                                {{-- @foreach ($cities as $city)
+                                    <option value="{{ $city->id }}"
+                                        {{ old('city_id', $detail->city_id) == $city->id ? 'selected' : '' }}>
+                                        {{ $city->city_name }}
+                                    </option>
+                                @endforeach --}}
+                            </select>
+                            @error('city_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
@@ -334,6 +337,43 @@
 @endsection
 
 @section('script')
+<script>
+    $(document).ready(function () {
+        const selectedStateId = '{{ $detail->state_id }}';
+        const selectedCityId = '{{ $detail->city_id }}';
+
+        // Load cities on page load
+        if (selectedStateId) {
+            loadCities(selectedStateId, selectedCityId);
+        }
+
+        // When user changes state
+        $('#stateDropdown').on('change', function () {
+            const stateId = $(this).val();
+            loadCities(stateId, null); // reset selected city
+        });
+
+        function loadCities(stateId, selectedCityId) {
+            $('#cityDropdown').html('<option value="">Loading...</option>');
+
+            $.ajax({
+                url: "{{ route('get.cities') }}",
+                type: "POST",
+                data: {
+                    state_id: stateId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function (data) {
+                    $('#cityDropdown').empty().append('<option value="">Select City</option>');
+                    $.each(data, function (index, city) {
+                        const selected = city.id == selectedCityId ? 'selected' : '';
+                        $('#cityDropdown').append('<option value="' + city.id + '" ' + selected + '>' + city.city_name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+</script>
 <script>
     flatpickr("#datePicker", {
         dateFormat: "d-m-Y",

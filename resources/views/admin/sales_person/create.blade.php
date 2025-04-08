@@ -1,21 +1,21 @@
 @extends('layouts.main')
 @section('content')
-<style>
-    /* Header (month/year) styling */
-.flatpickr-current-month {
-  font-weight: 600;
-  font-size: 16px;
-  color: #000;
-}
+    <style>
+        /* Header (month/year) styling */
+        .flatpickr-current-month {
+            font-weight: 600;
+            font-size: 16px;
+            color: #000;
+        }
 
-/* Selected date styling */
-.flatpickr-day.selected {
-  background: #007bff !important;
-  color: #fff !important;
-  font-weight: 600;
-  border-radius: 6px;
-}
-</style>
+        /* Selected date styling */
+        .flatpickr-day.selected {
+            background: #007bff !important;
+            color: #fff !important;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+    </style>
 @section('title')
     {{ $page_title }}
 @endsection
@@ -95,8 +95,9 @@
 
                             <div class="icon-form-end">
                                 <span class="form-icon gc-icon-set"><i class="ti ti-eye-off"></i></span>
-                                <input type="password" class="form-control icone @error('password') is-invalid @enderror"
-                                    name="password" placeholder="Password">
+                                <input type="password"
+                                    class="form-control icone @error('password') is-invalid @enderror" name="password"
+                                    placeholder="Password">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -210,28 +211,12 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label class="col-form-label">City <span class="text-danger">*</span></label>
-                            <select id="inputCity" class="form-select @error('city_id') is-invalid @enderror"
-                                name="city_id">
-                                <option value="">Select city</option>
-                                @foreach ($cities as $city)
-                                    <option value="{{ $city->id }}"
-                                        {{ old('city_id') == $city->id ? 'selected' : '' }}>{{ $city->city_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('city_id')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">State/Province <span class="text-danger">*</span></label>
-                            <select id="inputState" class="form-select @error('state_id') is-invalid @enderror"
-                                name="state_id">
+                            <select id="stateDropdown" class="form-select @error('state_id') is-invalid @enderror"
+                                name="state_id"> {{-- id="inputState" --}}
                                 <option value="">Select state</option>
                                 @foreach ($states as $state)
                                     <option value="{{ $state->id }}"
@@ -244,6 +229,25 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="col-form-label">City <span class="text-danger">*</span></label>
+                            <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
+                                name="city_id"> {{-- id="inputCity" --}}
+                                <option value="">Select city</option>
+                                {{-- @foreach ($cities as $city)
+                                    <option value="{{ $city->id }}"
+                                        {{ old('city_id') == $city->id ? 'selected' : '' }}>{{ $city->city_name }}
+                                    </option>
+                                @endforeach --}}
+                            </select>
+                            @error('city_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
@@ -283,6 +287,35 @@
 @endsection
 
 @section('script')
+<script>
+    $(document).ready(function() {
+        $('#stateDropdown').on('change', function() {
+            var stateID = $(this).val();
+            $('#cityDropdown').html('<option value="">Loading...</option>');
+
+            if (stateID) {
+                $.ajax({
+                    url: "{{ route('get.cities') }}",
+                    type: "POST",
+                    data: {
+                        state_id: stateID,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        $('#cityDropdown').empty().append(
+                            '<option value="">Select City</option>');
+                        $.each(data, function(key, city) {
+                            $('#cityDropdown').append('<option value="' + city.id +
+                                '">' + city.city_name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#cityDropdown').html('<option value="">-- Select City --</option>');
+            }
+        });
+    });
+</script>
 <script>
     flatpickr("#datePicker", {
         dateFormat: "d-m-Y",
