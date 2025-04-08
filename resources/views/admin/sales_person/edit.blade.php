@@ -1,5 +1,21 @@
 @extends('layouts.main')
 @section('content')
+    <style>
+        /* Header (month/year) styling */
+        .flatpickr-current-month {
+            font-weight: 600;
+            font-size: 16px;
+            color: #000;
+        }
+
+        /* Selected date styling */
+        .flatpickr-day.selected {
+            background: #007bff !important;
+            color: #fff !important;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+    </style>
 @section('title')
     {{ $page_title }}
 @endsection
@@ -51,14 +67,17 @@
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn">
-                                    <input type="file" name="profile_picture" accept="image/*"
-                                        onchange="previewProfilePicture(event)">
+                                    <input type="file" name="profile_picture" accept="image/*" class="form-control @error('profile_picture') is-invalid @enderror"
+                                        onchange="previewProfilePicture(event)" >
                                     <span>
                                         <i class="ti ti-file-broken"></i> Upload Profile Image
                                     </span>
                                 </div>
-                                <p>JPG, GIF or PNG. Max size of 800 KB</p>
-                                <div id="profile_picture" class="error-message text-danger"></div>
+                                <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                {{-- <div id="profile_picture" class="error-message text-danger"></div> --}}
+                                @error('profile_picture')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -196,17 +215,30 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="col-form-label">Date <span class="text-danger">*</span></label>
                             <div class="icon-form">
                                 <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                                <input type="text" name="date" value="{{ old('date', $detail->date) }}"
+                                <input type="text" name="date" vvalue="{{ old('date', optional($detail->date)->format('d-m-Y')) }}"
                                     class="form-control datetimepicker @error('date') is-invalid @enderror">
                             </div>
                             @error('date')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
+                        </div> --}}
+                        <div class="mb-3">
+                            <label class="col-form-label">Date <span class="text-danger">*</span></label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                                <input type="text" name="date" id="datePicker"
+                                    value="{{ old('date', isset($detail) ? \Carbon\Carbon::parse($detail->date)->format('d-m-Y') : now()->format('d-m-Y')) }}"
+                                    class="form-control @error('date') is-invalid @enderror">
+                            </div>
+                            @error('date')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -303,6 +335,24 @@
 
 @section('script')
 <script>
+    flatpickr("#datePicker", {
+        dateFormat: "d-m-Y",
+        maxDate: "today",
+        defaultDate: "{{ old('date', isset($detail) ? \Carbon\Carbon::parse($detail->date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+        onReady: removeTodayHighlight,
+        onMonthChange: removeTodayHighlight,
+        onYearChange: removeTodayHighlight,
+        onOpen: removeTodayHighlight,
+        onChange: removeTodayHighlight
+    });
+
+    function removeTodayHighlight(selectedDates, dateStr, instance) {
+        const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");
+        if (todayElem && !todayElem.classList.contains("selected")) {
+            todayElem.classList.remove("today");
+        }
+    }
+
     $(document).ready(function() {
         $(document).on('click', '.form-icon', function() {
             let input = $(this).siblings("input");

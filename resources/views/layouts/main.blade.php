@@ -22,6 +22,10 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
     <link href="{{ asset('css/toastify.css') }}" rel="stylesheet">
+        {{-- datepicker  --}}
+        {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> --}}
+        <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
+        {{-- END --}}
 
     <!-- include summernote css/js -->
     <link rel="stylesheet" href="{{ asset('css/summernote-bs4.min.css') }}">
@@ -439,6 +443,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/summernote-bs4.min.js') }}"></script>
     {{-- End summernote --}}
+
+      {{-- datepicker  --}}
+      {{-- <script src="https://cdn.jsdelivr.net/npm/flatpickr.js"></script> --}}
+      <script src="{{ asset('js/flatpickr.js') }}"></script>
+      {{-- END --}}
 
     @if (session('success'))
         <script>

@@ -44044,3 +44044,20 @@ select.select.addfileddrop {
 .icon-set .gc-icon-set {
     top: 21px !important;
 }
+
+
+
+/* Header (month/year) styling */
+/* .flatpickr-current-month {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+} */
+
+/* Selected date styling */
+/* .flatpickr-day.selected {
+  background: #007bff !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 6px;
+} */

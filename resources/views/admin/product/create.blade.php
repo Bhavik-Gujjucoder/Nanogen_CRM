@@ -26,7 +26,7 @@
                                         <i class="ti ti-file-broken"></i> Upload Product Image
                                     </span>
                                 </div>
-                                <p>JPG, GIF or PNG. Max size of 800 KB</p>
+                                <p>JPG, GIF or PNG. Max size of 2MB</p>
                                 <div id="product_image_error" class="error-message text-danger"></div>
                             </div>
                         </div>
@@ -176,26 +176,46 @@
             let file = product_image_field[0].files[0]; // Get the selected file
 
             // if (!product_image_field.val().trim()) {
-            if (!file) {
-                $("#product_image_error").html("The product image is required.");
-                valid = false;
-            } else {
-                // Check file type (JPG, GIF, PNG)
+            // if (!file) {
+            //     $("#product_image_error").html("The product image is required.");
+            //     valid = false;
+            // } else {
+            //     // Check file type (JPG, GIF, PNG)
+            //     let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+            //     let fileExtension = file.name.split('.').pop().toLowerCase();
+
+            //     if (!validExtensions.includes(fileExtension)) {
+            //         $("#product_image_error").html(
+            //             "Invalid file type. Only JPG, GIF, and PNG are allowed.");
+            //         valid = false;
+            //     }
+
+            //     // Check file size (max 800KB)
+            //     if (file.size > 2097152) { // 2MB = 2,097,152 bytes || 800KB = 800000 bytes  ||  8KB = 8,192 bytes.
+            //         $("#product_image_error").html("File size must be less than 2MB.");
+            //         valid = false;
+            //     }
+            // }
+
+            // Only validate if file is selected
+            if (file) {
                 let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
                 let fileExtension = file.name.split('.').pop().toLowerCase();
 
+                // Validate extension
                 if (!validExtensions.includes(fileExtension)) {
                     $("#product_image_error").html(
                         "Invalid file type. Only JPG, GIF, and PNG are allowed.");
                     valid = false;
                 }
 
-                // Check file size (max 800KB)
-                if (file.size > 800000) { // 800KB = 800000 bytes  ||  8KB = 8,192 bytes.
-                    $("#product_image_error").html("File size must be less than 800KB.");
+                // Validate file size (max 2MB)
+                if (file.size > 2097152) {  //2097152
+                    $("#product_image_error").html("File size must be less than 2MB.");
                     valid = false;
                 }
             }
+
 
 
             /* Validate Product Name */

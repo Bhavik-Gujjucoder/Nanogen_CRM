@@ -1,5 +1,21 @@
 @extends('layouts.main')
 @section('content')
+<style>
+    /* Header (month/year) styling */
+.flatpickr-current-month {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+}
+
+/* Selected date styling */
+.flatpickr-day.selected {
+  background: #007bff !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 6px;
+}
+</style>
 @section('title')
     {{ $page_title }}
 @endsection
@@ -14,21 +30,22 @@
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
                                 <img id="profilePreview" src="{{ asset('images/default-user.png') }}"
-                                alt="Profile Picture" class="img-thumbnail mb-2">
+                                    alt="Profile Picture" class="img-thumbnail mb-2">
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn">
-                                    <input type="file" name="profile_picture" id="profile_picture" onchange="previewProfilePicture(event)"
+                                    <input type="file" name="profile_picture" id="profile_picture"
+                                        onchange="previewProfilePicture(event)"
                                         class="form-control @error('profile_picture') is-invalid @enderror">
                                     <span>
                                         <i class="ti ti-file-broken"></i>Upload Profile Image
                                     </span>
                                 </div>
-                                <p>JPG, JPEG, GIF or PNG. Max size of 800K</p>
+                                <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
+                                @error('profile_picture')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            @error('profile_picture')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -121,7 +138,9 @@
                             <select class="select @error('department_id') is-invalid @enderror" name="department_id">
                                 <option value="">Select option</option>
                                 @foreach ($departments as $d)
-                                    <option value="{{ $d->id }}"  {{ old('department_id') == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
+                                    <option value="{{ $d->id }}"
+                                        {{ old('department_id') == $d->id ? 'selected' : '' }}>{{ $d->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('department_id')
@@ -135,7 +154,9 @@
                             <select class="select @error('position_id') is-invalid @enderror" name="position_id">
                                 <option value="">Select option</option>
                                 @foreach ($positions as $p)
-                                    <option value="{{ $p->id }}"  {{ old('position_id') == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
+                                    <option value="{{ $p->id }}"
+                                        {{ old('position_id') == $p->id ? 'selected' : '' }}>{{ $p->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('position_id')
@@ -150,7 +171,9 @@
                                 class="select @error('reporting_manager_id') is-invalid @enderror">
                                 <option value="">Select option</option>
                                 @foreach ($reporting_managers as $manager)
-                                    <option value="{{ $manager->id }}" {{ old('reporting_manager_id') == $manager->id ? 'selected' : '' }}>{{ $manager->name }}</option>
+                                    <option value="{{ $manager->id }}"
+                                        {{ old('reporting_manager_id') == $manager->id ? 'selected' : '' }}>
+                                        {{ $manager->name }}</option>
                                 @endforeach
                             </select>
                             @error('reporting_manager_id')
@@ -163,8 +186,8 @@
                             <label class="col-form-label">Date <span class="text-danger">*</span></label>
                             <div class="icon-form">
                                 <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                                <input type="text" name="date" value="{{ old('date') }}"
-                                    class="form-control datetimepicker @error('date') is-invalid @enderror">
+                                <input type="text" name="date" value="{{ old('date') }}" id="datePicker"
+                                    class="form-control @error('date') is-invalid @enderror">
                             </div>
                             @error('date')
                                 <span class="text-danger">{{ $message }}</span>
@@ -261,6 +284,24 @@
 
 @section('script')
 <script>
+    flatpickr("#datePicker", {
+        dateFormat: "d-m-Y",
+        maxDate: "today",
+        defaultDate: "{{ old('date', isset($detail) ? \Carbon\Carbon::parse($detail->date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+        onReady: removeTodayHighlight,
+        onMonthChange: removeTodayHighlight,
+        onYearChange: removeTodayHighlight,
+        onOpen: removeTodayHighlight,
+        onChange: removeTodayHighlight
+    });
+
+    function removeTodayHighlight(selectedDates, dateStr, instance) {
+        const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");
+        if (todayElem && !todayElem.classList.contains("selected")) {
+            todayElem.classList.remove("today");
+        }
+    }
+
     $(document).ready(function() {
         $(document).on('click', '.form-icon', function() {
             let input = $(this).siblings("input");

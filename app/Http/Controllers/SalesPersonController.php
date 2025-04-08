@@ -26,7 +26,6 @@ class SalesPersonController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Sales Person';
-
         if ($request->ajax()) {
             $data = SalesPersonDetail::with('user');
             return DataTables::of($data)
@@ -54,7 +53,6 @@ class SalesPersonController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-
                 ->editColumn('first_name', function ($row) {
                     $user = $row->user;
                     $profilePic = $user && !empty($user->profile_picture)
@@ -77,29 +75,27 @@ class SalesPersonController extends Controller
                 ->editColumn('user.email', function ($row) {
                     return $row->user ? $row->user->email : '-';
                 })
-
                 ->rawColumns(['checkbox', 'action', 'first_name'])
                 ->make(true);
         }
-
         return view('admin.sales_person.index', $data);
     }
 
     /**
      * Show the form for creating a new resource.
-     */
+    */
     public function create()
     {
-        $data['page_title'] = 'Basic Information';
-        $data['reporting_managers'] = User::role(['reporting manager'])->get();
-        $data['departments'] = SalesPersonDepartment::where('status', 1)->get()->all();
-        $data['positions'] = SalesPersonPosition::where('status', 1)->get()->all();
-        $data['states'] = StateManagement::where('status', 1)->get()->all();
-        $data['cities'] = CityManagement::where('status', 1)->get()->all();
-        $data['countries'] = Country::where('status', 1)->get()->all();
+        $data['page_title']         = 'Basic Information';
+        $data['reporting_managers'] = User::role(['reportingmanager'])->get();
+        $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
+        $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
+        $data['states']             = StateManagement::where('status', 1)->get()->all();
+        $data['cities']             = CityManagement::where('status', 1)->get()->all();
+        $data['countries']          = Country::where('status', 1)->get()->all();
 
         $latest_employee_id = SalesPersonDetail::withTrashed()->max(DB::raw("CAST(SUBSTRING(employee_id, 3) AS UNSIGNED)"));
-        $nextId = $latest_employee_id ? $latest_employee_id + 1 : 1;
+        $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
         $data['employeeId'] = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
         return view('admin.sales_person.create', $data);
@@ -112,16 +108,17 @@ class SalesPersonController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'first_name'           => 'required|string|max:255|unique:sales_person_details,first_name,NULL,id,deleted_at,NULL',
-            'last_name'            => 'required|string|max:255|unique:sales_person_details,last_name,NULL,id,deleted_at,NULL',
+            'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
+            'first_name'           => 'required|string|max:255',
+            'last_name'            => 'required|string|max:255',
             'email'                => 'required|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
             'phone_number'         => 'required|numeric|digits_between:10,15|unique:users,phone_no,NULL,id,deleted_at,NULL',
-            'password'             => 'required|string|min:6|confirmed', // use password_confirmation field too
+            'password'             => 'required|string|min:6|confirmed',     /*use password_confirmation field too*/
             // 'employee_id'          => 'required|string|max:255|unique:sales_person_details,employee_id,NULL,id,deleted_at,NULL',
             'department_id'        => 'required|exists:sales_person_department,id',
             'position_id'          => 'required|exists:sales_person_position,id',
-            'reporting_manager_id' => 'required', // allow null if optional
-            'date'                 => 'required|date_format:d-m-Y|before:today',
+            'reporting_manager_id' => 'required',
+            'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
             'city_id'              => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
@@ -163,6 +160,8 @@ class SalesPersonController extends Controller
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
 
+
+            $user->assignRole('sales');
             DB::commit();
             return redirect()->route('sales_person.index')->with('success', 'Sales person created successfully!');
         } catch (\Exception $e) {
@@ -179,7 +178,7 @@ class SalesPersonController extends Controller
     {
         $data['page_title']         = 'Edit Basic Information';
         $data['detail']             = SalesPersonDetail::findOrFail($id);
-        $data['reporting_managers'] = User::role(['reporting manager'])->get();
+        $data['reporting_managers'] = User::role(['reportingmanager'])->get();
         $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
         $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
         $data['states']             = StateManagement::where('status', 1)->get()->all();
@@ -195,17 +194,17 @@ class SalesPersonController extends Controller
     public function update(Request $request, string $id)
     {
         $salesDetail = SalesPersonDetail::findOrFail($id);
-        $user = User::where('id', $salesDetail->user_id)->first();
+        $user        = User::where('id', $salesDetail->user_id)->first();
         $request->validate([
-            'profile_picture'      => 'nullable|image|mimes:jpeg,jpg,png,gif|max:800',
+            'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
             'first_name'           => 'required|string|max:255',
             'last_name'            => 'required|string|max:255',
             'email'                => 'required|email|max:255|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
             'phone_number'         => 'required|numeric|digits_between:10,15|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
-            'password'             => 'nullable|string|min:6|confirmed', // use password_confirmation field too
+            'password'             => 'nullable|string|min:6|confirmed',   /* use password_confirmation field too */
             'department_id'        => 'required|exists:sales_person_department,id',
             'position_id'          => 'required|exists:sales_person_position,id',
-            'reporting_manager_id' => 'required', // allow null if optional
+            'reporting_manager_id' => 'required',
             'date'                 => 'required|date_format:d-m-Y|before:today',
             'street_address'       => 'required|string|max:255',
             'city_id'              => 'required|exists:city_management,id',
@@ -216,13 +215,13 @@ class SalesPersonController extends Controller
 
         DB::beginTransaction();
         try {
-
             $user->update([
                 'name'     => $request->first_name . ' ' . $request->last_name,
                 'email'    => $request->email,
                 'phone_no' => $request->phone_number,
             ]);
 
+            $user->assignRole('sales');
             if ($request->filled('password')) {
                 $user->update(['password' => Hash::make($request->password)]);
             }
@@ -267,9 +266,7 @@ class SalesPersonController extends Controller
     public function destroy(string $id)
     {
         $detail = SalesPersonDetail::findOrFail($id);
-        $user = User::where('id', $detail->user_id)->first();
-
-        // dd($detail,$user);
+        $user   = User::where('id', $detail->user_id)->first();
 
         if ($user->profile_picture) {
             Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
@@ -281,13 +278,10 @@ class SalesPersonController extends Controller
     }
 
 
-
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-
         if (!empty($ids) && is_array($ids)) {
-
             $details = SalesPersonDetail::whereIn('id', $ids)->get()->all();
             foreach ($details as $key => $detail) {
                 $user = User::where('id', $detail->user_id)->first();
@@ -297,10 +291,8 @@ class SalesPersonController extends Controller
                 $user->delete();
                 $detail->delete();
             }
-
             return response()->json(['message' => 'Selected users deleted successfully!']);
         }
-
         return response()->json(['message' => 'No records selected!'], 400);
     }
 }

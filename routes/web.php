@@ -64,6 +64,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:sales'])->group(function () {
     Route::get('/sales', [HomeController::class, 'sales_index'])->name('sales.dashboard');
+
 });
 
 Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {

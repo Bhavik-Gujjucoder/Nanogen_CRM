@@ -20,7 +20,6 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Product Catalogue';
-
         if ($request->ajax()) {
             $data = Product::query();
             return DataTables::of($data)
@@ -48,7 +47,6 @@ class ProductController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-
                 ->editColumn('product_name', function ($product) {
                     return '<a href="' . asset("storage/product_images/" . $product->product_image) . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                                              <img class="" src="' . asset("storage/product_images/" . $product->product_image) . '" alt="User Image"></a>  ' . $product->product_name;
@@ -59,17 +57,14 @@ class ProductController extends Controller
                 ->editColumn('grade_id', function ($product) {
                     return $product->grade ? $product->grade->name : '-';
                 })
-
                 // ->filterColumn('value', function ($query, $keyword) {
                 //     $query->whereHas('variant_options', function ($q) use ($keyword) {
                 //         $q->where('value', 'LIKE', "%{$keyword}%");
                 //     });
                 // })
-
                 ->editColumn('status', function ($product) {
                     return $product->statusBadge();
                 })
-
                 ->rawColumns(['checkbox', 'product_name', 'action', 'status']) //'value',
                 ->make(true);
         }
@@ -84,9 +79,8 @@ class ProductController extends Controller
     {
         $data['page_title'] = 'Create Product Catalogue';
         $data['variations'] = Variation::where('status', 1)->get()->all();
-        $data['category'] = Category::where('status', 1)->get()->all();
-        $data['grads'] = GradeManagement::where('status', 1)->get()->all();
-
+        $data['category']   = Category::where('status', 1)->get()->all();
+        $data['grads']      = GradeManagement::where('status', 1)->get()->all();
         return view('admin.product.create', $data);
     }
 
@@ -97,7 +91,7 @@ class ProductController extends Controller
     {
         $product = Product::create($request->only(['product_name', 'category_id', 'grade_id', 'status']));
         if ($request->hasFile('product_image')) {
-            $file = $request->file('product_image');
+            $file     = $request->file('product_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('product_images', $filename, 'public');
             /** Save to storage/app/public/product_images **/
@@ -106,17 +100,17 @@ class ProductController extends Controller
         $product->save();
 
         if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id'])) {
-            $dealer_prices = $request->input('dealer_price');
-            $distributor_price = $request->input('distributor_price');
-            $variation_id = $request->input('variation_id');
+            $dealer_prices       = $request->input('dealer_price');
+            $distributor_price   = $request->input('distributor_price');
+            $variation_id        = $request->input('variation_id');
             $variation_option_id = $request->input('variation_option_id');
 
             foreach ($dealer_prices as $key => $dealer_price) {
                 ProductVariation::create([
-                    'product_id' => $product->id,
-                    'dealer_price' => $dealer_price,
-                    'distributor_price' => $distributor_price[$key],
-                    'variation_id' => $variation_id[$key],
+                    'product_id'          => $product->id,
+                    'dealer_price'        => $dealer_price,
+                    'distributor_price'   => $distributor_price[$key],
+                    'variation_id'        => $variation_id[$key],
                     'variation_option_id' => $variation_option_id[$key],
                 ]);
             }
@@ -132,10 +126,10 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $data = [
             'page_title' => 'Edit Product Catalogue',
-            'product' => $product,
+            'product'    => $product,
             'variations' => Variation::where('status', 1)->get()->all(),
-            'category' => Category::where('status', 1)->get()->all(),
-            'grads' => GradeManagement::where('status', 1)->get()->all(),
+            'category'   => Category::where('status', 1)->get()->all(),
+            'grads'      => GradeManagement::where('status', 1)->get()->all(),
         ];
         return view('admin.product.edit', $data);
     }
@@ -153,7 +147,7 @@ class ProductController extends Controller
                 Storage::disk('public')->delete('product_images/' . $product->product_image);
             }
 
-            $file = $request->file('product_image');
+            $file     = $request->file('product_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('product_images', $filename, 'public');
             /** Save to storage/app/public/product_images **/
@@ -164,17 +158,17 @@ class ProductController extends Controller
         if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id'])) {
             ProductVariation::where('product_id', $id)->delete();
 
-            $dealer_prices = $request->input('dealer_price');
-            $distributor_prices = $request->input('distributor_price');
-            $variation_ids = $request->input('variation_id');
+            $dealer_prices        = $request->input('dealer_price');
+            $distributor_prices   = $request->input('distributor_price');
+            $variation_ids        = $request->input('variation_id');
             $variation_option_ids = $request->input('variation_option_id');
 
             foreach ($dealer_prices as $key => $dealer_price) {
                 ProductVariation::create([
-                    'product_id' => $product->id,
-                    'dealer_price' => $dealer_price,
-                    'distributor_price' => $distributor_prices[$key],
-                    'variation_id' => $variation_ids[$key],
+                    'product_id'          => $product->id,
+                    'dealer_price'        => $dealer_price,
+                    'distributor_price'   => $distributor_prices[$key],
+                    'variation_id'        => $variation_ids[$key],
                     'variation_option_id' => $variation_option_ids[$key],
                 ]);
             }
@@ -200,7 +194,6 @@ class ProductController extends Controller
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-
         if (!empty($ids)) {
             $products = Product::whereIn('id', $ids)->get();
             ProductVariation::whereIn('product_id', $ids)->delete();
@@ -213,7 +206,6 @@ class ProductController extends Controller
             }
             return response()->json(['message' => 'Selected products deleted successfully!']);
         }
-
         return response()->json(['message' => 'No records selected!'], 400);
     }
 }

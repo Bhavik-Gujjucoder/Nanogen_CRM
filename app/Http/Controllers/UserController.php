@@ -23,7 +23,7 @@ class UserController extends Controller
         $data['page_title'] = 'Users';
 
         if ($request->ajax()) {
-            $data = User::role(['admin', 'staff','reporting manager']);
+            $data = User::role(['admin', 'staff','reportingmanager']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -123,16 +123,16 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'phone_no' => $request->phone_no,
             'password' => Hash::make($request->password),
-            'status' => $request->status,
+            'status'   => $request->status,
         ]);
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
+            $file     = $request->file('profile_picture');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('profile_pictures', $filename, 'public'); // Save to storage/app/public/profile_pictures
             $user->profile_picture = $filename;
@@ -150,9 +150,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $data['page_title'] = 'Edit User';
-        $data['user'] = $user;
+        $data['user']       = $user;
         // $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
-        $data['roles'] = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
+        $data['roles']      = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
         return view('users.edit', $data);
     }
 
@@ -162,13 +162,14 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:users,name,' . $user->id . ',id,deleted_at,NULL',
-            'email' => 'required|email|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
-            'phone_no' => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
-            'role' => 'required|exists:roles,name',
-            'password' => 'nullable|min:6|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
+            'name'            => 'required|string|max:255|unique:users,name,' . $user->id . ',id,deleted_at,NULL',
+            'email'           => 'required|email|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
+            'phone_no'        => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
+            'role'            => 'required|exists:roles,name',
+            'password'        => 'nullable|min:6|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:0,1',
+            'status'          => 'required|in:0,1',
         ]);
 
         $user->update([
@@ -197,9 +198,7 @@ class UserController extends Controller
         }
 
         $user->save();
-
         $user->syncRoles([$request->role]); // Update role
-
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
 
