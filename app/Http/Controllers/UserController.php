@@ -45,7 +45,6 @@ class UserController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('users.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
-
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
@@ -68,7 +67,7 @@ class UserController extends Controller
                         </a>' . $row->name;
                 })
                 ->addColumn('role', function ($user) {
-                    return $user->roles->pluck('name')->implode(', '); // Get user roles
+                    return $user->roles->pluck('name')->implode(', ');
                 })
                 ->filterColumn('role', function($query, $keyword) {
                     $query->whereHas('roles', function($q) use ($keyword) {
@@ -76,13 +75,13 @@ class UserController extends Controller
                     });
                 })
                 ->editColumn('status', function ($user) {
-                    return $user->statusBadge(); // Get user roles
+                    return $user->statusBadge();
                 })
                 ->editColumn('updated_at', function ($user) {
-                    return  Carbon::parse($user->updated_at)->diffForHumans(); // Get user roles
+                    return  Carbon::parse($user->updated_at)->diffForHumans();
                 })
                 ->editColumn('created_at', function ($user) {
-                    return  $user->created_at->format('d M Y, h:i A'); // Get user roles
+                    return  $user->created_at->format('d M Y, h:i A');
                 })
                 ->filterColumn('created_at', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(created_at, '%d %b %Y, %h:%i %p') like ?", ["%{$keyword}%"]);

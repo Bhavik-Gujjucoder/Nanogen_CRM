@@ -28,19 +28,24 @@
         <!-- Manage Users List -->
         <div class="table-responsive custom-table">
             <table class="table dataTable no-footer" id="users">
+                <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">Id</th>
+                        <th class="no-sort" scope="col">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all" class="grade_checkbox"><span
+                                    class="checkmarks"></span>
+                            </label>
+                        </th>
+                        <th class="no-sort" scope="col"></th>
                         <th scope="col">Name</th>
                         <th scope="col">Status</th>
                         <th scope="col">Action</th>
                         {{-- class="text-end" --}}
                     </tr>
                 </thead>
-
             </table>
         </div>
-
         <!-- /Manage Users List -->
     </div>
 </div>
@@ -52,9 +57,9 @@
                 <h5 class="modal-title" id="modalTitle">Grade Management</h5>
                 {{-- <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button> --}}
                 <button class="btn-close custom-btn-close border p-1 me-0 text-dark" data-bs-dismiss="modal"
-                aria-label="Close">
-             <i class="ti ti-x"></i>
-             </button>
+                    aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
 
             </div>
             <div class="modal-body">
@@ -89,7 +94,7 @@
 
                     <div class="float-end">
                         <button type="button" class="btn btn-light me-2 close_poup"
-                        data-bs-dismiss="modal">Cancel</button>
+                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="submitBtn">Create</button>
                     </div>
                 </form>
@@ -110,10 +115,23 @@
         dom: 'lrtip',
         ajax: "{{ route('grade.index') }}",
         columns: [{
-                data: 'id',
-                name: 'id',
-                searchable: true
-            }, {
+                data: 'checkbox',
+                name: 'checkbox',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            // {
+            //     data: 'id',
+            //     name: 'id',
+            //     searchable: true
+            // },
+            {
                 data: 'name',
                 name: 'name',
                 searchable: true
@@ -133,15 +151,14 @@
 
     });
 
-    // Custom Search Box
+
+    /*** Custom Search Box ***/
     $('#customSearch').on('keyup', function() {
         grade_table.search(this.value).draw();
     });
 
 
-
-
-    //  Open Modal for Adding a New Grade
+    /***  Open Modal for Adding a New Grade ***/
     $('#openModal').click(function() {
         $('#adminForm')[0].reset();
         $('#modalTitle').text('Grade Management');
@@ -153,7 +170,8 @@
 
     });
 
-    //  Open Modal for Editing an Admin
+
+    /***  Open Modal for Editing an Admin ***/
     $(document).on('click', '.edit-btn', function() {
         let user_id = $(this).data('id');
         $("#adminForm .text-danger").text('');
@@ -169,7 +187,8 @@
         });
     });
 
-    //  Handle Add & Edit Form Submission
+
+    /***  Handle Add & Edit Form Submission ***/
     $('#adminForm').submit(function(e) {
         e.preventDefault();
         let user_id = $('input[name="user_id"]').val();
@@ -196,31 +215,61 @@
         });
     });
 
-    $(document).on('click', '.deleteGrade', function(event) {
-        event.preventDefault();
-        let userId = $(this).data('id'); // Get the user ID
-        let form = $('#delete-form-' + userId); // Select the correct form
-        console.log(form);
+
+    /***** conformation *****/
+    function confirmDeletion(callback) {
         Swal.fire({
             title: "Are you sure?",
-            text: "You want to remove this Grade? Once deleted, it cannot be recovered.",
+            text: "You want to remove this grade? Once deleted, it cannot be recovered.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
             customClass: {
-                popup: 'my-custom-popup', // Custom class for the popup
-                title: 'my-custom-title', // Custom class for the title
-                confirmButton: 'btn btn-primary', // Custom class for the confirm button
-                cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
                 icon: 'my-custom-icon swal2-warning'
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit(); // Submit form if confirmed
+                callback(); // Execute callback function if confirmed
             }
         });
+    }
+
+    /*** single grade delete ***/
+    $(document).on('click', '.deleteGrade', function(event) {
+        event.preventDefault();
+        let userId = $(this).data('id');        // Get the user ID
+        let form = $('#delete-form-' + userId); // Select the correct form
+        console.log(form);
+
+        confirmDeletion(function() {
+            form.submit(); // Submit the form if confirmed
+        });
+        // Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "You want to remove this Grade? Once deleted, it cannot be recovered.",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes, delete it!',
+        //     cancelButtonText: 'Cancel',
+        //     customClass: {
+        //         popup: 'my-custom-popup', // Custom class for the popup
+        //         title: 'my-custom-title', // Custom class for the title
+        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+        //         icon: 'my-custom-icon swal2-warning'
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         form.submit(); // Submit form if confirmed
+        //     }
+        // });
     });
+
 
     function display_errors(errors) {
         $("#adminForm .error-text").text('');
@@ -230,7 +279,58 @@
         });
     }
 
-    // $(".dataTables_filter").hide();
-    // $(".dataTables_length").hide();
+
+    /***** Bulk Delete *****/
+    $('#select-all').change(function() {
+        // Check/uncheck all checkboxes when the select-all checkbox is clicked
+        $('.grade_checkbox').prop('checked', this.checked);
+
+    });
+
+
+    $(document).on('change', '.grade_checkbox', function() {
+        let count = $('.grade_checkbox:checked').length; // Count checked checkboxes
+        $('#checked-count').text(count); // Display count in an element
+        if (count > 0) {
+            $('#bulk_delete_button').show();
+        } else {
+            $('#bulk_delete_button').hide();
+        }
+    });
+
+
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+        confirmDeletion(function() {
+            var selectedIds = $('.grade_checkbox:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedIds.length > 0) {
+                // Make an AJAX request to delete the selected items
+                $.ajax({
+                    url: "{{ route('grade.bulkDelete') }}",
+                    method: 'POST',
+                    data: {
+                        ids: selectedIds, // Send the selected IDs
+                        _token: '{{ csrf_token() }}' // CSRF token for security
+                    },
+                    success: function(response) {
+                        // Swal.fire("Deleted!", response.message, "success");
+                        show_success(response.message);
+                        // Optionally, reload the page to reflect changes
+                        grade_table.ajax.reload();
+                        // location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        show_error('An error occurred while deleting.');
+                        // alert("An error occurred while deleting.");
+                    }
+                });
+            } else {
+                alert("No items selected.");
+            }
+        });
+    });
 </script>
 @endsection

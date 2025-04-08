@@ -119,18 +119,14 @@ class CategoryController extends Controller
 
 
     /*****  Bulk delete method  *****/
-    public function bulkDelete(Request $request, Category $category)
+    public function bulkDelete(Request $request)
     {
-        //   // Validate the incoming request
-        $validated = $request->validate([
-            'ids' => 'required|array', // Ensure ids is an array
-            'ids.*' => 'integer|exists:items,id', // Ensure each ID is valid and exists in the "items" table
-        ]);
+        $ids = $request->ids;
+        if (!empty($ids)) {
+            Category::whereIn('id', $ids)->delete();
 
-        // Delete the items based on the provided IDs
-        // Item::destroy($validated['ids']);
-
-        // Return a success message
-        return response()->json(['message' => 'Selected items have been deleted successfully.']);
+            return response()->json(['message' => 'Selected categories deleted successfully!']);
+        }
+        return response()->json(['message' => 'No records selected!'], 400);
     }
 }

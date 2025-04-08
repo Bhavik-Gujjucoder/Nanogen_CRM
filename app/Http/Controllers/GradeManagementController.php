@@ -23,6 +23,12 @@ class GradeManagementController extends Controller
             $data = GradeManagement::query();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($row) {
+                    return '<label class="checkboxs">
+                            <input type="checkbox" class="checkbox-item grade_checkbox" data-id="' . $row->id . '">
+                            <span class="checkmarks"></span>
+                        </label>';
+                })
                 ->addColumn('action', function ($row) {
                     // $show_btn = '<a href="' . route('users.show', $row->id) . '"
                     // class="btn btn-outline-info btn-sm"><i class="bi bi-eye-fill"></i> ' . __('Show') . '</a>';
@@ -54,7 +60,7 @@ class GradeManagementController extends Controller
                     return $product->statusBadge(); // Get user roles
                 })
 
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
         return view('admin.grade.index', $data);
@@ -115,5 +121,18 @@ class GradeManagementController extends Controller
         $grade->delete();
         return redirect()->route('grade.index')->with('success', 'Grade deleted successfully.');
     }
+
+
+      /*****  Bulk delete method  *****/
+      public function bulkDelete(Request $request)
+      {
+          $ids = $request->ids;
+          if (!empty($ids)) {
+            GradeManagement::whereIn('id', $ids)->delete();
+
+              return response()->json(['message' => 'Selected Grade deleted successfully!']);
+          }
+          return response()->json(['message' => 'No records selected!'], 400);
+      }
 
 }

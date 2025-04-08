@@ -36,7 +36,7 @@
                                 <input type="checkbox" id="select-all" class="state_checkbox"><span class="checkmarks"></span>
                             </label>
                         </th>
-                        <th class="no-sort" scope="col">SR. Number</th>
+                        <th class="no-sort" scope="col"></th>
                         <th scope="col">State Name</th>
                         <th scope="col">Number of City</th>
                         <th scope="col">Status</th>
@@ -220,26 +220,6 @@
         confirmDeletion(function() {
             form.submit(); // Submit the form if confirmed
         });
-
-        // Swal.fire({
-        //     title: "Are you sure?",
-        //     text: "You want to remove this State? Once deleted, it cannot be recovered.",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonText: 'Yes, delete it!',
-        //     cancelButtonText: 'Cancel',
-        //     customClass: {
-        //         popup: 'my-custom-popup', // Custom class for the popup
-        //         title: 'my-custom-title', // Custom class for the title
-        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
-        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
-        //         icon: 'my-custom-icon swal2-warning'
-        //     }
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         form.submit(); // Submit form if confirmed
-        //     }
-        // });
     });
 
     function display_errors(errors) {

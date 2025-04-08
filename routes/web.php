@@ -74,10 +74,11 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
 
     /* Grade */
     Route::resource('grade', GradeManagementController::class);
+    Route::post('/grade/bulk-delete', [GradeManagementController::class, 'bulkDelete'])->name('grade.bulkDelete');
 
     /* Category */
     Route::resource('category', CategoryController::class);
-    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('product_category.bulk_delete'); //
+    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');
 
     /* Variation */
     Route::resource('variation', VariationController::class);

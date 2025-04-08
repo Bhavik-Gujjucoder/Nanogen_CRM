@@ -29,7 +29,6 @@
         <div class="table-responsive custom-table">
             <table class="table" id="category_table">
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
-
                 <thead class="thead-light">
                     <tr>
                         <th class="no-sort" scope="col">
@@ -38,7 +37,7 @@
                                     class="checkmarks"></span>
                             </label>
                         </th>
-                        <th class="no-sort" scope="col">Id</th>
+                        <th class="no-sort" scope="col"></th>
                         <th scope="col">Category Name</th>
                         <th scope="col">Parent Category Name</th>
                         <th scope="col">Status</th>
@@ -59,8 +58,8 @@
                 <h5 class="modal-title" id="modalTitle">Add Product Category</h5>
                 {{-- <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button> --}}
                 <button class="btn-close custom-btn-close border p-1 me-0 text-dark" data-bs-dismiss="modal"
-                aria-label="Close">
-             <i class="ti ti-x"></i>
+                    aria-label="Close">
+                    <i class="ti ti-x"></i>
             </div>
             <div class="modal-body">
                 <form id="categoryForm">
@@ -71,7 +70,7 @@
                         <label class="col-form-label">Select Parent Category</label>
                         <select class="select" name="parent_category_id" style="height: 210px;" ">
                             <option value="0">{{ __('Select Parent Category') }}</option>
-                              @foreach ($category as $c)
+                               @foreach ($category as $c)
                             <option value="{{ $c->id }}">{{ $c->category_name }}</option>
                             @endforeach
                         </select>
@@ -105,7 +104,7 @@
 
                     <div class="float-end">
                         <button type="button" class="btn btn-light me-2 close_poup"
-                        data-bs-dismiss="modal">Cancel</button>
+                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                     </div>
 
@@ -131,11 +130,18 @@
                 name: 'checkbox',
                 orderable: false,
                 searchable: false
-            }, {
-                data: 'id',
-                name: 'id',
-                searchable: true
-            }, {
+            },{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            // {
+            //     data: 'id',
+            //     name: 'id',
+            //     searchable: true
+            // },
+             {
                 data: 'category_name',
                 name: 'category_name',
                 searchable: true
@@ -227,12 +233,8 @@
         });
     });
 
-    /***** Delete *****/
-    $(document).on('click', '.deleteCategory', function(event) {
-        event.preventDefault();
-        let categoryId = $(this).data('id');
-        let form = $('#delete-form-' + categoryId); // Select the correct form
-        console.log(form);
+
+    function confirmDeletion(callback) {
         Swal.fire({
             title: "Are you sure?",
             text: "You want to remove this category? Once deleted, it cannot be recovered.",
@@ -241,17 +243,48 @@
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
             customClass: {
-                popup: 'my-custom-popup', // Custom class for the popup
-                title: 'my-custom-title', // Custom class for the title
-                confirmButton: 'btn btn-primary', // Custom class for the confirm button
-                cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
                 icon: 'my-custom-icon swal2-warning'
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit(); // Submit form if confirmed
+                callback(); // Execute callback function if confirmed
             }
         });
+    }
+
+    /***** Delete *****/
+    $(document).on('click', '.deleteCategory', function(event) {
+        event.preventDefault();
+        let categoryId = $(this).data('id');
+        let form = $('#delete-form-' + categoryId); // Select the correct form
+        console.log(form);
+
+        confirmDeletion(function() {
+            form.submit(); // Submit the form if confirmed
+        });
+        // Swal.fire({
+            //     title: "Are you sure?",
+            //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
+            //     icon: 'warning',
+            //     showCancelButton: true,
+            //     confirmButtonText: 'Yes, delete it!',
+            //     cancelButtonText: 'Cancel',
+            //     customClass: {
+            //         popup: 'my-custom-popup', // Custom class for the popup
+            //         title: 'my-custom-title', // Custom class for the title
+            //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+            //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+            //         icon: 'my-custom-icon swal2-warning'
+            //     }
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+            //         form.submit(); // Submit form if confirmed
+            //     }
+        // });
     });
 
     function display_errors(errors) {
@@ -263,40 +296,27 @@
         });
     }
 
-    // $(".dataTables_filter").hide();
-    // $(".dataTables_length").hide();
-
 
     /***** Bulk Delete *****/
-    $(document).ready(function() {
-        $('.category_checkbox').change(function() {
+    $('#select-all').change(function() {
+        // Check/uncheck all checkboxes when the select-all checkbox is clicked
+        $('.category_checkbox').prop('checked', this.checked);
 
-            // Handle checkbox change event to show/hide the bulk delete button
-            $('#select-all').change(function() {
-                // Check/uncheck all checkboxes when the select-all checkbox is clicked
-                $('.category_checkbox').prop('checked', this.checked);
-                toggleBulkDeleteButton();
-            });
+    });
 
-            // Handle individual checkbox change event
-            $('.category_checkbox').change(function() {
-                toggleBulkDeleteButton();
-            });
+    $(document).on('change', '.category_checkbox', function () {
+        let count = $('.category_checkbox:checked').length; // Count checked checkboxes
+        $('#checked-count').text(count); // Display count in an element
+        if(count > 0){
+            $('#bulk_delete_button').show();
+        }else{
+            $('#bulk_delete_button').hide();
+        }
+    });
 
-            function toggleBulkDeleteButton() {
-                var selectedCheckboxes = $('.category_checkbox:checked').length;
-
-                if (selectedCheckboxes > 0) {
-                    $('#bulk_delete_button').show(); // Show delete button
-                } else {
-                    $('#bulk_delete_button').hide(); // Hide delete button
-                }
-            }
-        });
-
-        // Handle Bulk Delete button click
-        $('#bulk_delete_button').click(function() {
-            // Get the IDs of selected checkboxes
+     // Handle Bulk Delete button click
+     $('#bulk_delete_button').click(function() {
+       confirmDeletion(function() {
             var selectedIds = $('.category_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
@@ -304,25 +324,29 @@
             if (selectedIds.length > 0) {
                 // Make an AJAX request to delete the selected items
                 $.ajax({
-                    url: '/bulk-delete', // The route where the delete request will be sent
+                    url: "{{ route('category.bulkDelete') }}",
                     method: 'POST',
                     data: {
                         ids: selectedIds, // Send the selected IDs
                         _token: '{{ csrf_token() }}' // CSRF token for security
                     },
                     success: function(response) {
-                        alert(response.message); // Show a success message
+                        // Swal.fire("Deleted!", response.message, "success");
+                        show_success(response.message);
                         // Optionally, reload the page to reflect changes
-                        location.reload();
+                        category_table_show.ajax.reload();
+                        // location.reload();
                     },
                     error: function(xhr, status, error) {
-                        alert("An error occurred while deleting.");
+                        show_error('An error occurred while deleting.');
+                        // alert("An error occurred while deleting.");
                     }
                 });
             } else {
                 alert("No items selected.");
             }
         });
+        // Get the IDs of selected checkboxes
     });
 </script>
 @endsection

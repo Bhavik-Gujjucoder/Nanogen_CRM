@@ -96,7 +96,7 @@
                             <div class="icon-form-end">
                                 <span class="form-icon gc-icon-set"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control icone @error('password') is-invalid @enderror"
-                                    name="password">
+                                    name="password" placeholder="Password">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -110,7 +110,7 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
-                                    name="password_confirmation">
+                                    name="password_confirmation" placeholder="Confirm Password">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror

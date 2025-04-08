@@ -35,7 +35,8 @@
                                 <input type="checkbox" id="select-all" class="variation_checkbox"><span class="checkmarks"></span>
                             </label>
                         </th>
-                        <th scope="col">SR. Number</th>
+                        {{-- <th scope="col">SR. Number</th> --}}
+                        <th class="no-sort" scope="col"></th>
                         <th scope="col">Variation Name</th>
                         <th scope="col">Options</th>
                         <th scope="col">Status</th>
@@ -104,7 +105,7 @@
         variation_table_show.search(this.value).draw();
     });
 
-
+    /***** conformation *****/
     function confirmDeletion(callback) {
         Swal.fire({
             title: "Are you sure?",
@@ -137,25 +138,7 @@
         confirmDeletion(function() {
             form.submit(); // Submit the form if confirmed
         });
-        // Swal.fire({
-        //     title: "Are you sure?",
-        //     text: "You want to remove this variation? Once deleted, it cannot be recovered.",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonText: 'Yes, delete it!',
-        //     cancelButtonText: 'Cancel',
-        //     customClass: {
-        //         popup: 'my-custom-popup', // Custom class for the popup
-        //         title: 'my-custom-title', // Custom class for the title
-        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
-        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
-        //         icon: 'my-custom-icon swal2-warning'
-        //     }
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         form.submit(); // Submit form if confirmed
-        //     }
-        // });
+
     });
 
 
