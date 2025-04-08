@@ -212,7 +212,7 @@ class SalesPersonController extends Controller
             'department_id'        => 'required|exists:sales_person_department,id',
             'position_id'          => 'required|exists:sales_person_position,id',
             'reporting_manager_id' => 'required',
-            'date'                 => 'required|date_format:d-m-Y|before:today',
+            'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
             'city_id'              => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
