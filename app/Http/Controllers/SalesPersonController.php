@@ -124,7 +124,15 @@ class SalesPersonController extends Controller
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
+        ],[
+            'department_id.required'        => 'The department field is required.',
+            'position_id.required'          => 'The position field is required.',
+            'reporting_manager_id.required' => 'The reporting manager field is required.',
+            'city_id.required'              => 'The city field is required.',
+            'state_id.required'             => 'The state field is required.',
+            'country_id.required'           => 'The country field is required.',
         ]);
+
         DB::beginTransaction();
         try {
 
@@ -211,6 +219,13 @@ class SalesPersonController extends Controller
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
+        ],[
+            'department_id.required'        => 'The department field is required.',
+            'position_id.required'          => 'The position field is required.',
+            'reporting_manager_id.required' => 'The reporting manager field is required.',
+            'city_id.required'              => 'The city field is required.',
+            'state_id.required'             => 'The state field is required.',
+            'country_id.required'           => 'The country field is required.',
         ]);
 
         DB::beginTransaction();
