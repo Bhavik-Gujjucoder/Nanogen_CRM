@@ -15,9 +15,7 @@ class VariationController extends Controller
      */
     public function index(Request $request)
     {
-
         $data['page_title'] = 'Pricing and Product Variation';
-
         if ($request->ajax()) {
             $data = Variation::with('variant_options');
             return DataTables::of($data)
@@ -45,7 +43,6 @@ class VariationController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-
                 ->addColumn('value', function ($variation) {
                     return $variation->variant_options->isNotEmpty() ? $variation->variant_options->pluck('value')->implode(', ') : '-';
                 })
@@ -54,11 +51,9 @@ class VariationController extends Controller
                         $q->where('value', 'LIKE', "%{$keyword}%");
                     });
                 })
-
                 ->editColumn('status', function ($category) {
                     return $category->statusBadge();
                 })
-
                 ->rawColumns(['checkbox', 'action', 'value', 'status'])
                 ->make(true);
         }
@@ -80,11 +75,11 @@ class VariationController extends Controller
      */
     public function store(Request $request)
     {
-        $name = $request->name;
+        $name   = $request->name;
         $weight = $request->weight;
         if ($name) {
             $variation =  Variation::create([
-                'name' => $name,
+                'name'   => $name,
                 'status' => $request->status,
             ]);
         }
@@ -93,7 +88,7 @@ class VariationController extends Controller
             foreach ($weight as $weightValue) {
                 VariationOption::create([
                     'variation_id' => $variation->id,
-                    'value' => $weightValue,
+                    'value'  => $weightValue,
                 ]);
             }
         }
@@ -107,7 +102,7 @@ class VariationController extends Controller
     public function edit(string $id)
     {
         $data['page_title'] = 'Edit Pricing and Product Variation';
-        $data['variation'] = Variation::with('variant_options')->where('id', $id)->firstOrFail();
+        $data['variation']  = Variation::with('variant_options')->where('id', $id)->firstOrFail();
         // dd($data['variations']);
         return view('admin.variation.edit', $data);
     }
@@ -117,11 +112,11 @@ class VariationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $name = $request->name;
-        $weight = $request->weight;
+        $name      = $request->name;
+        $weight    = $request->weight;
         $variation = Variation::findOrFail($id);
         $variation->update([
-            'name' => $name,
+            'name'   => $name,
             'status' => $request->status
         ]);
 
@@ -154,25 +149,22 @@ class VariationController extends Controller
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-
         if (!empty($ids)) {
             Variation::whereIn('id', $ids)->delete();
             VariationOption::whereIn('variation_id', $ids)->delete();
             return response()->json(['message' => 'Selected variations deleted successfully!']);
         }
-
         return response()->json(['message' => 'No records selected!'], 400);
     }
 
-
     public function get_variation_value(Request $request)
-{
-    $VariationOption = VariationOption::where('variation_id', $request->variation_id)->get();
+    {
+        $VariationOption = VariationOption::where('variation_id', $request->variation_id)->get();
 
-    if ($VariationOption->isNotEmpty()) {
-        return response()->json(['success' => true, 'variations' => $VariationOption]);
-    } else {
-        return response()->json(['success' => false, 'message' => 'No sizes found']);
+        if ($VariationOption->isNotEmpty()) {
+            return response()->json(['success' => true, 'variations' => $VariationOption]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No sizes found']);
+        }
     }
-}
 }

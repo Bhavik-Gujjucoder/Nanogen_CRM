@@ -23,8 +23,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $data['page_title'] = 'Add role';
-        $data['permissions']  = Permission::all();
+        $data['page_title']  = 'Add role';
+        $data['permissions'] = Permission::all();
         return view('roles.create', $data);
     }
 
@@ -44,19 +44,11 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Role $role)
     {
-        $data['page_title'] = 'Edit role';
+        $data['page_title']   = 'Edit role';
         $data['permissions']  = Permission::all();
         $data['role']  = $role;
         return view('roles.edit', $data);

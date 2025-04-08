@@ -11,7 +11,7 @@ class GeneralSettingController extends Controller
     public function create()
     {
         $data['page_title'] = 'Settings';
-        $data['setting'] = GeneralSetting::get();
+        $data['setting']    = GeneralSetting::get();
         return view('admin.generalsetting.create', $data);
     }
 
@@ -36,8 +36,8 @@ class GeneralSettingController extends Controller
         $data = $request->except('company_logo');
         if (!$data) {
             return redirect()->back()->with('error', 'Request data is empty.');
-        } else {
-
+        }
+        else {
             if ($request->hasFile('company_logo')) {
                 $general_setting = GeneralSetting::where('key', 'company_logo')->first();
                 /* Delete old profile picture if exists */
@@ -54,12 +54,9 @@ class GeneralSettingController extends Controller
                 $general_setting->save();
             }
 
-
             foreach ($data as $key => $value) {
                 GeneralSetting::where('key', $key)->update(['value' => $value]);
             }
-
-
             return redirect()->back()->withSuccess('Setting update successfully.');
         }
     }

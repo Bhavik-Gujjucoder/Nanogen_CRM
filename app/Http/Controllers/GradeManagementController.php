@@ -69,10 +69,10 @@ class GradeManagementController extends Controller
             'name' => 'required|unique:grade_management,name,NULL,id,deleted_at,NULL'
         ],[
             'name.required' => 'The grade name field is required.',
-            'name.unique' => 'This grade name already exists.',
+            'name.unique'   => 'This grade name already exists.',
         ]);
         GradeManagement::create([
-            'name' => $request->name,
+            'name'   => $request->name,
             'status' => $request->status
         ]);
         return response()->json(['success' => true, 'message' => 'Grade created successfully']);
@@ -95,10 +95,10 @@ class GradeManagementController extends Controller
     {
         $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id. ',id,deleted_at,NULL'],[
             'name.required' => 'The grade name field is required.',
-            'name.unique' => 'This grade name already exists.',
+            'name.unique'   => 'This grade name already exists.',
         ]);
         $grade->update([
-            'name' => $request->name,
+            'name'   => $request->name,
             'status' => $request->status
         ]);
         return response()->json(['success' => true, 'message' => 'Grade updated successfully']);

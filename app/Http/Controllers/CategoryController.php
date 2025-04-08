@@ -45,21 +45,17 @@ class CategoryController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-
                 ->editColumn('parent_category_id', function ($category) {
                     return $category->parent->category_name ?? '-'; //Get user roles
                 })
-
                 ->filterColumn('parent_category_id', function($query, $keyword) {
                     $query->whereHas('parent', function($query) use ($keyword) {
                         $query->where('category_name', 'like', "%$keyword%");
                     });
                 })
-
                 ->editColumn('status', function ($category) {
                     return $category->statusBadge(); //Get user roles
                 })
-
                 ->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
@@ -76,8 +72,8 @@ class CategoryController extends Controller
         Category::create([
             'parent_category_id' => $request->parent_category_id,
             'category_name' => $request->category_name,
-            'status' => $request->status,
-            'is_parent' =>  $is_parent
+            'status'        => $request->status,
+            'is_parent'     => $is_parent
         ]);
 
         return redirect()->route('category.index')->with('success', 'Product Category created successfully.');
@@ -105,7 +101,7 @@ class CategoryController extends Controller
         $category->update([
             'parent_category_id' => $request->parent_category_id,
             'category_name' => $request->category_name,
-            'status' => $request->status,
+            'status'    => $request->status,
             'is_parent' =>  $is_parent
         ]);
         return response()->json(['success' => true, 'message' => 'Category updated successfully']);

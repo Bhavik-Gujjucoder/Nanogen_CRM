@@ -172,7 +172,7 @@
 <script>
     var users_table = $('#users').DataTable({
         "pageLength": 10,
-        deferRender: true, // Prevents unnecessary DOM rendering
+        deferRender: true,
         processing: true,
         serverSide: true,
         responsive: true,

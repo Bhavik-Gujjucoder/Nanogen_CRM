@@ -66,7 +66,6 @@ class SalesPersonController extends Controller
                                     <img class="" src="' . $profilePic . '" alt="User Image">
                                 </a>' . $name;
                     }
-
                     return $name;
                 })
                 ->editColumn('user.phone_no', function ($row) {

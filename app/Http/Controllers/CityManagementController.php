@@ -69,16 +69,16 @@ class CityManagementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'state_id' => 'required',
+            'state_id'  => 'required',
             'city_name' => 'required|unique:city_management,city_name,NULL,id,deleted_at,NULL'
         ],[
             'state_id.required' => 'The state name field is required.
 '
         ]);
         CityManagement::create([
-            'state_id' => $request->state_id,
+            'state_id'  => $request->state_id,
             'city_name' => $request->city_name,
-            'status' => $request->status
+            'status'    => $request->status
         ]);
         return response()->json(['success' => true, 'message' => 'City created successfully']);
     }
@@ -97,15 +97,15 @@ class CityManagementController extends Controller
     public function update(Request $request, CityManagement $city)
     {
         $request->validate([
-            'state_id' => 'required',
+            'state_id'  => 'required',
             'city_name' => 'required|unique:city_management,city_name,' . $city->id. ',id,deleted_at,NULL'
         ],[
             'state_id.required' => 'The state name field is required.'
         ]);
         $city->update([
-            'state_id' => $request->state_id,
+            'state_id'  => $request->state_id,
             'city_name' => $request->city_name,
-            'status' => $request->status
+            'status'    => $request->status
         ]);
         return response()->json(['success' => true, 'message' => 'City updated successfully']);
     }

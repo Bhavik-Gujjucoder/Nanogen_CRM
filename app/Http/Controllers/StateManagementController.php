@@ -69,7 +69,7 @@ class StateManagementController extends Controller
         $request->validate(['state_name' => 'required|unique:state_management,state_name,NULL,id,deleted_at,NULL']);
         StateManagement::create([
             'state_name' => $request->state_name,
-            'status' => $request->status
+            'status'     => $request->status
         ]);
         return response()->json(['success' => true, 'message' => 'State created successfully']);
     }

@@ -21,7 +21,6 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Users';
-
         if ($request->ajax()) {
             $data = User::role(['admin', 'staff','reportingmanager']);
             return DataTables::of($data)
@@ -58,6 +57,16 @@ class UserController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
+                ->editColumn('name', function ($row) {
+                    $profilePic = isset($row->profile_picture)
+                        ? asset('storage/profile_pictures/' . $row->profile_picture)
+                        : asset('images/default-user.png');
+
+                    return '
+                        <a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
+                            <img src="' . $profilePic . '" alt="User Image">
+                        </a>' . $row->name;
+                })
                 ->addColumn('role', function ($user) {
                     return $user->roles->pluck('name')->implode(', '); // Get user roles
                 })
@@ -78,7 +87,7 @@ class UserController extends Controller
                 ->filterColumn('created_at', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(created_at, '%d %b %Y, %h:%i %p') like ?", ["%{$keyword}%"]);
                 })
-                ->rawColumns(['action', 'status','checkbox'])
+                ->rawColumns(['action', 'status','checkbox','name'])
                 ->make(true);
         }
         return view('users.index', $data);
@@ -90,8 +99,8 @@ class UserController extends Controller
     public function create()
     {
         $data['page_title'] = 'Create User';
-        // $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
-        $data['roles'] = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
+        // $data['roles']   = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
+        $data['roles']      = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
 
         return view('users.create', $data);
     }
@@ -103,23 +112,21 @@ class UserController extends Controller
     {
         $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
-            'name' => 'required|string|max:255|unique:users,name,NULL,id,deleted_at,NULL',
-            'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
-            'role' => [
-                'required',
-                Rule::exists('roles', 'id')->whereNot('name', 'superadmin') // Exclude superadmin
-            ],
+            'name'     => 'required|string|max:255|unique:users,name,NULL,id,deleted_at,NULL',
+            'email'    => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
+            'role'     => [
+                            'required',
+                            Rule::exists('roles', 'id')->whereNot('name', 'superadmin') // Exclude superadmin
+                        ],
             'phone_no' => 'required|digits_between:10,11|unique:users,phone_no,NULL,id,deleted_at,NULL',
             'password' => 'required|min:6|confirmed',
-
-            'status' => 'required|in:1,0'
+            'status'   => 'required|in:1,0'
         ], [
             'profile_picture.image' => 'The profile picture must be an image.',
             'profile_picture.mimes' => 'The profile picture must be a file of type: JPG, JPEG, PNG, or GIF.',
-            'profile_picture.max' => 'The profile picture may not be greater than 2MB.',
-
-            'role.exists' => 'Invalid role selected.',
-            'password.confirmed' => 'Password and Confirm Password must match.'
+            'profile_picture.max'   => 'The profile picture may not be greater than 2MB.',
+            'role.exists'           => 'Invalid role selected.',
+            'password.confirmed'    => 'Password and Confirm Password must match.'
         ]);
 
         $user = User::create([
@@ -151,7 +158,7 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Edit User';
         $data['user']       = $user;
-        // $data['roles'] = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
+        // $data['roles']   = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
         $data['roles']      = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
         return view('users.edit', $data);
     }
@@ -168,15 +175,14 @@ class UserController extends Controller
             'phone_no'        => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
             'role'            => 'required|exists:roles,name',
             'password'        => 'nullable|min:6|confirmed',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status'          => 'required|in:0,1',
         ]);
 
         $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'phone_no' => $request->phone_no,
-            'status' => $request->status,
+            'status'   => $request->status,
         ]);
 
         if ($request->filled('password')) {
@@ -189,7 +195,7 @@ class UserController extends Controller
                 Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
             }
             // Upload new profile picture
-            $file = $request->file('profile_picture');
+            $file     = $request->file('profile_picture');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('profile_pictures', $filename, 'public'); // Save in storage/app/public/profile_pictures
 
@@ -219,12 +225,6 @@ class UserController extends Controller
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-
-        // if (!empty($ids)) {
-        //     User::whereIn('id', $ids)->delete();
-        //     return response()->json(['message' => 'Selected users deleted successfully!']);
-        // }
-
         if (!empty($ids) && is_array($ids) ) {
             $users = User::whereIn('id', $ids)->get();
 
@@ -236,7 +236,6 @@ class UserController extends Controller
             }
             return response()->json(['message' => 'Selected users deleted successfully!']);
         }
-
         return response()->json(['message' => 'No records selected!'], 400);
     }
 }
