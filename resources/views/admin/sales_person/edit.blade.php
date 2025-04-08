@@ -227,7 +227,7 @@
                             @enderror
                         </div> --}}
                         <div class="mb-3">
-                            <label class="col-form-label">Date <span class="text-danger">*</span></label>
+                            <label class="col-form-label">Date of Birth <span class="text-danger">*</span></label>
                             <div class="icon-form">
                                 <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
                                 <input type="text" name="date" id="datePicker"
