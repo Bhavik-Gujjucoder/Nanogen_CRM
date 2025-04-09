@@ -14,10 +14,12 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\CityManagementController;
+use App\Http\Controllers\DistributorsDealersController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
 use App\Http\Controllers\SalesPersonController;
 use App\Http\Controllers\StateManagementController;
+use App\Models\DistributorsDealers;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -100,6 +102,9 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::resource('sales_person', SalesPersonController::class);
     Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
     Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
+
+    /* Distributors & Dealers */
+    Route::resource('distributors_dealers', DistributorsDealersController::class);
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

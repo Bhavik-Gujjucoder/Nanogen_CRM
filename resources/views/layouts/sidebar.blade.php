@@ -54,8 +54,8 @@
                                 <i class="ti ti-layout-2"></i><span>Customer Management</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="distributors.html">Distributors</a></li>
-                                <li><a href="dealers.html">Dealers</a></li>
+                                <li><a href="{{route('distributors_dealers.index')}}">Distributors</a></li>
+                                <li><a href="{{route('distributors_dealers.index')}}">Dealers</a></li>
                             </ul>
                         </li>
                     </ul>

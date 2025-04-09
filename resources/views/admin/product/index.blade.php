@@ -181,7 +181,6 @@
         $('.product_checkbox').prop('checked', this.checked);
     });
 
-
     $(document).on('change', '.product_checkbox', function () {
         let count = $('.product_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
