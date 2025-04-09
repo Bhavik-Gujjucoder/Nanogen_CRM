@@ -4,8 +4,12 @@
             <ul>
                 <li class="clinicdropdown">
                     <a href="dashboard.html">
-                        <img src="{{ asset('images/default-user.png') }}" class="img-fluid" alt="Profile">
+                        <img src="{{ asset('storage/profile_pictures/' . (auth()->user()->profile_picture ?? 'images/default-user.png')) }}"
+                                    class="img-fluid" alt="Profile">
+
+                        {{-- <img src="{{ asset('images/default-user.png') }}" class="img-fluid" alt="Profile"> --}}
                         <div class="user-names">
+                            {{-- {{dd(auth()->user());}} --}}
                             <h5>{{ auth()->user()->name }}</h5>
                             <h6>{{ auth()->user()->getRoleNames()->first() }}</h6>
                         </div>
