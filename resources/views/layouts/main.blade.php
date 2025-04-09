@@ -329,7 +329,9 @@
                         <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
                             <span class="user-info">
                                 <span class="user-letter">
-                                    <img src="{{ asset('images/default-user.png') }}" alt="Profile">
+                                    {{-- <img src="{{ asset('images/default-user.png') }}" alt="Profile"> --}}
+                                    <img src="{{ asset('storage/profile_pictures/' . (auth()->user()->profile_picture ?? 'images/default-user.png')) }}"
+                                    class="img-fluid" alt="Profile">
                                 </span>
                                 <span class="badge badge-success rounded-pill"></span>
                             </span>
