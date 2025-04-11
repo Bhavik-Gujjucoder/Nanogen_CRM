@@ -804,7 +804,7 @@
             </div>
             <div class="d-flex align-items-center justify-content-end">
                 <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
             <!-- /Basic Info -->
         </form>
