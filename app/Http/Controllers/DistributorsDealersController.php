@@ -173,15 +173,15 @@ class DistributorsDealersController extends Controller
 
         if ($request->has(['name', 'birthdate', 'address'])) {
             ProprietorPartnerDirector::where('dd_id', $id)->delete();
-            $name      = $request->input('name');
+            $names      = $request->input('name');
             $birthdate = $request->input('birthdate');
             $address   = $request->input('address');
 
-            foreach ($name as $key => $name) {
+            foreach ($names as $key => $name) {
                 if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
                     ProprietorPartnerDirector::create([
                         'dd_id'     => $d_d->id,
-                        'name'      => $name,
+                        'name'      => $n,
                         'birthdate' => $birthdate[$key],
                         'address'   => $address[$key],
                     ]);
