@@ -181,7 +181,7 @@ class DistributorsDealersController extends Controller
                 if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
                     ProprietorPartnerDirector::create([
                         'dd_id'     => $d_d->id,
-                        'name'      => $n,
+                        'name'      => $name,
                         'birthdate' => $birthdate[$key],
                         'address'   => $address[$key],
                     ]);
