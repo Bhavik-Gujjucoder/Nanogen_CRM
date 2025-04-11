@@ -55,7 +55,7 @@
                             </a>
                             <ul>
                                 <li><a href="{{route('distributors_dealers.index')}}">Distributors</a></li>
-                                <li><a href="{{route('distributors_dealers.index')}}">Dealers</a></li>
+                                <li><a href="{{route('distributors_dealers.index',1)}}">Dealers</a></li>
                             </ul>
                         </li>
                     </ul>

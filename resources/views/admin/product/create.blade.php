@@ -157,7 +157,7 @@
 @endsection
 @section('script')
 <script>
-    /***** Add new functionality validation *****/
+    /***** Add validation functionality  *****/
     $(document).ready(function() {
         $("form").on("submit", function(e) {
             var valid = true;

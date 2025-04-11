@@ -104,7 +104,10 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
 
     /* Distributors & Dealers */
-    Route::resource('distributors_dealers', DistributorsDealersController::class);
+    Route::get('distributors_dealers/index/{dealer?}', [DistributorsDealersController::class, 'index'])->name('distributors_dealers.index');
+    Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
+
+    Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

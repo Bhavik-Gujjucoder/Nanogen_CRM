@@ -28,30 +28,6 @@
             @method('PUT')
             <div class="mb-4">
                 <div class="row">
-                    {{-- <div class="col-md-12">
-                        <div class="profile-pic-upload">
-                            <div class="profile-pic">
-                                <img id="profilePreview"
-                                src="{{ asset('images/default-user.png') }}"
-                                 src="{{ asset('storage/profile_picture/' . ($detail->profile_picture ?? 'images/default-user.png')) }}"
-                                alt="Profile Picture" class="img-thumbnail mb-2">
-                            </div>
-                            <div class="upload-content">
-                                <div class="upload-btn">
-                                    <input type="file" name="profile_picture" id="profile_picture" onchange="previewProfilePicture(event)"
-                                        class="form-control @error('profile_picture') is-invalid @enderror">
-                                    <span>
-                                        <i class="ti ti-file-broken"></i>Upload File
-                                    </span>
-                                </div>
-                                <p>JPG, GIF or PNG. Max size of 800K</p>
-                            </div>
-                            @error('profile_picture')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div> --}}
-
                     <div class="col-md-12">
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
