@@ -18,8 +18,8 @@
                             <div class="profile-pic-upload">
                                 <div class="profile-pic">
                                     <img id="profilePreview"
-                                    src="{{ $distributor_dealers && $distributor_dealers->profile_picture
-                                        ? asset('storage/profile_pictures/' . $distributor_dealers->profile_picture)
+                                    src="{{ $distributor_dealers && $distributor_dealers->profile_image
+                                        ? asset('storage/distributor_dealer_profile_image/' . $distributor_dealers->profile_image)
                                         : asset('images/default-user.png') }}"
                                     alt="Profile Image" class="img-thumbnail mb-2">
                                 </div>
@@ -471,7 +471,8 @@
                                                     <span class="form-icon"><i
                                                             class="ti ti-calendar-check"></i></span>
                                                     <input type="text" name="birthdate[]"
-                                                        value="{{ old('birthdate',$p->birthdate) }}"
+                                                        {{-- value="{{ old('birthdate',$p->birthdate) }}" --}}
+                                                         value="{{ old('birthdate', \Carbon\Carbon::parse($p->birthdate)->format('d-m-Y')) }}"
                                                         class="form-control datePicker" placeholder="">
                                                 </div>
                                             </td>
@@ -599,10 +600,11 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Date</label>
-                                <input type="date" name="date" class="form-control datePicker"
+                                <input type="text" name="date" class="form-control datePicker"
                                     placeholder="Date"
-                                    value="{{ old('date',$distributor_dealers->date) }}">
-                                    {{-- value="{{ old('date', isset($distributor_dealers) ? \Carbon\Carbon::parse($distributor_dealers->date)->format('d-m-Y') : now()->format('d-m-Y')) }}"> --}}
+                                    {{-- value="{{ old('date',$distributor_dealers->date) }}"> --}}
+                                    {{-- value="{{ old('date', isset($distributor_dealers) ? \Carbon\Carbon::parse($distributor_dealers->date)->format('d-m-Y') : '') }}"> --}}
+                                    value="{{ old('date', \Carbon\Carbon::parse($distributor_dealers->date)->format('d-m-Y')) }}">
                                 <span id="date_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -816,21 +818,20 @@
 <script>
     /**** date-picker ****/
     function initFlatpickr() {
-        $('.datePicker').each(function() {
-            if (!$(this).hasClass('flatpickr-input')) {
-                flatpickr(this, {
-                    dateFormat: "d-m-Y",
-                    maxDate: "today",
-                    defaultDate: "{{ old('date', isset($detail) ? \Carbon\Carbon::parse($detail->date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
-                    onReady: removeTodayHighlight,
-                    onMonthChange: removeTodayHighlight,
-                    onYearChange: removeTodayHighlight,
-                    onOpen: removeTodayHighlight,
-                    onChange: removeTodayHighlight
-                });
-            }
-        });
-    }
+    $('.datePicker').each(function () {
+        if (!$(this).hasClass('flatpickr-input')) {
+            flatpickr(this, {
+                dateFormat: "d-m-Y", // CORRECTED format
+                maxDate: "today",
+                onReady: removeTodayHighlight,
+                onMonthChange: removeTodayHighlight,
+                onYearChange: removeTodayHighlight,
+                onOpen: removeTodayHighlight,
+                onChange: removeTodayHighlight
+            });
+        }
+    });
+}
 
     function removeTodayHighlight(selectedDates, dateStr, instance) {
         const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");

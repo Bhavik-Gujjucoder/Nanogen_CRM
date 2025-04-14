@@ -82,19 +82,22 @@ class DistributorsDealersController extends Controller
         $d_d->save();
 
         if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
+
             $company_name    = $request->input('company_name');
             $product_id      = $request->input('product_id');
             $quantity        = $request->input('quantity');
             $company_remarks = $request->input('company_remarks');
 
             foreach ($company_name as $key => $company_name) {
-                DealershipCompanies::create([
-                    'dd_id'           => $d_d->id,
-                    'company_name'    => $company_name,
-                    'product_id'      => $product_id[$key],
-                    'quantity'        => $quantity[$key],
-                    'company_remarks' => $company_remarks[$key],
-                ]);
+                if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
+                    DealershipCompanies::create([
+                        'dd_id'           => $d_d->id,
+                        'company_name'    => $company_name,
+                        'product_id'      => $product_id[$key],
+                        'quantity'        => $quantity[$key],
+                        'company_remarks' => $company_remarks[$key],
+                    ]);
+                }
             }
         }
 
@@ -104,16 +107,18 @@ class DistributorsDealersController extends Controller
             $address   = $request->input('address');
 
             foreach ($name as $key => $name) {
-                ProprietorPartnerDirector::create([
-                    'dd_id'     => $d_d->id,
-                    'name'      => $name,
-                    'birthdate' => $birthdate[$key],
-                    'address'   => $address[$key],
-                ]);
+                if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
+                    ProprietorPartnerDirector::create([
+                        'dd_id'     => $d_d->id,
+                        'name'      => $name,
+                        'birthdate' => $birthdate[$key],
+                        'address'   => $address[$key],
+                    ]);
+                }
             }
         }
-
-        return redirect()->route('distributors_dealers.index')->with('success', 'Record created successfully!');
+       
+            return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record created successfully!');
     }
 
     /**
@@ -122,6 +127,7 @@ class DistributorsDealersController extends Controller
     public function edit(string $id)
     {
         $distributor_dealers = DistributorsDealers::findOrFail($id);
+       
         $data = [
             'page_title'          => 'Edit Distributors and Dealers',
             'distributor_dealers' => $distributor_dealers,
@@ -188,7 +194,7 @@ class DistributorsDealersController extends Controller
                 }
             }
         }
-        return redirect()->route('distributors_dealers.index')->with('success', 'Record updated successfully.');
+        return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record updated successfully.');
     }
 
     /**
@@ -201,8 +207,8 @@ class DistributorsDealersController extends Controller
         ProprietorPartnerDirector::where('dd_id', $id)->delete();
         if ($d_d->profile_image) {
             Storage::disk('public')->delete('distributor_dealer_profile_image/' . $d_d->profile_image);
-        }
+        } 
         $d_d->delete();
-        return redirect()->route('distributors_dealers.index')->with('success', 'Record deleted successfully!');
+        return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
     }
 }
