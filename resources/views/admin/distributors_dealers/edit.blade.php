@@ -241,7 +241,7 @@
                         </div>
                         <div class="col-md-10">
                             <div class="listcheck mb-3">
-                                <label class="col-form-label">Type of A/c. <span class="text-danger">*</span></label>
+                                <label class="col-form-label">Type of A/c. </label>
                                 <ul>
                                     <li class="form-check form-check-md d-flex align-items-center">
                                         <input class="form-check-input" name="ac_type" type="radio" value="1"
@@ -404,7 +404,7 @@
                         <div class="col-md-12">
                             <div class="listcheck">
                                 <label class="col-form-label">Status of Firm
-                                    <span class="text-danger">*</span></label>
+                                    </label>
                                 <p class="smallnote">
                                     (For partnership firms enclose copy of partnership Deed
                                     and for Companies Memorandum Articles of Association)
@@ -524,8 +524,7 @@
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Name and address of associate firm(s) <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Name and address of associate firm(s) </label>
                                 <input type="text" name="associate_name_address"
                                     value="{{ old('associate_name_address', $distributor_dealers->associate_name_address) }}"
                                     class="form-control" placeholder="Name and address of associate firm(s)">
@@ -535,7 +534,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="col-form-label">Indicate number of people employed in your firm
-                                    (including active partners)<span class="text-danger">*</span></label>
+                                    (including active partners)</label>
                                 <input type="number" name="indicate_number"
                                     value="{{ old('indicate_number', $distributor_dealers->indicate_number) }}"
                                     class="form-control"
@@ -573,8 +572,7 @@
 
                             <div class="col-md-10">
                                 <div class="listcheck mb-3">
-                                    <label class="col-form-label">Do you have Godown Facility? <span
-                                            class="text-danger">*</span></label>
+                                    <label class="col-form-label">Do you have Godown Facility? </label>
                                     <ul>
                                         <li class="form-check form-check-md d-flex align-items-center">
                                             {{-- <input class="form-check-input" name="godown_facility" type="radio"
@@ -617,8 +615,7 @@
 
                                         <div class="col-md-6 mt-0">
                                             <div class="mb-3">
-                                                <label class="col-form-label">Address of Godown<span
-                                                        class="text-danger">*</span></label>
+                                                <label class="col-form-label">Address of Godown</label>
                                                 <textarea type="text" name="godown_address" class="form-control" placeholder="Address of Godown">{{ old('godown_address', $distributor_dealers->godown_address) }}</textarea>
                                                 <span id="godown_address_error" class="text-danger"></span>
                                             </div>
@@ -704,8 +701,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="col-form-label d-block">Construction <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-form-label d-block">Construction</label>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="godown_construction"
                                                 id="construction_permanent" value="Permanent"
@@ -728,8 +724,7 @@
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="col-form-label">Experience and capability <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-form-label">Experience and capability </label>
                                         <input type="text" name="experience_capability" class="form-control"
                                             value="{{ old('experience_capability', $distributor_dealers->experience_capability) }}"
                                             placeholder="Experience and capability">
@@ -739,8 +734,7 @@
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="col-form-label">Financial standing and capability to invest <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-form-label">Financial standing and capability to invest </label>
                                         <input type="text" name="financial_capability" class="form-control"
                                             value="{{ old('financial_capability', $distributor_dealers->financial_capability) }}"
                                             placeholder="Financial standing and capability to invest">
@@ -752,8 +746,7 @@
 
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="col-form-label d-block">Market reputation and credibility <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label d-block">Market reputation and credibility </label>
 
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="market_reputation"
@@ -800,7 +793,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label">Business potential of party (Estimated
-                                        sales/month) <span class="text-danger">*</span></label>
+                                        sales/month) </label>
                                     <input type="text" name="business_potential" class="form-control"
                                         placeholder="Estimated sales/month"
                                         value="{{ old('business_potential', $distributor_dealers->market_potential) }}">
@@ -809,8 +802,7 @@
 
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="col-form-label">Total market potential of the area <span
-                                            class="text-danger">*</span></label>
+                                    <label class="col-form-label">Total market potential of the area </label>
                                     <input type="text" name="market_potential" class="form-control"
                                         placeholder="Total market potential"
                                         value="{{ old('market_potential', $distributor_dealers->market_potential) }}">
@@ -819,8 +811,7 @@
 
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="col-form-label">Assurance of minimum turnover <span
-                                            class="text-danger">*</span></label>
+                                    <label class="col-form-label">Assurance of minimum turnover</label>
                                     <input type="text" name="minimum_turnover" class="form-control"
                                         placeholder="Minimum turnover assurance"
                                         value="{{ old('minimum_turnover', $distributor_dealers->minimum_turnover) }}">
@@ -830,7 +821,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="col-form-label">Approximate number of competitors stockists in
-                                        the area/town (major competitors) <span class="text-danger">*</span></label>
+                                        the area/town (major competitors) </label>
                                     <input type="text" name="competitor_count" class="form-control"
                                         placeholder="No. of major competitors"
                                         value="{{ old('competitor_count', $distributor_dealers->competitor_count) }}">
@@ -839,8 +830,7 @@
 
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="col-form-label">Credit limit <span
-                                            class="text-danger">*</span></label>
+                                    <label class="col-form-label">Credit limit </label>
                                     <input type="text" name="credit_limit" class="form-control"
                                         placeholder="Credit limit"
                                         value="{{ old('credit_limit', $distributor_dealers->credit_limit) }}">
