@@ -280,7 +280,7 @@
         $("#orderForm").validate({
             ignore: [],
             rules: {
-                party_name: {
+                dd_id: {
                     required: true
                 },
                 order_date: {
@@ -293,7 +293,7 @@
                     minlength: 10,
                     maxlength: 10
                 },
-                salesman: {
+                salesman_id: {
                     required: true
                 },
                 transport: {
@@ -313,7 +313,7 @@
                 }
             },
             messages: {
-                party_name: "Please enter party name",
+                dd_id: "Please enter party name",
                 order_date: "Please enter a valid order date",
                 mobile_no: {
                     required: "Please enter mobile number",
@@ -321,7 +321,7 @@
                     minlength: "Mobile number must be 10 digits",
                     maxlength: "Mobile number must be 10 digits"
                 },
-                salesman: "Please enter salesman name",
+                salesman_id: "Please enter salesman name",
                 transport: "Please enter transport details",
                 freight: "Please enter freight value",
                 gst_no: "Please enter GST number",
@@ -331,9 +331,13 @@
             errorPlacement: function(error, element) {
                 if (element.attr("name") === "dummy") {
                     $("#productError").text(error.text()).show();
+                } else if (element.hasClass('select2-hidden-accessible')) {
+                    error.addClass('text-danger');
+                    error.insertAfter(element.next('.select2')); // This targets the Select2 container
                 } else {
                     error.addClass('text-danger');
                     error.insertAfter(element);
+                    
                 }
             },
             success: function(label, element) {
