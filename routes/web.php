@@ -2,6 +2,7 @@
 
 use App\Models\Product;
 use App\Models\Variation;
+use App\Models\DistributorsDealers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -13,13 +14,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SalesPersonController;
 use App\Http\Controllers\CityManagementController;
-use App\Http\Controllers\DistributorsDealersController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
-use App\Http\Controllers\SalesPersonController;
+use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\StateManagementController;
-use App\Models\DistributorsDealers;
+use App\Http\Controllers\DistributorsDealersController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -108,6 +109,9 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
+    /* Order Management */
+    Route::resource('order_management', OrderManagementController::class);
+    Route::post('/order/bulk-delete', [OrderManagementController::class, 'bulkDelete'])->name('order_management.bulkDelete');
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
@@ -116,6 +120,8 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     });
 
     Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
+    Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get'); 
+    Route::post('/order_product_variation_price/get', [ProductController::class, 'get_product_variation_price'])->name('product.variation.price.get'); 
 
 
 });

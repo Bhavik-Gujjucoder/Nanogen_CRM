@@ -111,8 +111,7 @@
                                             class="form-control">
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Variation Name <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-form-label">Variation Name <span class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
                                             @foreach ($variations as $v)

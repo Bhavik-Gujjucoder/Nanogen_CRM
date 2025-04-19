@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\VariationOption;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\hasOne;
+
+class OrderManagementProduct extends Model
+{
+    protected $table = 'order_management_products';
+    // protected $guarded = [];
+    protected $fillable = [
+        'order_id', 'product_id', 'packing_size_id', 'price', 'qty', 'total'
+    ];
+
+          /**
+         * Get all of the comments for the OrderManagement
+         *
+         * @return hasOne
+         */
+        public function variation_option(): hasOne
+        {
+            return $this->hasOne(VariationOption::class,'id', 'packing_size_id' );
+        }
+}

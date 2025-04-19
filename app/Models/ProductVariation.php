@@ -11,6 +11,6 @@ class ProductVariation extends Model
 
 
     public function variation_option_value(){
-        return $this->hasOne(VariationOption::class,'id','variation_option_id');
+        return $this->hasOne(VariationOption::class,'id', 'variation_option_id');
     }
 }

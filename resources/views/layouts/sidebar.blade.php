@@ -38,7 +38,7 @@
                                     class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="order-management.html">Order Management</a></li>
+                                <li><a href="{{ route('order_management.index') }}">Order Management</a></li>
                                 <li><a href="{{ route('sales_person.index') }}">Sales Persons</a></li>
                                 <li><a href="targets.html">Targets</a></li>
                                 <li><a href="areawise-sales.html">Area Wise Sales</a></li>

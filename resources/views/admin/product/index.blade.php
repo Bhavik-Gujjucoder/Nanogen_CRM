@@ -18,32 +18,10 @@
              <div
                 class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
 
-                {{-- <div class="dropdown me-2">
-                   <a href="javascript:void(0);" class="dropdown-toggle"
-                      data-bs-toggle="dropdown"><i
-                      class="ti ti-package-export me-2"></i>Export</a>
-                   <div class="dropdown-menu  dropdown-menu-end">
-                      <ul>
-                         <li>
-                            <a href="javascript:void(0);" class="dropdown-item"><i
-                               class="ti ti-file-type-pdf text-danger me-1"></i>Export
-                            as PDF</a>
-                         </li>
-                         <li>
-                            <a href="javascript:void(0);" class="dropdown-item"><i
-                               class="ti ti-file-type-xls text-green me-1"></i>Export
-                            as Excel </a>
-                         </li>
-                      </ul>
-                   </div>
-                </div> --}}
-
-                <!-- <a href="javascript:void(0);" class="btn btn-primary"
-                   data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i
-                   class="ti ti-square-rounded-plus me-2"></i>Add Catalogue</a> -->
+               
 
                    <a href="{{ route('product.create') }}" class="btn btn-primary"><i
-                   class="ti ti-square-rounded-plus me-2"></i>Add Catalogue</a>
+                   class="ti ti-square-rounded-plus me-2"></i>Add Product</a>
              </div>
           </div>
        </div>

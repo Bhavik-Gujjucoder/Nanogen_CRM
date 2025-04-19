@@ -117,7 +117,6 @@ class DistributorsDealersController extends Controller
                 }
             }
         }
-       
             return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record created successfully!');
     }
 
@@ -127,7 +126,6 @@ class DistributorsDealersController extends Controller
     public function edit(string $id)
     {
         $distributor_dealers = DistributorsDealers::findOrFail($id);
-       
         $data = [
             'page_title'          => 'Edit Distributors and Dealers',
             'distributor_dealers' => $distributor_dealers,
@@ -211,4 +209,6 @@ class DistributorsDealersController extends Controller
         $d_d->delete();
         return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
     }
+
+    
 }

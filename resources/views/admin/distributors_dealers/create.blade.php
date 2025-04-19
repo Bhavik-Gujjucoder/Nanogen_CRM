@@ -33,29 +33,17 @@
                             </div>
                         </div>
 
-                        {{-- <div class="col-md-12 mb-4">
-                            <!-- Default value when checkbox is NOT checked -->
-                            <input type="hidden" name="user_type" value="2">
-
-                            <!-- When checked, this value overrides the hidden input -->
-                            <input type="checkbox" id="toggle" name="user_type" value="1"
-                                class="toggleCheckbox" />
-
-                            <label for="toggle" class="toggleContainer">
-                                <div>Distributor</div>
-                                <div>Dealers</div>
-                            </label>
-                        </div> --}}
-
                         <div class="radio-group-bg">
                             <div class="radio-group-flex">
                                 <div class="radio-group-tab">
-                                    <input type="radio" name="user_type" value="1" id="distributor-radio" class="create-deitr" {{ request('dealer') == 1  ? '' : 'checked' }}/>
+                                    <input type="radio" name="user_type" value="1" id="distributor-radio"
+                                        class="create-deitr" {{ request('dealer') == 1 ? '' : 'checked' }} />
                                     <label for="distributor-radio">Distributor</label>
                                 </div>
 
                                 <div class="radio-group-tab">
-                                    <input type="radio" name="user_type" value="2" id="dealers-radio" class="create-deitr" {{ request('dealer') == 1  ? 'checked' : '' }}/>
+                                    <input type="radio" name="user_type" value="2" id="dealers-radio"
+                                        class="create-deitr" {{ request('dealer') == 1 ? 'checked' : '' }} />
                                     <label for="dealers-radio">Dealers</label>
                                 </div>
                             </div>
@@ -360,7 +348,7 @@
                         <div class="col-md-12">
                             <div class="listcheck">
                                 <label class="col-form-label">Status of Firm
-                                    </label>
+                                </label>
                                 <p class="smallnote">
                                     (For partnership firms enclose copy of partnership Deed
                                     and for Companies Memorandum Articles of Association)
@@ -521,7 +509,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="col-md-6 mt-0">
                                             <div class="mb-3">
                                                 <label class="col-form-label">Address of Godown</label>
@@ -653,7 +640,8 @@
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="col-form-label">Financial standing and capability to invest </label>
+                                        <label class="col-form-label">Financial standing and capability to invest
+                                        </label>
                                         <input type="text" name="financial_capability" class="form-control"
                                             value="{{ old('financial_capability') }}"
                                             placeholder="Financial standing and capability to invest">
@@ -746,10 +734,59 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label">Credit limit </label>
-                                    <input type="text" name="credit_limit" class="form-control"
-                                        placeholder="Credit limit" value="{{ old('credit_limit') }}">
+                                    <input type="text" name="cr_limit" class="form-control"
+                                        placeholder="Credit limit" value="{{ old('cr_limit') }}">
                                 </div>
                             </div>
+                            
+                            {{-- @if (request('dealer') != 1) --}}
+                                <div class="col-md-5 ">
+                                    <label class="col-form-label">Credit Limit </label>
+                                    <div class="form-input-icon input-group gropinginput box-bordernone">
+                                        <input type="number" step="any"
+                                            class="form-control"
+                                            placeholder="0" name="credit_limit"
+                                            value="{{ old('credit_limit') }}">
+                                        <div class="form-input-icon select-2-box">
+                                            <select class="select2" id="credit_limit_type"
+                                                name="credit_limit_type" aria-hidden="true" style="width:100%">
+                                                <option value="day" {{ old('credit_limit_type') == 'month' ? 'selected' : 'selected' }} >
+                                                    Days</option>
+                                                <option value="month"
+                                                    {{ old('credit_limit_type') == 'month' ? 'selected' : '' }}>
+                                                    Month</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{-- @endif --}}
+                            {{-- @if (request('dealer') == 1)
+                            <div class="col-md-5 ">
+                                <label class="col-form-label">Dealer Credit Limit <span
+                                        class="text-danger">*</span></label>
+                                <div class="form-input-icon input-group gropinginput box-bordernone">
+                                    <input type="number"
+                                        class="form-control @error('dealer_credit_limit') is-invalid @enderror"
+                                        name="dealer_credit_limit" placeholder="0"
+                                        value="{{ old('dealer_credit_limit', getSetting('dealer_credit_limit')) }}">
+                                    <div class="form-input-icon select-2-box">
+                                        <select class="select2" id="dealer_cr_limit_type" name="dealer_cr_limit_type"
+                                            aria-hidden="true" style="width:100%">
+                                            <option value="day"
+                                                {{ old('dealer_cr_limit_type', getSetting('dealer_cr_limit_type')) == 'day' ? 'selected' : '' }}>
+                                                Days</option>
+                                            <option value="month"
+                                                {{ old('dealer_cr_limit_type', getSetting('dealer_cr_limit_type')) == 'month' ? 'selected' : '' }}>
+                                                Month</option>
+                                        </select>
+                                    </div>
+                                    @error('dealer_credit_limit')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            @endif --}}
+
 
                             <div class="col-md-12">
                                 <div class="mb-3">

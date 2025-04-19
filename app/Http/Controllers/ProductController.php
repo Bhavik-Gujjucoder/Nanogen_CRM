@@ -77,7 +77,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $data['page_title'] = 'Create Product Catalogue';
+        $data['page_title'] = 'Create Product';
         $data['variations'] = Variation::where('status', 1)->get()->all();
         $data['category']   = Category::where('status', 1)->get()->all();
         $data['grads']      = GradeManagement::where('status', 1)->get()->all();
@@ -125,7 +125,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $data = [
-            'page_title' => 'Edit Product Catalogue',
+            'page_title' => 'Edit Product',
             'product'    => $product,
             'variations' => Variation::where('status', 1)->get()->all(),
             'category'   => Category::where('status', 1)->get()->all(),
@@ -208,5 +208,35 @@ class ProductController extends Controller
         }
         return response()->json(['message' => 'No records selected!'], 400);
     }
+
+    
+    public function get_product_variation(Request $request)
+    {
+        if (!empty($request->product_id)) {
+            $product_variation = ProductVariation::with('variation_option_value')->where('product_id', $request->product_id)->get();
+            return response()->json(['product_variation'=> $product_variation,
+            'success' => true,
+            'message' => 'Selected products deleted successfully!']);
+        }
+        return response()->json(['message' => 'No records selected!'], 400);
+    }
+
+    public function get_product_variation_price(Request $request)
+    {
+        // dd($request->variation_option_id);
+        if ($request->variation_option_id) {
+
+            $product = ProductVariation::with('variation_option_value')
+            ->where('product_id', $request->product_id)
+            ->where('variation_option_id', $request->variation_option_id)
+            ->first();
+
+            return response()->json(['product'=> $product,
+            'success' => true,
+            'message' => 'Selected products deleted successfully!']);
+        }
+        return response()->json(['message' => 'No records selected!'], 400);
+    }
+    
 }
 

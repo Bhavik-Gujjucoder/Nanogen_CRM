@@ -64,7 +64,9 @@ return new class extends Migration
             $table->text('market_potential')->nullable();
             $table->text('minimum_turnover')->nullable();
             $table->string('competitor_count')->nullable();
+            $table->string('cr_limit')->nullable();
             $table->string('credit_limit')->nullable();
+            $table->string('credit_limit_type')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

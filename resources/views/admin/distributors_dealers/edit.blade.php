@@ -831,9 +831,30 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label">Credit limit </label>
-                                    <input type="text" name="credit_limit" class="form-control"
-                                        placeholder="Credit limit"
+                                    <input type="text" name="cr_limit" class="form-control"
+                                        placeholder="Cr limit"
+                                        value="{{ old('cr_limit', $distributor_dealers->cr_limit) }}">
+                                </div> 
+                            </div>
+
+                            <div class="col-md-5 mb-3">
+                                <label class="col-form-label">Credit Limit </label>
+                                <div class="form-input-icon input-group gropinginput box-bordernone">
+                                    <input type="number" step="any"
+                                        class="form-control"  
+                                        placeholder="0" name="credit_limit"
                                         value="{{ old('credit_limit', $distributor_dealers->credit_limit) }}">
+                                    <div class="form-input-icon select-2-box">
+                                        <select class="select2" id="credit_limit_type"
+                                            name="credit_limit_type" aria-hidden="true" style="width:100%">
+                                            <option value="day"
+                                                {{ old('credit_limit_type',$distributor_dealers->credit_limit_type) == 'day' ? 'selected' : '' }}>
+                                                Days</option>
+                                            <option value="month"
+                                                {{ old('credit_limit_type', $distributor_dealers->credit_limit_type) == 'month' ? 'selected' : '' }}>
+                                                Month</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 

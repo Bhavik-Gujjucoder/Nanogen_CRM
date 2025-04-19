@@ -17,6 +17,7 @@ class GeneralSettingController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         if ($request->form_type == 'company-detail') {
             $request->validate([
                 'company_logo'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -25,13 +26,22 @@ class GeneralSettingController extends Controller
                 'company_address' => 'required',
                 'distributor_payment_reminder_interval' => 'required',
                 'dealer_payment_reminder_interval'      => 'required',
+                'gst'             => 'required',
             ]);
         } elseif ($request->form_type == 'email-detail') {
             $request->validate([
                 'email_template_header' => 'required',
                 'email_template_footer' => 'required',
             ]);
+        } elseif ($request->form_type == 'distributors-dealers'){
+            $request->validate([
+                'distributor_credit_limit' => 'required',
+                'dealer_credit_limit' => 'required',
+            ]);
+        } else{
+            // 
         }
+        
         $data = $request->except('_token');
         $data = $request->except('company_logo');
         if (!$data) {
@@ -54,8 +64,16 @@ class GeneralSettingController extends Controller
                 $general_setting->save();
             }
 
+            $data = $request->except(['_token', 'company_logo','form_type']);
+            // dd($data);
             foreach ($data as $key => $value) {
-                GeneralSetting::where('key', $key)->update(['value' => $value]);
+                // dd($key);
+                // dd($key->toArray());
+                // GeneralSetting::where('key', $key)->update(['value' => $value]);
+                GeneralSetting::updateOrCreate(
+                    ['key' => $key],         /* Search by key */
+                    ['value' => $value]      /* Update or set value */
+                );
             }
             return redirect()->back()->withSuccess('Setting update successfully.');
         }
