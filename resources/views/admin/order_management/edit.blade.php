@@ -518,7 +518,7 @@
             });
 
             let all_total = 0;
-            let gst = parseFloat('{{ getSetting('gst') }}') || 0;
+            let gst = parseFloat('{{ $order->gst ?  $order->gst  : getSetting('gst') }}') || 0;
 
             $('[name="total[]"]').each(function() {
                 let val = parseFloat($(this).val()) || 0;
