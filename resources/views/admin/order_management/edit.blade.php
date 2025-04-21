@@ -11,7 +11,7 @@
             @method('PUT')
             <div class="row mb-4 order-form">
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Party Name</label>
+                    <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">
                         <option value="">Select Party</option>
                         @foreach ($distributor_dealers as $dd)
@@ -25,7 +25,7 @@
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Order Date</label>
+                    <label class="col-form-label">Order Date <span class="text-danger">*</span></label>
                     <div class="icon-form">
                         <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
                         <input type="text" name="order_date"
@@ -35,13 +35,13 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Phone</label>
+                    <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                     <input type="number" name="mobile_no" value="{{ old('mobile_no', $order->mobile_no) }}"
                         class="form-control" placeholder="1234567890">
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Salesman</label>
+                    <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
 
                     <select name="salesman_id" class="form-control form-select search-dropdown">
                         <option value="">Select Salesman</option>
@@ -54,23 +54,23 @@
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Transport</label>
+                    <label class="col-form-label">Transport <span class="text-danger">*</span></label>
                     <input type="text" name="transport" value="{{ old('transport', $order->transport) }}"
                         class="form-control" placeholder="Transport">
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Freight</label>
+                    <label class="col-form-label">Freight <span class="text-danger">*</span></label>
                     <input type="text" name="freight" value="{{ old('freight', $order->freight) }}"
                         class="form-control" placeholder="Freight">
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="col-form-label">GST No.</label>
+                    <label class="col-form-label">GST No. <span class="text-danger">*</span></label>
                     <input type="text" name="gst_no" value="{{ old('gst_no', $order->gst_no) }}"
                         class="form-control" placeholder="GST No">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="col-form-label">Address</label>
+                    <label class="col-form-label">Address <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="address" placeholder="Address">{{ old('address', $order->address) }}</textarea>
                 </div>
             </div>
@@ -81,11 +81,11 @@
                     <thead>
                         <tr>
                             <th scope="col">S.No</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Packing Size</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">QTY</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">Product Name <span class="text-danger">*</span></th>
+                            <th scope="col">Packing Size <span class="text-danger">*</span></th>
+                            <th scope="col">Price <span class="text-danger">*</span></th>
+                            <th scope="col">QTY <span class="text-danger">*</span></th>
+                            <th scope="col">Total <span class="text-danger">*</span></th>
                             {{-- <th scope="col">Action</th> --}}
                             <th data-label="Action">
                                 <button type="button" onclick="addpropRow()" class="btn btn-primary">Add New</button>
