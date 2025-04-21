@@ -47,11 +47,16 @@
                             <label class="col-form-label">Category <span class="text-danger">*</span></label>
                             <select class="select" name="category_id">
                                 <option value="">Select category</option>
-                                @foreach ($category as $c)
-                                    <option value="{{ $c->id }}"
-                                        {{ $product->category_id == $c->id ? 'selected' : '' }}>{{ $c->category_name }}
-                                    </option>
-                                @endforeach
+                                @if ($category)
+                                    @foreach ($category as $c)
+                                        <option value="{{ $c->id }}"
+                                            {{ $product->category_id == $c->id ? 'selected' : '' }}>
+                                            {{ $c->category_name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
                             </select>
                             <div id="category_id_error" class="error-message text-danger"></div>
                         </div>
@@ -62,11 +67,15 @@
                             <label class="col-form-label">Grade <span class="text-danger">*</span></label>
                             <select class="select" name="grade_id">
                                 <option value="">Select grade</option>
-                                @foreach ($grads as $g)
-                                    <option value="{{ $g->id }}"
-                                        {{ $product->grade_id == $g->id ? 'selected' : '' }}>{{ $g->name }}
-                                    </option>
-                                @endforeach
+                                @if ($grads)
+                                    @foreach ($grads as $g)
+                                        <option value="{{ $g->id }}"
+                                            {{ $product->grade_id == $g->id ? 'selected' : '' }}>{{ $g->name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
                             </select>
                             <div id="grade_id_error" class="error-message text-danger"></div>
                         </div>
@@ -109,36 +118,39 @@
                                 New</button>
                         </div>
 
-                        <div id="fields-container">
-                            @foreach ($product->product_variations as $variation)
-                                <div class="field-group ">
-                                    <input type="number" name="dealer_price[]" value="{{ $variation->dealer_price }}"
-                                        class="form-control" placeholder="Dealer Price">
+                        @if ($product->product_variations)
+                            <div id="fields-container">
+                                @foreach ($product->product_variations as $variation)
+                                    <div class="field-group ">
+                                        <input type="number" name="dealer_price[]"
+                                            value="{{ $variation->dealer_price }}" class="form-control"
+                                            placeholder="Dealer Price">
 
-                                    <input type="number" name="distributor_price[]"
-                                        value="{{ $variation->distributor_price }}" class="form-control"
-                                        placeholder="Distributor Price">
+                                        <input type="number" name="distributor_price[]"
+                                            value="{{ $variation->distributor_price }}" class="form-control"
+                                            placeholder="Distributor Price">
 
-                                    <select class="select" name="variation_id[]">
-                                        <option value="">Select Variation</option>
-                                        @foreach ($variations as $v)
-                                            <option value="{{ $v->id }}"
-                                                {{ $variation->variation_id == $v->id ? 'selected' : '' }}>
-                                                {{ $v->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <select class="select" name="variation_option_id[]">
-                                        @foreach (getVariationOptions($variation->variation_id) as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $variation->variation_option_value ? ($variation->variation_option_value->id == $item->id ? 'selected' : '') : '' }}>
-                                                {{ $item->value }}</option>
-                                        @endforeach
-                                    </select>
-                                    <button type="button" class="remove-btn btn btn-danger mb-1"
-                                        onclick="removeField(this)">Remove</button>
-                                </div>
-                            @endforeach
-                        </div>
+                                        <select class="select" name="variation_id[]">
+                                            <option value="">Select Variation</option>
+                                            @foreach ($variations as $v)
+                                                <option value="{{ $v->id }}"
+                                                    {{ $variation->variation_id == $v->id ? 'selected' : '' }}>
+                                                    {{ $v->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <select class="select" name="variation_option_id[]">
+                                            @foreach (getVariationOptions($variation->variation_id) as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ $variation->variation_option_value ? ($variation->variation_option_value->id == $item->id ? 'selected' : '') : '' }}>
+                                                    {{ $item->value }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="remove-btn btn btn-danger mb-1"
+                                            onclick="removeField(this)">Remove</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                         <div id="not_count_match" class="text-danger"></div>
                     </div>
 
@@ -291,7 +303,7 @@
                 }
 
                 // Validate file size (max 2MB)
-                if (file.size > 2097152) {  //2097152
+                if (file.size > 2097152) { //2097152
                     $("#product_image_error").html("File size must be less than 2MB.");
                     valid = false;
                 }

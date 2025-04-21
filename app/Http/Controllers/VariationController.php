@@ -44,7 +44,7 @@ class VariationController extends Controller
                     return $action_btn . ' </div></div>';
                 })
                 ->addColumn('value', function ($variation) {
-                    return $variation->variant_options->isNotEmpty() ? $variation->variant_options->pluck('value')->implode(', ') : '-';
+                    return $variation->variant_options->isNotEmpty() ? '<div class="option_value">'.$variation->variant_options->pluck('value')->implode(', ').'</div>' : '-';
                 })
                 ->filterColumn('value', function ($query, $keyword) {
                     $query->whereHas('variant_options', function ($q) use ($keyword) {

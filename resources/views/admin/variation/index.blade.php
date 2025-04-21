@@ -32,7 +32,8 @@
                     <tr>
                         <th class="no-sort" scope="col">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="variation_checkbox"><span class="checkmarks"></span>
+                                <input type="checkbox" id="select-all" class="variation_checkbox"><span
+                                    class="checkmarks"></span>
                             </label>
                         </th>
                         {{-- <th scope="col">SR. Number</th> --}}
@@ -97,6 +98,13 @@
                 searchable: false
             },
         ],
+        columnDefs: [{
+            targets: 1, // index of 'value' column
+            className: 'word-wrap',
+            width: '300px' // optional: controls how early wrap starts
+        }]
+
+
 
     });
 
@@ -149,19 +157,19 @@
 
     });
 
-    $(document).on('change', '.variation_checkbox', function () {
+    $(document).on('change', '.variation_checkbox', function() {
         let count = $('.variation_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
     // Handle Bulk Delete button click
     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.variation_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();

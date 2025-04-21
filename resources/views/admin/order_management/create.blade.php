@@ -12,20 +12,25 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order ID</label>
-                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control" readonly>
+                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control"
+                        readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">
                         <option value="">Select</option>
-                        @foreach ($distributor_dealers as $dd)
-                            <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }}
-                                data-user_type="{{ $dd->user_type }}">
-                                {{ $dd->applicant_name }}
-                                {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
-                            </option>
-                        @endforeach
+                        @if ($distributor_dealers)
+                            @foreach ($distributor_dealers as $dd)
+                                <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }}
+                                    data-user_type="{{ $dd->user_type }}">
+                                    {{ $dd->applicant_name }}
+                                    {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="">No record</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -48,11 +53,16 @@
 
                     <select name="salesman_id" class="form-control form-select search-dropdown">
                         <option value="">Select</option>
-                        @foreach ($salesmans as $s)
-                            <option value="{{ $s->id }}" {{ old('salesman_id') == $s->id ? 'selected' : '' }}>
-                                {{ $s->first_name }}
-                            </option>
-                        @endforeach
+                        @if ($salesmans)
+                            @foreach ($salesmans as $s)
+                                <option value="{{ $s->id }}"
+                                    {{ old('salesman_id') == $s->id ? 'selected' : '' }}>
+                                    {{ $s->first_name }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="">No record</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -61,18 +71,18 @@
                         placeholder="Transport">
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Freight  <span class="text-danger">*</span></label>
+                    <label class="col-form-label">Freight <span class="text-danger">*</span></label>
                     <input type="text" name="freight" value="{{ old('freight') }}" class="form-control"
                         placeholder="Freight">
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">GST No.  <span class="text-danger">*</span></label>
+                    <label class="col-form-label">GST No. <span class="text-danger">*</span></label>
                     <input type="text" name="gst_no" value="{{ old('gst_no') }}" class="form-control"
                         placeholder="GST No">
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Address  <span class="text-danger">*</span></label>
+                    <label class="col-form-label">Address <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="address" placeholder="Address">{{ old('address') }}</textarea>
                 </div>
             </div>
@@ -83,11 +93,11 @@
                     <thead>
                         <tr>
                             <th scope="col">S.No </th>
-                            <th scope="col">Product Name  <span class="text-danger">*</span></th>
-                            <th scope="col">Packing Size  <span class="text-danger">*</span></th>
-                            <th scope="col">Price  <span class="text-danger">*</span></th>
-                            <th scope="col">QTY  <span class="text-danger">*</span></th>
-                            <th scope="col">Total  <span class="text-danger">*</span></th>
+                            <th scope="col">Product Name <span class="text-danger">*</span></th>
+                            <th scope="col">Packing Size <span class="text-danger">*</span></th>
+                            <th scope="col">Price <span class="text-danger">*</span></th>
+                            <th scope="col">QTY <span class="text-danger">*</span></th>
+                            <th scope="col">Total <span class="text-danger">*</span></th>
                             <th scope="col">Action </th>
                         </tr>
                     </thead>
@@ -98,9 +108,13 @@
                                 <select name="product_id[]"
                                     class="form-control product-field form-select product_id-field search-dropdown">
                                     <option selected disabled>Select</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
-                                    @endforeach
+                                    @if ($products)
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="">No record</option>
+                                    @endif
                                 </select>
                             </td>
                             <td data-label="Packing Size">
@@ -122,7 +136,8 @@
                                     placeholder="Total">
                             </td>
                             <td data-label="Action">
-                                <button type="button" onclick="addpropRow()" class="btn btn-primary">Add New</button>
+                                <button type="button" onclick="addpropRow()" class="btn btn-primary">Add
+                                    New</button>
                             </td>
                         </tr>
                     </tbody>
@@ -280,7 +295,8 @@
                     $("#productError").text(error.text()).show();
                 } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');
-                    error.insertAfter(element.next('.select2')); // This targets the Select2 container
+                    error.insertAfter(element.next(
+                        '.select2')); // This targets the Select2 container
                 } else {
                     error.addClass('text-danger');
                     error.insertAfter(element);
@@ -446,7 +462,7 @@
             }
         });
     });
-    
+
     // Calculate Grand Total
     function calculateGrandTotal() {
         $('[name="price[]"]').each(function() {
@@ -485,7 +501,7 @@
     //     let selectedVariationOptionID = $(this).val();
     //     let priceField = $(this).closest('.field-group').find('[name="price[]"]');
     //     let user_type = $('select[name="dd_id"] option:selected').data('user_type'); //attr('data-user_type') 
-    
+
     //     if (selectedVariationOptionID) {
     //         $.ajax({
     //             url: "{{ route('product.variation.price.get') }}",
@@ -524,21 +540,19 @@
     //         let val = parseFloat($(this).val()) || 0;
     //         all_total += val;
     //     });
-    
-    
+
+
     //     // Example: show total in an element with id="grandTotal"
     //     $('#all_total').text('Total : ' + all_total.toFixed(2));
-    
+
     //     let gstAmount = (all_total * gst) / 100;
     //     let grandTotal = all_total + gstAmount;
     //     $('#gstAmount').text(gstAmount.toFixed(2));
     //     $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
-    
+
     //     $('input[name="total_order_amount"]').val(all_total.toFixed(0));
     //     $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
     //     $('input[name="grand_total"]').val(grandTotal.toFixed(0));
     // }
 </script>
-
-
 @endsection

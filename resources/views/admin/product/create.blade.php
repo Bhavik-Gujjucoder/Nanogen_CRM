@@ -46,9 +46,13 @@
                             <label class="col-form-label">Category <span class="text-danger">*</span></label>
                             <select class="select" name="category_id" value="{{ old('category_id') }}">
                                 <option value="">Select category</option>
-                                @foreach ($category as $c)
-                                    <option value="{{ $c->id }}">{{ $c->category_name }}</option>
-                                @endforeach
+                                @if ($category)
+                                    @foreach ($category as $c)
+                                        <option value="{{ $c->id }}">{{ $c->category_name }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
 
                             </select>
                             <div id="category_id_error" class="error-message text-danger"></div>
@@ -61,9 +65,13 @@
                             <select class="select" name="grade_id" value="{{ old('grade_id') }}">
 
                                 <option value="">Select grade</option>
-                                @foreach ($grads as $g)
-                                    <option value="{{ $g->id }}">{{ $g->name }}</option>
-                                @endforeach
+                                @if ($grads)
+                                    @foreach ($grads as $g)
+                                        <option value="{{ $g->id }}">{{ $g->name }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
                             </select>
                             <div id="grade_id_error" class="error-message text-danger"></div>
                         </div>
@@ -111,13 +119,17 @@
                                             class="form-control">
                                     </div>
                                     <div>
-                                        <label class="col-form-label">Variation Name <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Variation Name <span
+                                                class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
-                                            @foreach ($variations as $v)
-                                                <option value="{{ $v->id }}">{{ $v->name }}</option>
-                                            @endforeach
-
+                                            @if ($variations)
+                                                @foreach ($variations as $v)
+                                                    <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="">No record</option>
+                                            @endif
                                         </select>
                                     </div>
                                     <div>
@@ -209,7 +221,7 @@
                 }
 
                 // Validate file size (max 2MB)
-                if (file.size > 2097152) {  //2097152
+                if (file.size > 2097152) { //2097152
                     $("#product_image_error").html("File size must be less than 2MB.");
                     valid = false;
                 }

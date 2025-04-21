@@ -65,7 +65,7 @@ class OrderManagementController extends Controller
                     return '-';
                 })
                 ->addColumn('order_status', function ($row) {
-                    $order_status = '  
+                    $order_status = '
                      <a  href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"   data-status="1">
                         <span class="badge bg-warning">Pending</span>
                     </a>
@@ -79,7 +79,7 @@ class OrderManagementController extends Controller
                         <span class="badge bg-success">Delivery</span>
                     </a>';
 
-                    $action_btn = '<div class="dropdown table-action">'.  $row->statusBadge().'  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                    $action_btn = '<div class="dropdown table-action order_drpdown">'.  $row->statusBadge().'  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">';
                     Auth::user()->can('manage users') ? $action_btn .= $order_status : '';
 

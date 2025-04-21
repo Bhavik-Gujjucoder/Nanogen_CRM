@@ -13,21 +13,26 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order ID</label>
-                    <input type="text" name="unique_order_id" value="{{ $order->unique_order_id }}" class="form-control" readonly>
+                    <input type="text" name="unique_order_id" value="{{ $order->unique_order_id }}"
+                        class="form-control" readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">
                         <option value="">Select Party</option>
-                        @foreach ($distributor_dealers as $dd)
-                            <option value="{{ $dd->id }}"
-                                {{ old('dd_id', $order->dd_id) == $dd->id ? 'selected' : '' }}
-                                data-user_type="{{ $dd->user_type }}">
-                                {{ $dd->applicant_name }}
-                                {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
-                            </option>
-                        @endforeach
+                        @if ($distributor_dealers)
+                            @foreach ($distributor_dealers as $dd)
+                                <option value="{{ $dd->id }}"
+                                    {{ old('dd_id', $order->dd_id) == $dd->id ? 'selected' : '' }}
+                                    data-user_type="{{ $dd->user_type }}">
+                                    {{ $dd->applicant_name }}
+                                    {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="">No record</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -50,12 +55,16 @@
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
                     <select name="salesman_id" class="form-control form-select search-dropdown">
                         <option value="">Select Salesman</option>
-                        @foreach ($salesmans as $s)
-                            <option value="{{ $s->id }}"
-                                {{ old('salesman_id', $order->salesman_id) == $s->id ? 'selected' : '' }}>
-                                {{ $s->first_name }}
-                            </option>
-                        @endforeach
+                        @if ($salesmans)
+                            @foreach ($salesmans as $s)
+                                <option value="{{ $s->id }}"
+                                    {{ old('salesman_id', $order->salesman_id) == $s->id ? 'selected' : '' }}>
+                                    {{ $s->first_name }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="">No record</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -88,7 +97,7 @@
                         <option value="delivery" {{ old('order_status', $order->order_status) == 'delivery' ? 'selected' : '' }}>Delivery</option>
                     </select>
                 </div> --}}
-                
+
             </div>
             <input type="hidden" name="dummy" id="dummyValidationField" />
 
@@ -116,11 +125,15 @@
                                     <select name="product_id[]"
                                         class="form-control product-field form-select product_id-field search-dropdown">
                                         {{-- <option selected>Select</option> --}}
-                                        @foreach ($products as $product)
-                                            <option value="{{ $product->id }}"
-                                                {{ $p->product_id == $product->id ? 'selected' : '' }}>
-                                                {{ $product->product_name }}</option>
-                                        @endforeach
+                                        @if ($products)
+                                            @foreach ($products as $product)
+                                                <option value="{{ $product->id }}"
+                                                    {{ $p->product_id == $product->id ? 'selected' : '' }}>
+                                                    {{ $product->product_name }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="">No record</option>
+                                        @endif
                                     </select>
                                 </td>
                                 <td data-label="Packing Size">
@@ -128,17 +141,17 @@
                                         class="form-control form-select product-field packing_size_field search-dropdown">
                                         {{-- <option selected>Select</option> --}}
                                         @foreach (getProductVariationOptions($p->product_id) as $item)
-                                            <option value="{{ $item->variation_option_value->id }}"
+                                            <option value="{{ $item->variation_option_value->id ?? '' }}"
                                                 {{ $p->variation_option ? ($p->variation_option->id == $item->id ? 'selected' : '') : '' }}>
-                                                {{ $item->variation_option_value->value }}</option>
+                                                {{ $item->variation_option_value->value ?? '' }}</option>
                                         @endforeach
 
                                         {{-- <option value="{{ $p->variation_option->id }}" selected>{{ $p->variation_option->value }}</option> --}}
                                     </select>
                                 </td>
                                 <td data-label="Price">
-                                    <input type="number" name="price[]" value="{{ old('price', $p->price) }}" readonly
-                                        class="form-control product-field price-field" placeholder="Price">
+                                    <input type="number" name="price[]" value="{{ old('price', $p->price) }}"
+                                        readonly class="form-control product-field price-field" placeholder="Price">
                                 </td>
                                 <td data-label="QTY">
                                     <input type="number" name="qty[]" value="{{ old('qty', $p->qty) }}"
@@ -149,7 +162,8 @@
                                         readonly class="form-control total-field" placeholder="Total">
                                 </td>
                                 <td data-label="Action">
-                                    <button type="button" onclick="removeRow(this)" class="btn btn-danger">Remove</button>
+                                    <button type="button" onclick="removeRow(this)"
+                                        class="btn btn-danger">Remove</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -349,11 +363,12 @@
                     $("#productError").text(error.text()).show();
                 } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');
-                    error.insertAfter(element.next('.select2')); // This targets the Select2 container
+                    error.insertAfter(element.next(
+                    '.select2')); // This targets the Select2 container
                 } else {
                     error.addClass('text-danger');
                     error.insertAfter(element);
-                    
+
                 }
             },
             success: function(label, element) {
@@ -415,7 +430,7 @@
             placeholder: "Select"
         });
 
-        updateSerialNumbers(); 
+        updateSerialNumbers();
     }
     /*** END ***/
 
@@ -521,36 +536,36 @@
             }
         });
 
-      
+
     });
-      // Calculate Grand Total
-      function calculateGrandTotal() {
-            $('[name="price[]"]').each(function() {
-                let price = parseFloat($(this).val()) || 0;
-                let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]')
-                    .val()) || 0;
-                $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(
-                    0));
-            });
+    // Calculate Grand Total
+    function calculateGrandTotal() {
+        $('[name="price[]"]').each(function() {
+            let price = parseFloat($(this).val()) || 0;
+            let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]')
+                .val()) || 0;
+            $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(
+                0));
+        });
 
-            let all_total = 0;
-            let gst = parseFloat('{{ $order->gst ?  $order->gst  : getSetting('gst') }}') || 0;
+        let all_total = 0;
+        let gst = parseFloat('{{ $order->gst ? $order->gst : getSetting('gst') }}') || 0;
 
-            $('[name="total[]"]').each(function() {
-                let val = parseFloat($(this).val()) || 0;
-                all_total += val;
-            });
+        $('[name="total[]"]').each(function() {
+            let val = parseFloat($(this).val()) || 0;
+            all_total += val;
+        });
 
-            let gstAmount = (all_total * gst) / 100;
-            let grandTotal = all_total + gstAmount;
+        let gstAmount = (all_total * gst) / 100;
+        let grandTotal = all_total + gstAmount;
 
-            $('#all_total').text('Total : ' + all_total.toFixed(2));
-            $('#gstAmount').text(gstAmount.toFixed(2));
-            $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
+        $('#all_total').text('Total : ' + all_total.toFixed(2));
+        $('#gstAmount').text(gstAmount.toFixed(2));
+        $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
 
-            $('input[name="total_order_amount"]').val(all_total.toFixed(0));
-            $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
-            $('input[name="grand_total"]').val(grandTotal.toFixed(0));
-        }
+        $('input[name="total_order_amount"]').val(all_total.toFixed(0));
+        $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
+        $('input[name="grand_total"]').val(grandTotal.toFixed(0));
+    }
 </script>
 @endsection
