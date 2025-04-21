@@ -8,7 +8,7 @@
     <div class="welcome-wrap mb-4">
         <div class=" d-flex align-items-center justify-content-between flex-wrap">
             <div class="mb-3">
-                <h2 class="mb-1 text-white">Welcome Back, {{auth()->user()->name}}</h2>
+                <h2 class="mb-1 text-white">Welcome Back, {{ auth()->user()->name }}</h2>
                 <p class="text-light"></p>
             </div>
         </div>
@@ -23,13 +23,13 @@
                         <span class="avatar avatar-md rounded bg-dark mb-3">
                             <i class="ti ti-medal fs-16"></i>
                         </span>
-                        <span class="badge bg-success fw-normal mb-3">
+                        {{-- <span class="badge bg-success fw-normal mb-3">
                             +19.01%
-                        </span>
+                        </span> --}}
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h2 class="mb-1">5468</h2>
+                            <h2 class="mb-1">{{ $total_dealer }}</h2>
                             <p class="fs-13">Total Dealers</p>
                         </div>
                         <div class="company-bar1">5,10,7,5,10,7,5</div>
@@ -46,16 +46,16 @@
                         <span class="avatar avatar-md rounded bg-dark mb-3">
                             <i class="ti ti-user-up fs-16"></i>
                         </span>
-                        <span class="badge bg-danger fw-normal mb-3">
+                        {{-- <span class="badge bg-danger fw-normal mb-3">
                             -12%
-                        </span>
+                        </span> --}}
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h2 class="mb-1">4598</h2>
+                            <h2 class="mb-1">{{ $total_distributor }}</h2>
                             <p class="fs-13">Total Distributors</p>
                         </div>
-                        <div class="company-bar2">5,3,7,6,3,10,5</div>
+                        {{-- <div class="company-bar2">5,3,7,6,3,10,5</div> --}}
                     </div>
                 </div>
             </div>
@@ -69,16 +69,16 @@
                         <span class="avatar avatar-md rounded bg-dark mb-3">
                             <i class="ti ti-user-star fs-16"></i>
                         </span>
-                        <span class="badge bg-success fw-normal mb-3">
+                        {{-- <span class="badge bg-success fw-normal mb-3">
                             +6%
-                        </span>
+                        </span> --}}
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h2 class="mb-1">3698</h2>
+                            <h2 class="mb-1">{{ $total_sales_person }}</h2>
                             <p class="fs-13">Total Sales Persons</p>
                         </div>
-                        <div class="company-bar3">8,10,10,8,8,10,8</div>
+                        {{-- <div class="company-bar3">8,10,10,8,8,10,8</div> --}}
                     </div>
                 </div>
             </div>
@@ -92,16 +92,16 @@
                         <span class="avatar avatar-md rounded bg-dark mb-3">
                             <i class="ti ti-businessplan fs-16"></i>
                         </span>
-                        <span class="badge bg-danger fw-normal mb-3">
+                        {{-- <span class="badge bg-danger fw-normal mb-3">
                             -16%
-                        </span>
+                        </span> --}}
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h2 class="mb-1">$89,878,58</h2>
+                            <h2 class="mb-1">{{ $total_product }}</h2>
                             <p class="fs-13">Total Products</p>
                         </div>
-                        <div class="company-bar4">5,10,7,5,10,7,5</div>
+                        {{-- <div class="company-bar4">5,10,7,5,10,7,5</div> --}}
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 class="mb-2">Total Orders</h5>
-                    <div class="dropdown mb-2">
+                    {{-- <div class="dropdown mb-2">
                         <a href="javascript:void(0);"
                             class="btn btn-white border btn-sm d-inline-flex align-items-center"
                             data-bs-toggle="dropdown">
@@ -122,24 +122,23 @@
                         </a>
                         <ul class="dropdown-menu  dropdown-menu-end p-3">
                             <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">This
-                                    Month</a>
+                                <a href="javascript:void(0);" class="dropdown-item rounded-1">This Month</a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">This
-                                    Week</a>
+                                <a href="javascript:void(0);" class="dropdown-item rounded-1">This Week</a>
                             </li>
                             <li>
                                 <a href="javascript:void(0);" class="dropdown-item rounded-1">Today</a>
                             </li>
                         </ul>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="card-body">
                     <div id="company-chart"></div>
-                    <p class="f-13 d-inline-flex align-items-center"><span class="badge badge-success me-1">+6%</span> 5
+                    {{-- <p class="f-13 d-inline-flex align-items-center"><span class="badge badge-success me-1">+6%</span> 5
                         Companies from last month
-                    </p>
+                    </p> --}}
+                    <h2 class="mb-1">{{ $total_order }}</h2>
                 </div>
             </div>
         </div>
@@ -171,9 +170,8 @@
                 <div class="card-body pb-0">
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div class="mb-1">
-                            <h5 class="mb-1">$45787</h5>
-                            <p><span class="text-success fw-bold">+40%</span> increased from last
-                                year</p>
+                            <h2 class="mb-1">{{ $order_grand_total }}</h2>
+                            {{-- <p><span class="text-success fw-bold">+40%</span> increased from last year</p> --}}
                         </div>
                         <p class="fs-13 text-gray-9 d-flex align-items-center mb-1"><i
                                 class="ti ti-circle-filled me-1 fs-6 text-primary"></i>Revenue</p>

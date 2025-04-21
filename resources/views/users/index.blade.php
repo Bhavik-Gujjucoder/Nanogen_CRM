@@ -35,7 +35,7 @@
                    </div>
                 </div> -->
                     <a href="{{ route('users.create') }}" class="btn btn-primary"><i
-                            class="ti ti-square-rounded-plus me-2"></i>Add user</a>
+                            class="ti ti-square-rounded-plus me-2"></i>Add User</a>
                 </div>
             </div>
         </div>

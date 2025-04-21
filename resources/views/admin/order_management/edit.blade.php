@@ -10,6 +10,12 @@
             @csrf
             @method('PUT')
             <div class="row mb-4 order-form">
+
+                <div class="col-md-4 mb-3">
+                    <label class="col-form-label">Order ID</label>
+                    <input type="text" name="unique_order_id" value="{{ $order->unique_order_id }}" class="form-control" readonly>
+                </div>
+
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">

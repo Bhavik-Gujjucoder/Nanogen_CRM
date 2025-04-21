@@ -58,9 +58,8 @@ class SalesPersonController extends Controller
                     $profilePic = $user && !empty($user->profile_picture)
                         ? asset("storage/profile_pictures/" . $user->profile_picture)
                         : asset("images/default-user.png");
-
                     $name = $row->first_name . ' ' . $row->last_name;
-
+                    
                     if ($user) {
                         return '<a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                                     <img class="" src="' . $profilePic . '" alt="User Image">

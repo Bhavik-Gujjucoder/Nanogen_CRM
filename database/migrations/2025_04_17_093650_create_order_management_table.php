@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('order_management', function (Blueprint $table) {
             $table->id();
+            $table->string('unique_order_id')->nullable();
             $table->integer('dd_id')->comment('distributors_dealers -> id');                // distributors & dealers
             $table->date('order_date')->nullable();
             $table->string('mobile_no');

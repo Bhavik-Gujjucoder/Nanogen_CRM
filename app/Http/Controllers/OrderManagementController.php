@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderManagement;
 use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
+use Illuminate\Support\Facades\DB;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -113,7 +114,6 @@ class OrderManagementController extends Controller
                 ->filterColumn('order_date', function($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
                 })
-
                 ->rawColumns(['checkbox', 'action', 'order_status']) //'value',
                 ->make(true);
         }
@@ -126,7 +126,6 @@ class OrderManagementController extends Controller
         $order = OrderManagement::findOrFail($id);
         $order->status = $request->status;
         $order->save();
-    
         return response()->json(['success' => true]);
     }
     /**
@@ -138,7 +137,11 @@ class OrderManagementController extends Controller
         $data['products']            = Product::where('status', 1)->get();
         $data['distributor_dealers'] = DistributorsDealers::get();
         $data['salesmans']           = SalesPersonDetail::where('deleted_at', NULL)->get();
-       
+
+        $latest_order_id = OrderManagement::max(DB::raw("CAST(SUBSTRING(unique_order_id, 4) AS UNSIGNED)"));
+        $next_id = $latest_order_id ? $latest_order_id +1 : 1;
+        $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
+
         return view('admin.order_management.create', $data);
     }
 
@@ -147,7 +150,7 @@ class OrderManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $order = OrderManagement::create($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address',
+        $order = OrderManagement::create($request->only(['unique_order_id','dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address',
         'total_order_amount', 'gst' ,'gst_amount' ,'grand_total']));
         $order->save();
 

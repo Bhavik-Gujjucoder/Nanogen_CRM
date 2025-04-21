@@ -136,8 +136,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="col-form-label">Employee ID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control " name="employee_id"
+                            <label class="col-form-label">Employee ID</label>
+                            <input type="text" class="form-control" name="employee_id"
                                 value="{{ $detail->employee_id }}" placeholder="Employee ID" readonly>
                         </div>
                     </div>

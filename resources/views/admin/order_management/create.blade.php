@@ -9,6 +9,12 @@
         <form action="{{ route('order_management.store') }}" id="orderForm" method="POST">
             @csrf
             <div class="row mb-4 order-form">
+
+                <div class="col-md-4 mb-3">
+                    <label class="col-form-label">Order ID</label>
+                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control" readonly>
+                </div>
+
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">
@@ -60,12 +66,12 @@
                         placeholder="Freight">
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="col-form-label">GST No.  <span class="text-danger">*</span></label>
                     <input type="text" name="gst_no" value="{{ old('gst_no') }}" class="form-control"
                         placeholder="GST No">
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="col-form-label">Address  <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="address" placeholder="Address">{{ old('address') }}</textarea>
                 </div>

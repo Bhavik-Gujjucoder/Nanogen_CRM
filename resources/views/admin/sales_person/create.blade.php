@@ -125,7 +125,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="col-form-label">Employee ID <span class="text-danger">*</span></label>
+                            <label class="col-form-label">Employee ID</label>
                             <input type="text" class="form-control " name="employee_id" value="{{ $employeeId }}"
                                 placeholder="Employee ID" readonly>
                             {{-- @error('employee_id')  @error('employee_id') is-invalid @enderror

@@ -24,7 +24,7 @@
                                 <i class="ti ti-layout-2"></i><span>Dashboard</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                                <li><a href="{{ route('admin.dashboard') }}" class="active">Dashboard</a></li>
                             </ul>
                         </li>
                     </ul>
