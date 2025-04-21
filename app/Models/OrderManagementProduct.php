@@ -14,13 +14,13 @@ class OrderManagementProduct extends Model
         'order_id', 'product_id', 'packing_size_id', 'price', 'qty', 'total'
     ];
 
-          /**
-         * Get all of the comments for the OrderManagement
-         *
-         * @return hasOne
-         */
-        public function variation_option(): hasOne
-        {
-            return $this->hasOne(VariationOption::class,'id', 'packing_size_id' );
-        }
+    /**
+     * Get all of the comments for the OrderManagement
+     *
+     * @return hasOne
+    */
+    public function variation_option(): hasOne
+    {
+        return $this->hasOne(VariationOption::class,'id', 'packing_size_id' );
+    }
 }

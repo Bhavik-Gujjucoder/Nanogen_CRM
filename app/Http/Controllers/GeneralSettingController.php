@@ -24,8 +24,8 @@ class GeneralSettingController extends Controller
                 'company_email'   => 'required|email',
                 'company_phone'   => 'required',
                 'company_address' => 'required',
-                'distributor_payment_reminder_interval' => 'required',
-                'dealer_payment_reminder_interval'      => 'required',
+                // 'distributor_payment_reminder_interval' => 'required',
+                // 'dealer_payment_reminder_interval'      => 'required',
                 'gst'             => 'required',
             ]);
         } elseif ($request->form_type == 'email-detail') {

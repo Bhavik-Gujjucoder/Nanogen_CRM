@@ -84,10 +84,36 @@ class OrderManagementController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-                
-                // ->editColumn('status', function ($product) {
-                //     return $product->statusBadge();
-                // })
+                ->filterColumn('order_status', function($query, $keyword) {
+                    $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
+                    // Find the matching status key (case-insensitive)
+                    foreach ($statuses as $label => $value) {
+                        if (stripos($label, $keyword) !== false) {
+                            return $query->where('status', $value);
+                        }
+                    }
+                    // If not matched, prevent any result
+                    return $query->whereRaw('0 = 1');
+                })
+                ->filterColumn('dd_id', function($query, $keyword) { 
+                    $query->whereHas('distributors_dealers', function($q) use ($keyword) {
+                        $q->where('applicant_name', 'like', "%{$keyword}%")
+                          ->orWhereRaw("CASE 
+                              WHEN user_type = 1 THEN 'Distributor'
+                              WHEN user_type = 2 THEN 'Dealer'
+                              ELSE ''
+                          END LIKE ?", ["%{$keyword}%"]);
+                    });
+                })
+                ->filterColumn('salesman_id', function($query, $keyword) {
+                    $query->whereHas('salesman', function($q) use ($keyword) {
+                        $q->where('first_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('order_date', function($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
+                })
+
                 ->rawColumns(['checkbox', 'action', 'order_status']) //'value',
                 ->make(true);
         }
@@ -176,7 +202,6 @@ class OrderManagementController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($id);
         $order = OrderManagement::findOrFail($id);
         
         $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address','total_order_amount', 'gst' ,'gst_amount' ,'grand_total']));

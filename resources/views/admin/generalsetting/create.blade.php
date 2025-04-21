@@ -94,7 +94,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="col-form-label">Distributor Payment Reminder Interval <span
                                         class="text-danger">* NOTE: input value consider will be days.</span></label>
@@ -119,7 +119,7 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -191,7 +191,7 @@
                     <input type="hidden" name="form_type" value="distributors-dealers">
                     <div class="row">
                         <div class="col-md-5 mb-3">
-                            <label class="col-form-label">Distributors Credit Limit <span
+                            <label class="col-form-label">Distributors Payment Reminder <span
                                     class="text-danger">*</span></label>
                             <div class="form-input-icon input-group gropinginput box-bordernone">
                                 <input type="number" step="any"
@@ -212,7 +212,7 @@
                         </div>
                         
                         <div class="col-md-5 mb-3">
-                            <label class="col-form-label">Dealer Credit Limit <span class="text-danger">*</span></label>
+                            <label class="col-form-label">Dealer Payment Reminder <span class="text-danger">*</span></label>
                             <div class="form-input-icon input-group gropinginput box-bordernone">
                                 <input type="number"
                                     class="form-control @error('dealer_credit_limit') is-invalid @enderror"

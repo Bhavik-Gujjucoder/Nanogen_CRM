@@ -838,7 +838,7 @@
                             </div>
 
                             <div class="col-md-5 mb-3">
-                                <label class="col-form-label">Credit Limit </label>
+                                <label class="col-form-label">Payment Reminder</label>  {{-- Credit Limit --}}
                                 <div class="form-input-icon input-group gropinginput box-bordernone">
                                     <input type="number" step="any"
                                         class="form-control"  

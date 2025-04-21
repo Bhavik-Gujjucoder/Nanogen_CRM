@@ -31,6 +31,7 @@ class OrderManagement extends Model
                 return '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
         }
     }
+    
 
     /**
      * Get the user that owns the OrderManagement
