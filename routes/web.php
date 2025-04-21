@@ -110,8 +110,9 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
     /* Order Management */
-    Route::resource('order_management', OrderManagementController::class);
+    Route::post('/order/status-update/{id}', [OrderManagementController::class, 'order_status'])->name('order_management.order_status');
     Route::post('/order/bulk-delete', [OrderManagementController::class, 'bulkDelete'])->name('order_management.bulkDelete');
+    Route::resource('order_management', OrderManagementController::class);
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

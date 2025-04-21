@@ -63,16 +63,46 @@ class OrderManagementController extends Controller
                     }
                     return '-';
                 })
+                ->addColumn('order_status', function ($row) {
+                    $order_status = '  
+                     <a  href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"   data-status="1">
+                        <span class="badge bg-warning">Pending</span>
+                    </a>
+                    <a  href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"   data-status="2">
+                        <span class="badge bg-warning">Processing</span>
+                    </a>
+                    <a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"  data-status="3">
+                        <span class="badge bg-info">Shipping</span>
+                    </a>
+                    <a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"  data-status="4">
+                        <span class="badge bg-success">Delivery</span>
+                    </a>';
+
+                    $action_btn = '<div class="dropdown table-action">'.  $row->statusBadge().'  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">';
+                    Auth::user()->can('manage users') ? $action_btn .= $order_status : '';
+
+                    return $action_btn . ' </div></div>';
+                })
+                
                 // ->editColumn('status', function ($product) {
                 //     return $product->statusBadge();
                 // })
-                ->rawColumns(['checkbox','action']) //'value',
+                ->rawColumns(['checkbox', 'action', 'order_status']) //'value',
                 ->make(true);
         }
 
         return view('admin.order_management.index', $data);
     }
 
+    public function order_status(Request $request, string $id)
+    {
+        $order = OrderManagement::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+    
+        return response()->json(['success' => true]);
+    }
     /**
      * Show the form for creating a new resource.
     */
@@ -146,6 +176,7 @@ class OrderManagementController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        dd($id);
         $order = OrderManagement::findOrFail($id);
         
         $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address','total_order_amount', 'gst' ,'gst_amount' ,'grand_total']));

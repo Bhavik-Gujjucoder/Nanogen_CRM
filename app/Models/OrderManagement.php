@@ -18,9 +18,19 @@ class OrderManagement extends Model
     
     public function statusBadge()
     {
-        return $this->status == 1 ? '<span class="badge badge-pill badge-status bg-success">Active</span>' : '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
+        switch ($this->status) {
+            case 1:
+                return '<span class="badge badge-pill badge-status bg-secondary">Pending</span>';
+            case 2:
+                return '<span class="badge badge-pill badge-status bg-warning">Processing</span>';
+            case 3:
+                return '<span class="badge badge-pill badge-status bg-info">Shipping</span>';
+            case 4:
+                return '<span class="badge badge-pill badge-status bg-success">Delivered</span>';
+            default:
+                return '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
+        }
     }
-
 
     /**
      * Get the user that owns the OrderManagement

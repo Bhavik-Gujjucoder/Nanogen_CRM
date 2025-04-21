@@ -16,7 +16,7 @@
             </div>
             <div class="col-sm-8">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-                    
+
                     <a href="{{ route('order_management.create') }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add Order</a>
                 </div>
@@ -33,7 +33,8 @@
                     <tr>
                         <th class="no-sort" scope="col">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="order_checkbox"><span class="checkmarks"></span></label>
+                                <input type="checkbox" id="select-all" class="order_checkbox"><span
+                                    class="checkmarks"></span></label>
                             </label>
                         </th>
                         <th class="no-sort" scope="col"></th>
@@ -42,6 +43,7 @@
                         <th scope="col">Contact Number</th>
                         <th scope="col">Salesman</th>
                         <th scope="col">Total</th>
+                        <th scope="col">Order Status</th>
                         <th class="text-end" scope="col">Action</th>
                     </tr>
                 </thead>
@@ -62,8 +64,8 @@
 @endsection
 @section('script')
 <script>
-      /***** DataTable *****/
-      var order_management_show = $('#order_management').DataTable({
+    /***** DataTable *****/
+    var order_management_show = $('#order_management').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
         processing: true,
@@ -76,8 +78,8 @@
                 name: 'checkbox',
                 orderable: false,
                 searchable: false
-
-            }, {
+            },
+            {
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
                 orderable: false,
@@ -111,14 +113,41 @@
                 searchable: true
             },
             {
+                data: 'order_status',
+                name: 'order_status',
+                searchable: true,
+                orderable: true
+            },
+            {
                 data: 'action',
                 name: 'action',
                 orderable: false,
                 searchable: false
             },
         ],
-
     });
+
+    /*** Order Status update ***/
+    $(document).on('click', '.change-status', function() {
+        let order_id = $(this).data('id');
+        let status = $(this).data('status');
+
+        let url = order_id ? '{{ route('order_management.order_status', ':id') }}'.replace(':id', order_id) : "";
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                _token: "{{ csrf_token() }}",
+                status: status
+            },
+            success: function(res) {
+                $('#order_management').DataTable().ajax.reload(null, false);
+                show_success('Status updated successfully!');
+            }
+        });
+    });
+    /*** End ***/
 
     /***** Search Box *****/
     $('#customSearch').on('keyup', function() {
@@ -126,8 +155,8 @@
     });
 
 
-       /***** Alert Delete-MSG *****/
-       $(document).on('click', '.deleteOrder', function(event) {
+    /***** Alert Delete-MSG *****/
+    $(document).on('click', '.deleteOrder', function(event) {
         event.preventDefault();
         let variationId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + variationId); // Select the correct form
@@ -138,28 +167,28 @@
         });
     });
 
-     /***** Bulk Delete *****/
-     $('#select-all').change(function() {
+    /***** Bulk Delete *****/
+    $('#select-all').change(function() {
         // Check/uncheck all checkboxes when the select-all checkbox is clicked
         $('.order_checkbox').prop('checked', this.checked);
 
     });
 
-    $(document).on('change', '.order_checkbox', function () {
+    $(document).on('change', '.order_checkbox', function() {
         let count = $('.order_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
 
 
-     // Handle Bulk Delete button click
-     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.order_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
@@ -170,7 +199,8 @@
                     url: "{{ route('order_management.bulkDelete') }}",
                     method: 'POST',
                     data: {
-                        ids: selectedIds, /** Send the selected IDs **/
+                        ids: selectedIds,
+                        /** Send the selected IDs **/
                         _token: '{{ csrf_token() }}' // CSRF token for security
                     },
                     success: function(response) {
@@ -213,8 +243,5 @@
             }
         });
     }
-
-
-
 </script>
 @endsection

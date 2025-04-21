@@ -42,7 +42,6 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
-
                     <select name="salesman_id" class="form-control form-select search-dropdown">
                         <option value="">Select Salesman</option>
                         @foreach ($salesmans as $s)
@@ -64,15 +63,26 @@
                         class="form-control" placeholder="Freight">
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="col-form-label">GST No. <span class="text-danger">*</span></label>
                     <input type="text" name="gst_no" value="{{ old('gst_no', $order->gst_no) }}"
                         class="form-control" placeholder="GST No">
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="col-form-label">Address <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="address" placeholder="Address">{{ old('address', $order->address) }}</textarea>
                 </div>
+
+                {{-- <div class="col-md-4 mb-3">
+                    <label class="col-form-label">Order Status <span class="text-danger">*</span></label>
+                    <select name="order_status" class="form-control form-select search-dropdown">
+                        <option value="">Select</option>
+                        <option value="processing" {{ old('order_status', $order->order_status) == 'processing' ? 'selected' : '' }}>Processing</option>
+                        <option value="shipping" {{ old('order_status', $order->order_status) == 'shipping' ? 'selected' : '' }}>Shipping</option>
+                        <option value="delivery" {{ old('order_status', $order->order_status) == 'delivery' ? 'selected' : '' }}>Delivery</option>
+                    </select>
+                </div> --}}
+                
             </div>
             <input type="hidden" name="dummy" id="dummyValidationField" />
 
@@ -208,7 +218,7 @@
             </div>
 
             <div class="d-flex align-items-center justify-content-end">
-                <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a>
+                {{-- <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a> --}}
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
         </form>
