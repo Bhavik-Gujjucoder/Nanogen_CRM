@@ -50,8 +50,8 @@
                                             value="{{ old('weight.' . $index, $option->value) }}"
                                             placeholder="KG/GM/L/ML" class="form-control">
 
-                                        <button type="button" class="remove-btn btn btn-danger"
-                                            onclick="removeField(this)">Remove</button>
+                                        {{-- <button type="button" class="remove-btn btn btn-danger"
+                                            onclick="removeField(this)">Remove</button> --}}
 
                                     </div>
                                 @endforeach
