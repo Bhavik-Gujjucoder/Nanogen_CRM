@@ -12,7 +12,8 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order ID</label>
-                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control" readonly>
+                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control"
+                        readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -49,24 +50,30 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
+                    {{-- @if (auth()->user()->hasRole('sales'))
+                        <input type="text"  value="{{ auth()->user()->name }}" class="form-control" readonly>
+                        <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}" > 
+                    @else --}}
                     @if (auth()->user()->hasRole('sales'))
-                        <input type="text" name="salesman_id" value="{{ auth()->user()->name }}" class="form-control" readonly
-                    >
+                        <select name="salesman_id" class="form-control">
+                            <option value="{{ auth()->user()->id }}" selected readonly>{{ auth()->user()->name }}</option>
+                        </select>
                     @else
-                    <select name="salesman_id" class="form-control form-select search-dropdown">
-                        <option value="">Select</option>
-                        @if ($salesmans)
-                            @foreach ($salesmans as $s)
-                                <option value="{{ $s->id }}"
-                                    {{ old('salesman_id') == $s->id ? 'selected' : '' }}>
-                                    {{ $s->first_name }}
-                                </option>
-                            @endforeach
-                        @else
-                            <option value="">No record</option>
-                        @endif
-                    </select>
+                        <select name="salesman_id" class="form-control form-select search-dropdown">
+                            <option value="">Select</option>
+                            @if ($salesmans)
+                                @foreach ($salesmans as $s)
+                                    <option value="{{ $s->id }}"
+                                        {{ old('salesman_id') == $s->id ? 'selected' : '' }}>
+                                        {{ $s->first_name }}
+                                    </option>
+                                @endforeach
+                            @else
+                                <option value="">No record</option>
+                            @endif
+                        </select>
                     @endif
+                    {{-- @endif --}}
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Transport <span class="text-danger">*</span></label>
@@ -111,9 +118,9 @@
                                 <select name="product_id[]"
                                     class="form-control product-field form-select product_id-field search-dropdown">
                                     <option selected disabled>Select</option>
-                                        @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
-                                        @endforeach
+                                    @foreach ($products as $product)
+                                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td data-label="Packing Size">
