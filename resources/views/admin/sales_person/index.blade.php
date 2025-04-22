@@ -34,6 +34,7 @@
                         <th class="no-sort" scope="col"><label class="checkboxs">
                             <input type="checkbox" id="select-all" class="sales_person_checkbox"><span class="checkmarks"></span></label>
                         </th>
+                        <th hidden>ID</th>
                         <th scope="col">Name</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
@@ -58,41 +59,16 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
+        order: [[1, 'desc']],  
         ajax: "{{ route('sales_person.index') }}",
-        columns: [{
-                data: 'checkbox',
-                name: 'checkbox',
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'first_name',
-                name: 'first_name',
-                searchable: true
-            },
-            {
-                data: 'user.phone_no',
-                name: 'user.phone_no',
-                searchable: true,
-                orderable: true
-            },
-            {
-                data: 'user.email',
-                name: 'user.email',
-                searchable: true,
-                orderable: true
-            },
-            {
-                data: 'employee_id',
-                name: 'employee_id',
-                searchable: true
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
+        columns: [
+            { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+            { data: 'id', name: 'id', visible: false, searchable: false },
+            { data: 'first_name', name: 'first_name', searchable: true },
+            { data: 'user.phone_no', name: 'user.phone_no', searchable: true, orderable: true },
+            { data: 'user.email', name: 'user.email', searchable: true, orderable: true },
+            { data: 'employee_id', name: 'employee_id', searchable: true },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
         ],
 
     });

@@ -107,6 +107,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Distributors & Dealers */
     Route::get('distributors_dealers/index/{dealer?}', [DistributorsDealersController::class, 'index'])->name('distributors_dealers.index');
     Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
+    Route::get('/distributors_dealers/payment_history/{id}', [DistributorsDealersController::class, 'payment_history'])->name('distributors_dealers.payment_history');
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
     /* Order Management */

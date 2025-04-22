@@ -42,7 +42,7 @@ class OrderManagementController extends Controller
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-
+                    
                     Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
 
@@ -79,13 +79,13 @@ class OrderManagementController extends Controller
                         <span class="badge bg-success">Delivery</span>
                     </a>';
 
-                    $action_btn = '<div class="dropdown table-action order_drpdown">'.  $row->statusBadge().'  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                    $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">';
                     Auth::user()->can('manage users') ? $action_btn .= $order_status : '';
 
                     return $action_btn . ' </div></div>';
                 })
-                ->filterColumn('order_status', function($query, $keyword) {
+                ->filterColumn('order_status', function ($query, $keyword) {
                     $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
                     // Find the matching status key (case-insensitive)
                     foreach ($statuses as $label => $value) {
@@ -96,22 +96,22 @@ class OrderManagementController extends Controller
                     // If not matched, prevent any result
                     return $query->whereRaw('0 = 1');
                 })
-                ->filterColumn('dd_id', function($query, $keyword) { 
-                    $query->whereHas('distributors_dealers', function($q) use ($keyword) {
+                ->filterColumn('dd_id', function ($query, $keyword) {
+                    $query->whereHas('distributors_dealers', function ($q) use ($keyword) {
                         $q->where('applicant_name', 'like', "%{$keyword}%")
-                          ->orWhereRaw("CASE 
+                            ->orWhereRaw("CASE 
                               WHEN user_type = 1 THEN 'Distributor'
                               WHEN user_type = 2 THEN 'Dealer'
                               ELSE ''
                           END LIKE ?", ["%{$keyword}%"]);
                     });
                 })
-                ->filterColumn('salesman_id', function($query, $keyword) {
-                    $query->whereHas('salesman', function($q) use ($keyword) {
+                ->filterColumn('salesman_id', function ($query, $keyword) {
+                    $query->whereHas('salesman', function ($q) use ($keyword) {
                         $q->where('first_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->filterColumn('order_date', function($query, $keyword) {
+                ->filterColumn('order_date', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
                 })
                 ->rawColumns(['checkbox', 'action', 'order_status']) //'value',
@@ -130,16 +130,16 @@ class OrderManagementController extends Controller
     }
     /**
      * Show the form for creating a new resource.
-    */
+     */
     public function create()
     {
-        $data['page_title']          = 'Create Order';
-        $data['products']            = Product::where('status', 1)->get();
+        $data['page_title'] = 'Create Order';
+        $data['products'] = Product::where('status', 1)->get();
         $data['distributor_dealers'] = DistributorsDealers::get();
-        $data['salesmans']           = SalesPersonDetail::where('deleted_at', NULL)->get();
+        $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
 
         $latest_order_id = OrderManagement::max(DB::raw("CAST(SUBSTRING(unique_order_id, 4) AS UNSIGNED)"));
-        $next_id = $latest_order_id ? $latest_order_id +1 : 1;
+        $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
 
         return view('admin.order_management.create', $data);
@@ -150,29 +150,42 @@ class OrderManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $order = OrderManagement::create($request->only(['unique_order_id','dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address',
-        'total_order_amount', 'gst' ,'gst_amount' ,'grand_total']));
+        $order = OrderManagement::create($request->only([
+            'unique_order_id',
+            'dd_id',
+            'order_date',
+            'mobile_no',
+            'salesman_id',
+            'transport',
+            'freight',
+            'gst_no',
+            'address',
+            'total_order_amount',
+            'gst',
+            'gst_amount',
+            'grand_total'
+        ]));
         $order->save();
 
         if ($request->has(['product_id', 'price', 'qty', 'packing_size_id', 'total'])) {
-            $product_id      = $request->input('product_id');
-            $price           = $request->input('price');
-            $qty             = $request->input('qty');
+            $product_id = $request->input('product_id');
+            $price = $request->input('price');
+            $qty = $request->input('qty');
             $packing_size_id = $request->input('packing_size_id');
-            $total           = $request->input('total');
+            $total = $request->input('total');
             // $grand_total     = 0;
 
             foreach ($product_id as $key => $p) {
 
-                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])){
+                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key];
                     OrderManagementProduct::create([
-                        'order_id'        => $order->id,
-                        'product_id'      => $p,
-                        'price'           => $price[$key],
-                        'qty'             => $qty[$key],
+                        'order_id' => $order->id,
+                        'product_id' => $p,
+                        'price' => $price[$key],
+                        'qty' => $qty[$key],
                         'packing_size_id' => $packing_size_id[$key],
-                        'total'           => $total[$key],
+                        'total' => $total[$key],
                     ]);
                 }
             }
@@ -192,10 +205,10 @@ class OrderManagementController extends Controller
         $order = OrderManagement::findOrFail($id);
         $data = [
             'page_title' => 'Edit Order',
-            'order'      => $order,
-            'products'   => Product::where('status', 1)->get(),
-            'distributor_dealers'  => DistributorsDealers::get(),
-            'salesmans'  => SalesPersonDetail::where('deleted_at', NULL)->get(),
+            'order' => $order,
+            'products' => Product::where('status', 1)->get(),
+            'distributor_dealers' => DistributorsDealers::get(),
+            'salesmans' => SalesPersonDetail::where('deleted_at', NULL)->get(),
         ];
         return view('admin.order_management.edit', $data);
     }
@@ -206,29 +219,29 @@ class OrderManagementController extends Controller
     public function update(Request $request, string $id)
     {
         $order = OrderManagement::findOrFail($id);
-        
-        $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address','total_order_amount', 'gst' ,'gst_amount' ,'grand_total']));
+
+        $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address', 'total_order_amount', 'gst', 'gst_amount', 'grand_total']));
 
         if ($request->only(['product_id', 'price', 'qty', 'packing_size_id', 'total'])) {
 
             OrderManagementProduct::where('order_id', $id)->delete();
 
-            $product_id      = $request->input('product_id');
-            $price           = $request->input('price');
-            $qty             = $request->input('qty');
+            $product_id = $request->input('product_id');
+            $price = $request->input('price');
+            $qty = $request->input('qty');
             $packing_size_id = $request->input('packing_size_id');
-            $total           = $request->input('total');
+            $total = $request->input('total');
             foreach ($product_id as $key => $p) {
 
-                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])){
+                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key]; 
                     OrderManagementProduct::create([
-                        'order_id'        => $order->id,
-                        'product_id'      => $p,
+                        'order_id' => $order->id,
+                        'product_id' => $p,
                         'packing_size_id' => $packing_size_id[$key],
-                        'price'           => $price[$key],
-                        'qty'             => $qty[$key],
-                        'total'           => $total[$key],
+                        'price' => $price[$key],
+                        'qty' => $qty[$key],
+                        'total' => $total[$key],
                     ]);
                 }
             }
@@ -253,11 +266,14 @@ class OrderManagementController extends Controller
     {
         $ids = $request->ids;
         if (!empty($ids)) {
-            $order = OrderManagement::whereIn('id', $ids)->delete(); 
+            $order = OrderManagement::whereIn('id', $ids)->delete();
             OrderManagementProduct::whereIn('order_id', $ids)->delete();
 
             return response()->json(['message' => 'Selected orders deleted successfully!']);
         }
         return response()->json(['message' => 'No records selected!'], 400);
     }
+
+
+   
 }

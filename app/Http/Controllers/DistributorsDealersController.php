@@ -34,6 +34,9 @@ class DistributorsDealersController extends Controller
                 //         </label>';
                 // })
                 ->addColumn('action', function ($row) {
+                    // $payment_history = '<a href="' . route('distributors_dealers.payment_history', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    // class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Payment History</a>';
+
                     $edit_btn = '<a href="' . route('distributors_dealers.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
@@ -45,6 +48,7 @@ class DistributorsDealersController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
+                     // Auth::user()->can('manage users') ? $action_btn .= $payment_history : '';
                     Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
                     return $action_btn . ' </div></div>';
@@ -207,7 +211,17 @@ class DistributorsDealersController extends Controller
             Storage::disk('public')->delete('distributor_dealer_profile_image/' . $d_d->profile_image);
         } 
         $d_d->delete();
-        return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
+        return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
+    }
+
+    public function payment_history(Request $request, string $id)
+    {
+        $distributor_dealers = DistributorsDealers::findOrFail($id);
+        $data = [
+            'page_title' => 'Payment History',
+            'distributor_dealers' => $distributor_dealers,
+            ];
+        return view('admin.distributors_dealers.payment_history', $data);
     }
 
     

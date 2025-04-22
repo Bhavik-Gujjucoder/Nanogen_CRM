@@ -58,6 +58,7 @@
                                 <input type="checkbox" id="select-all"><span class="checkmarks"></span>
                             </label>
                         </th> --}}
+                        <th hidden>ID</th>
                         <th class="no-sort" scope="col"></th>
 
                         <th scope="col"> {{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}</th>
@@ -67,107 +68,6 @@
                         <th class="text-end" scope="col">Action</th>
                     </tr>
                 </thead>
-                {{-- <tbody>
-                    <tr>
-                        <td data-label="Checkmark"><label class="checkboxs"><input type="checkbox"
-                                    id="select-all"><span class="checkmarks"></span> </label>
-                        </td>
-                        <td data-label="Rating">
-                            <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                        </td>
-                        <td data-label="Distributer Name">
-                            <h2 class="d-flex align-items-center"><a href="javascript:void(0);"
-                                    class="avatar avatar-sm me-2"><img class="w-auto h-auto"
-                                        src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);"
-                                    class="d-flex flex-column">Darlee Robertson <span class="text-default">Facility
-                                        Manager </span></a></h2>
-                        </td>
-                        <td data-label="Phone">0123456789</td>
-                        <td data-label="Email">info@gmail.com</td>
-
-                        <td data-label="Dealer Form">Yes</td>
-                        <td data-label="O form">Yes</td>
-                        <td data-label="Firm Name">abcd</td>
-                        <td class="text-end" data-label="Action">
-                            <div class="dropdown table-action">
-                                <a href="#" class="action-icon " data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                        href="edit-distributors.html"><i class="ti ti-edit text-blue"></i> Edit</a><a
-                                        class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i>
-                                        Delete</a></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="Checkmark"><label class="checkboxs">
-                                <input type="checkbox" id="select-all"><span class="checkmarks"></span>
-                            </label>
-                        </td>
-                        <td data-label="Rating">
-                            <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                        </td>
-                        <td data-label="Distributer Name">
-                            <h2 class="d-flex align-items-center"><a href="javascript:void(0);"
-                                    class="avatar avatar-sm me-2"><img class="w-auto h-auto"
-                                        src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);"
-                                    class="d-flex flex-column"> Konopelski<span class="text-default">Facility Manager
-                                    </span></a></h2>
-                        </td>
-                        <td data-label="Phone">0123456789</td>
-                        <td data-label="Email">info@gmail.com</td>
-
-                        <td data-label="Dealer Form">Yes</td>
-                        <td data-label="O form">No</td>
-                        <td data-label="Firm Name">abcd</td>
-                        <td class="text-end" data-label="Action">
-                            <div class="dropdown table-action">
-                                <a href="#" class="action-icon " data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                        href="edit-distributors.html"><i class="ti ti-edit text-blue"></i> Edit</a><a
-                                        class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i>
-                                        Delete</a></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="Checkmark"><label class="checkboxs"> <input type="checkbox"
-                                    id="select-all"><span class="checkmarks"></span></label> </td>
-                        <td data-label="Rating">
-                            <div class="set-star rating-select"><i class="fa fa-star"></i></div>
-                        </td>
-                        <td data-label="Distributer Name">
-                            <h2 class="d-flex align-items-center"><a href="javascript:void(0);"
-                                    class="avatar avatar-sm me-2"><img class="w-auto h-auto"
-                                        src="images/avatar-14.png" alt="User Image"></a><a href="javascript:void(0);"
-                                    class="d-flex flex-column">Wisozk<span class="text-default">Facility Manager
-                                    </span></a></h2>
-                        </td>
-                        <td data-label="Phone">0123456789</td>
-                        <td data-label="Email">info@gmail.com</td>
-
-                        <td data-label="Dealer Form">No</td>
-                        <td data-label="O form">Yes</td>
-                        <td data-label="Firm Name">abcd</td>
-                        <td class="text-end" data-label="Action">
-                            <div class="dropdown table-action">
-                                <a href="#" class="action-icon " data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                        href="edit-distributors.html"><i class="ti ti-edit text-blue"></i> Edit</a><a
-                                        class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#delete_contact"><i class="ti ti-trash text-danger"></i>
-                                        Delete</a></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody> --}}
             </table>
         </div>
 
@@ -185,20 +85,12 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
+        order: [[0, 'desc']],  
         ajax: "{{ route('distributors_dealers.index', request('dealer')) }}",
         columns: [
-            // {
-            //        data: 'checkbox',
-            //        name: 'checkbox',
-            //        orderable: false,
-            //        searchable: false
-            //    },
-            {
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
-                orderable: false,
-                searchable: false
-            },
+            { data: 'id', name: 'id', visible: false, searchable: false },
+            // { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'applicant_name',
                 name: 'applicant_name',

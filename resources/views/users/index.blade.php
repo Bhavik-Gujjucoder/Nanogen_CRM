@@ -89,6 +89,7 @@
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
+                        <th hidden>ID</th>
                         <th class="no-sort" scope="col">
                             <label class="checkboxs">
                                 <input type="checkbox" id="select-all" class="user_checkbox"><span class="checkmarks"></span>
@@ -177,8 +178,10 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
+        order: [[0, 'desc']],  
         ajax: "{{ route('users.index') }}",
         columns: [
+            { data: 'id', name: 'id', visible: false, searchable: false },
             {
                 data: 'checkbox',
                 name: 'checkbox',

@@ -12,8 +12,7 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order ID</label>
-                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control"
-                        readonly>
+                    <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control" readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -50,7 +49,10 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
-
+                    @if (auth()->user()->hasRole('sales'))
+                        <input type="text" name="salesman_id" value="{{ auth()->user()->name }}" class="form-control" readonly
+                    >
+                    @else
                     <select name="salesman_id" class="form-control form-select search-dropdown">
                         <option value="">Select</option>
                         @if ($salesmans)
@@ -64,6 +66,7 @@
                             <option value="">No record</option>
                         @endif
                     </select>
+                    @endif
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Transport <span class="text-danger">*</span></label>
@@ -108,13 +111,9 @@
                                 <select name="product_id[]"
                                     class="form-control product-field form-select product_id-field search-dropdown">
                                     <option selected disabled>Select</option>
-                                    {{-- @if ($products) --}}
                                         @foreach ($products as $product)
                                             <option value="{{ $product->id }}">{{ $product->product_name }}</option>
                                         @endforeach
-                                    {{-- @else
-                                        <option value="">No record</option>
-                                    @endif --}}
                                 </select>
                             </td>
                             <td data-label="Packing Size">
@@ -146,7 +145,6 @@
                     Please fill all fields in each product row.
                 </div>
             </div>
-
             <div class="gstsec mt-4 mb-4">
                 <div class="totalsec text-end">
                     <div class="row">
@@ -169,15 +167,12 @@
                             <input type="hidden" name="grand_total" value="">
                         </div>
                     </div>
-
                 </div>
             </div>
-
             <div class="d-flex align-items-center justify-content-end">
                 <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </form>
-
     </div>
 </div>
 

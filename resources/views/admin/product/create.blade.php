@@ -123,13 +123,9 @@
                                                 class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
-                                            @if ($variations)
                                                 @foreach ($variations as $v)
                                                     <option value="{{ $v->id }}">{{ $v->name }}</option>
                                                 @endforeach
-                                            @else
-                                                <option value="">No record</option>
-                                            @endif
                                         </select>
                                     </div>
                                     <div>

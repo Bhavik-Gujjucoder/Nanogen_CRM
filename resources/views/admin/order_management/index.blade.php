@@ -37,6 +37,7 @@
                                     class="checkmarks"></span></label>
                             </label>
                         </th>
+                        <th hidden>ID</th>
                         <th class="no-sort" scope="col"></th>
                         <th scope="col">Order ID</th>
                         <th scope="col">Party Name</th>
@@ -73,18 +74,20 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
+        order: [[1, 'desc']],  
         ajax: "{{ route('order_management.index') }}",
         columns: [
-            {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
-            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }, // Auto-increment number
-            {data: 'unique_order_id', name: 'unique_order_id', searchable: true },
-            {data: 'dd_id', name: 'dd_id', searchable: true },
-            {data: 'order_date', name: 'order_date', searchable: true, orderable: false },
-            {data: 'mobile_no', name: 'mobile_no', searchable: true, orderable: false },
-            {data: 'salesman_id', name: 'salesman_id', searchable: true },
-            {data: 'grand_total', name: 'grand_total', searchable: true },
-            {data: 'order_status', name: 'order_status', searchable: true, orderable: true },
-            {data: 'action', name: 'action', orderable: false, searchable: false },
+            { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+            { data: 'id', name: 'id', visible: false, searchable: false },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }, // Auto-increment number
+            { data: 'unique_order_id', name: 'unique_order_id', searchable: true },
+            { data: 'dd_id', name: 'dd_id', searchable: true },
+            { data: 'order_date', name: 'order_date', searchable: true, orderable: false },
+            { data: 'mobile_no', name: 'mobile_no', searchable: true, orderable: false },
+            { data: 'salesman_id', name: 'salesman_id', searchable: true },
+            { data: 'grand_total', name: 'grand_total', searchable: true },
+            { data: 'order_status', name: 'order_status', searchable: true, orderable: true },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
         ],
     });
 
