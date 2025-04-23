@@ -54,7 +54,7 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
                     @if (auth()->user()->hasRole('sales'))
-                        <input type="text" value="{{  $order->sales_person_detail->first_name .  $order->sales_person_detail->last_name }}" class="form-control" readonly>
+                        <input type="text" value="{{  $order->sales_person_detail->first_name .' '.  $order->sales_person_detail->last_name }}" class="form-control" readonly>
                         <input type="hidden" name="salesman_id" value="{{ $order->salesman_id }}"> 
                     @else
                         <select name="salesman_id" class="form-control form-select search-dropdown">

@@ -21,7 +21,6 @@ class OrderManagementController extends Controller
      */
     public function index(Request $request)
     {
-
         // $role = Role::findByName('sales'); // or 'sales_manager', etc.
         // $role->givePermissionTo('manage orders');
 

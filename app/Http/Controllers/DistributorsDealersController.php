@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProprietorPartnerDirector;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DistributorsDealersController extends Controller
 {
@@ -214,15 +215,33 @@ class DistributorsDealersController extends Controller
         return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
     }
 
-    public function payment_history(Request $request, string $id)
-    {
-        $distributor_dealers = DistributorsDealers::findOrFail($id);
-        $data = [
-            'page_title' => 'Payment History',
-            'distributor_dealers' => $distributor_dealers,
-            ];
-        return view('admin.distributors_dealers.payment_history', $data);
-    }
+    // public function payment_history(Request $request, string $id)
+    // {
+    //     $distributor_dealers = DistributorsDealers::findOrFail($id);
+    //     $data = [
+    //         'page_title' => 'Payment History',
+    //         'distributor_dealers' => $distributor_dealers,
+    //         ];
+    //     return view('admin.distributors_dealers.payment_history', $data);
+    // }
 
+    public function export_price_list()
+    {
+        $products = [
+            ['name' => 'Product A', 'price' => 10],
+            ['name' => 'Product B', 'price' => 15],
+            ['name' => 'Product C', 'price' => 20],
+            ['name' => 'Product D', 'price' => 30],
+        ];
+    
+        $pdf = Pdf::loadView('admin.distributors_dealers.price_list', compact('products'));
+        $filename = 'price-list-' . now()->year . '.pdf';
+
+        // Save to storage/app/public/price-lists/
+        Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
+    
+        return $pdf->stream($filename);
+
+    }
     
 }

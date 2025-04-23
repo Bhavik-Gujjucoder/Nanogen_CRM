@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TargetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariationController;
@@ -107,13 +108,18 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Distributors & Dealers */
     Route::get('distributors_dealers/index/{dealer?}', [DistributorsDealersController::class, 'index'])->name('distributors_dealers.index');
     Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
-    Route::get('/distributors_dealers/payment_history/{id}', [DistributorsDealersController::class, 'payment_history'])->name('distributors_dealers.payment_history');
+    // Route::get('/distributors_dealers/payment_history/{id}', [DistributorsDealersController::class, 'payment_history'])->name('distributors_dealers.payment_history');
+    Route::get('/distributors_dealers/export-price-list', [DistributorsDealersController::class, 'export_price_list'])->name('distributors_dealers.export_price_list');
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
     /* Order Management */
     Route::post('/order/status-update/{id}', [OrderManagementController::class, 'order_status'])->name('order_management.order_status');
     Route::post('/order/bulk-delete', [OrderManagementController::class, 'bulkDelete'])->name('order_management.bulkDelete');
     Route::resource('order_management', OrderManagementController::class);
+
+    /* Targets */
+    Route::resource('target', TargetController::class);
+
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
