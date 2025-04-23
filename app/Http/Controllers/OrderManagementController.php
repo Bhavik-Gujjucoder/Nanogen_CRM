@@ -65,7 +65,7 @@ class OrderManagementController extends Controller
                 })
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {
-                        return $row->sales_person_detail->first_name .  $row->sales_person_detail->last_name;
+                        return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
                     }
                     return '-'; 
                 })
