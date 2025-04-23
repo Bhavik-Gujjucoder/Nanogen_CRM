@@ -63,7 +63,7 @@
                                 @foreach ($salesmans as $s)
                                     <option value="{{ $s->user_id }}"
                                         {{ old('salesman_id', $order->salesman_id) == $s->user_id ? 'selected' : '' }}>
-                                        {{ $s->first_name }}
+                                        {{ $s->first_name.' '.$s->last_name }}
                                     </option>
                                 @endforeach
                             @else
