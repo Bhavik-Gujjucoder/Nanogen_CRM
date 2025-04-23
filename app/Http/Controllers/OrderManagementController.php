@@ -10,6 +10,7 @@ use App\Models\SalesPersonDetail;
 use Illuminate\Support\Facades\DB;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderManagementProduct;
 
@@ -20,6 +21,10 @@ class OrderManagementController extends Controller
      */
     public function index(Request $request)
     {
+
+        // $role = Role::findByName('sales'); // or 'sales_manager', etc.
+        // $role->givePermissionTo('manage orders');
+
         $data['page_title'] = 'Order Management';
         if ($request->ajax()) {
             $data = OrderManagement::query();
@@ -43,8 +48,8 @@ class OrderManagementController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
                     
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
+                    Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
 
                     return $action_btn . ' </div></div>';
                 })
@@ -59,10 +64,10 @@ class OrderManagementController extends Controller
                     return '-';
                 })
                 ->editColumn('salesman_id', function ($row) {
-                    if ($row->salesman) {
-                        return $row->salesman->first_name;
+                    if ($row->sales_person_detail) {
+                        return $row->sales_person_detail->first_name .  $row->sales_person_detail->last_name;
                     }
-                    return '-';
+                    return '-'; 
                 })
                 ->addColumn('order_status', function ($row) {
                     $order_status = '

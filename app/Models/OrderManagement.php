@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\DistributorsDealers;
 use App\Models\OrderManagementProduct;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -48,11 +49,10 @@ class OrderManagement extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function salesman(): BelongsTo
+    public function sales_person_detail(): HasOne
     {
-        return $this->belongsTo(SalesPersonDetail::class, 'salesman_id', 'id');
+        return $this->hasOne(SalesPersonDetail::class, 'user_id', 'salesman_id');
     }
-
 
         /**
          * Get all of the comments for the OrderManagement

@@ -53,19 +53,24 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
-                    <select name="salesman_id" class="form-control form-select search-dropdown">
-                        <option value="">Select Salesman</option>
-                        @if ($salesmans)
-                            @foreach ($salesmans as $s)
-                                <option value="{{ $s->id }}"
-                                    {{ old('salesman_id', $order->salesman_id) == $s->id ? 'selected' : '' }}>
-                                    {{ $s->first_name }}
-                                </option>
-                            @endforeach
-                        @else
-                            <option value="">No record</option>
-                        @endif
-                    </select>
+                    @if (auth()->user()->hasRole('sales'))
+                        <input type="text" value="{{  $order->sales_person_detail->first_name .  $order->sales_person_detail->last_name }}" class="form-control" readonly>
+                        <input type="hidden" name="salesman_id" value="{{ $order->salesman_id }}"> 
+                    @else
+                        <select name="salesman_id" class="form-control form-select search-dropdown">
+                            <option value="">Select Salesman</option>
+                            @if ($salesmans)
+                                @foreach ($salesmans as $s)
+                                    <option value="{{ $s->user_id }}"
+                                        {{ old('salesman_id', $order->salesman_id) == $s->user_id ? 'selected' : '' }}>
+                                        {{ $s->first_name }}
+                                    </option>
+                                @endforeach
+                            @else
+                                <option value="">No record</option>
+                            @endif
+                        </select>
+                    @endif
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Transport <span class="text-danger">*</span></label>
@@ -113,7 +118,8 @@
                             <th scope="col">Total <span class="text-danger">*</span></th>
                             {{-- <th scope="col">Action</th> --}}
                             <th data-label="Action">
-                                <button type="button" onclick="addpropRow()" class="btn btn-primary">Add New</button>
+                                <button type="button" onclick="addpropRow()" class="btn btn-primary">Add
+                                    New</button>
                             </th>
                         </tr>
                     </thead>
@@ -124,11 +130,11 @@
                                 <td data-label="Product Name">
                                     <select name="product_id[]"
                                         class="form-control product-field form-select product_id-field search-dropdown">
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}"
-                                                    {{ $p->product_id == $product->id ? 'selected' : '' }}>
-                                                    {{ $product->product_name }}</option>
-                                            @endforeach
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}"
+                                                {{ $p->product_id == $product->id ? 'selected' : '' }}>
+                                                {{ $product->product_name }}</option>
+                                        @endforeach
                                     </select>
                                 </td>
                                 <td data-label="Packing Size">
@@ -359,7 +365,7 @@
                 } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');
                     error.insertAfter(element.next(
-                    '.select2')); // This targets the Select2 container
+                        '.select2')); // This targets the Select2 container
                 } else {
                     error.addClass('text-danger');
                     error.insertAfter(element);

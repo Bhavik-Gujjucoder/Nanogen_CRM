@@ -50,22 +50,17 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
-                    {{-- @if (auth()->user()->hasRole('sales'))
-                        <input type="text"  value="{{ auth()->user()->name }}" class="form-control" readonly>
-                        <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}" > 
-                    @else --}}
                     @if (auth()->user()->hasRole('sales'))
-                        <select name="salesman_id" class="form-control">
-                            <option value="{{ auth()->user()->id }}" selected readonly>{{ auth()->user()->name }}</option>
-                        </select>
+                        <input type="text"  value="{{ auth()->user()->name }}" class="form-control" readonly>
+                        <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}" >
                     @else
                         <select name="salesman_id" class="form-control form-select search-dropdown">
                             <option value="">Select</option>
                             @if ($salesmans)
                                 @foreach ($salesmans as $s)
-                                    <option value="{{ $s->id }}"
-                                        {{ old('salesman_id') == $s->id ? 'selected' : '' }}>
-                                        {{ $s->first_name }}
+                                    <option value="{{ $s->user_id }}"
+                                        {{ old('salesman_id') == $s->user_id ? 'selected' : '' }}>
+                                        {{ $s->first_name.' '.$s->last_name }}
                                     </option>
                                 @endforeach
                             @else
@@ -73,7 +68,6 @@
                             @endif
                         </select>
                     @endif
-                    {{-- @endif --}}
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Transport <span class="text-danger">*</span></label>
