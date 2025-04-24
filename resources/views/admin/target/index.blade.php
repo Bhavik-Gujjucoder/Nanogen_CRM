@@ -16,7 +16,7 @@
             </div>
             <div class="col-sm-8">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-                    <div class="dropdown me-2">
+                    {{-- <div class="dropdown me-2">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown"><i
                                 class="ti ti-package-export me-2"></i>Export</a>
                         <div class="dropdown-menu  dropdown-menu-end">
@@ -33,7 +33,7 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
+                    </div> --}}
                     <a href="{{ route('target.create') }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add New Target</a>
                 </div>
