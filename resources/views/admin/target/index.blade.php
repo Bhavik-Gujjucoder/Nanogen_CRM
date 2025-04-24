@@ -215,6 +215,8 @@
                         show_success(response.message);
                         // Optionally, reload the page to reflect changes
                         target_show.ajax.reload();
+
+                        $('#bulk_delete_button').hide();
                         // location.reload();
                     },
                     error: function(xhr, status, error) {

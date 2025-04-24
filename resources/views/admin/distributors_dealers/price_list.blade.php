@@ -346,14 +346,14 @@
             /* height: 100%; */
         }
 
-        .footer-cls-new .header-logo p,
-        .footer-cls-new .header-logo a {
+        .footer-content p,
+        .footer-content a {
             color: #fff;
             text-decoration: none;
             font-size: 20px;
         }
 
-        .footer-cls-new .header-logo p {
+        .footer-content p {
             margin-top: 50px;
         }
 
@@ -385,37 +385,83 @@
 
         }
 
-        .new-cls {
+        .foter-cls-new {
             background-color: #0d47a1;
             z-index: 99999;
+
 
 
         }
 
         .footer-table {
-            position: relative;
-            width: 80%;
+
+            width: 90%;
             max-width: 600px;
             margin: auto;
             text-align: center;
         }
 
-        /* .footer-cls-new .header-logo {
+        .footer-content {
+            text-align: center;
+        }
+
+        /* 
+        .footer-table {
             position: absolute;
-            bottom: 100%;
+            bottom: 0;
             left: 50%;
             transform: translate(-50%, -30%);
-           
+
             contain: "";
             z-index: 99999;
 
 
+        }
+
+        .foter-cls-new {
+            position: relative;
         } */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .container.foter-cls-new {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            /* push footer to bottom */
+          
+        }
+
+        .footer-table {
+            text-align: center;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+       
+
+        .contact-cls a {
+            display: inline-block;
+            margin: 5px 0;
+            color: #000;
+            text-decoration: none;
+        }
+
+       
     </style>
 </head>
 
 <body>
-    <!-- <div class="img-cls-new">
+    <div class="img-cls-new">
         <img src="images/nonogen-slider-img.png" class="bg-img" alt="Background Image">
         <div class="cover-content">
             <img src="images/new-logo.png" class="logo" alt="Logo">
@@ -1318,22 +1364,22 @@
             </div>
 
         </div>
-    </div> -->
+    </div>
     <div style="padding-top: 40px;">
-        <div class="container">
+        <div class="container foter-cls-new">
             <div class="footer-table">
                 <table>
                     <tr>
                         <td class="footer-content">
                             <img src="images/new-logo.png" class="logo" alt="Logo">
                             <p>
-                                Revenue Survey No. 162, Mayank Cattle Food Limited Compound,<br>
-                                Office No. 1, Rajkot-Jamnagar Highway, Village: Naranka,<br>
+                                Revenue Survey No. 162, Mayank Cattle Food Limited Compound,
+                                Office No. 1, Rajkot-Jamnagar Highway, Village: Naranka,
                                 Rajkot, Gujarat 360 110 INDIA.
                             </p>
 
                             <div class="contact-cls">
-                                <a href="#"><img src="images/call-footer.png" alt="">+91 98253 85584</a><br>
+                                <a href="#"><img src="images/call-footer.png" alt="">+91 98253 85584</a>
                                 <a href="#"><img src="images/mail-footer.png" alt="">info@nanogenagrochem.com</a>
                             </div>
 
@@ -1342,6 +1388,7 @@
                             </div>
                         </td>
                     </tr>
+
                 </table>
             </div>
 
