@@ -112,13 +112,13 @@
                 data: 'target_value',
                 name: 'target_value',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'city_id',
                 name: 'city_id',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'start_date',

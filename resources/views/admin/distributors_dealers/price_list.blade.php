@@ -1346,7 +1346,7 @@
 
         </div>
     </div>
-    <div style="padding-top: 800px;">
+    <div style="padding-top: 620px;">
         <div class="container foter-cls-new">
             <div class="footer-table">
                 <table>
