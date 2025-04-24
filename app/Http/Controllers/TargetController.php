@@ -66,6 +66,17 @@ class TargetController extends Controller
                     }
                     return '-'; 
                 })
+                ->filterColumn('salesman_id', function($query, $keyword) {
+                    $query->whereHas('sales_person_detail', function($q) use ($keyword) {
+                        $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
+                    });
+                })
+                ->filterColumn('city_id', function($query, $keyword) {
+                    $query->whereHas('city', function($q) use ($keyword) {
+                        $q->where('city_name', 'like', "%{$keyword}%");
+                    });
+                })
+                
                 ->rawColumns(['checkbox', 'action']) //'value',
                 ->make(true);
         }

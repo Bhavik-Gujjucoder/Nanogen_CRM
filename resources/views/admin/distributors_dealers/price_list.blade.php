@@ -433,30 +433,31 @@
             flex-direction: column;
             justify-content: flex-end;
             /* push footer to bottom */
+            align-items: end;
           
+
         }
 
         .footer-table {
             text-align: center;
             padding: 20px;
             background: #f5f5f5;
+           
+            position: relative;
+
+
         }
 
         .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
+            position: absolute;
+            top: auto;
+            bottom: 100%;
+            left: 50%;
+            /* transform: translate(-50%, -30%); */
+            z-index: 99999;
+            content: "";
+            height: 100%;
         }
-
-       
-
-        .contact-cls a {
-            display: inline-block;
-            margin: 5px 0;
-            color: #000;
-            text-decoration: none;
-        }
-
-       
     </style>
 </head>
 
