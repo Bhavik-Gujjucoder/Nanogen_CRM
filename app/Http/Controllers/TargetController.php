@@ -27,7 +27,7 @@ class TargetController extends Controller
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
                     return '<label class="checkboxs">
-                            <input type="checkbox" class="checkbox-item order_checkbox" data-id="' . $row->id . '">
+                            <input type="checkbox" class="checkbox-item target_checkbox" data-id="' . $row->id . '">
                             <span class="checkmarks"></span>
                         </label>';
                 })
@@ -35,7 +35,7 @@ class TargetController extends Controller
                     $edit_btn = '<a href="' . route('target.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
-                    $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteOrder"  data-id="' . $row->id . '"
+                    $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteTarget"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('target.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
@@ -106,8 +106,8 @@ class TargetController extends Controller
             foreach ($grade_id as $key => $g) {
                 if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
                     TargetGrade::create([
-                        'target_id' => $target->id,
-                        'grade_id' => $grade_id[$key],
+                        'target_id'  => $target->id,
+                        'grade_id'   => $grade_id[$key],
                         'percentage' => $percentage[$key],
                         'percentage_value' => $percentage_value[$key],
                     ]);
@@ -120,19 +120,16 @@ class TargetController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $data['page_title'] = 'Edit Target';
+        $data['target'] = Target::findOrFail($id);
+        $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
+        $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
+        $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
+        return view('admin.target.edit', $data);
     }
 
     /**
@@ -140,7 +137,34 @@ class TargetController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $target = Target::findOrFail($id);
+        $target->update($request->only([
+           'subject', 'salesman_id', 'city_id', 'target_value', 'start_date', 'end_date'
+        ]));
+
+        if ($request->only(['grade_id', 'percentage', 'percentage_value'])) {   
+
+            TargetGrade::where('target_id', $id)->delete(); 
+
+            $grade_id         = $request->input('grade_id');
+            $percentage       = $request->input('percentage');
+            $percentage_value = $request->input('percentage_value');
+
+            if($grade_id){
+
+                foreach ($grade_id as $key => $g) {
+                    if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
+                        TargetGrade::create([
+                            'target_id' => $target->id,
+                            'grade_id' => $g,
+                            'percentage' => $percentage[$key],
+                            'percentage_value' => $percentage_value[$key],
+                        ]);
+                    }
+                }
+            }
+        }
+        return redirect()->route('target.index')->with('success', 'Target updated successfully.');
     }
 
     /**
@@ -148,6 +172,23 @@ class TargetController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Target::where('id', $id)->delete();
+        TargetGrade::where('target_id', $id)->delete();
+        return redirect()->route('target.index')->with('success', 'Target deleted successfully.');
     }
+
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+        if (!empty($ids)) {
+            Target::whereIn('id', $ids)->delete();
+            TargetGrade::whereIn('target_id', $ids)->delete();
+
+            return response()->json(['message' => 'Selected Target deleted successfully!']);
+        }
+        return response()->json(['message' => 'No records selected!'], 400);
+    }
+
+
 }

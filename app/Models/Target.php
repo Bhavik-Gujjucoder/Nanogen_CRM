@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\TargetGrade;
 use App\Models\CityManagement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Target extends Model
 {
@@ -23,5 +25,15 @@ class Target extends Model
     public function city(): HasOne
     {
         return $this->hasOne(CityManagement::class, 'id', 'city_id');
+    }
+
+    /**
+     * Get all of the comments for the Target
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function target_grade(): HasMany
+    {
+        return $this->hasMany(TargetGrade::class, 'target_id', 'id');
     }
 }

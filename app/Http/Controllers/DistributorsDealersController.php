@@ -234,6 +234,7 @@ class DistributorsDealersController extends Controller
             ['name' => 'Product D', 'price' => 30],
         ];
     
+        // return view('admin.distributors_dealers.price_list', compact('products'));
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list', compact('products'));
         $filename = 'price-list-' . now()->year . '.pdf';
 

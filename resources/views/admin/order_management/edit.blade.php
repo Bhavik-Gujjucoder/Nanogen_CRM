@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+
 @section('title')
     {{ $page_title }}
 @endsection

@@ -22,21 +22,18 @@
                         <div class="dropdown-menu  dropdown-menu-end">
                             <ul>
                                 <li>
-                                    <a href="javascript:void(0);" class="dropdown-item"><i
-                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export
-                                        as PDF</a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="ti ti-file-type-pdf text-danger me-1"></i>Export as PDF
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0);" class="dropdown-item"><i
-                                            class="ti ti-file-type-xls text-green me-1"></i>Export
-                                        as Excel </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="ti ti-file-type-xls text-green me-1"></i>Export as Excel
+                                    </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <!-- <a href="javascript:void(0);" class="btn btn-primary"
-                   data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i
-                   class="ti ti-square-rounded-plus me-2"></i>Add New Targets</a> -->
                     <a href="{{ route('target.create') }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add New Target</a>
                 </div>
@@ -49,10 +46,11 @@
         <!-- Projects List -->
         <div class="table-responsive custom-table">
             <table class="table dataTable no-footer" id="target_table">
+                <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort" scope="col"><label class="checkboxs"><input type="checkbox"
-                                    id="select-all"><span class="checkmarks"></span></label>
+                        <th class="no-sort" scope="col"><label class="checkboxs">
+                                <input type="checkbox" id="select-all"><span class="target_checkbox"></span></label>
                         </th>
                         <th scope="col">ID</th>
                         <th scope="col">Subject</th>
@@ -139,6 +137,96 @@
                 searchable: false
             },
         ],
+    });
+
+
+    /***** Alert Delete-MSG *****/
+    $(document).on('click', '.deleteTarget', function(event) {
+        event.preventDefault();
+        let targetId = $(this).data('id'); // Get the target ID
+        let form = $('#delete-form-' + targetId); // Select the correct form
+        console.log(form);
+
+        confirmDeletion(function() {
+            form.submit(); // Submit the form if confirmed
+        });
+    });
+
+    function confirmDeletion(callback) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to remove this Target? Once deleted, it cannot be recovered.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+                icon: 'my-custom-icon swal2-warning'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                callback(); // Execute callback function if confirmed
+            }
+        });
+    }
+
+     /***** Bulk Delete *****/
+     $('#select-all').change(function() {
+        // Check/uncheck all checkboxes when the select-all checkbox is clicked
+        $('.target_checkbox').prop('checked', this.checked);
+
+    });
+
+    $(document).on('change', '.target_checkbox', function() {
+        let count = $('.target_checkbox:checked').length; // Count checked checkboxes
+        $('#checked-count').text(count); // Display count in an element
+        if (count > 0) {
+            $('#bulk_delete_button').show();
+        } else {
+            $('#bulk_delete_button').hide();
+        }
+    });
+
+
+
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+        confirmDeletion(function() {
+            var selectedIds = $('.target_checkbox:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedIds.length > 0) {
+                // Make an AJAX request to delete the selected items
+                $.ajax({
+                    url: "{{ route('target.bulkDelete') }}",
+                    method: 'POST',
+                    data: {
+                        ids: selectedIds,
+                        /** Send the selected IDs **/
+                        _token: '{{ csrf_token() }}' // CSRF token for security
+                    },
+                    success: function(response) {
+                        // Swal.fire("Deleted!", response.message, "success");
+                        show_success(response.message);
+                        // Optionally, reload the page to reflect changes
+                        target_show.ajax.reload();
+                        // location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        show_error('An error occurred while deleting.');
+                        // alert("An error occurred while deleting.");
+                    }
+                });
+            } else {
+                alert("No items selected.");
+            }
+        });
+        // Get the IDs of selected checkboxes
     });
 </script>
 @endsection

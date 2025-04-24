@@ -51,8 +51,8 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
                     @if (auth()->user()->hasRole('sales'))
-                        <input type="text"  value="{{ auth()->user()->name }}" class="form-control" readonly>
-                        <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}" >
+                        <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
+                        <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
                     @else
                         <select name="salesman_id" class="form-control form-select search-dropdown">
                             <option value="">Select</option>
@@ -60,7 +60,7 @@
                                 @foreach ($salesmans as $s)
                                     <option value="{{ $s->user_id }}"
                                         {{ old('salesman_id') == $s->user_id ? 'selected' : '' }}>
-                                        {{ $s->first_name.' '.$s->last_name }}
+                                        {{ $s->first_name . ' ' . $s->last_name }}
                                     </option>
                                 @endforeach
                             @else
@@ -219,6 +219,7 @@
                 let qty = $(this).find(".qty-field").val();
                 let packing = $(this).find(".packing_size_field").val();
                 let total = $(this).find(".total-field").val();
+
 
                 if (
                     product === "" || product === "Select" ||

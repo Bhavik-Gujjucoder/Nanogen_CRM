@@ -16,14 +16,16 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('target.store') }}" id="target_form" enctype="multipart/form-data" method="POST">
+        <form action="{{ route('target.update', $target->id) }}" id="target_form" enctype="multipart/form-data"
+            method="POST">
             @csrf
+            @method('PUT')
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Subject <span class="text-danger">*</span></label>
-                        <input type="text" name="subject" value="{{ old('subject') }}" class="form-control"
-                            placeholder="Subject">
+                        <input type="text" name="subject" value="{{ old('subject', $target->subject) }}"
+                            class="form-control" placeholder="Subject">
                     </div>
                 </div>
 
@@ -35,7 +37,7 @@
                             @if ($salesmans)
                                 @foreach ($salesmans as $s)
                                     <option value="{{ $s->user_id }}"
-                                        {{ old('salesman_id') == $s->user_id ? 'selected' : '' }}>
+                                        {{ old('salesman_id', $target->salesman_id) == $s->user_id ? 'selected' : '' }}>
                                         {{ $s->first_name . ' ' . $s->last_name }}
                                     </option>
                                 @endforeach
@@ -54,7 +56,7 @@
                             @if ($cities)
                                 @foreach ($cities as $c)
                                     <option value="{{ $c->id }}"
-                                        {{ old('city_id') == $c->id ? 'selected' : '' }}>
+                                        {{ old('city_id', $target->city_id) == $c->id ? 'selected' : '' }}>
                                         {{ $c->city_name }}
                                     </option>
                                 @endforeach
@@ -68,8 +70,8 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Target Value <span class="text-danger">*</span></label>
-                        <input type="number" name="target_value" value="{{ old('target_value') }}"
-                            class="form-control">
+                        <input type="number" name="target_value"
+                            value="{{ old('target_value', $target->target_value) }}" class="form-control">
                     </div>
                 </div>
 
@@ -78,7 +80,8 @@
                         <label class="col-form-label">Start Date <span class="text-danger">*</span></label>
                         <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
+                            <input type="text" name="start_date"
+                                value="{{ old('start_date', $target->start_date->format('d-m-y')) }}" id="startDate"
                                 class="form-control" placeholder="DD/MM/YY">
                         </div>
                     </div>
@@ -89,7 +92,8 @@
                         <label class="col-form-label">End Date <span class="text-danger">*</span></label>
                         <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"
+                            <input type="text" name="end_date"
+                                value="{{ old('end_date', $target->end_date->format('d-m-y')) }}" id="endDate"
                                 class="form-control" placeholder="DD/MM/YY">
                         </div>
                     </div>
@@ -105,32 +109,37 @@
                                         class="text-danger">*</span></label>
                                 <label class="col-md-3 col-form-label">Target Value <span
                                         class="text-danger">*</span></label>
-                            </div>
-                            <div class="product-group d-flex align-items-center mb-2">
                                 <input type="hidden" name="dummy_grade" id="dummyValidationField" />
-                                <select class="form-select me-2" name="grade_id[]">
-                                    <option value="">Select</option>
-                                    @if ($grade)
-                                        @foreach ($grade as $g)
-                                            <option value="{{ $g->id }}"
-                                                {{ old('grade_id') == $g->id ? 'selected' : '' }}>
-                                                {{ $g->name }}
-                                            </option>
-                                        @endforeach
-                                    @else
-                                        <option value="">No record</option>
-                                    @endif
-                                </select>
-
-                                <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                                    class="form-control me-2" placeholder="Target To (%)">
-
-                                <strong>₹</strong> <input type="text" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                                    class="input-as-text" placeholder="" readonly>
-                                    {{-- /<div id="percentage_value"></div>  --}}
-
-                                <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
                             </div>
+                            @if ($target->target_grade)
+                                @foreach ($target->target_grade as $t_g)
+                                    <div class="product-group d-flex align-items-center mb-2">
+                                        <select class="form-select me-2" name="grade_id[]">
+                                            <option value="">Select</option>
+                                            @if ($grade)
+                                                @foreach ($grade as $g)
+                                                    <option value="{{ $g->id }}"
+                                                        {{ old('grade_id', $t_g->grade_id) == $g->id ? 'selected' : '' }}>
+                                                        {{ $g->name }}
+                                                    </option>
+                                                @endforeach
+                                            @else
+                                                <option value="">No record</option>
+                                            @endif
+                                        </select>
+
+                                        <input type="number" name="percentage[]"
+                                            value="{{ old('percentage', $t_g->percentage) }}" class="form-control me-2"
+                                            placeholder="Target To (%)">
+
+                                            <strong>₹</strong> <input type="text" name="percentage_value[]"
+                                            value="{{ old('percentage_value',$t_g->percentage_value) }}" 
+                                            class="input-as-text" readonly> 
+
+                                        <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                         <div id="productError" class="text-danger mb-3" style="display:none;">
                             Please fill all fields in each product row.
@@ -140,7 +149,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-end">
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
         </form>
     </div>
@@ -158,7 +167,6 @@
         $('#product-container .product-group').each(function() {
             let $percentage = $(this).find('input[name="percentage[]"]');
             let $valueField = $(this).find('input[name="percentage_value[]"]');
-            // let $valueField = $(this).find('#percentage_value');
             let percentage = parseFloat($percentage.val());
 
             if (!isNaN(percentage)) {
@@ -243,14 +251,10 @@
             }
         }
     });
-
     /*** END ***/
 
 
     /*** Validation ***/
-
-
-
     function check_total_percentage() {
         let totalPercentage = 0;
         $('input[name="percentage[]"]').each(function() {
@@ -266,13 +270,14 @@
     }
 
     function check_atleast_one() {
-       let count_percetage_input =  $('input[name="percentage[]"]').length;
-        if (count_percetage_input) {
+       let totalPercentage =  $('input[name="percentage[]"]').length;
+        if (totalPercentage) {
             return true;
         } else {
             return false;
         }
     }
+
 
     $.validator.addMethod("validateGrades", function(value, element) {
         let isValid = true;
@@ -372,20 +377,7 @@
         unhighlight: function(element) {
             $(element).removeClass('is-invalid');
         },
-
-        // // Add these to prevent real-time validation on dummy_grade
-        // onkeyup: function(element) {
-        //     if ($(element).attr("name") !== "dummy_grade") {
-        //         $(element).valid();
-        //     }
-        // },
-        // onfocusout: function(element) {
-        //     if ($(element).attr("name") !== "dummy_grade") {
-        //         $(element).valid();
-        //     }
-        // }
     });
-
     /*** END ***/
 
 

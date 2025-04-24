@@ -118,6 +118,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::resource('order_management', OrderManagementController::class);
 
     /* Targets */
+    Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
     Route::resource('target', TargetController::class);
 
 
