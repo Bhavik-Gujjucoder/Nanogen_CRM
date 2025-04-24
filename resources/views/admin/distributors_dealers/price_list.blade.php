@@ -434,29 +434,9 @@
             justify-content: flex-end;
             /* push footer to bottom */
             align-items: end;
-          
-
-        }
-
-        .footer-table {
-            text-align: center;
-            padding: 20px;
-            background: #f5f5f5;
-           
             position: relative;
 
 
-        }
-
-        .footer-content {
-            position: absolute;
-            top: auto;
-            bottom: 100%;
-            left: 50%;
-            /* transform: translate(-50%, -30%); */
-            z-index: 99999;
-            content: "";
-            height: 100%;
         }
     </style>
 </head>
@@ -1366,7 +1346,7 @@
 
         </div>
     </div>
-    <div style="padding-top: 40px;">
+    <div style="padding-top: 800px;">
         <div class="container foter-cls-new">
             <div class="footer-table">
                 <table>

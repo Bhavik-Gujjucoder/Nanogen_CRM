@@ -183,8 +183,8 @@
         });
 
         // Show/hide error if total exceeds 100
-        if (totalPercentage > 100) {
-            $('#percentageLimitError').text('Total percentage should not exceed 100%.').show();
+        if (totalPercentage != 100) {
+            $('#percentageLimitError').text('Total percentage should be 100%.').show();
             isValid = false;
         } else {
             $('#percentageLimitError').hide();
@@ -222,7 +222,7 @@
         const startPicker = flatpickr("#startDate", {
             dateFormat: "d-m-Y",
             // maxDate: "today",
-            defaultDate: "{{ old('start_date', isset($detail) ? \Carbon\Carbon::parse($detail->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+            defaultDate: "{{ old('start_date', isset($target) ? \Carbon\Carbon::parse($target->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
             onChange: function(selectedDates, dateStr, instance) {
                 // Set selected start date as minDate for end date
                 endPicker.set('minDate', dateStr);
@@ -237,7 +237,7 @@
         const endPicker = flatpickr("#endDate", {
             dateFormat: "d-m-Y",
             // maxDate: "today",
-            defaultDate: "{{ old('end_date', isset($detail) ? \Carbon\Carbon::parse($detail->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+            defaultDate: "{{ old('end_date', isset($target) ? \Carbon\Carbon::parse($target->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
             onReady: removeTodayHighlight,
             onMonthChange: removeTodayHighlight,
             onYearChange: removeTodayHighlight,
@@ -262,7 +262,7 @@
             totalPercentage += val;
         });
         console.log(totalPercentage);
-        if (totalPercentage > 100) {
+        if (totalPercentage != 100) {
             return false;
         } else {
             return true;
@@ -351,7 +351,7 @@
             } else {
                 // alert('ddd');
                 $("#productError").text(
-                    'Please enter a valid percentage. The total percentage cannot exceed 100%.').show();
+                    'Please enter a valid percentage. The total percentage should be 100%.').show();
             }
         },
         errorElement: 'span',

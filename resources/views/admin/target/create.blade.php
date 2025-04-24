@@ -175,8 +175,8 @@
         });
 
         // Show/hide error if total exceeds 100
-        if (totalPercentage > 100) {
-            $('#percentageLimitError').text('Total percentage should not exceed 100%.').show();
+        if (totalPercentage != 100) {
+            $('#percentageLimitError').text('Total percentage should be 100%.').show();
             isValid = false;
         } else {
             $('#percentageLimitError').hide();
@@ -258,7 +258,7 @@
             totalPercentage += val;
         });
         console.log(totalPercentage);
-        if (totalPercentage > 100) {
+        if (totalPercentage != 100) {
             return false;
         } else {
             return true;
@@ -346,7 +346,7 @@
             } else {
                 // alert('ddd');
                 $("#productError").text(
-                    'Please enter a valid percentage. The total percentage cannot exceed 100%.').show();
+                    'Please enter a valid percentage. The total percentage should be 100%.').show();
             }
         },
         errorElement: 'span',
