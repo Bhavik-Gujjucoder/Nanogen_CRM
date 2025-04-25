@@ -142,7 +142,7 @@ class ComplainController extends Controller
         $data['dds'] = DistributorsDealers::get();
         $data['products'] = Product::where('status', 1)->get();
         $data['complain'] = Complain::findOrFail($id);
-        $data['complain_status_history'] = ComplainStatusHistory::where('complain_id', $id)->get();
+        $data['complain_status_history'] = ComplainStatusHistory::where('complain_id', $id)->orderBy('created_at', 'desc')->get();
         return view('admin.complain.edit', $data);
     }
 
