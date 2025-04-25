@@ -78,7 +78,7 @@
                 </li>
                 <li>
                     <ul>
-                        <li><a href="#{{-- route('complain.index') --}}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
+                        <li><a href="#{{-- route('complain.index')  --}}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
                         <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade
                                     Management</span></a></li>
                         <li><a href="{{ route('state.index') }}"><i class="ti ti-map-pin-pin"></i><span>State
