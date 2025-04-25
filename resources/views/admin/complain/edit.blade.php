@@ -92,7 +92,7 @@
                                 $selectedStatus = old('status', $complain->status ?? '');
                             @endphp
 
-                            <select class="select" name="status">
+                            <select class="select" name="status" id="status">
                                 <option value="1" {{ $selectedStatus == 1 ? 'selected' : '' }}>In progress</option>
                                 <option value="2" {{ $selectedStatus == 2 ? 'selected' : '' }}>Under review</option>
                                 <option value="3" {{ $selectedStatus == 3 ? 'selected' : '' }}>Completed</option>
@@ -108,7 +108,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="col-form-label">Remarks<span class="text-danger">*</span></label>
-                        <textarea type="text" class="form-control" name="remark">{{ $complain->remark ?? old('remark') }}</textarea>
+                        <textarea type="text" class="form-control remark" name="remark">{{ $complain->remark ?? old('remark') }}</textarea>
                     </div>
                 </div>
                 </div>
@@ -258,5 +258,9 @@
             reader.readAsDataURL(file); // Read the file as a Data URL
         }
     }
+
+    $('#status').change(function() {
+        $('.remark').val('');
+    });
 </script>
 @endsection

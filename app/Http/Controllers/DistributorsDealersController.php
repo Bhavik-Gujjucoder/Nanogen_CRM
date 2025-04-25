@@ -240,7 +240,8 @@ class DistributorsDealersController extends Controller
         // Save to storage/app/public/price-lists/
         Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
     
-        return $pdf->stream($filename);
+        return $pdf->download($filename); 
+        // return $pdf->stream($filename);
 
     }
     
