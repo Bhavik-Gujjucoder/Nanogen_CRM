@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\DistributorsDealers;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ComplainStatusHistory;
+use Illuminate\Support\Facades\Storage;
 
 class ComplainController extends Controller
 {
@@ -27,7 +29,7 @@ class ComplainController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                 
-                    $edit_btn = '<a href="#" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
+                    $edit_btn = '<a href="' . route('complain.edit', $row->id) . '" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     $delete_btn = '<a href="#" class="dropdown-item deleteGrade"  data-id="' . $row->id . '"
@@ -140,6 +142,51 @@ class ComplainController extends Controller
         $data['dds'] = DistributorsDealers::get();
         $data['products'] = Product::where('status', 1)->get();
         $data['complain'] = Complain::findOrFail($id);
+        $data['complain_status_history'] = ComplainStatusHistory::where('complain_id', $id)->get();
         return view('admin.complain.edit', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'complain_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'complain_image.image' => 'Complain image must be an image.',
+            'complain_image.mimes' => 'Complain image must be a file of type: jpeg, png, jpg, gif.',
+            'complain_image.max' => 'Complain image may not be greater than 2MB',
+        ]);
+
+        $complain = Complain::findOrFail($id);
+        $data = [
+            'dd_id' => $request->dd_id,
+            'date' => $request->date,
+            'product_id' => $request->product_id,
+            'status' => $request->status,
+            'description' => $request->description,
+            'remark' => $request->remark,
+        ];
+
+        if ($request->hasFile('complain_image')) {
+            // Delete old complain image if exists
+            if ($complain->complain_image) {
+                Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+            }
+            
+            $file     = $request->file('complain_image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('complain_images', $filename, 'public'); // Save to storage/app/public/complain_images
+            $data['complain_image'] = $filename;
+        }
+
+        $complain->update($data);
+
+        $complain_status_history = new ComplainStatusHistory();
+        $complain_status_history_data = [
+            'complain_id' => $id,
+            'status' => $request->status,
+            'remark' => $request->remark,
+        ];
+        $complain_status_history->create($complain_status_history_data);
+        return redirect()->route('complain.index')->with('success', 'Complain updated successfully.');
     }
 }

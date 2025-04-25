@@ -1,15 +1,15 @@
 @extends('layouts.main')
 @section('content')
-<style>
-    .input-as-text {
-    border: none;
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    outline: none;
-}
-</style>
+    <style>
+        .input-as-text {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            outline: none;
+        }
+    </style>
 @section('title')
     {{ $page_title }}
 @endsection
@@ -107,7 +107,8 @@
                                         class="text-danger">*</span></label>
                             </div>
                             <div class="product-group d-flex align-items-center mb-2">
-                                <input type="hidden" name="dummy_grade" id="dummyValidationField" />
+                                    <input type="hidden" name="dummy_grade" id="dummyValidationField" />
+                                <div class="col-md-4">
                                 <select class="form-select me-2" name="grade_id[]">
                                     <option value="">Select</option>
                                     @if ($grade)
@@ -121,13 +122,16 @@
                                         <option value="">No record</option>
                                     @endif
                                 </select>
-
+                                </div>
+                                <div class="col-md-4">
                                 <input type="number" name="percentage[]" value="{{ old('percentage') }}"
                                     class="form-control me-2" placeholder="Target To (%)">
-
-                                <strong>₹</strong> <input type="text" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                                    class="input-as-text" placeholder="" readonly>
-                                    {{-- /<div id="percentage_value"></div>  --}}
+                                </div>
+                                <div class="col-md-4">
+                                <strong>₹</strong> <input type="text" name="percentage_value[]"
+                                    value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
+                                    readonly></div>
+                                {{-- /<div id="percentage_value"></div>  --}}
 
                                 <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
                             </div>
@@ -266,7 +270,7 @@
     }
 
     function check_atleast_one() {
-       let count_percetage_input =  $('input[name="percentage[]"]').length;
+        let count_percetage_input = $('input[name="percentage[]"]').length;
         if (count_percetage_input) {
             return true;
         } else {
@@ -337,9 +341,9 @@
         },
         submitHandler: function(form) {
             if (check_total_percentage()) {
-                if(check_atleast_one()){
+                if (check_atleast_one()) {
                     form.submit(); //Submit only if check passes
-                }else{
+                } else {
                     $("#productError").text(
                         'Please add atleast one target').show();
                 }
@@ -394,7 +398,7 @@
         let productContainer = document.getElementById('product-container');
         let newProductGroup = document.createElement('div');
         newProductGroup.classList.add('product-group', 'd-flex', 'align-items-center', 'mb-2');
-        newProductGroup.innerHTML = `
+        newProductGroup.innerHTML = `<div class="col-md-4">
             <select class="form-select me-2" name="grade_id[]">
                 <option value="">Select</option>
                 @if ($grade)
@@ -407,12 +411,12 @@
                 @else
                     <option value="">No record</option>
                 @endif
-            </select>
+            </select></div><div class="col-md-4">
              <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                class="form-control me-2" placeholder="Target To (%)">
+                class="form-control me-2" placeholder="Target To (%)"></div><div class="col-md-4">
 
             <strong>₹</strong><input type="text" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                class="input-as-text" readonly>
+                class="input-as-text" readonly></div>
 
             <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
         `;

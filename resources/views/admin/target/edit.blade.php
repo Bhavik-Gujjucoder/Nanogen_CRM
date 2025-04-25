@@ -114,6 +114,7 @@
                             @if ($target->target_grade)
                                 @foreach ($target->target_grade as $t_g)
                                     <div class="product-group d-flex align-items-center mb-2">
+                                        <div class="col-md-4">
                                         <select class="form-select me-2" name="grade_id[]">
                                             <option value="">Select</option>
                                             @if ($grade)
@@ -126,15 +127,16 @@
                                             @else
                                                 <option value="">No record</option>
                                             @endif
-                                        </select>
+                                        </select></div>
+                                        <div class="col-md-4">
 
                                         <input type="number" name="percentage[]"
                                             value="{{ old('percentage', $t_g->percentage) }}" class="form-control me-2"
-                                            placeholder="Target To (%)">
-
+                                            placeholder="Target To (%)"></div>
+                                            <div class="col-md-4">
                                             <strong>₹</strong> <input type="text" name="percentage_value[]"
                                             value="{{ old('percentage_value',$t_g->percentage_value) }}" 
-                                            class="input-as-text" readonly> 
+                                            class="input-as-text" readonly> </div>
 
                                         <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
                                     </div>
@@ -386,7 +388,7 @@
         let productContainer = document.getElementById('product-container');
         let newProductGroup = document.createElement('div');
         newProductGroup.classList.add('product-group', 'd-flex', 'align-items-center', 'mb-2');
-        newProductGroup.innerHTML = `
+        newProductGroup.innerHTML = `<div class="col-md-4">
             <select class="form-select me-2" name="grade_id[]">
                 <option value="">Select</option>
                 @if ($grade)
@@ -399,12 +401,12 @@
                 @else
                     <option value="">No record</option>
                 @endif
-            </select>
+            </select></div><div class="col-md-4">
              <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                class="form-control me-2" placeholder="Target To (%)">
-
+                class="form-control me-2" placeholder="Target To (%)"></div>
+<div class="col-md-4">
             <strong>₹</strong><input type="text" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                class="input-as-text" readonly>
+                class="input-as-text" readonly></div>
 
             <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
         `;

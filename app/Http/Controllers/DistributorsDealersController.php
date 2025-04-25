@@ -233,7 +233,6 @@ class DistributorsDealersController extends Controller
         ->has('products') // Only get categories with products
         ->get();
 
-
         // return view('admin.distributors_dealers.price_list', compact('products'));
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
         $filename = 'price-list-' . now()->year . '.pdf';

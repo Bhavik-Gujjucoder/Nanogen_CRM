@@ -42,7 +42,7 @@
                                     <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }}
                                         data-user_type="{{ $dd->user_type }}">
                                         {{ $dd->applicant_name }}
-                                        {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
+                                        {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealer)' : '') }}
                                     </option>
                                 @endforeach
                                 @else

@@ -60,7 +60,7 @@
                         <th scope="col">Region</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
-                        <th class="text-end" scope="col">Action</th>
+                        <th class="{{--text-end--}}" scope="col">Action</th>
                     </tr>
                 </thead>
             </table>
