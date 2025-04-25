@@ -50,7 +50,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="no-sort" scope="col"><label class="checkboxs">
-                                <input type="checkbox" id="select-all"><span class="target_checkbox"></span></label>
+                            <input type="checkbox" id="select-all"><span class="target_checkbox"></span></label>
                         </th>
                         <th scope="col">ID</th>
                         <th scope="col">Subject</th>
@@ -63,7 +63,6 @@
                         <th class="text-end" scope="col">Action</th>
                     </tr>
                 </thead>
-
             </table>
         </div>
 

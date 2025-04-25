@@ -32,4 +32,13 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class);  // 'product_id' is the foreign key in the ProductVariation table
     }
 
+    public function getAllVariationOptionValuesAttribute()
+    {
+        return $this->product_variations->map(function ($variation) {
+                    return $variation->variation_option_value?->value;
+                })->filter() // removes nulls if any
+                ->values();  // reset array keys
+    }
+
+    
 }

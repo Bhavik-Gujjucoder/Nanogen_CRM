@@ -15,7 +15,8 @@
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
                                 <img id="profilePreview"
-                                    src="{{ asset('storage/product_images/' . ($product->product_image ?? 'images/default-user.png')) }}"
+                                    {{-- src="{{ asset('storage/product_images/' . ($product->product_image ?? 'images/default-user.png')) }}" --}}
+                                     src="{{ !empty($product->product_image) ? asset('storage/product_images/' . $product->product_image) : asset('images/default-user.png') }}"
                                     alt="Product Image" class="img-thumbnail mb-2">
                             </div>
                             <div class="upload-content">

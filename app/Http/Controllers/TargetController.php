@@ -19,8 +19,6 @@ class TargetController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Target';
-
-
         if ($request->ajax()) {
             $data = Target::query();
             return DataTables::of($data)

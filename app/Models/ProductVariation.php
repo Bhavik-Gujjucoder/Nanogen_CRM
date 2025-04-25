@@ -13,4 +13,15 @@ class ProductVariation extends Model
     public function variation_option_value(){
         return $this->hasOne(VariationOption::class,'id', 'variation_option_id');
     }
+
+
+    /**
+     * Get all of the comments for the ProductVariation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    // public function comments(): HasMany
+    // {
+    //     return $this->hasMany(VariationOption::class, 'foreign_key', 'local_key');
+    // }
 }

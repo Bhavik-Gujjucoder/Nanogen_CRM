@@ -19,16 +19,13 @@
                                 {{-- <span><i class="ti ti-photo"></i></span> --}}
                             </div>
                             <div class="upload-content">
-                                <div class="upload-btn @error('profile_picture') is-invalid @enderror">
+                                <div class="upload-btn">
                                     <input type="file" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
                                     <span>
                                         <i class="ti ti-file-broken"></i>Upload File
                                     </span>
                                 </div>
                                 <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
-                                @error('profile_picture')
-                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
-                                @enderror
                             </div>
                         </div>
                     </div>

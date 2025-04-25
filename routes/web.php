@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SalesPersonController;
@@ -127,6 +128,10 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
         Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
         Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
     });
+
+
+    /* Complain */
+    Route::resource('complain', ComplainController::class);
 
     Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
     Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get'); 

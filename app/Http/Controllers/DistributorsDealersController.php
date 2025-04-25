@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Product; 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\DealershipCompanies;
@@ -227,15 +228,14 @@ class DistributorsDealersController extends Controller
 
     public function export_price_list()
     {
-        $products = [
-            ['name' => 'Product A', 'price' => 10],
-            ['name' => 'Product B', 'price' => 15],
-            ['name' => 'Product C', 'price' => 20],
-            ['name' => 'Product D', 'price' => 30],
-        ];
-    
+        // $data['products'] = Product::with('category', 'product_variations.variation_option_value')->where('status', 1)->get();
+        $data['category'] = Category::with('products')->where('status', 1)
+        ->has('products') // Only get categories with products
+        ->get();
+
+
         // return view('admin.distributors_dealers.price_list', compact('products'));
-        $pdf = Pdf::loadView('admin.distributors_dealers.price_list', compact('products'));
+        $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
         $filename = 'price-list-' . now()->year . '.pdf';
 
         // Save to storage/app/public/price-lists/

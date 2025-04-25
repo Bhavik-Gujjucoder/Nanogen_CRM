@@ -47,9 +47,21 @@ class ProductController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
+                // ->editColumn('product_name', function ($product) {
+                //     return '<a href="' . asset("storage/product_images/" . $product->product_image) . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
+                //                              <img class="" src="' . asset("storage/product_images/" . $product->product_image) . '" alt="User Image"></a>  ' . $product->product_name;
+                // })
+
                 ->editColumn('product_name', function ($product) {
-                    return '<a href="' . asset("storage/product_images/" . $product->product_image) . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
-                                             <img class="" src="' . asset("storage/product_images/" . $product->product_image) . '" alt="User Image"></a>  ' . $product->product_name;
+                    $productImage = !empty($product->product_image)
+                        ? asset("storage/product_images/" . $product->product_image)
+                        : asset("images/default-user.png"); // Change path if your default image is elsewhere
+                
+                    $imageTag = '<a href="' . $productImage . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
+                                    <img class="" src="' . $productImage . '" alt="Product Image">
+                                </a>';
+                
+                    return $imageTag . ' ' . $product->product_name;
                 })
                 ->editColumn('category_id', function ($product) {
                     return $product->category ? $product->category->category_name : '-';

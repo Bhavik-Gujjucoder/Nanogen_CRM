@@ -15,10 +15,7 @@
                 url('../fonts/NotoSansGujarati-Medium.woff2') format('woff2'),
                 url('../fonts/NotoSansGujarati-Medium.woff') format('woff'),
                 url('../fonts/NotoSansGujarati-Medium.ttf') format('truetype'),
-
         }
-
-
 
         /* @font-face {
             font-family: 'Anek Gujarati';
@@ -405,7 +402,7 @@
             text-align: center;
         }
 
-        /* 
+        /*
         .footer-table {
             position: absolute;
             bottom: 0;
@@ -446,7 +443,7 @@
         <img src="images/nonogen-slider-img.png" class="bg-img" alt="Background Image">
         <div class="cover-content">
             <img src="images/new-logo.png" class="logo" alt="Logo">
-            <h1 class="brand">PRICELIST – 2024 <br><span>MONTH</span></h1>
+            <h1 class="brand">PRICELIST – {{ now()->year }} <br><span>MONTH</span></h1>
         </div>
     </div>
     <div style="padding-top: 40px;">
@@ -457,225 +454,80 @@
                         <img src="images/sub-logo.png" alt="Nanogen Logo" class="logo-img">
                     </td>
                     <td class="header-tag-cell">
-                        <div class="pricelist-tag">PRICELIST – 2024</div>
+                        <div class="pricelist-tag">PRICELIST – {{ now()->year }}</div>
                     </td>
                 </tr>
             </table>
-            <div class="section-title section-ribbon">WATER SOLUBLE FERTILISERS</div>
-
-            <table class="table-cls">
-                <thead>
-                    <tr>
-                        <th>PRODUCT NAME</th>
-
-                        <th>WEIGHT</th>
-                        <th>DEALER <br> RATE <br>
-                            <span class="gst-cls">(without GST)</span>
-                        </th>
-                        <th>GST %</th>
-                        <th>MRP</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-
-                </tbody>
-            </table>
-
+            @php $gst = getSetting('gst'); @endphp
+            @if ($category) 
+                @foreach ($category as $c)
+                    <div class="section-title section-ribbon">{{ $c->category_name }}</div>
+                    <table class="table-cls">
+                        <thead>
+                            <tr>
+                                <th>PRODUCT NAME</th>
+                                <th>WEIGHT</th>
+                                <th>DEALER <br> RATE <br> <span class="gst-cls">(without GST)</span></th>
+                                <th>GST {{ $gst }}%</th>
+                                <th>MRP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($c->products && count($c->products))
+                                @foreach ($c->products as $p)
+                                    @php $variations = $p->product_variations; @endphp
+                                    @if ($variations && count($variations))
+                                        @foreach ($variations as $index => $variation)
+                                            @php
+                                                $price = $variation->dealer_price;
+                                                $gst_amount = ($price * $gst) / 100;
+                                                $mrp = $price + $gst_amount;
+                                            @endphp
+                                            <tr>
+                                                @if ($index === 0)
+                                                    <td class="product-name" rowspan="{{ $variations->count() }}">
+                                                        <div class="count-name">{{ $p->product_name }}</div>
+                                                        {{-- PRODUCT NAME --}}
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        &nbsp;
+                                                    </td>
+                                                @endif
+                                                <td>
+                                                    <span
+                                                        class="first-count">{{ $variation->variation_option_value->value }}</span>{{-- WEIGHT --}}
+                                                </td>
+                                                <td>
+                                                    <span class="first-count">{{ $price }}</span>
+                                                    {{-- DEALER RATE --}}
+                                                </td>
+                                                <td>
+                                                    <span class="first-count">{{ $gst_amount }}</span>
+                                                    {{-- GST % --}}
+                                                </td>
+                                                <td>
+                                                    <span class="first-count">{{ $mrp }}</span>
+                                                    {{-- MRP --}}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="5">No product available</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                @endforeach
+            @endif
         </div>
     </div>
+
+
+    {{-- gujrati content --}}
     <div style="padding-top: 40px;">
         <div class="container">
             <table class="header-table">
@@ -684,646 +536,45 @@
                         <img src="images/sub-logo.png" alt="Nanogen Logo" class="logo-img">
                     </td>
                     <td class="header-tag-cell">
-                        <div class="pricelist-tag">PRICELIST – 2024</div>
+                        <div class="pricelist-tag">PRICELIST – {{ now()->year }}</div>
                     </td>
                 </tr>
             </table>
-            <div class="section-title section-ribbon">WATER SOLUBLE FERTILISERS</div>
 
-            <table class="table-cls">
-                <thead>
-                    <tr>
-                        <th>PRODUCT NAME</th>
+            {{-- <div class="section-title section-ribbon">Quantity scheme</div>
+                <div class="sub-heading">WATER SOLUBLE FERTILISERS</div>
+                <table class="table-cls second-table-cls">
+                    <tbody>
+                        <tr class="tbody-cls">
+                            <td class="product-namec-cls product-id">calcium nitrate</td>
+                            <td class="product-name product-id">
+                                <span class="count-name bag-cls">BAG (25KG)</span>
+                                <span class="count-name">RS.</span>
+                            </td>
+                            <td class="product-wrap">
+                                <span class="first-count">1 kg</span>
+                                <span class="second-count">25</span>
+                            </td>
+                            <td class="product-wrap">
+                                <span class="first-count">1 kg</span>
+                                <span class="second-count">25</span>
+                            </td>
+                            <td class="product-wrap">
+                                <span class="first-count">1 kg</span>
+                                <span class="second-count">25</span>
+                            </td>
+                            <td class="product-wrap">
+                                <span class="first-count">1 kg</span>
+                                <span class="second-count">25</span>
+                            </td>
+                            <td class="product-wrap" style=visibility:hidden;>
+                                <span class="first-count"></span>
+                                <span class="second-count">25</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> --}}
 
-                        <th>WEIGHT</th>
-                        <th>DEALER <br> RATE <br>
-                            <span class="gst-cls">(without GST)</span>
-                        </th>
-                        <th>GST %</th>
-                        <th>MRP</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-    <div style="padding-top: 40px;">
-        <div class="container">
-            <table class="header-table">
-                <tr>
-                    <td class="header-logo">
-                        <img src="images/sub-logo.png" alt="Nanogen Logo" class="logo-img">
-                    </td>
-                    <td class="header-tag-cell">
-                        <div class="pricelist-tag">PRICELIST – 2024</div>
-                    </td>
-                </tr>
-            </table>
-            <div class="section-title section-ribbon">WATER SOLUBLE FERTILISERS</div>
-
-            <table class="table-cls">
-                <thead>
-                    <tr>
-                        <th>PRODUCT NAME</th>
-
-                        <th>WEIGHT</th>
-                        <th>DEALER <br> RATE <br>
-                            <span class="gst-cls">(without GST)</span>
-                        </th>
-                        <th>GST %</th>
-                        <th>MRP</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td class="product-name">
-                            <div class="count-name">AQUA BOOST</div>
-                            <div class="price-cls">19:19:19</div>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-                        <td>
-                            <span class="first-count">1 kg</span>
-
-                            <span class="second-count">25</span>
-                        </td>
-
-                    </tr>
-
-
-
-
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-    <div style="padding-top: 40px;">
-        <div class="container">
-            <table class="header-table">
-                <tr>
-                    <td class="header-logo">
-                        <img src="images/sub-logo.png" alt="Nanogen Logo" class="logo-img">
-                    </td>
-                    <td class="header-tag-cell">
-                        <div class="pricelist-tag">PRICELIST – 2024</div>
-                    </td>
-                </tr>
-            </table>
-            <div class="section-title section-ribbon">Quantity scheme</div>
-            <div class="sub-heading">WATER SOLUBLE FERTILISERS</div>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div style="padding-top: 40px;">
-        <div class="container">
-            <table class="header-table">
-                <tr>
-                    <td class="header-logo">
-                        <img src="images/sub-logo.png" alt="Nanogen Logo" class="logo-img">
-                    </td>
-                    <td class="header-tag-cell">
-                        <div class="pricelist-tag">PRICELIST – 2024</div>
-                    </td>
-                </tr>
-            </table>
-            <div class="section-title section-ribbon">Quantity scheme</div>
-            <div class="sub-heading">WATER SOLUBLE FERTILISERS</div>
-            <table class="table-cls second-table-cls">
-                <tbody>
-                    <tr class="tbody-cls">
-                        <td class="product-namec-cls product-id">calcium nitrate</td>
-                        <td class="product-name product-id">
-                            <span class="count-name bag-cls">BAG (25KG)</span>
-                            <span class="count-name">RS.</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap">
-                            <span class="first-count">1 kg</span>
-                            <span class="second-count">25</span>
-                        </td>
-                        <td class="product-wrap" style=visibility:hidden;>
-                            <span class="first-count"></span>
-                            <span class="second-count">25</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
             <div class="note-box">
                 <h3>નોંધ:</h3>
                 <ul>
@@ -1346,6 +597,8 @@
 
         </div>
     </div>
+    {{-- end --}}
+
     <div style="padding-top: 620px;">
         <div class="container foter-cls-new">
             <div class="footer-table">
@@ -1360,8 +613,10 @@
                             </p>
 
                             <div class="contact-cls">
-                                <a href="#"><img src="images/call-footer.png" alt="">+91 98253 85584</a>
-                                <a href="#"><img src="images/mail-footer.png" alt="">info@nanogenagrochem.com</a>
+                                <a href="#"><img src="images/call-footer.png" alt="">+91 98253
+                                    85584</a>
+                                <a href="#"><img src="images/mail-footer.png"
+                                        alt="">info@nanogenagrochem.com</a>
                             </div>
 
                             <div class="web-cls">
@@ -1369,11 +624,10 @@
                             </div>
                         </td>
                     </tr>
-
                 </table>
             </div>
-
         </div>
+    </div>
 
 </body>
 
