@@ -24,7 +24,7 @@ class RoleMiddleware
       $user = Auth::user();
 
         // Check if user has at least one of the required roles
-        if (!$user->hasAnyRole($roles)) {
+        if (!$user->hasAnyRole($roles)) {  
             // Redirect based on role
             if ($user->hasRole('superadmin')) {
                 return redirect()->route('superadmin.dashboard');
@@ -32,6 +32,8 @@ class RoleMiddleware
                 return redirect()->route('admin.dashboard');
             } elseif ($user->hasRole('sales')) {
                 return redirect()->route('sales.dashboard');
+            } elseif ($user->hasRole('staff')) { 
+                return redirect()->route('staff.dashboard');
             } else {
                 abort(403, 'Unauthorized Access');
             }

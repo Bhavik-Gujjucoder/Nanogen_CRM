@@ -4,8 +4,14 @@
             <ul>
                 <li class="clinicdropdown">
                     <a href="{{ route('admin.dashboard') }}">
-                        <img src="{{ asset('storage/profile_pictures/' . (auth()->user()->profile_picture ?? 'images/default-user.png')) }}"
-                            class="img-fluid" alt="Profile">
+                        {{-- <img src="{{ asset('storage/profile_pictures/' . (auth()->user()->profile_picture ?? 'images/default-user.png')) }}"
+                            class="img-fluid" alt="Profile"> --}}
+
+                            <img src="{{ auth()->user()->profile_picture 
+                            ? asset('storage/profile_pictures/' . auth()->user()->profile_picture) 
+                            : asset('images/default-user.png') 
+                        }}" 
+                        class="img-fluid" alt="Profile">
 
                         {{-- <img src="{{ asset('images/default-user.png') }}" class="img-fluid" alt="Profile"> --}}
                         <div class="user-names">
@@ -76,9 +82,11 @@
                         </li>
                     </ul>
                 </li>
+
                 <li>
                     <ul>
-                        <li><a href="{{-- route('complain.index') --}}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
+                        <li><a href="{{ route('payment.index') }}"><i class="ti ti-message-exclamation"></i><span>Payments</span></a></li>
+                        <li><a href="{{ route('complain.index') }}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
                         <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade
                                     Management</span></a></li>
                         <li><a href="{{ route('state.index') }}"><i class="ti ti-map-pin-pin"></i><span>State

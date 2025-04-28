@@ -173,8 +173,10 @@ class UserController extends Controller
             'email'           => 'required|email|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
             'phone_no'        => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
             'role'            => 'required|exists:roles,name',
-            'password'        => 'nullable|min:6|confirmed',
+            'password'        => ['nullable', 'string', 'min:6', 'confirmed'],
             'status'          => 'required|in:0,1',
+        ], [
+            'password.confirmed' => 'Password and Confirm Password must match.',
         ]);
 
         $user->update([

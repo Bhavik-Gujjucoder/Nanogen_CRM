@@ -14,6 +14,7 @@ use App\Http\Controllers\TargetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComplainController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SalesPersonController;
@@ -72,6 +73,10 @@ Route::middleware(['auth', 'role:sales'])->group(function () {
 
 });
 
+Route::middleware(['auth', 'role:staff'])->group(function () {
+    Route::get('/staff', [HomeController::class, 'staff_index'])->name('staff.dashboard');
+});
+
 Route::get('/my-profile', [HomeController::class, 'my_profile'])->name('my_profile');
 
 Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
@@ -124,6 +129,8 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
     Route::resource('target', TargetController::class);
 
+    /* Payments */
+    Route::resource('payment', PaymentsController::class);
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {

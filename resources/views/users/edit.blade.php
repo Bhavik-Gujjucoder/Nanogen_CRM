@@ -110,8 +110,8 @@
                             <label class="col-form-label">Confirm Password</label>
                             <div class="icon-form-end">
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
-                                <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password">
-                                @error('confirm_password')
+                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation">
+                                @error('password_confirmation')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
