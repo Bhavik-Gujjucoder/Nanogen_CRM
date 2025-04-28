@@ -93,6 +93,7 @@
                             @endphp
 
                             <select class="select" name="status" id="status">
+                                <option value="0" {{ $selectedStatus == 0 ? 'selected' : ''}}>Pending</option>
                                 <option value="1" {{ $selectedStatus == 1 ? 'selected' : '' }}>In progress</option>
                                 <option value="2" {{ $selectedStatus == 2 ? 'selected' : '' }}>Under review</option>
                                 <option value="3" {{ $selectedStatus == 3 ? 'selected' : '' }}>Completed</option>

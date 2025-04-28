@@ -76,6 +76,7 @@
                         <div class="mb-3">
                             <label class="col-form-label"> Status  <span class="text-danger">*</span></label>
                             <select class="select" name="status">
+                            <option value="0" {{ old('status') == 0 ? 'selected' : ''}}>Pending</option>
                             <option value="1" {{ old('status') == 1 ? 'selected' : ''}}>In progress</option>
                             <option value="2" {{ old('status') == 2 ? 'selected' : ''}}>Under review</option>
                             <option value="3" {{ old('status') == 3 ? 'selected' : ''}}>Completed </option>

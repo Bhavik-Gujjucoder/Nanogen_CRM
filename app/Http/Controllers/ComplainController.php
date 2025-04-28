@@ -23,7 +23,7 @@ class ComplainController extends Controller
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
                     return '<label class="checkboxs">
-                            <input type="checkbox" class="checkbox-item grade_checkbox" data-id="' . $row->id . '">
+                            <input type="checkbox" class="checkbox-item complain_checkbox" data-id="' . $row->id . '">
                             <span class="checkmarks"></span>
                         </label>';
                 })
@@ -32,8 +32,8 @@ class ComplainController extends Controller
                     $edit_btn = '<a href="' . route('complain.edit', $row->id) . '" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
-                    $delete_btn = '<a href="#" class="dropdown-item deleteGrade"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('grade.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-'. $row->id.'" >'
+                    $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deletecomplain"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('complain.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-'. $row->id.'" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
 
@@ -157,6 +157,16 @@ class ComplainController extends Controller
         ]);
 
         $complain = Complain::findOrFail($id);
+        if((int) $complain->status !== (int) $request->status){
+            $complain_status_history = new ComplainStatusHistory();
+            $complain_status_history_data = [
+                'complain_id' => $id,
+                'status' => $request->status,
+                'remark' => $request->remark,
+            ];
+            $complain_status_history->create($complain_status_history_data);
+        }
+        
         $data = [
             'dd_id' => $request->dd_id,
             'date' => $request->date,
@@ -179,14 +189,47 @@ class ComplainController extends Controller
         }
 
         $complain->update($data);
-
-        $complain_status_history = new ComplainStatusHistory();
-        $complain_status_history_data = [
-            'complain_id' => $id,
-            'status' => $request->status,
-            'remark' => $request->remark,
-        ];
-        $complain_status_history->create($complain_status_history_data);
+       
         return redirect()->route('complain.index')->with('success', 'Complain updated successfully.');
+    }
+
+    public function destroy(Complain $complain)
+    {
+        $complain = Complain::findOrFail($complain->id);
+        if ($complain->complain_image) {
+            Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+        }
+
+        $complain->delete();
+
+        $complain_status_history = ComplainStatusHistory::where('complain_id', $complain->id);
+        if ($complain_status_history) {
+            $complain_status_history->delete();
+        }
+        return redirect()->route('complain.index')->with('success', 'Complain deleted successfully.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+        if (!empty($ids) && is_array($ids) ) {
+            $complains = Complain::whereIn('id', $ids)->get();
+
+            foreach ($complains as $complain) {
+              
+                $complain_status_history = ComplainStatusHistory::where('complain_id', $complain->id);
+                if ($complain_status_history) {
+                    $complain_status_history->delete();
+                }
+
+                if ($complain->complain_image) {
+                    Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+                }
+                $complain->delete();
+
+            }
+            return response()->json(['message' => 'Selected Complains deleted successfully!']);
+        }
+        return response()->json(['message' => 'No records selected!'], 400);
     }
 }

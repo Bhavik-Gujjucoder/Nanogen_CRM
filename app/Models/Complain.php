@@ -31,6 +31,9 @@ class Complain extends Model
 
     public function statusBadge()
     {
+        if ($this->status == 0) {
+            return '<span class="badge badge-pill badge-status bg-danger">Pending</span>';
+        }
         if ($this->status == 1) {
             return '<span class="badge badge-pill badge-status bg-purple">In Progress</span>';
         }

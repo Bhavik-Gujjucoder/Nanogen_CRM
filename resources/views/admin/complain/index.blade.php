@@ -44,6 +44,7 @@
     <!-- dealers Users List -->
     <div class="table-responsive custom-table">
         <table class="table dataTable no-footer" id="complain">
+            <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
             <thead class="thead-light">
             <tr>
                 <th hidden>ID</th>
@@ -129,6 +130,79 @@
     // Custom Search Box
     $('#customSearch').on('keyup', function() {
         complain_table.search(this.value).draw();
+    });
+
+
+    $(document).on('click', '.deletecomplain', function(event) {
+    event.preventDefault();
+        let complainId = $(this).data('id'); // Get the user ID
+        let form = $('#delete-form-' + complainId); // Select the correct form
+
+        confirmDeletion(function() {
+            form.submit(); // Submit the form if confirmed
+        });
+    });
+
+    function confirmDeletion(callback) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to remove this Complain? Once deleted, it cannot be recovered.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+                icon: 'my-custom-icon swal2-warning'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                callback(); // Execute callback function if confirmed
+            }
+        });
+    }
+
+
+    $(document).on('change', '.complain_checkbox', function () {
+        let count = $('.complain_checkbox:checked').length; // Count checked checkboxes
+        $('#checked-count').text(count); // Display count in an element
+        if(count > 0){
+            $('#bulk_delete_button').show();
+        }else{
+            $('#bulk_delete_button').hide();
+        }
+    });
+
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+       confirmDeletion(function() {
+            var selectedIds = $('.complain_checkbox:checked').map(function() {
+                return $(this).data('id');
+            }).get();
+
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    url: "{{ route('complain.bulkDelete') }}",
+                    method: 'POST',
+                    data: {
+                        ids: selectedIds, 
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        show_success(response.message);
+                        complain_table.ajax.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        show_error('An error occurred while deleting.');
+                    }
+                });
+            } else {
+                alert("No items selected.");
+            }
+        });
     });
 </script>
 @endsection

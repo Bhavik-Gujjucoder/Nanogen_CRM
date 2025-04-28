@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\SalesPersonDepartment;
 use Illuminate\Support\Facades\Storage;
-use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class SalesPersonController extends Controller
 {
@@ -48,8 +47,8 @@ class SalesPersonController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    Auth::user()->can('manage sales') ? $action_btn .= $edit_btn : '';
+                    Auth::user()->can('manage sales') ? $action_btn .= $delete_btn : '';
 
                     return $action_btn . ' </div></div>';
                 })

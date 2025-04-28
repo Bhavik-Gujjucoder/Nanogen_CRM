@@ -72,6 +72,8 @@ Route::middleware(['auth', 'role:sales'])->group(function () {
 
 });
 
+Route::get('/my-profile', [HomeController::class, 'my_profile'])->name('my_profile');
+
 Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     /* Users */
     Route::resource('users', UserController::class);
@@ -132,6 +134,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
 
     /* Complain */
     Route::resource('complain', ComplainController::class);
+    Route::post('/complain/bulk-delete', [ComplainController::class, 'bulkDelete'])->name('complain.bulkDelete');
 
     Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
     Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get'); 

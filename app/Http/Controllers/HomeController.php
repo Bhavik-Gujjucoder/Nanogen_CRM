@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderManagement;
 use App\Models\SalesPersonDetail;
 use App\Models\DistributorsDealers;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -30,11 +31,13 @@ class HomeController extends Controller
         $data['page_title'] = 'Super Admin Dashboard';
         return view('superadmin.dashboard',$data);
     }
+
     public function staff_index()
     {
         $data['page_title'] = 'Staff Dashboard';
         return view('staff.dashboard',$data);
     }
+
     public function admin_index()
     {
         $data['page_title'] = 'Admin Dashboard';
@@ -47,11 +50,26 @@ class HomeController extends Controller
         $data['total_order'] = $order->count();
         $data['order_grand_total'] = $order->sum('grand_total');
 
-        return view('admin.dashboard',$data);
+        return view('admin.dashboard', $data);
     }
+
     public function sales_index()
     {
         $data['page_title'] = 'Sales Dashboard';
-        return view('sales.dashboard',$data);
+        return view('sales.dashboard', $data);
+    }
+
+    public function my_profile(Request $request)
+    {
+        $user = Auth::user();  
+        // dd($user);
+        if($user->hasrole('admin')){
+            return redirect()->route('users.edit', $user->id);
+        }
+        if($user->hasrole('sales')){
+            $sale_person_id = SalesPersonDetail::where('user_id', $user->id)->first()->id;
+            return redirect()->route('sales_person.edit', $sale_person_id);
+        }
+
     }
 }

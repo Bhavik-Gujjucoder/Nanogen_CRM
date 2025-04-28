@@ -338,15 +338,13 @@
                         </a>
                         <div class="dropdown-menu menu-drop-user">
                             <div class="profilename">
-                                <a class="dropdown-item" href="index.html">
+                                <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
                                     <i class="ti ti-layout-2"></i> Dashboard
                                 </a>
-                                <a class="dropdown-item" href="profile.html">
-                                    <i class="ti ti-user-pin"></i> My Profile
+                                <a class="dropdown-item" href="{{ route('my_profile') }}">
+                                    <i class="ti ti-user-pin"></i> My Profile 
                                 </a>
-                                {{-- <a class="dropdown-item" href="login.html">
-                    <i class="ti ti-lock"></i> Logout
-                    </a> --}}
+                               
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
@@ -373,7 +371,7 @@
                         <i class="ti ti-layout-2"></i> Dashboard
                     </a>
                     <a class="dropdown-item" href="profile.html">
-                        <i class="ti ti-user-pin"></i> My Profile
+                        <i class="ti ti-user-pin"></i> My Profile 
                     </a>
                     <a class="dropdown-item" href="login.html">
                         <i class="ti ti-lock"></i> Logout
