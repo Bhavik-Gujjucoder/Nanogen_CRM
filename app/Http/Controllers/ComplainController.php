@@ -49,13 +49,13 @@ class ComplainController extends Controller
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('name', function ($row) {
+                    $imagePath = 'storage/complain_images/' . $row->complain_image;
                     $complainimage = isset($row->complain_image)
-                        ? asset('storage/complain_images/' . $row->complain_image)
+                        ? asset($imagePath)
                         : asset('images/default-user.png');
                 
-                    $userLabel = $row->distributorsDealers?->user_type == 1
-                        ? '(Distributor)'
-                        : ($row->distributorsDealers?->user_type == 2 ? '(Dealer)' : '');
+                    $userLabel = $row->distributorsDealers?->user_type == 1 ? '(Distributor)'
+                              : ($row->distributorsDealers?->user_type == 2 ? '(Dealer)' : '');
                 
                     return '
                     <a href="' . $complainimage . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">

@@ -40,8 +40,6 @@ class Complain extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-
-
     public function statusBadge()
     {
         if ($this->status == 0) {
