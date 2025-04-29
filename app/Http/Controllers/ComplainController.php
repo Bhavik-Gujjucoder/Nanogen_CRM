@@ -79,7 +79,7 @@ class ComplainController extends Controller
                     return Carbon::parse($row->date)->format('d M Y');
                 })
                 ->addColumn('product', function ($row) {
-                    return $row->product->product_name;
+                    return $row->product->product_name ?? '-';
                 })
                 ->filterColumn('product_id', function ($query, $keyword) {
                     $query->whereHas('product', function ($q) use ($keyword) {
