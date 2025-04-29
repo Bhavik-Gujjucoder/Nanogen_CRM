@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\OrderManagement;
 use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderManagementProduct;
 
@@ -53,7 +54,8 @@ class OrderManagementController extends Controller
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('order_date', function ($row) {
-                    return $row->order_date->format('d-m-Y');
+                    // return $row->order_date->format('d-m-Y');
+                    return Carbon::parse($row->order_date)->format('d M Y');
                 })
                 ->editColumn('dd_id', function ($row) {
                     if ($row->distributors_dealers) {
