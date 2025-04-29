@@ -61,7 +61,8 @@
                         <label class="col-form-label">Date <span class="text-danger">*</span></label>
                             <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="date" class="form-control datetimepicker" id="datePicker" value="{{ $complain->date ?? old('date') }}" placeholder="Enter Date">
+                            <input type="text" name="date" class="form-control datetimepicker" id="datePicker" 
+                            value="{{ old('date', $complain->date->format('d-m-y')) }}"placeholder="Enter Date">
                             </div>
                         </div>
                     </div>
@@ -176,7 +177,7 @@
     flatpickr("#datePicker", {
         dateFormat: "d-m-Y",
         maxDate: "today",
-        defaultDate: "{{ old('date', isset($detail) ? \Carbon\Carbon::parse($detail->date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+        defaultDate: "{{ old('date', isset($complain) ? \Carbon\Carbon::parse($complain->date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
         onReady: removeTodayHighlight,
         onMonthChange: removeTodayHighlight,
         onYearChange: removeTodayHighlight,
