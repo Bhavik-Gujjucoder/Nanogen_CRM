@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Complain extends Model
 {
@@ -24,10 +25,22 @@ class Complain extends Model
         return $this->belongsTo(DistributorsDealers::class, 'dd_id');
     }
 
-    public function product()
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class, 'product_id');
+    // }
+
+    /**
+     * Get the user that owns the Complain
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+
 
     public function statusBadge()
     {

@@ -43,6 +43,13 @@
                         <i class="ti ti-square-rounded-plus me-2"></i>Export Price List
                     </a>
 
+                    {{-- <form method="POST" action="{{ route('send-whatsapp-pdf.sendPdf') }}">
+                        @csrf
+                        <input type="text" name="phone" placeholder="Enter phone number" value="+919099909076" />
+                        <button type="submit">Send WhatsApp PDF</button>
+                    </form> --}}
+                    
+
                     <a href="{{ route('distributors_dealers.create',request('dealer')) }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i> {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
                 </div>

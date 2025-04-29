@@ -15,6 +15,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SalesPersonController;
@@ -131,6 +132,8 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
 
     /* Payments */
     Route::resource('payment', PaymentsController::class);
+
+    Route::post('/send-whatsapp-pdf', [WhatsAppController::class, 'sendPdf'])->name('send-whatsapp-pdf.sendPdf');
 
     /* General Settings */
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
