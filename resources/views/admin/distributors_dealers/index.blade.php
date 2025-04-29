@@ -75,8 +75,7 @@
                         <th scope="col"> {{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Code</th>
-
-                        <th class="text-end" scope="col">Action</th>
+                        <th class="" scope="col">Action</th> {{--class="text-end"--}}
                     </tr>
                 </thead>
             </table>

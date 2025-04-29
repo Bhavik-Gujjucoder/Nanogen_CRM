@@ -42,7 +42,7 @@
                         <th scope="col">Number of City</th>
                         <th scope="col">Status</th>
                         {{-- <th scope="col">Number of City</th> --}}
-                        <th class="text-end" scope="col">Action</th>
+                        <th class="" scope="col">Action</th>
                     </tr>
                 </thead>
 

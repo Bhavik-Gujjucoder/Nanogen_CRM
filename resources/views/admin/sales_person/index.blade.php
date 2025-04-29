@@ -39,7 +39,7 @@
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
                         <th scope="col">Employee ID</th>
-                        <th class="text-end" scope="col">Action</th>
+                        <th class="" scope="col">Action</th>
                     </tr>
                 </thead>
 

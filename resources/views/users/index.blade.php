@@ -102,7 +102,7 @@
                         <th scope="col">Created</th>
                         <th scope="col">Last Activity</th>
                         <th scope="col">Status</th>
-                        <th class="text-end" scope="col">Action</th>
+                        <th class="" scope="col">Action</th>
                     </tr>
                 </thead>
             </table>
