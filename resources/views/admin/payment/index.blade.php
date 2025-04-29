@@ -45,27 +45,16 @@
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <div
-                                    class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end mb-3 mb-sm-0">
-                                    <div class="dropdown me-2">
-                                        <a href="" class="dropdown-toggle"
-                                            data-bs-toggle="dropdown"><i
-                                                class="ti ti-package-export me-2"></i>Export</a>
-                                        <div class="dropdown-menu  dropdown-menu-end">
-                                            <ul>
-                                                <li>
-                                                    <a href="" class="dropdown-item"><i
-                                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export
-                                                        as PDF</a>
-                                                </li>
-                                                <li>
-                                                    <a href="" class="dropdown-item"><i
-                                                            class="ti ti-file-type-xls text-green me-1"></i>Export
-                                                        as Excel </a>
-                                                </li>
-                                            </ul>
+                                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end mb-3 mb-sm-0">
+                                  
+
+                                    {{-- <div class=""> --}}
+                                        <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                        
+                                            <a href="{{ route('payment.create') }}" class="btn btn-primary"><i
+                                                    class="ti ti-square-rounded-plus me-2"></i>Add Payment</a>
                                         </div>
-                                    </div>
+                                    {{-- </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -75,7 +64,7 @@
                     <div class="card-body">
 
                         <!-- Filter -->
-                        <div class="d-flex align-items-center justify-content-between flex-wrap mb-4 row-gap-2">
+                        <!-- <div class="d-flex align-items-center justify-content-between flex-wrap mb-4 row-gap-2">
                             <div class="d-flex align-items-center flex-wrap row-gap-2">
                                 <div class="dropdown me-2">
                                     <a href="" class="dropdown-toggle"
@@ -408,7 +397,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- /Filter -->
 
                         <!-- Projects List -->

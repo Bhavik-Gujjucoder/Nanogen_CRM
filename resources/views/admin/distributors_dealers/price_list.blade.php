@@ -7,7 +7,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-        @font-face {
+        /* @font-face {
             font-family: 'Noto Sans Gujarati Medium';
             src: url('../fonts/NotoSansGujarati-Medium.eot');
 
@@ -15,7 +15,7 @@
                 url('../fonts/NotoSansGujarati-Medium.woff2') format('woff2'),
                 url('../fonts/NotoSansGujarati-Medium.woff') format('woff'),
                 url('../fonts/NotoSansGujarati-Medium.ttf') format('truetype'),
-        }
+        } */
 
         /* @font-face {
             font-family: 'Anek Gujarati';
@@ -37,7 +37,7 @@
             margin: 0;
             padding: 0;
             background-color: #0d47a1;
-            font-family: "Poppins", sans-serif;
+            /* font-family: "Poppins", sans-serif; */
 
         }
 
@@ -432,11 +432,12 @@
             /* push footer to bottom */
             align-items: end;
             position: relative;
-
-
         }
+
+       
     </style>
 </head>
+{{-- {{dd(public_path('fonts\NotoSansGujarati-Regular.ttf'))}} --}}
 
 <body>
     <div class="img-cls-new">
@@ -459,7 +460,7 @@
                 </tr>
             </table>
             @php $gst = getSetting('gst'); @endphp
-            @if ($category) 
+            @if ($category)
                 @foreach ($category as $c)
                     <div class="section-title section-ribbon">{{ $c->category_name }}</div>
                     <table class="table-cls">
@@ -467,7 +468,8 @@
                             <tr>
                                 <th>PRODUCT NAME</th>
                                 <th>WEIGHT</th>
-                                <th> {{ request()->dealer == 1 ? 'DEALER'  : 'DISTRIBUTOR' }}<br> RATE <br> <span class="gst-cls">(without GST)</span></th>
+                                <th> {{ request()->dealer == 1 ? 'DEALER' : 'DISTRIBUTOR' }}<br> RATE <br> <span
+                                        class="gst-cls">(without GST)</span></th>
                                 <th>GST {{ $gst }}%</th>
                                 <th>MRP</th>
                             </tr>
@@ -479,7 +481,10 @@
                                     @if ($variations && count($variations))
                                         @foreach ($variations as $index => $variation)
                                             @php
-                                                $price = request()->dealer == 1 ?  $variation->dealer_price : $variation->distributor_price ;
+                                                $price =
+                                                    request()->dealer == 1
+                                                        ? $variation->dealer_price
+                                                        : $variation->distributor_price;
                                                 $gst_amount = ($price * $gst) / 100;
                                                 $mrp = $price + $gst_amount;
                                             @endphp
@@ -575,8 +580,13 @@
                     </tbody>
                 </table> --}}
 
-            <div class="note-box">
-                <h3>નોંધ:</h3>
+            <div charset="UTF-8" class="note-box" style="font-family: noto_sans_gujarati; font-size: 16px;">
+                <div style="text-align: left;margin-left:-20px;">
+
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents('images/nanoogen-gujrati-content.png')) }}">
+                </div>
+
+                {{-- <h3>નોંધ:</h3>
                 <ul>
                     <li>ઉપલોકત ભાવ અમારા ગોડાઉન આધારિત છે.</li>
                     <li>૪ ટન ઓર્ડર પર FOR આપવામાં આવશે. (હૉઈર આપવી આપશો નહિ)</li>
@@ -592,8 +602,11 @@
                     <li>મૂળભૂત ભાવ પર જ માલ દેવા કૉમ્પ્રોમાઇઝ કરવો નહિ.</li>
                     <li>મશીનરી સેટ કરો પછી સેટ નહી થાય તો રિટર્ન ક્લેમ કશું મળવું પડશે નહિ.</li>
                     <li>વ્યાજબાકી કડક રકમેક રહેશે.</li>
-                </ul>
+                </ul> --}}
             </div>
+
+            {{-- <p style="font-family: noto_sans_gujarati; font-size: 14px;">{!! $gujaratiText !!}</p> --}}
+
 
         </div>
     </div>

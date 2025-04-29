@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product; 
+use Mpdf\Mpdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Models\Category;
+use App\Models\Product; 
+use Mpdf\HTMLParserMode;
 use Illuminate\Http\Request;
+use Mpdf\Config\FontVariables;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Config\ConfigVariables;
 use Yajra\DataTables\DataTables;
 use App\Models\DealershipCompanies;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProprietorPartnerDirector;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class DistributorsDealersController extends Controller
 {
@@ -216,33 +223,60 @@ class DistributorsDealersController extends Controller
         return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
     }
 
-    // public function payment_history(Request $request, string $id)
+
+    
+    public function payment_history(Request $request, string $id)
+    {
+        $distributor_dealers = DistributorsDealers::findOrFail($id);
+        $data = [
+            'page_title' => 'Payment History',
+            'distributor_dealers' => $distributor_dealers,
+            ];
+        return view('admin.distributors_dealers.payment_history', $data);
+    }
+
+
+
+    // public function export_price_list()
     // {
-    //     $distributor_dealers = DistributorsDealers::findOrFail($id);
-    //     $data = [
-    //         'page_title' => 'Payment History',
-    //         'distributor_dealers' => $distributor_dealers,
-    //         ];
-    //     return view('admin.distributors_dealers.payment_history', $data);
+        //     // $data['products'] = Product::with('category', 'product_variations.variation_option_value')->where('status', 1)->get();
+        //     $data['category'] = Category::with('products')->where('status', 1)
+        //     ->has('products') // Only get categories with products
+        //     ->get();
+
+        //     // return view('admin.distributors_dealers.price_list', compact('products'));
+        //     $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
+        //     $filename = 'price-list-' . now()->year . '.pdf';
+
+        //     // Save to storage/app/public/price-lists/
+        //     Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
+        
+        //     return $pdf->download($filename); 
+        //     // return $pdf->stream($filename);
+
     // }
 
-    public function export_price_list()
+
+    public function export_price_list(Request $request)  // right function
     {
         // $data['products'] = Product::with('category', 'product_variations.variation_option_value')->where('status', 1)->get();
         $data['category'] = Category::with('products')->where('status', 1)
-        ->has('products') // Only get categories with products
-        ->get();
+                            ->has('products')  /***  Only get categories with products ***/
+                            ->get();
 
-        // return view('admin.distributors_dealers.price_list', compact('products'));
+        // return view('admin.distributors_dealers.price_list', $data);  //only web view perpose 
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
-        $filename = 'price-list-' . now()->year . '.pdf';
+      
+        $name = $request->dealer == 1 ? 'Dealers' : 'Distributors';
+        $filename = $name . '-price-list-' . now()->year . '.pdf';
 
         // Save to storage/app/public/price-lists/
         Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
-    
+        
         return $pdf->download($filename); 
-        // return $pdf->stream($filename);
+        //  return $pdf->stream($filename);   //only view perpose 
 
     }
-    
+
 }
+

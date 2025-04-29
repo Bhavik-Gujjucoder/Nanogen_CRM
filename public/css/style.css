@@ -44148,6 +44148,13 @@ select.select.addfileddrop {
 }
 
 
-#product-container .align-items-center, .product-group {
+#product-container .align-items-center,
+.product-group {
     gap: 13px;
+}
+
+
+/* 29-04-25 */
+.paymet-cls .dropdown .dropdown-toggle:after {
+    margin-left: 10px;
 }

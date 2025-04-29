@@ -11,7 +11,7 @@
             <div class="col-sm-4">
                 <div class="icon-form mb-3 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
-                    <input type="text" class="form-control" placeholder="Search User">
+                    <input type="text" class="form-control"  id="customSearch" placeholder="Search User">
                 </div>
             </div>
             <div class="col-sm-8">
@@ -125,6 +125,10 @@
             },
         ],
 
+    });
+     /*** Custom Search Box ***/
+     $('#customSearch').on('keyup', function() {
+        distributors_dealers_table.search(this.value).draw();
     });
 
     $(document).on('click', '.delete_d_d', function(event) {
