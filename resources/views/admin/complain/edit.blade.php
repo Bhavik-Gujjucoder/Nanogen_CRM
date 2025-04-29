@@ -61,8 +61,8 @@
                         <label class="col-form-label">Date <span class="text-danger">*</span></label>
                             <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="date" class="form-control datetimepicker" id="datePicker" 
-                            value="{{ old('date', $complain->date->format('d-m-y')) }}"placeholder="Enter Date">
+                            <input type="text" name="date" class="form-control datetimepicker" id="datePicker" value="{{ old('date', \Carbon\Carbon::parse($complain->date)->format('d-m-y')) }}"
+                            placeholder="Enter Date">
                             </div>
                         </div>
                     </div>
