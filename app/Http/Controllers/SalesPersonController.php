@@ -72,6 +72,13 @@ class SalesPersonController extends Controller
                 ->editColumn('user.email', function ($row) {
                     return $row->user ? $row->user->email : '-';
                 })
+                ->filterColumn('first_name', function ($query, $keyword) {
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('first_name', 'like', "%{$keyword}%")
+                          ->orWhere('last_name', 'like', "%{$keyword}%")
+                          ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
+                    });
+                })
                 ->rawColumns(['checkbox', 'action', 'first_name'])
                 ->make(true);
         }

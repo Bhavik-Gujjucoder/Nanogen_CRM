@@ -47,11 +47,6 @@ class ProductController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-                // ->editColumn('product_name', function ($product) {
-                //     return '<a href="' . asset("storage/product_images/" . $product->product_image) . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
-                //                              <img class="" src="' . asset("storage/product_images/" . $product->product_image) . '" alt="User Image"></a>  ' . $product->product_name;
-                // })
-
                 ->editColumn('product_name', function ($product) {
                     $productImage = !empty($product->product_image)
                         ? asset("storage/product_images/" . $product->product_image)
@@ -69,11 +64,16 @@ class ProductController extends Controller
                 ->editColumn('grade_id', function ($product) {
                     return $product->grade ? $product->grade->name : '-';
                 })
-                // ->filterColumn('value', function ($query, $keyword) {
-                //     $query->whereHas('variant_options', function ($q) use ($keyword) {
-                //         $q->where('value', 'LIKE', "%{$keyword}%");
-                //     });
-                // })
+                ->filterColumn('category_id', function ($query, $keyword) {
+                    $query->whereHas('category', function ($q) use ($keyword) {
+                        $q->where('category_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('grade_id', function ($query, $keyword) {
+                    $query->whereHas('grade', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->editColumn('status', function ($product) {
                     return $product->statusBadge();
                 })
@@ -235,9 +235,7 @@ class ProductController extends Controller
 
     public function get_product_variation_price(Request $request)
     {
-        // dd($request->variation_option_id);
         if ($request->variation_option_id) {
-
             $product = ProductVariation::with('variation_option_value')
             ->where('product_id', $request->product_id)
             ->where('variation_option_id', $request->variation_option_id)
