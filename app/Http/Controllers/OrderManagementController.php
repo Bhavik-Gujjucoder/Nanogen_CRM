@@ -113,8 +113,9 @@ class OrderManagementController extends Controller
                     });
                 })
                 ->filterColumn('salesman_id', function ($query, $keyword) {
-                    $query->whereHas('salesman', function ($q) use ($keyword) {
-                        $q->where('first_name', 'like', "%{$keyword}%");
+                    $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
+                        // $q->where('first_name', 'like', "%{$keyword}%");
+                        $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
                     });
                 })
                 ->filterColumn('order_date', function ($query, $keyword) {
