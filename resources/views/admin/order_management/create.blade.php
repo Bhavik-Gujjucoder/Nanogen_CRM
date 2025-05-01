@@ -44,8 +44,8 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Phone <span class="text-danger">*</span></label>
-                    <input type="number" name="mobile_no" value="{{ old('mobile_no') }}" class="form-control"
-                        placeholder="1234567890">
+                    <input type="text" name="mobile_no" value="{{ old('mobile_no') }}" class="form-control"
+                        placeholder="1234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                 </div>
 
                 <div class="col-md-4 mb-3">
