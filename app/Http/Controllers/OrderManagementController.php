@@ -67,7 +67,7 @@ class OrderManagementController extends Controller
 
                 ->editColumn('city', function ($row) {
                     if ($row->distributors_dealers) {
-                        return $row->distributors_dealers->city->city_name;
+                        return $row->distributors_dealers->city->city_name ?? '-';
                     }
                     return '-';
                 })
