@@ -269,28 +269,6 @@
             let product_image_field = $("input[name='product_image']");
             let file = product_image_field[0].files[0]; // Get the selected file
 
-            // Check if no file is selected
-            // if (!file) {
-            //     $("#product_image_error").html("The product image is required.");
-            //     valid = false;
-            // } else {
-            //     // Check file type (JPG, JPEG, GIF, PNG)
-            //     let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
-            //     let fileExtension = file.name.split('.').pop().toLowerCase();
-
-            //     if (!validExtensions.includes(fileExtension)) {
-            //         $("#product_image_error").html(
-            //             "Invalid file type. Only JPG, GIF, and PNG are allowed.");
-            //         valid = false;
-            //     }
-
-            //     // Check file size (max 800KB)
-            //     if (file.size > 2097152) { // 2MB = 2,097,152 bytes || 800KB = 800000 bytes
-            //         $("#product_image_error").html("File size must be less than 800KB.");
-            //         valid = false;
-            //     }
-            // }
-
             // Only validate if file is selected
             if (file) {
                 let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];

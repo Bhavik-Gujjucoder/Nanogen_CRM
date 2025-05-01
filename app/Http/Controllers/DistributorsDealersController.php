@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Mpdf\Mpdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Models\Country;
 use App\Models\Category;
-use App\Models\Product; 
+use App\Models\Product;
 use Mpdf\HTMLParserMode;
 use Illuminate\Http\Request;
 use Mpdf\Config\FontVariables;
+use App\Models\StateManagement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Mpdf\Config\ConfigVariables;
 use Yajra\DataTables\DataTables;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProprietorPartnerDirector;
+use App\Models\DistributorsDealersDocuments;
 
 class DistributorsDealersController extends Controller
 {
@@ -57,10 +60,13 @@ class DistributorsDealersController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
-                     // Auth::user()->can('manage users') ? $action_btn .= $payment_history : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $payment_history : '';
                     Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
                     return $action_btn . ' </div></div>';
+                })
+                ->editColumn('city_id', function ($row) {
+                    return $row->city ? $row->city->city_name : '-';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -74,7 +80,9 @@ class DistributorsDealersController extends Controller
     public function create()
     {
         $data['page_title'] = 'Create Distributors and Dealers';
-        $data['products'] = Product::where('status', 1)->get()->all();
+        $data['products']   = Product::where('status', 1)->get()->all();
+        $data['states']     = StateManagement::where('status', 1)->get()->all();
+        $data['countries']  = Country::where('status', 1)->get()->all();
         return view('admin.distributors_dealers.create', $data);
     }
 
@@ -83,54 +91,72 @@ class DistributorsDealersController extends Controller
      */
     public function store(Request $request)
     {
-        $d_d = new DistributorsDealers();
-        $d_d->fill($request->all());
+        try {
+            $d_d = new DistributorsDealers();
+            $d_d->fill($request->all());
 
-        if ($request->hasFile('profile_image')) {
-            $file     = $request->file('profile_image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('distributor_dealer_profile_image', $filename, 'public'); /* Save to storage/app/public/distributor_dealer_profile_image */
-            $d_d->profile_image = $filename;
-        }
-        $d_d->save();
+            if ($request->hasFile('profile_image')) {
+                $file     = $request->file('profile_image');
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('distributor_dealer_profile_image', $filename, 'public'); /* Save to storage/app/public/distributor_dealer_profile_image */
+                $d_d->profile_image = $filename;
+            }
+            $d_d->save();
 
-        if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
+            if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
 
-            $company_name    = $request->input('company_name');
-            $product_id      = $request->input('product_id');
-            $quantity        = $request->input('quantity');
-            $company_remarks = $request->input('company_remarks');
+                $company_name    = $request->input('company_name');
+                $product_id      = $request->input('product_id');
+                $quantity        = $request->input('quantity');
+                $company_remarks = $request->input('company_remarks');
 
-            foreach ($company_name as $key => $company_name) {
-                if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
-                    DealershipCompanies::create([
-                        'dd_id'           => $d_d->id,
-                        'company_name'    => $company_name,
-                        'product_id'      => $product_id[$key],
-                        'quantity'        => $quantity[$key],
-                        'company_remarks' => $company_remarks[$key],
-                    ]);
+                foreach ($company_name as $key => $company_name) {
+                    if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
+                        DealershipCompanies::create([
+                            'dd_id'           => $d_d->id,
+                            'company_name'    => $company_name,
+                            'product_id'      => $product_id[$key],
+                            'quantity'        => $quantity[$key],
+                            'company_remarks' => $company_remarks[$key],
+                        ]);
+                    }
                 }
             }
-        }
 
-        if ($request->has(['name', 'birthdate', 'address'])) {
-            $name      = $request->input('name');
-            $birthdate = $request->input('birthdate');
-            $address   = $request->input('address');
+            if ($request->has(['name', 'birthdate', 'address'])) {
+                $name      = $request->input('name');
+                $birthdate = $request->input('birthdate');
+                $address   = $request->input('address');
 
-            foreach ($name as $key => $name) {
-                if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
-                    ProprietorPartnerDirector::create([
+                foreach ($name as $key => $name) {
+                    if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
+                        ProprietorPartnerDirector::create([
+                            'dd_id'     => $d_d->id,
+                            'name'      => $name,
+                            'birthdate' => $birthdate[$key],
+                            'address'   => $address[$key],
+                        ]);
+                    }
+                }
+            }
+
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $filePath = $file->store('dd_documents', 'public'); // stored in storage/app/dd_documents
+
+                    DistributorsDealersDocuments::create([
                         'dd_id'     => $d_d->id,
-                        'name'      => $name,
-                        'birthdate' => $birthdate[$key],
-                        'address'   => $address[$key],
+                        'file_path' => $filePath,
+                        'file_name' => $originalName,
                     ]);
                 }
             }
+            return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record created successfully!');
+        } catch (\Throwable $th) {
+            dd($th);
+            return redirect()->back()->with('error', 'Something went wrong!');
         }
-            return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record created successfully!');
     }
 
     /**
@@ -139,10 +165,13 @@ class DistributorsDealersController extends Controller
     public function edit(string $id)
     {
         $distributor_dealers = DistributorsDealers::findOrFail($id);
+
         $data = [
             'page_title'          => 'Edit Distributors and Dealers',
             'distributor_dealers' => $distributor_dealers,
             'products'            => Product::where('status', 1)->get()->all(),
+            'states'              => StateManagement::where('status', 1)->get()->all(),
+            'countries'           => Country::where('status', 1)->get()->all(),
         ];
         return view('admin.distributors_dealers.edit', $data);
     }
@@ -152,63 +181,84 @@ class DistributorsDealersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $d_d = DistributorsDealers::findOrFail($id);
-        $d_d->update($request->all());
+        try {
+            $d_d = DistributorsDealers::findOrFail($id);
+            $d_d->update($request->all());
 
-        if ($request->hasFile('profile_image')) {
-            if ($d_d->profile_image) {
-                Storage::disk('public')->delete('distributor_dealer_profile_image/' . $d_d->profile_image);
+            if ($request->hasFile('profile_image')) {
+                if ($d_d->profile_image) {
+                    Storage::disk('public')->delete('distributor_dealer_profile_image/' . $d_d->profile_image);
+                }
+
+                $file     = $request->file('profile_image');
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('distributor_dealer_profile_image', $filename, 'public');
+                /** Save to storage/app/public/product_images **/
+                $d_d->profile_image = $filename;
+                $d_d->save();
             }
 
-            $file     = $request->file('profile_image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('distributor_dealer_profile_image', $filename, 'public');
-            /** Save to storage/app/public/product_images **/
-            $d_d->profile_image = $filename;
-            $d_d->save();
-        }
+            if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
+                DealershipCompanies::where('dd_id', $id)->delete();
+                $company_name    = $request->input('company_name');
+                $product_id      = $request->input('product_id');
+                $quantity        = $request->input('quantity');
+                $company_remarks = $request->input('company_remarks');
 
-        if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
-            DealershipCompanies::where('dd_id', $id)->delete();
-            $company_name    = $request->input('company_name');
-            $product_id      = $request->input('product_id');
-            $quantity        = $request->input('quantity');
-            $company_remarks = $request->input('company_remarks');
-
-            foreach ($company_name as $key => $company_name) {
-                if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
-                    DealershipCompanies::create([
-                        'dd_id'           => $d_d->id,
-                        'company_name'    => $company_name,
-                        'product_id'      => $product_id[$key],
-                        'quantity'        => $quantity[$key],
-                        'company_remarks' => $company_remarks[$key],
-                    ]);
+                foreach ($company_name as $key => $company_name) {
+                    if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
+                        DealershipCompanies::create([
+                            'dd_id'           => $d_d->id,
+                            'company_name'    => $company_name,
+                            'product_id'      => $product_id[$key],
+                            'quantity'        => $quantity[$key],
+                            'company_remarks' => $company_remarks[$key],
+                        ]);
+                    }
                 }
             }
-        }
 
-        if ($request->has(['name', 'birthdate', 'address'])) {
-            ProprietorPartnerDirector::where('dd_id', $id)->delete();
-            $names      = $request->input('name');
-            $birthdate = $request->input('birthdate');
-            $address   = $request->input('address');
+            if ($request->has(['name', 'birthdate', 'address'])) {
+                ProprietorPartnerDirector::where('dd_id', $id)->delete();
+                $names      = $request->input('name');
+                $birthdate = $request->input('birthdate');
+                $address   = $request->input('address');
 
-            foreach ($names as $key => $name) {
-                if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
-                    ProprietorPartnerDirector::create([
+                foreach ($names as $key => $name) {
+                    if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
+                        ProprietorPartnerDirector::create([
+                            'dd_id'     => $d_d->id,
+                            'name'      => $name,
+                            'birthdate' => $birthdate[$key],
+                            'address'   => $address[$key],
+                        ]);
+                    }
+                }
+            }
+
+            if ($request->hasFile('files')) {
+
+                foreach ($request->file('files') as $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $filePath = $file->store('dd_documents', 'public'); // stored in storage/app/dd_documents
+
+                    DistributorsDealersDocuments::create([
                         'dd_id'     => $d_d->id,
-                        'name'      => $name,
-                        'birthdate' => $birthdate[$key],
-                        'address'   => $address[$key],
+                        'file_path' => $filePath,
+                        'file_name' => $originalName,
                     ]);
                 }
             }
+
+            return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record updated successfully.');
+        } catch (\Throwable $th) {
+            dd($th);
+            return redirect()->back()->with('error', 'Something went wrong!');
         }
-        return redirect()->route('distributors_dealers.index',($d_d->user_type == 2))->with('success', 'Record updated successfully.');
     }
 
     /**
+     * 
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
@@ -218,65 +268,57 @@ class DistributorsDealersController extends Controller
         ProprietorPartnerDirector::where('dd_id', $id)->delete();
         if ($d_d->profile_image) {
             Storage::disk('public')->delete('distributor_dealer_profile_image/' . $d_d->profile_image);
-        } 
+        }
         $d_d->delete();
         return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
     }
 
 
+    public function documents_destroy(string $id)
+    {
+        $document = DistributorsDealersDocuments::findOrFail($id);
+
+        // Delete the file from storage
+        if (Storage::disk('public')->exists($document->file_path)) {
+            Storage::disk('public')->delete($document->file_path);
+        }
+        $document->delete();
     
+        return response()->json(['success' => true, 'message' => 'Document deleted successfully.']);
+    }
+
+
+
     public function payment_history(Request $request, string $id)
     {
         $distributor_dealers = DistributorsDealers::findOrFail($id);
         $data = [
             'page_title' => 'Payment History',
             'distributor_dealers' => $distributor_dealers,
-            ];
+        ];
         return view('admin.distributors_dealers.payment_history', $data);
     }
-
-
-
-    // public function export_price_list()
-    // {
-        //     // $data['products'] = Product::with('category', 'product_variations.variation_option_value')->where('status', 1)->get();
-        //     $data['category'] = Category::with('products')->where('status', 1)
-        //     ->has('products') // Only get categories with products
-        //     ->get();
-
-        //     // return view('admin.distributors_dealers.price_list', compact('products'));
-        //     $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
-        //     $filename = 'price-list-' . now()->year . '.pdf';
-
-        //     // Save to storage/app/public/price-lists/
-        //     Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
-        
-        //     return $pdf->download($filename); 
-        //     // return $pdf->stream($filename);
-
-    // }
 
 
     public function export_price_list(Request $request)  // right function
     {
         // $data['products'] = Product::with('category', 'product_variations.variation_option_value')->where('status', 1)->get();
         $data['category'] = Category::with('products')->where('status', 1)
-                            ->has('products')  /***  Only get categories with products ***/
-                            ->get();
+            ->has('products')
+            /***  Only get categories with products ***/
+            ->get();
 
         // return view('admin.distributors_dealers.price_list', $data);  //only web view perpose 
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
-      
+
         $name = $request->dealer == 1 ? 'Dealers' : 'Distributors';
         $filename = $name . '-price-list-' . now()->year . '.pdf';
 
         // Save to storage/app/public/price-lists/
         Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
-        
-        return $pdf->download($filename); 
+
+        return $pdf->download($filename);
         //  return $pdf->stream($filename);   //only view perpose 
 
     }
-
 }
-

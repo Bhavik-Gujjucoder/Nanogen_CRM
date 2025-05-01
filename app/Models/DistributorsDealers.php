@@ -24,6 +24,10 @@ class DistributorsDealers extends Model
         'gstin',
         'aadhar_card',
         'registered_dealer',
+        'city_id',
+        'state_id',
+        'postal_code',
+        'country_id',
         'bank_name_address',
         'account_no',
         'ifsc_code',
@@ -80,5 +84,15 @@ class DistributorsDealers extends Model
     public function proprietor_partner_director()
     {
         return $this->hasMany(ProprietorPartnerDirector::class, 'dd_id', 'id');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(DistributorsDealersDocuments::class, 'dd_id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(CityManagement::class, 'id','city_id');
     }
 }

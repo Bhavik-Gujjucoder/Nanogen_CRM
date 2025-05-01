@@ -74,6 +74,7 @@
 
                         <th scope="col"> {{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}</th>
                         <th scope="col">Phone</th>
+                        <th scope="col">City</th>
                         <th scope="col">Code</th>
                         <th class="" scope="col">Action</th> {{--class="text-end"--}}
                     </tr>
@@ -109,6 +110,11 @@
             {
                 data: 'mobile_no',
                 name: 'mobile_no',
+                searchable: true
+            },
+            {
+                data: 'city_id',
+                name: 'city_id',
                 searchable: true
             },
             {

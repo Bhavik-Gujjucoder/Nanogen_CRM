@@ -64,6 +64,14 @@ class OrderManagementController extends Controller
                     }
                     return '-';
                 })
+
+                ->editColumn('city', function ($row) {
+                    if ($row->distributors_dealers) {
+                        return $row->distributors_dealers->city->city_name;
+                    }
+                    return '-';
+                })
+
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
@@ -82,7 +90,7 @@ class OrderManagementController extends Controller
                         <span class="badge bg-info">Shipping</span>
                     </a>
                     <a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"  data-status="4">
-                        <span class="badge bg-success">Delivery</span>
+                        <span class="badge bg-success">Delivered</span>
                     </a>';
 
                     $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
@@ -120,6 +128,11 @@ class OrderManagementController extends Controller
                 })
                 ->filterColumn('order_date', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('city', function($query, $keyword) {
+                    $query->whereHas('distributors_dealers.city', function($q) use ($keyword) {
+                        $q->where('city_name', 'like', "%{$keyword}%");
+                    });
                 })
                 ->rawColumns(['checkbox', 'action', 'order_status']) //'value',
                 ->make(true);

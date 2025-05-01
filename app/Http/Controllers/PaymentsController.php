@@ -20,7 +20,7 @@ class PaymentsController extends Controller
      */
     public function create()
     {
-        $data['page_title'] = 'Create Payment';
+        $data['page_title'] = 'Receive Payment';
         return view('admin.payment.create', $data);
     }
 

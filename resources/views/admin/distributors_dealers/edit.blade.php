@@ -108,7 +108,7 @@
                                 <label class="col-form-label">Mobile No <span class="text-danger">*</span></label>
                                 <input type="number" name="mobile_no"
                                     value="{{ old('mobile_no', $distributor_dealers->mobile_no) }}"
-                                    class="form-control" placeholder="Mobile No">
+                                    class="form-control" placeholder="Mobile No" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                                 <span id="mobile_no_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="number" name="aadhar_card"
                                     value="{{ old('aadhar_card', $distributor_dealers->aadhar_card) }}"
-                                    class="form-control" placeholder="Aadhar Card No">
+                                    class="form-control" placeholder="Aadhar Card No" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
                                 <span id="aadhar_card_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -161,7 +161,73 @@
                         </ul>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label">State/Province <span
+                                        class="text-danger">*</span></label>
+                                <select id="stateDropdown" class="form-select @error('state_id') is-invalid @enderror"
+                                    name="state_id">
+                                    <option value="">Select state</option>
+                                    @foreach ($states as $state)
+                                        <option value="{{ $state->id }}"
+                                            {{ old('state_id', $distributor_dealers->state_id) == $state->id ? 'selected' : '' }}>
+                                            {{ $state->state_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('state_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label">City <span class="text-danger">*</span></label>
+                                <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
+                                    name="city_id">
+                                    <option value="">Select city</option>
+                                </select>
+                                @error('city_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
+                                <input type="text" name="postal_code"
+                                    value="{{ old('postal_code', $distributor_dealers->postal_code) }}"
+                                    class="form-control @error('postal_code') is-invalid @enderror"
+                                    placeholder="Postal/Zip code">
+                                @error('postal_code')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-form-label">Country <span class="text-danger">*</span></label>
+                            <select id="inputState" class="form-select @error('country_id') is-invalid @enderror"
+                                name="country_id">
+                                <option value="">Select country</option>
+                                @foreach ($countries as $county)
+                                    <option value="{{ $county->id }}"
+                                        {{ old('country_id', $distributor_dealers->country_id) == $county->id ? 'selected' : '' }}>
+                                        {{ $county->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('country_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                 </div>
+
+
 
 
                 <div class="applicationdtl delerbox-border-b">
@@ -330,11 +396,14 @@
                                             <th scope="col">Products</th>
                                             <th scope="col">Quantity</th>
                                             <th scope="col">Remarks</th>
-                                            <th scope="col">Action</th>
+                                            {{-- <th scope="col">Action</th> --}}
+                                            <th scope="col">
+                                                <button type="button" id="addNewFirmRow" class="btn btn-primary">Add New</button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        {{-- <tr>
                                             <td data-label="S.No.">1</td>
                                             <td data-label="Company Name">
                                                 <input type="text" name="company_name[]" value=""
@@ -361,10 +430,10 @@
                                                 <button type="button" id="addNewFirmRow" class="btn btn-primary">Add
                                                     New</button>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         @foreach ($distributor_dealers->dealership_companies as $c)
                                             <tr>
-                                                <td data-label="S.No.">1</td>
+                                                <td data-label="S.No.">{{ $loop->iteration }}</td>
                                                 <td data-label="Company Name">
                                                     <input type="text" name="company_name[]"
                                                         value="{{ old('company_name', $c->company_name) }}"
@@ -404,7 +473,7 @@
                         <div class="col-md-12">
                             <div class="listcheck">
                                 <label class="col-form-label">Status of Firm
-                                    </label>
+                                </label>
                                 <p class="smallnote">
                                     (For partnership firms enclose copy of partnership Deed
                                     and for Companies Memorandum Articles of Association)
@@ -463,12 +532,14 @@
                                             <th scope="col">Address</th>
                                             {{-- <th scope="col">Father’s/Husband’s Name</th>
                                             <th scope="col">Marital Status</th> --}}
-                                            <th scope="col">Action</th>
+                                            {{-- <th scope="col">Action</th> --}}
+                                            <th scope="col">
+                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add New</button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <tr>
+                                        {{-- <tr>
                                             <td data-label="S.No.">1</td>
                                             <td data-label="Name">
                                                 <input type="text" name="name[]" value="{{ old('name') }}"
@@ -490,10 +561,10 @@
                                                 <button type="button" id="addNewPropRow" class="btn btn-primary">Add
                                                     New</button>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         @foreach ($distributor_dealers->proprietor_partner_director as $p)
                                             <tr>
-                                                <td data-label="S.No.">1</td>
+                                                <td data-label="S.No.">{{ $loop->iteration }}</td>
                                                 <td data-label="Name">
                                                     <input type="text" name="name[]"
                                                         value="{{ old('name', $p->name) }}" placeholder="Enter name"
@@ -734,7 +805,8 @@
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label class="col-form-label">Financial standing and capability to invest </label>
+                                        <label class="col-form-label">Financial standing and capability to invest
+                                        </label>
                                         <input type="text" name="financial_capability" class="form-control"
                                             value="{{ old('financial_capability', $distributor_dealers->financial_capability) }}"
                                             placeholder="Financial standing and capability to invest">
@@ -834,21 +906,20 @@
                                     <input type="text" name="cr_limit" class="form-control"
                                         placeholder="Cr limit"
                                         value="{{ old('cr_limit', $distributor_dealers->cr_limit) }}">
-                                </div> 
+                                </div>
                             </div>
 
                             <div class="col-md-5 mb-3">
-                                <label class="col-form-label">Payment Reminder</label>  {{-- Credit Limit --}}
+                                <label class="col-form-label">Payment Reminder</label> {{-- Credit Limit --}}
                                 <div class="form-input-icon input-group gropinginput box-bordernone">
-                                    <input type="number" step="any"
-                                        class="form-control"  
-                                        placeholder="0" name="credit_limit"
+                                    <input type="number" step="any" class="form-control" placeholder="0"
+                                        name="credit_limit"
                                         value="{{ old('credit_limit', $distributor_dealers->credit_limit) }}">
                                     <div class="form-input-icon select-2-box">
-                                        <select class="select2" id="credit_limit_type"
-                                            name="credit_limit_type" aria-hidden="true" style="width:100%">
+                                        <select class="select2" id="credit_limit_type" name="credit_limit_type"
+                                            aria-hidden="true" style="width:100%">
                                             <option value="day"
-                                                {{ old('credit_limit_type',$distributor_dealers->credit_limit_type) == 'day' ? 'selected' : '' }}>
+                                                {{ old('credit_limit_type', $distributor_dealers->credit_limit_type) == 'day' ? 'selected' : '' }}>
                                                 Days</option>
                                             <option value="month"
                                                 {{ old('credit_limit_type', $distributor_dealers->credit_limit_type) == 'month' ? 'selected' : '' }}>
@@ -865,6 +936,185 @@
                                         placeholder="Enter any remarks here...">{{ old('remarks', $distributor_dealers->remarks) }}</textarea>
                                 </div>
                             </div>
+
+                            {{-- <div class="mb-3">
+                                <label class="form-label fw-bold">Uploaded Documents:</label>
+                                <div class="border p-3 rounded bg-light">
+                                    @if ($distributor_dealers->documents->count())
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach ($distributor_dealers->documents as $document)
+                                                @php
+                                                    $extension = strtolower(pathinfo($document->file_name, PATHINFO_EXTENSION));
+                                                    $fileUrl = asset('storage/' . $document->file_path);
+                            
+                                                    // Define download-only types
+                                                    $downloadTypes = ['doc', 'docx'];
+                            
+                                                    // Define icon (optional)
+                                                    $icon = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']) ? 'bi-image' :
+                                                            ($extension === 'pdf' ? 'bi-file-earmark-pdf' :
+                                                            (in_array($extension, ['xls', 'xlsx']) ? 'bi-file-earmark-excel' : 'bi-file-earmark'));
+                                                @endphp
+                            
+                                                <li class="mb-1">
+                                                    @if (in_array($extension, $downloadTypes))
+                                                        <a href="{{ $fileUrl }}" download="{{ $document->file_name }}" class="text-success">
+                                                            <i class="bi {{ $icon }} me-1"></i>
+                                                            {{ $document->file_name }}
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ $fileUrl }}" target="_blank" class="text-primary">
+                                                            <i class="bi {{ $icon }} me-1"></i>
+                                                            {{ $document->file_name }}
+                                                        </a>
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <p class="text-muted mb-0">No documents uploaded.</p>
+                                    @endif
+                                </div>
+                            </div> --}}
+
+                            {{-- <div class="mb-3">
+                                <label class="form-label fw-bold">Uploaded Documents:</label>
+                                <div class="border p-3 rounded bg-light">
+                                    @if ($distributor_dealers->documents->count())
+                                        <ul class="list-unstyled mb-0 row">
+                                            @foreach ($distributor_dealers->documents as $document)
+                                                @php
+                                                    $extension = strtolower(pathinfo($document->file_name, PATHINFO_EXTENSION));
+                                                    $fileUrl = asset('storage/' . $document->file_path);
+                                                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                                    $downloadTypes = ['doc', 'docx'];
+                                                    $openInTab = !in_array($extension, $downloadTypes);
+                                                    $icon = match($extension) {
+                                                        'pdf' => 'bi-file-earmark-pdf',
+                                                        'doc', 'docx' => 'bi-file-earmark-word',
+                                                        'xls', 'xlsx' => 'bi-file-earmark-excel',
+                                                        default => 'bi-file-earmark'
+                                                    };
+                                                @endphp
+                            
+                                                <li class="col-md-4 mb-3">
+                                                    <div class="fw-semibold mb-1">{{ $loop->iteration }}.</div>
+                                                    @if ($isImage)
+                                                        <a href="{{ $fileUrl }}" target="_blank" class="d-block">
+                                                            <img src="{{ $fileUrl }}" alt="{{ $document->file_name }}"
+                                                                 class="img-thumbnail" style="max-height: 100px;">
+                                                            <div class="mt-1 text-truncate">{{ $document->file_name }}</div>
+                                                        </a>
+                                                    @else
+                                                        @if ($openInTab)
+                                                            <a href="{{ $fileUrl }}" target="_blank" class="text-primary d-flex align-items-center">
+                                                                <i class="bi {{ $icon }} fs-4 me-2"></i> {{ $document->file_name }}
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ $fileUrl }}" download="{{ $document->file_name }}" class="text-success d-flex align-items-center">
+                                                                <i class="bi {{ $icon }} fs-4 me-2"></i> {{ $document->file_name }}
+                                                            </a>
+                                                        @endif
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <p class="text-muted mb-0">No documents uploaded.</p>
+                                    @endif
+                                </div>
+                            </div> --}}
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Uploaded Documents:</label>
+                                <div class="border p-3 rounded bg-light">
+                                    @if ($distributor_dealers->documents->count())
+                                        <div class="row">
+                                            @foreach ($distributor_dealers->documents as $document)
+                                                @php
+                                                    $extension = strtolower(
+                                                        pathinfo($document->file_name, PATHINFO_EXTENSION),
+                                                    );
+                                                    $fileUrl = asset('storage/' . $document->file_path);
+                                                    $isImage = in_array($extension, [ 'jpg', 'jpeg', 'png', 'gif', 'webp', ]);
+                                                    $downloadTypes = ['doc', 'docx'];
+                                                    $openInTab = !in_array($extension, $downloadTypes);
+                                                    $icon = match ($extension) {
+                                                        'pdf' => 'bi-file-earmark-pdf',
+                                                        'doc', 'docx' => 'bi-file-earmark-word',
+                                                        'xls', 'xlsx' => 'bi-file-earmark-excel',
+                                                        default => 'bi-file-earmark',
+                                                    };
+                                                @endphp
+
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="border rounded p-2 h-100 bg-white shadow-sm">
+                                                        <div class="fw-semibold mb-2">{{ $loop->iteration }}.</div>
+
+                                                        @if ($isImage)
+                                                            <a href="{{ $fileUrl }}" target="_blank"
+                                                                class="d-block mb-2">
+                                                                <img src="{{ $fileUrl }}"
+                                                                    alt="{{ $document->file_name }}"
+                                                                    class="img-thumbnail" style="max-height: 100px;">
+                                                            </a>
+                                                        @else
+                                                            @if ($openInTab)
+                                                                <a href="{{ $fileUrl }}" target="_blank"
+                                                                    class="text-primary d-flex align-items-center mb-2">
+                                                                    <i class="bi {{ $icon }} fs-4 me-2"></i>
+                                                                    {{ $document->file_name }}
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ $fileUrl }}"
+                                                                    download="{{ $document->file_name }}"
+                                                                    class="text-success d-flex align-items-center mb-2">
+                                                                    <i class="bi {{ $icon }} fs-4 me-2"></i>
+                                                                    {{ $document->file_name }}
+                                                                </a>
+                                                            @endif
+                                                        @endif
+
+                                                        <button type="button" class="btn btn-sm btn-danger delete_document"
+                                                            data-id="{{ $document->id }}"
+                                                            data-url="{{ route('distributors_dealers.documents_destroy', $document->id) }}">
+                                                            <i class="ti ti-trash text-white"></i> Delete
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <p class="text-muted mb-0">No documents uploaded.</p>
+                                    @endif
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <div class="mb-1">
+                                    <label class="col-form-label">Add Documents <small class="text-muted"> (JPG, JPEG,
+                                            PNG, GIF, WEBP, DOC or DOCX)</small></label>
+                                </div>
+                            </div>
+                            <div id="fileUploadWrapper">
+                                <div class="col-md-5 file-group">
+                                    <div class="form-input-icon input-group gropinginput box-bordernone">
+                                        <input type="file" name="files[]" class="form-control mb-1"
+                                            accept=".jpg,.jpeg,.png,.gif,.webp,.doc,.docx" />
+                                        <div class="form-input-icon">
+                                            <button type="button" class="btn btn-danger removeFileBtn">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-input-icon mt-2">
+                                <button type="button" id="addFileBtn" class="btn btn-primary">Add New File</button>
+                            </div>
+
+
+
                         </div>
 
                     </div>
@@ -882,6 +1132,44 @@
 @endsection
 @section('script')
 <script>
+    /**** State wise city dropdown ****/
+    $(document).ready(function() {
+        const selectedStateId = '{{ $distributor_dealers->state_id }}';
+        const selectedCityId = '{{ $distributor_dealers->city_id }}';
+
+        // Load cities on page load
+        if (selectedStateId) {
+            loadCities(selectedStateId, selectedCityId);
+        }
+
+        // When user changes state
+        $('#stateDropdown').on('change', function() {
+            const stateId = $(this).val();
+            loadCities(stateId, null); // reset selected city
+        });
+
+        function loadCities(stateId, selectedCityId) {
+            $('#cityDropdown').html('<option value="">Loading...</option>');
+
+            $.ajax({
+                url: "{{ route('get.cities') }}",
+                type: "POST",
+                data: {
+                    state_id: stateId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $('#cityDropdown').empty().append('<option value="">Select City</option>');
+                    $.each(data, function(index, city) {
+                        const selected = city.id == selectedCityId ? 'selected' : '';
+                        $('#cityDropdown').append('<option value="' + city.id + '" ' +
+                            selected + '>' + city.city_name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+
     /**** date-picker ****/
     function initFlatpickr() {
         $('.datePicker').each(function() {
@@ -1066,7 +1354,7 @@
                     </td>
                 </tr>`;
 
-            $('#dealership_companies tbody').append(newRow);
+            $('#dealership_companies tbody').prepend(newRow);
             updateFirmSerialNumbers();
         });
 
@@ -1118,7 +1406,7 @@
                     </td>
                 </tr>`;
 
-            $('#propertiesdataTable tbody').append(newRow);
+            $('#propertiesdataTable tbody').prepend(newRow); //append
             updatePropSerialNumbers();
 
             /* Initialize Flatpickr for newly added row */
@@ -1150,6 +1438,78 @@
             }
             reader.readAsDataURL(file); // Read the file as a Data URL
         }
+    }
+
+
+    /**** multy images add  ****/
+    $(document).on('click', '#addFileBtn', function() {
+        const newInput = `
+            <div class="col-md-5 file-group mt-2">
+                <div class="form-input-icon input-group gropinginput box-bordernone">
+                    <input type="file" name="files[]" class="form-control mb-1" />
+                    <div class="form-input-icon">
+                        <button type="button" class="btn btn-danger removeFileBtn">Remove</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        $('#fileUploadWrapper').append(newInput);
+    });
+
+    // Remove file input
+    $(document).on('click', '.removeFileBtn', function() {
+        $(this).closest('.file-group').remove();
+    });
+    /***end***/
+
+    /**** Documents Image delete ***/
+    $(document).on('click', '.delete_document', function(event) {
+        event.preventDefault();
+        let button = $(this);
+        let document_id = button.data('id');
+        let url = button.data('url'); // URL from data attribute
+
+        confirmDeletion(function() {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    // Optionally show toast/alert
+                    Swal.fire('Deleted!', 'Document has been deleted.', 'success');
+                    // Remove the card or reload list
+                    button.closest('.col-md-4').remove();
+                },
+                error: function(xhr) {
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                }
+            });
+        });
+    });
+
+    function confirmDeletion(callback) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to remove this Document? Once deleted, it cannot be recovered.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+                icon: 'my-custom-icon swal2-warning'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                callback(); // Execute callback function if confirmed
+            }
+        });
     }
 </script>
 @endsection

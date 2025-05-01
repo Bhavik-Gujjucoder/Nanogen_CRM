@@ -19,6 +19,7 @@ use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SalesPersonController;
+use App\Http\Controllers\AreaWiseSalesController;
 use App\Http\Controllers\CityManagementController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
@@ -114,11 +115,17 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
     Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
 
+    /* Area-wise Sales */
+    Route::resource('area_wise_sales', AreaWiseSalesController::class)->except(['show']);
+    Route::get('area_wise_sales/show/{city_id}', [AreaWiseSalesController::class, 'show'])->name('area_wise_sales.show');
+
+
     /* Distributors & Dealers */
     Route::get('distributors_dealers/index/{dealer?}', [DistributorsDealersController::class, 'index'])->name('distributors_dealers.index');
     Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
     // Route::get('/distributors_dealers/payment_history/{id}', [DistributorsDealersController::class, 'payment_history'])->name('distributors_dealers.payment_history');
     Route::get('/distributors_dealers/export-price-list/{dealer?}', [DistributorsDealersController::class, 'export_price_list'])->name('distributors_dealers.export_price_list');
+    Route::delete('/documents_destroy/{id}', [DistributorsDealersController::class, 'documents_destroy'])->name('distributors_dealers.documents_destroy');
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
     /* Order Management */

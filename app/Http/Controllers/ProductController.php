@@ -64,6 +64,9 @@ class ProductController extends Controller
                 ->editColumn('grade_id', function ($product) {
                     return $product->grade ? $product->grade->name : '-';
                 })
+                ->editColumn('status', function ($product) {
+                    return $product->statusBadge();
+                })
                 ->filterColumn('category_id', function ($query, $keyword) {
                     $query->whereHas('category', function ($q) use ($keyword) {
                         $q->where('category_name', 'like', "%{$keyword}%");
@@ -74,11 +77,9 @@ class ProductController extends Controller
                         $q->where('name', 'like', "%{$keyword}%");
                     });
                 })
-                ->editColumn('status', function ($product) {
-                    return $product->statusBadge();
-                })
                 ->rawColumns(['checkbox', 'product_name', 'action', 'status']) //'value',
                 ->make(true);
+                
         }
 
         return view('admin.product.index', $data);

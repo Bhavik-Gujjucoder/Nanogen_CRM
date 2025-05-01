@@ -47,7 +47,7 @@
                                 <li><a href="{{ route('order_management.index') }}">Order Management</a></li>
                                 <li><a href="{{ route('sales_person.index') }}">Sales Persons</a></li>
                                 <li><a href="{{ route('target.index') }}">Targets</a></li>
-                                <li><a href="areawise-sales.html">Area Wise Sales</a></li>
+                                <li><a href="{{ route('area_wise_sales.index') }}">Area Wise Sales</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -85,7 +85,7 @@
 
                 <li>
                     <ul>
-                        <li><a href="{{ route('payment.index') }}"><i class="ti ti-message-exclamation"></i><span>Payments</span></a></li>
+                        <li><a href="{{ route('payment.index') }}"><i class="ti ti-message-exclamation"></i><span>Received Payment</span></a></li>
                         <li><a href="{{ route('complain.index') }}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
                         <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade
                                     Management</span></a></li>

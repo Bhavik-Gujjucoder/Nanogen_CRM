@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CityManagement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,5 +15,10 @@ class SalesPersonDetail extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id','user_id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(CityManagement::class, 'id','city_id');
     }
 }

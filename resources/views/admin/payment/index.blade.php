@@ -15,7 +15,7 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col-4">
-                            <h4 class="page-title">Payments</h4>
+                            <h4 class="page-title">Received Payment</h4>
                         </div>
                         <div class="col-8 text-end">
                             <div class="head-icons">
@@ -52,7 +52,7 @@
                                         <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
                         
                                             <a href="{{ route('payment.create') }}" class="btn btn-primary"><i
-                                                    class="ti ti-square-rounded-plus me-2"></i>Add Payment</a>
+                                                    class="ti ti-square-rounded-plus me-2"></i>Receive Payment</a>
                                         </div>
                                     {{-- </div> --}}
                                 </div>
@@ -409,6 +409,7 @@
                                         <th>Customer Name</th>
                                         <th>Order Date</th>
                                         <th>Due Date</th>
+                                        <th>Receive Date</th>
                                         <th>Amount</th>
                                         <th>Paid Amount</th>
                                         <th>Due Amount</th>
@@ -423,6 +424,7 @@
                                             <h2 class="d-flex align-items-center"><a href="">NovaWave LLC</a></h2>
                                         </td>
 
+                                        <td>28 Dec 2023</td>
                                         <td>28 Dec 2023</td>
                                         <td>28 Dec 2023</td>
                                         <td>2,00,000</td>
@@ -444,6 +446,7 @@
 
                                         <td>28 Dec 2023</td>
                                         <td>28 Dec 2023</td>
+                                        <td>28 Dec 2023</td>
                                         <td>2,00,000</td>
                                         <td>2,00,000</td>
                                         <td>2,00,000</td>
@@ -461,6 +464,7 @@
                                             <h2 class="d-flex align-items-center"><a href="">NovaWave LLC</a></h2>
                                         </td>
 
+                                        <td>28 Dec 2023</td>
                                         <td>28 Dec 2023</td>
                                         <td>28 Dec 2023</td>
                                         <td>2,00,000</td>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use App\Models\VariationOption;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\hasOne;
@@ -23,4 +24,15 @@ class OrderManagementProduct extends Model
     {
         return $this->hasOne(VariationOption::class,'id', 'packing_size_id' );
     }
+
+      /**
+     * Get all of the products for the OrderManagementProduct
+     *
+     * @return hasOne
+    */
+    public function product(): hasOne
+    {
+        return $this->hasOne(Product::class,'id', 'product_id' );
+    }
+
 }

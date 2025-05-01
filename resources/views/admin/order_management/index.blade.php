@@ -41,6 +41,7 @@
                         <th class="no-sort" scope="col"></th>
                         <th scope="col">Order ID</th>
                         <th scope="col">Party Name</th>
+                        <th scope="col">City</th>
                         <th scope="col">Order Date</th>
                         <th scope="col">Contact Number</th>
                         <th scope="col">Salesman</th>
@@ -104,29 +105,38 @@
             {
                 data: 'dd_id',
                 name: 'dd_id',
-                searchable: true
+                searchable: true,
+                orderable: true,
+            },
+            {
+                data: 'city',
+                name: 'city',
+                searchable: true,
+                orderable: false,
             },
             {
                 data: 'order_date',
                 name: 'order_date',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'mobile_no',
                 name: 'mobile_no',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'salesman_id',
                 name: 'salesman_id',
-                searchable: true
+                searchable: true,
+                orderable: true
             },
             {
                 data: 'grand_total',
                 name: 'grand_total',
-                searchable: true
+                searchable: true,
+                orderable: true
             },
             {
                 data: 'order_status',

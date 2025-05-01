@@ -25,6 +25,13 @@ return new class extends Migration
             $table->string('gstin')->nullable();
             $table->string('aadhar_card');
             $table->string('registered_dealer');
+            
+            $table->bigInteger('city_id')->nullable();
+            $table->bigInteger('state_id')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->bigInteger('country_id')->nullable();
+
+
             $table->text('bank_name_address');
             $table->string('account_no');
             $table->string('ifsc_code');

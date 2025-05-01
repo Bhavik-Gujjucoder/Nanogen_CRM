@@ -44158,3 +44158,86 @@ select.select.addfileddrop {
 .paymet-cls .dropdown .dropdown-toggle:after {
     margin-left: 10px;
 }
+
+.paymet-cls-wraps h6 a {
+    color: #014e9c !important;
+    font-size: 16px !important;
+}
+
+.paymet-cls-wraps .table tbody tr td {
+    vertical-align: text-top;
+    font-size: 16px;
+
+}
+
+.paymet-cls-wraps .custom-table h6 {
+    padding-top: 16px !important;
+}
+
+
+.payment-summary-table {
+    width: 30%;
+    background-color: #fef7ec;
+
+    border-radius: 6px;
+    margin-top: 20px;
+    margin: 30px 0 30px auto;
+}
+
+.payment-summary-table .label-cell,
+.payment-summary-table .value-cell {
+    text-align: right;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.payment-summary-table .excess-row {
+    color: #c0392b;
+}
+
+.payment-summary-table .warning-label {
+    color: #c0392b !important;
+}
+
+.payment-summary-table .warning-value {
+    color: #c0392b !important;
+}
+
+.icon-warning {
+    margin-right: 6px;
+}
+
+table.table.table-bordered.payment-summary-table td {
+    border-style: hidden;
+    background: #fcf4e7;
+    color: #c78c0b
+}
+
+.paymet-cls-wraps .form-control {
+    text-align: right;
+    width: fit-content;
+    margin: 0 0 0 auto;
+    font-weight: 600;
+    color: #000;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.paymet-cls-wraps input.form-control::placeholder {
+    font-weight: 600;
+    color: #000;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.paymet-cls-wraps .due-date-cls {
+    font-size: 14px;
+}
+
+/*  */
+.dropdown-item {
+    z-index: 9999999;
+    position: relative;
+    color: #000;
+    font-size: 14px;
+}

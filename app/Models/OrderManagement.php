@@ -33,7 +33,6 @@ class OrderManagement extends Model
         }
     }
     
-
     /**
      * Get the user that owns the OrderManagement
      *
@@ -61,7 +60,7 @@ class OrderManagement extends Model
          */
         public function products(): HasMany
         {
-            return $this->hasMany(OrderManagementProduct::class, 'order_id', 'id');
+            return $this->hasMany(OrderManagementProduct::class, 'order_id', 'id'); 
         }
 
 }
