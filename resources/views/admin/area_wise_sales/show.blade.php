@@ -10,7 +10,7 @@
         </div>
         <div class="areawise col-md-4 d-flex">
             <div class="main-catgeory">
-                <h6> Main ategory </h6>
+                <h6> Main Category </h6>
                 <select name="category_id" class="form-control select" onchange="applyFilter()">
                     <option value="">Select</option>
                     @foreach ($categories as $category)
