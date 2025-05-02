@@ -27,7 +27,7 @@
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">City Name</th>
-                        <th scope="col">Sales amount</th>
+                        <th scope="col">Sales Amount</th>
                         <th class="no-sort" scope="col">Action</th>
                     </tr>
                 </thead>

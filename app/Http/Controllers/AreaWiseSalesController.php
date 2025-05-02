@@ -22,7 +22,7 @@ class AreaWiseSalesController extends Controller
      */
     public function index(Request $request)
     {
-        $data['page_title'] = 'Area wise sales';
+        $data['page_title'] = 'Area Wise Sales';
         if ($request->ajax()) {
             $data = OrderManagement::query()
                 // ->join('sales_person_details', 'sales_person_details.user_id', '=', 'order_management.salesman_id')
@@ -68,7 +68,7 @@ class AreaWiseSalesController extends Controller
      */
     public function show(Request $request, $city_id)
     {
-        $data['page_title'] = 'Areawise Sales';
+        $data['page_title'] = 'Area Wise Sales';
         $data['city_id']    = $city_id;
         $data['city_name']  = CityManagement::where('id', $city_id)->first()->city_name ?? '';
         $data['products']   = Product::where('status', 1)->get();
