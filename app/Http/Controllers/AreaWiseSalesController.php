@@ -68,7 +68,7 @@ class AreaWiseSalesController extends Controller
      */
     public function show(Request $request, $city_id)
     {
-        $data['page_title'] = 'Area Wise Sales';
+        $data['page_title'] = 'Area-wise Sales';
         $data['city_id']    = $city_id;
         $data['city_name']  = CityManagement::where('id', $city_id)->first()->city_name ?? '';
         $data['products']   = Product::where('status', 1)->get();
