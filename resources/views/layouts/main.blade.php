@@ -239,16 +239,18 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="lead-reports.html" class="btn btn-chart-pie">
                                     <i class="ti ti-chart-pie"></i>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
                     <!-- /Nav List -->
+
+                    
                     <!-- Notifications -->
-                    <li class="nav-item dropdown nav-item-box">
+                    {{-- <li class="nav-item dropdown nav-item-box">
                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="dropdown">
                             <i class="ti ti-bell"></i>
                             <span class="badge rounded-pill">13</span>
@@ -322,8 +324,11 @@
                                 <a href="javascript:void(0);" class="clear-link">Clear all</a>
                             </div>
                         </div>
-                    </li>
+                    </li> --}}
                     <!-- /Notifications -->
+
+
+
                     <!-- Profile Dropdown -->
                     <li class="nav-item dropdown has-arrow main-drop">
                         <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">

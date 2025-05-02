@@ -117,6 +117,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
 
     /* Area-wise Sales */
     Route::resource('area_wise_sales', AreaWiseSalesController::class)->except(['show']);
+    Route::get('area_wise_sales/order_show/{id}', [AreaWiseSalesController::class, 'order_show'])->name('area_wise_sales.order_show');
     Route::get('area_wise_sales/show/{city_id}', [AreaWiseSalesController::class, 'show'])->name('area_wise_sales.show');
 
 

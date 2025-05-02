@@ -83,7 +83,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Phone Number <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('phone_number') is-invalid @enderror"
-                                name="phone_number" value="{{ old('phone_number') }}" placeholder="Phone Number">
+                                name="phone_number" value="{{ old('phone_number') }}" placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                             @error('phone_number')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -220,7 +220,7 @@
                                 <option value="">Select state</option>
                                 @foreach ($states as $state)
                                     <option value="{{ $state->id }}"
-                                        {{ old('state_id') == $state->id ? 'selected' : '' }}>{{ $state->state_name }}
+                                        {{-- old('state_id') == $state->id ? 'selected' : '' --}}>{{ $state->state_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -305,7 +305,7 @@
                         $('#cityDropdown').empty().append(
                             '<option value="">Select City</option>');
                         $.each(data, function(key, city) {
-                            $('#cityDropdown').append('<option value="' + city.id +
+                            $('#cityDropdown').append('<option value=" old . ' + city.id +
                                 '">' + city.city_name + '</option>');
                         });
                     }

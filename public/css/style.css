@@ -44241,3 +44241,97 @@ table.table.table-bordered.payment-summary-table td {
     color: #000;
     font-size: 14px;
 }
+
+
+/* 02-05-25 */
+.order-form-cls {
+    text-align: center;
+}
+
+.order-form-cls label {
+    font-weight: 600;
+}
+
+.order-form-cls .form-control-plaintext,
+.table-data-cls .form-control-plaintext,
+.gstsec .form-control-plaintext {
+    font-size: 15px;
+    color: #424848 !important;
+    margin-bottom: 0;
+}
+
+.order-form-cls .mb-3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* Style the table */
+.table-view th,
+.table-view td {
+    vertical-align: middle;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+}
+
+.table-view thead {
+    background-color: #FAFAFA;
+    color: #171724;
+}
+
+table.table.table-view.addnewfield {
+    border: none;
+}
+
+/* .table-view tbody tr:nth-child(even) {
+    background-color: #fafafa;
+} */
+
+/* .table-view tbody td {
+    border-top: 1px solid #eaeaea;
+} */
+
+/* Style the totals section */
+.gstsec .totalsec {
+    max-width: 240px;
+    margin-left: auto;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.gstsec .totalsec label {
+    font-weight: 600;
+    display: inline-block;
+    width: 70%;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.gstsec .totalsec p {
+    display: inline-block;
+    width: auto;
+    margin-bottom: 0;
+    margin-left: 14px;
+    text-align: right;
+}
+
+/* Add a border-top for the grand total */
+.gstsec .totalsec .row:last-child {
+    border-top: 2px solid #ddd;
+    padding-top: 10px;
+    margin-top: 5px;
+}
+
+.price-cls-new {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+table.table.table-view.addnewfield th {
+    background-color: #FAFAFA;
+    color: #171724; border-color: #e8e8e8
+}
+
+table.table.table-view.addnewfield td {
+    border-color: #e8e8e8
+}

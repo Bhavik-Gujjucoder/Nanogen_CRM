@@ -58,7 +58,7 @@ class SalesPersonController extends Controller
                         ? asset("storage/profile_pictures/" . $user->profile_picture)
                         : asset("images/default-user.png");
                     $name = $row->first_name . ' ' . $row->last_name;
-                    
+
                     if ($user) {
                         return '<a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                                     <img class="" src="' . $profilePic . '" alt="User Image">
@@ -75,8 +75,8 @@ class SalesPersonController extends Controller
                 ->filterColumn('first_name', function ($query, $keyword) {
                     $query->where(function ($q) use ($keyword) {
                         $q->where('first_name', 'like', "%{$keyword}%")
-                          ->orWhere('last_name', 'like', "%{$keyword}%")
-                          ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
+                            ->orWhere('last_name', 'like', "%{$keyword}%")
+                            ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
                     });
                 })
                 ->rawColumns(['checkbox', 'action', 'first_name'])
@@ -98,7 +98,7 @@ class SalesPersonController extends Controller
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();
 
-        $latest_employee_id = SalesPersonDetail::withTrashed()->max(DB::raw("CAST(SUBSTRING(employee_id, 3) AS UNSIGNED)"));
+        $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
         $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
         $data['employeeId'] = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
@@ -158,18 +158,22 @@ class SalesPersonController extends Controller
                 $user->profile_picture = $filename;
             }
 
-            $user->name      = $request->first_name . ' ' . $request->last_name;
-            $user->email     = $request->email;
-            $user->phone_no  = $request->phone_number;
-            $user->password  = Hash::make($request->password);
+            $user->name     = $request->first_name . ' ' . $request->last_name;
+            $user->email    = $request->email;
+            $user->phone_no = $request->phone_number;
+            $user->password = Hash::make($request->password);
             $user->save();
+
+            $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
+            $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
+            $employee_id        = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
             /* Store into sales_person_details table */
             $salesDetail = new SalesPersonDetail();
             $salesDetail->first_name           = $request->first_name;
             $salesDetail->last_name            = $request->last_name;
             $salesDetail->user_id              = $user->id;
-            $salesDetail->employee_id          = $request->employee_id;
+            $salesDetail->employee_id          = $employee_id;
             $salesDetail->department_id        = $request->department_id;
             $salesDetail->position_id          = $request->position_id;
             $salesDetail->reporting_manager_id = $request->reporting_manager_id;
@@ -180,7 +184,6 @@ class SalesPersonController extends Controller
             $salesDetail->postal_code          = $request->postal_code;
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
-
 
             $user->assignRole('sales');
             DB::commit();

@@ -95,7 +95,7 @@
                             <label class="col-form-label">Phone Number <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('phone_number') is-invalid @enderror"
                                 name="phone_number" value="{{ old('phone_number', $detail->user->phone_no) }}"
-                                placeholder="Phone Number">
+                                placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                             @error('phone_number')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\CityManagement;
 use App\Models\OrderManagement;
 use Yajra\DataTables\DataTables;
+use App\Models\SalesPersonDetail;
 use Illuminate\Support\Facades\DB;
+use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\CityManagement;
-use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
 class AreaWiseSalesController extends Controller
@@ -21,7 +23,6 @@ class AreaWiseSalesController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Area wise sales';
-
         if ($request->ajax()) {
             $data = OrderManagement::query()
                 // ->join('sales_person_details', 'sales_person_details.user_id', '=', 'order_management.salesman_id')
@@ -68,13 +69,12 @@ class AreaWiseSalesController extends Controller
     public function show(Request $request, $city_id)
     {
         $data['page_title'] = 'Areawise Sales';
-        $data['city_id'] = $city_id;
-        $data['city_name'] = CityManagement::where('id', $city_id)->first()->city_name ?? '';
-        $data['products'] = Product::where('status', 1)->get();
+        $data['city_id']    = $city_id;
+        $data['city_name']  = CityManagement::where('id', $city_id)->first()->city_name ?? '';
+        $data['products']   = Product::where('status', 1)->get();
         $data['categories'] = Category::where('status', 1)->get();
-        // $data['records'] = OrderManagement::where('sales_person_id');
-        if ($request->ajax()) {
 
+        if ($request->ajax()) {
             // $data = OrderManagement::with('sales_person_detail')
             // ->whereHas('sales_person_detail', function($q) use ($city_id) {
             //     $q->where('city_id', $city_id);
@@ -95,12 +95,15 @@ class AreaWiseSalesController extends Controller
                     });
                 });
 
-
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('order_date', function ($row) {
-                    // return $row->order_date->format('d-m-Y');
-                    return Carbon::parse($row->order_date)->format('d M Y');
+                ->editColumn('unique_order_id', function ($row) {
+                    $order_id = $row->unique_order_id;
+                    return '<a href="' . route('area_wise_sales.order_show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
+                                <i class="ti ti-eye #1ecbe2"></i>  ' . $order_id . '</a>';
+
+                    // '. route('order_management.edit', $row->id) .'
+
                 })
                 ->editColumn('dd_id', function ($row) {
                     if ($row->distributors_dealers) {
@@ -115,27 +118,17 @@ class AreaWiseSalesController extends Controller
                     }
                     return '-';
                 })
-
                 ->addColumn('product_qty', function ($row) {
                     return $row->products->map(function ($orderProduct) {
                         return $orderProduct->product->product_name . ' (' . $orderProduct->qty . ')';
                     })->implode('<br> ');
                 })
-
+                ->editColumn('order_date', function ($row) {
+                    return Carbon::parse($row->order_date)->format('d M Y');
+                })
                 ->editColumn('status', function ($row) {
                     return $row->statusBadge();
                 })
-                // ->filterColumn('order_status', function ($query, $keyword) {
-                //     $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
-                //     // Find the matching status key (case-insensitive)
-                //     foreach ($statuses as $label => $value) {
-                //         if (stripos($label, $keyword) != false) {
-                //             return $query->where('status', $value);
-                //         }
-                //     }
-                //     // If not matched, prevent any result
-                //     return $query->whereRaw('0 = 1');
-                // })
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributors_dealers', function ($q) use ($keyword) {
                         $q->where('applicant_name', 'like', "%{$keyword}%")
@@ -155,22 +148,28 @@ class AreaWiseSalesController extends Controller
                 ->filterColumn('order_date', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
                 })
-
-
-
-                // ->editColumn('city_name', function ($row) {
-                //     return $row->sales_person_detail->city->city_name ?? '-'; //Get user roles
-                // })
-                // ->editColumn('amount', function ($row) {
-                //     return $row->grand_total; //Get user roles
-                // })
-                // ->filterColumn('city_name', function($query, $keyword) {
-                //             $query->where('city_name', 'like', "%$keyword%");
-                // })
-                ->rawColumns(['status', 'product_qty'])
+                ->rawColumns(['unique_order_id', 'status', 'product_qty'])
                 ->make(true);
         }
 
         return view('admin.area_wise_sales.show', $data);
+    }
+
+
+    public function order_show($id)
+    {
+        try {
+            $data['order'] = OrderManagement::findOrFail($id);
+           
+            $html = view('admin.area_wise_sales.order_show', $data)->render(); // Assuming your modal HTML is in order.modal view.
+    
+            return response()->json([
+                'html' => $html,  // Return the modal HTML as a string
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['error' => 'Something went wrong!'], 500); 
+            // return redirect()->back()->with('error', 'Something is wrong!!');
+        }
     }
 }

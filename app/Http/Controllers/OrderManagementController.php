@@ -158,7 +158,7 @@ class OrderManagementController extends Controller
         $data['distributor_dealers'] = DistributorsDealers::get();
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
 
-        $latest_order_id = OrderManagement::max(DB::raw("CAST(SUBSTRING(unique_order_id, 4) AS UNSIGNED)"));
+        $latest_order_id = OrderManagement::withTrashed()->max('id');
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
 
@@ -170,8 +170,8 @@ class OrderManagementController extends Controller
      */
     public function store(Request $request)
     {
+        $latest_order_id = OrderManagement::withTrashed()->max('id');
         $order = OrderManagement::create($request->only([
-            'unique_order_id',
             'dd_id',
             'order_date',
             'mobile_no',
@@ -185,7 +185,13 @@ class OrderManagementController extends Controller
             'gst_amount',
             'grand_total'
         ]));
+        
+        $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
+        $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
+        $order->unique_order_id = $data['unique_order_id'];
         $order->save();
+
+
 
         if ($request->has(['product_id', 'price', 'qty', 'packing_size_id', 'total'])) {
             $product_id = $request->input('product_id');

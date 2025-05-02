@@ -139,12 +139,14 @@
                                     </select>
                                 </td>
                                 <td data-label="Packing Size">
+                                    {{-- {{dd($p->variation_option->id)}} --}}
+                                   
                                     <select name="packing_size_id[]"
                                         class="form-control form-select product-field packing_size_field search-dropdown">
                                         {{-- <option selected>Select</option> --}}
                                         @foreach (getProductVariationOptions($p->product_id) as $item)
                                             <option value="{{ $item->variation_option_value->id ?? '' }}"
-                                                {{ $p->variation_option ? ($p->variation_option->id == $item->id ? 'selected' : '') : '' }}>
+                                                {{ $p->variation_option ? ($p->variation_option->id == $item->variation_option_id ? 'selected' : '') : '' }}>
                                                 {{ $item->variation_option_value->value ?? '' }}</option>
                                         @endforeach
 

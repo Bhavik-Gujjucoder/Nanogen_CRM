@@ -50,6 +50,24 @@
         </div>
     </div>
 </div>
+
+<!-- Order Popup Modal Structure -->
+<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupModalLabel">Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="popupModalContent">
+                <!-- Content will be loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('script')
 <script>
@@ -130,6 +148,85 @@
     /***** Search Box *****/
     $('#customSearch').on('keyup', function() {
         area_wise.search(this.value).draw();
+    });
+
+
+
+    /*** Order Popup Model ***/
+    // $(document).on('click', '.open-popup-model', function(e) {
+    //     e.preventDefault();
+    //     var url = $(this).attr('href');
+    //     var dataId = $(this).data('id');
+
+    //     // Optional: You can use data-id for extra logic
+    //     // Load content into the modal via AJAX
+    //     $('#popupModalContent').html('Loading...');
+
+    //     $.ajax({
+    //         url: url,
+    //         type: 'GET',
+    //         success: function(data) {
+    //             $('#popupModalContent').html(data);
+    //             $('#popupModal').modal('show');
+    //         },
+    //         error: function() {
+    //             $('#popupModalContent').html('<p class="text-danger">Failed to load content.</p>');
+    //         }
+    //     });
+    // });
+
+    $(document).on('click', '.open-popup-model', function(e) {
+        e.preventDefault();
+        // var url = $(this).attr('href'); // URL of the order detail route
+        
+        let order_id = $(this).data('id'); // Data ID passed from the anchor tag
+        let url = order_id ? '{{ route('area_wise_sales.order_show', ':id') }}'.replace(':id', order_id) : "";
+
+        // Show SweetAlert2 loading spinner while fetching the data
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we load the order details.',
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading(); // Show loading spinner
+            }
+        });
+
+        // Fetch the order data via AJAX
+        $.ajax({
+            url: url, // Use the URL from the 'href' attribute
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    Swal.fire({
+                        title: 'Order Details',
+                        html: response.html,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        width: '80%',
+                        heightAuto: true
+                    });
+                } else {
+                    console.error('No HTML returned:', response);
+                    Swal.fire('Error', 'No content received from server.', 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX error:', xhr.responseText);
+                Swal.fire('Error', 'Could not load order details.', 'error');
+            }
+            // error: function() {
+            //     // Error handling
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Oops...',
+            //         text: 'Failed to load order details.'
+            //     });
+            // }
+        });
+
+
+
     });
 </script>
 @endsection
