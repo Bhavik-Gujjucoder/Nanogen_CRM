@@ -44245,7 +44245,7 @@ table.table.table-bordered.payment-summary-table td {
 
 /* 02-05-25 */
 .order-form-cls {
-    text-align: center;
+    text-align: center;padding: 0 15px;
 }
 
 .order-form-cls label {

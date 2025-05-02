@@ -50,7 +50,7 @@ class ResetPasswordNotification extends Notification
 
         return (new MailMessage)
             ->subject('Reset Your Password')
-            ->view('emails.custom_reset', ['actionUrl' => $url]);
+            ->view('email.custom_reset', ['actionUrl' => $url]);
     }
     /**
      * Get the array representation of the notification.
