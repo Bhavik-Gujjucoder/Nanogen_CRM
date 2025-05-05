@@ -305,7 +305,7 @@
                         $('#cityDropdown').empty().append(
                             '<option value="">Select City</option>');
                         $.each(data, function(key, city) {
-                            $('#cityDropdown').append('<option value=" old . ' + city.id +
+                            $('#cityDropdown').append('<option value="' + city.id +
                                 '">' + city.city_name + '</option>');
                         });
                     }

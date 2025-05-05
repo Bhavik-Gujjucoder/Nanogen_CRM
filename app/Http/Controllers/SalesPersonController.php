@@ -135,7 +135,7 @@ class SalesPersonController extends Controller
             'reporting_manager_id' => 'required',
             'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
-            'city_id'              => 'required|exists:city_management,id',
+            // 'city_id'              => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
@@ -143,14 +143,14 @@ class SalesPersonController extends Controller
             'department_id.required'        => 'The department field is required.',
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',
-            'city_id.required'              => 'The city field is required.',
+            // 'city_id.required'              => 'The city field is required.',
             'state_id.required'             => 'The state field is required.',
             'country_id.required'           => 'The country field is required.',
         ]);
 
         DB::beginTransaction();
         try {
-
+            // dd($request->all());
             $user = new User();
 
             if ($request->hasFile('profile_picture')) {
@@ -193,9 +193,9 @@ class SalesPersonController extends Controller
                 'email' => $request->email,
                 'password' => $request->password,
             ];
-            if($request->email){
-                Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
-            }
+            // if($request->email){
+            //     Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
+            // }
             $user->assignRole('sales');
             DB::commit();
             return redirect()->route('sales_person.index')->with('success', 'Sales person created successfully!');

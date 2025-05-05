@@ -27,10 +27,10 @@
                     aria-controls="Distributors-Dealers" aria-selected="false">Distributors and
                     Dealers</a>
             </li>
-            {{-- <li class="nav-item" role="presentation">
+            <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'o_form' ? 'active' : '' }}" id="o_form_tab" data-bs-toggle="tab"
                     href="#o_form" role="tab" aria-controls="o_form" aria-selected="false">O Form</a>
-            </li> --}}
+            </li>
         </ul>
 
         <!--C O M P A N Y   D E T A I L S   T A B-->
