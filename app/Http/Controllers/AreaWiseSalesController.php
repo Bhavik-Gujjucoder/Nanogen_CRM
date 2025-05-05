@@ -74,6 +74,11 @@ class AreaWiseSalesController extends Controller
         $data['products']   = Product::where('status', 1)->get();
         $data['categories'] = Category::where('status', 1)->get();
 
+        $city_wise_total_sales = OrderManagement::whereHas('distributors_dealers', function ($q) use ($city_id) {
+            $q->where('city_id', $city_id);
+        });
+        $data['city_wise_total_sales'] = (clone $city_wise_total_sales)->sum('grand_total');
+        
         if ($request->ajax()) {
             // $data = OrderManagement::with('sales_person_detail')
             // ->whereHas('sales_person_detail', function($q) use ($city_id) {
@@ -94,6 +99,8 @@ class AreaWiseSalesController extends Controller
                         $q->where('categories.id', $request->category_id);
                     });
                 });
+
+            
 
             return DataTables::of($data)
                 ->addIndexColumn()
