@@ -27,6 +27,10 @@
                     aria-controls="Distributors-Dealers" aria-selected="false">Distributors and
                     Dealers</a>
             </li>
+            {{-- <li class="nav-item" role="presentation">
+                <a class="nav-link {{ $activeTab == 'o_form' ? 'active' : '' }}" id="o_form_tab" data-bs-toggle="tab"
+                    href="#o_form" role="tab" aria-controls="o_form" aria-selected="false">O Form</a>
+            </li> --}}
         </ul>
 
         <!--C O M P A N Y   D E T A I L S   T A B-->
@@ -124,10 +128,8 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="col-form-label">GST(%) <span class="text-danger">*</span></label>
-                                <input type="number"
-                                    class="form-control @error('gst') is-invalid @enderror"
-                                    name="gst"
-                                    value="{{ old('gst', getSetting('gst')) }}">
+                                <input type="number" class="form-control @error('gst') is-invalid @enderror"
+                                    name="gst" value="{{ old('gst', getSetting('gst')) }}">
                                 @error('gst')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -141,10 +143,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-
-        <!--E M A I L   D E T A I L S   T A B-->
-        <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade {{ $activeTab == 'email-detail' ? 'show active' : '' }}" id="email-detail"
                 role="tabpanel" aria-labelledby="EmailDetails">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST"
@@ -179,10 +177,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-
-        <!--D I S T R I B U T O R S   &   D E A L E R S   T A B-->
-        <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade {{ $activeTab == 'distributors-dealers' ? 'show active' : '' }}"
                 id="Distributors-Dealers" role="tabpanel" aria-labelledby="DistributorsDealers">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST"
@@ -199,10 +193,14 @@
                                     placeholder="0" name="distributor_credit_limit"
                                     value="{{ old('distributor_credit_limit', getSetting('distributor_credit_limit')) }}">
                                 <div class="form-input-icon select-2-box">
-                                    <select class="select2" id="distributor_cr_limit_type" name="distributor_cr_limit_type"
-                                        aria-hidden="true" style="width:100%">
-                                        <option value="day" {{ old('distributor_cr_limit_type', getSetting('distributor_cr_limit_type')) == 'day' ? 'selected': '' }} >Days</option>
-                                        <option value="month" {{ old('distributor_cr_limit_type', getSetting('distributor_cr_limit_type')) == 'month' ? 'selected': '' }}>Month</option>
+                                    <select class="select2" id="distributor_cr_limit_type"
+                                        name="distributor_cr_limit_type" aria-hidden="true" style="width:100%">
+                                        <option value="day"
+                                            {{ old('distributor_cr_limit_type', getSetting('distributor_cr_limit_type')) == 'day' ? 'selected' : '' }}>
+                                            Days</option>
+                                        <option value="month"
+                                            {{ old('distributor_cr_limit_type', getSetting('distributor_cr_limit_type')) == 'month' ? 'selected' : '' }}>
+                                            Month</option>
                                     </select>
                                 </div>
                                 @error('distributor_credit_limit')
@@ -210,20 +208,26 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="col-md-5 mb-3">
-                            <label class="col-form-label">Dealer Payment Reminder <span class="text-danger">*</span></label>
+                            <label class="col-form-label">Dealer Payment Reminder <span
+                                    class="text-danger">*</span></label>
                             <div class="form-input-icon input-group gropinginput box-bordernone">
                                 <input type="number"
                                     class="form-control @error('dealer_credit_limit') is-invalid @enderror"
                                     name="dealer_credit_limit" placeholder="0"
                                     value="{{ old('dealer_credit_limit', getSetting('dealer_credit_limit')) }}">
-                                    <div class="form-input-icon select-2-box">
-                                        <select class="select2" id="dealer_cr_limit_type" name="dealer_cr_limit_type" aria-hidden="true" style="width:100%">
-                                            <option value="day" {{ old('dealer_cr_limit_type', getSetting('dealer_cr_limit_type')) == 'day' ? 'selected': '' }}>Days</option>
-                                            <option value="month" {{ old('dealer_cr_limit_type', getSetting('dealer_cr_limit_type')) == 'month' ? 'selected': '' }}>Month</option>
-                                        </select>
-                                    </div>
+                                <div class="form-input-icon select-2-box">
+                                    <select class="select2" id="dealer_cr_limit_type" name="dealer_cr_limit_type"
+                                        aria-hidden="true" style="width:100%">
+                                        <option value="day"
+                                            {{ old('dealer_cr_limit_type', getSetting('dealer_cr_limit_type')) == 'day' ? 'selected' : '' }}>
+                                            Days</option>
+                                        <option value="month"
+                                            {{ old('dealer_cr_limit_type', getSetting('dealer_cr_limit_type')) == 'month' ? 'selected' : '' }}>
+                                            Month</option>
+                                    </select>
+                                </div>
                                 @error('dealer_credit_limit')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -235,10 +239,44 @@
                     </div>
                 </form>
             </div>
+            <div class="tab-pane fade {{ $activeTab == 'o_form' ? 'show active' : '' }}" id="o_form"
+                role="tabpanel" aria-labelledby="o_form">
+                <form action="{{ route('admin.generalsetting.replaceInWord') }}" method="POST"
+                    enctype="multipart/form-data" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="form_type" value="o_form">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="pdf_file" class="form-label">Upload PDF:</label>
+                        <input type="file" name="pdf_file" id="pdf_file" class="form-control" >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">New Name:</label>
+                        <input type="text" name="name" id="name" class="form-control"
+                            placeholder="e.g. John Doe" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Replace Name</button>
+                </form>
+            </div>
+
         </div>
 
+        <!--E M A I L   D E T A I L S   T A B-->
+        {{-- <div class="tab-content mt-3" id="myTabContent">
+
+        </div> --}}
+
+        <!--D I S T R I B U T O R S   &   D E A L E R S   T A B-->
+        {{-- <div class="tab-content mt-3" id="myTabContent">
+          
+        </div> --}}
+
+        <!-- O  F o r m-->
 
 
+        <!-- E N D   F o r m-->
     </div>
 </div>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\GeneralSetting;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class GeneralSettingController extends Controller
 {
@@ -75,7 +76,36 @@ class GeneralSettingController extends Controller
                     ['value' => $value]      /* Update or set value */
                 );
             }
+
+         
             return redirect()->back()->withSuccess('Setting update successfully.');
         }
     }
+
+    public function replaceInWord(Request $request)
+    {
+        // $request->validate([
+        //     'name' => 'required|string',
+        //     'company' => 'required|string',
+        // ]);
+
+        // Load the template
+        $templatePath = storage_path('app\public\test.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        // $variables = $templateProcessor->getVariables();
+        // dd($variables);
+        
+        // Replace placeholders
+        $templateProcessor->setValue('name', $request->name);
+        $templateProcessor->setValue('test', 'Gujjucoder');
+
+        // Save new file
+        $fileName = 'customized_' . time() . '.docx';
+        $savePath = storage_path("app/public/{$fileName}");
+        $templateProcessor->saveAs($savePath);
+
+        return response()->download($savePath);
+    }
+
 }

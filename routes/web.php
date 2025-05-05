@@ -147,6 +147,8 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
         Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
         Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
+        Route::post('/replaceInWord', [GeneralSettingController::class, 'replaceInWord'])->name('.replaceInWord');
+        
     });
 
 

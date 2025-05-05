@@ -38,7 +38,7 @@
                                     class="checkmarks"></span>
                             </label>
                         </th>
-                        <th class="no-sort" scope="col"></th>
+                        <th scope="col"></th> <!-- class="no-sort" -->
                         <th scope="col">Name</th>
                         <th scope="col">Status</th>
                         <th scope="col">Action</th>
@@ -114,7 +114,7 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [[2, 'desc']], // Order by 'id' in descending order
         ajax: "{{ route('grade.index') }}",
         columns: [
             { data: 'id', name: 'id', visible: false, searchable: false },
@@ -126,7 +126,7 @@
             },
             {
                 data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
+                name: 'DT_RowIndex', 
                 orderable: false,
                 searchable: false
             },

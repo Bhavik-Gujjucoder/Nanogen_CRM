@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\DB;
 use App\Models\SalesPersonPosition;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Models\SalesPersonDepartment;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class SalesPersonController extends Controller
 {
@@ -119,7 +121,7 @@ class SalesPersonController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+       
         $request->validate([
             'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
             'first_name'           => 'required|string|max:255',
@@ -185,6 +187,15 @@ class SalesPersonController extends Controller
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
 
+
+            $data = [
+                'name' => $request->first_name . ' ' . $request->last_name,
+                'email' => $request->email,
+                'password' => $request->password,
+            ];
+            if($request->email){
+                Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
+            }
             $user->assignRole('sales');
             DB::commit();
             return redirect()->route('sales_person.index')->with('success', 'Sales person created successfully!');
