@@ -13,7 +13,7 @@ class CategoryController extends Controller
     {
         $data['page_title'] = 'Product Category';
         // $data['category'] = Category::where('is_parent', 1)->orWhereHas('children')->get();
-        $data['category'] = Category::where('is_parent', 1)->get()->all();
+        $data['category'] = Category::where('is_parent', 1)->where('status', 1)->get()->all();
         // dd($data['category']->pluck('category_name')->toArray());
 
         if ($request->ajax()) {
