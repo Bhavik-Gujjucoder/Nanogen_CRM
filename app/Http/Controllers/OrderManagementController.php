@@ -234,16 +234,8 @@ class OrderManagementController extends Controller
         //nanogen@gmail.com
         if(getSetting('company_email'))
         {
-            $order->email_for = 'admin';
             Mail::send('email.order_email.order_create', compact('order'), fn($message) => $message->to(getSetting('company_email'))->subject('Order Created'));
         }
-        // else
-        // {
-        //     $order->email_for = 'distributor';
-        //     $order->dealer_name = $order->distributors_dealers->applicant_name;
-            
-        //     Mail::send('email.order_email.order_create', compact('order'), fn($message) => $message->to(getSetting('company_email'))->subject('Order Created'));
-        // }
         return redirect()->route('order_management.index')->with('success', 'Order created successfully.');
     }
 
