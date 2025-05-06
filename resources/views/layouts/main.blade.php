@@ -86,20 +86,20 @@
                                         <div class="col-md-6">
                                             <ul class="menu-list">
                                                 <li>
-                                                    <a href="state-management.html">
+                                                    <a href="{{ route('state.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-green">
                                                                 <i class="ti ti-map-pin-pin"></i>
                                                             </span>
                                                             <div class="menu-details-content">
-                                                                <p>State Management</p>
-                                                                <span>Add New State Management</span>
+                                                                    <p>State Management</p>
+                                                                    <span>Add New State Management</span>
                                                             </div>
                                                         </div>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="city-management.html">
+                                                    <a href="{{ route('city.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-violet">
                                                                 <i class="ti ti-map-pin-pin"></i>
@@ -111,21 +111,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
-                                                <!--  <li>
-                                    <a href="contacts.html">
-                                        <div class="menu-details">
-                                        <span class="menu-list-icon bg-pink">
-                                        <i class="ti ti-steam"></i>
-                                        </span>
-                                        <div class="menu-details-content">
-                                            <p>Contacts</p>
-                                            <span>Add New contacts</span>
-                                        </div>
-                                        </div>
-                                    </a>
-                                </li> -->
                                                 <li>
-                                                    <a href="sales-reports.html">
+                                                    <a href="{{ route('sales_person.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-info">
                                                                 <i class="ti ti-file-invoice"></i>
@@ -138,7 +125,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="product-catelog.html">
+                                                    <a href="{{ route('product.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-danger">
                                                                 <i class="ti ti-atom-2"></i>
@@ -151,7 +138,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="pricing-product-variation.html">
+                                                    <a href="{{ route('variation.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-info">
                                                                 <i class="ti ti-medal"></i>
@@ -170,7 +157,7 @@
                                         <div class="col-md-6">
                                             <ul class="menu-list">
                                                 <li>
-                                                    <a href="distributors.html">
+                                                    <a href="{{ route('distributors_dealers.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-secondary">
                                                                 <i class="ti ti-chart-arcs"></i>
@@ -183,7 +170,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="dealers.html">
+                                                    <a href="{{ route('distributors_dealers.index', 1) }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-tertiary">
                                                                 <i class="ti ti-building-community"></i>
@@ -196,7 +183,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="roles-permissions.html">
+                                                    <a href="#">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-success">
                                                                 <i class="ti ti-navigation-cog"></i>
@@ -209,7 +196,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="manage-users.html">
+                                                    <a href="{{ route('users.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-purple">
                                                                 <i class="ti ti-users"></i>
@@ -222,7 +209,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="product-category.html">
+                                                    <a href="{{ route('category.index') }}">
                                                         <div class="menu-details">
                                                             <span class="menu-list-icon bg-info">
                                                                 <i class="ti ti-medal"></i>
