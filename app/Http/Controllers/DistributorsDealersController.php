@@ -334,7 +334,7 @@ class DistributorsDealersController extends Controller
         // Load the template
         // $templatePath = storage_path('app\public\NANOGEN_O_FORM.docx');
 
-        $templatePath = storage_path('app/public/O-FORM/NANOGEN-O-FORM.docx');
+        $templatePath = storage_path('app/public/O-Form/NANOGEN-O-FORM.docx');
 
         $templateProcessor = new TemplateProcessor($templatePath);
 
