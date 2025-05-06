@@ -33,8 +33,8 @@
             </li>
         </ul>
 
-        <!--C O M P A N Y   D E T A I L S   T A B-->
         <div class="tab-content mt-3" id="myTabContent">
+            <!--C O M P A N Y   D E T A I L S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'company-detail' ? 'show active' : '' }}" id="company-details"
                 role="tabpanel" aria-labelledby="CompanyDetails">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST" enctype="multipart/form-data">
@@ -143,6 +143,8 @@
                     </div>
                 </form>
             </div>
+
+            <!--E M A I L   D E T A I L S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'email-detail' ? 'show active' : '' }}" id="email-detail"
                 role="tabpanel" aria-labelledby="EmailDetails">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST"
@@ -177,6 +179,8 @@
                     </div>
                 </form>
             </div>
+
+             <!--D I S T R I B U T O R S   &   D E A L E R S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'distributors-dealers' ? 'show active' : '' }}"
                 id="Distributors-Dealers" role="tabpanel" aria-labelledby="DistributorsDealers">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST"
@@ -239,6 +243,8 @@
                     </div>
                 </form>
             </div>
+
+             <!-- O - F O R M-->
             <div class="tab-pane fade {{ $activeTab == 'o_form' ? 'show active' : '' }}" id="o_form"
                 role="tabpanel" aria-labelledby="o_form">
                 <form action="{{ route('admin.generalsetting.replaceInWord') }}" method="POST"
@@ -260,28 +266,11 @@
                     <button type="submit" class="btn btn-primary">Replace Name</button>
                 </form>
             </div>
-
         </div>
-
-        <!--E M A I L   D E T A I L S   T A B-->
-        {{-- <div class="tab-content mt-3" id="myTabContent">
-
-        </div> --}}
-
-        <!--D I S T R I B U T O R S   &   D E A L E R S   T A B-->
-        {{-- <div class="tab-content mt-3" id="myTabContent">
-          
-        </div> --}}
-
-        <!-- O  F o r m-->
-
-
-        <!-- E N D   F o r m-->
     </div>
 </div>
 
 @endsection
-
 @section('script')
 <script type="text/javascript">
     $(document).ready(function() {

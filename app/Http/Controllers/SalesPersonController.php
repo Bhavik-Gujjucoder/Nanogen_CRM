@@ -189,13 +189,13 @@ class SalesPersonController extends Controller
 
 
             $data = [
-                'name' => $request->first_name . ' ' . $request->last_name,
+                'name'  => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
                 'password' => $request->password,
             ];
-            // if($request->email){
-            //     Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
-            // }
+            if($request->email){
+                Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
+            }
             $user->assignRole('sales');
             DB::commit();
             return redirect()->route('sales_person.index')->with('success', 'Sales person created successfully!');
@@ -217,10 +217,8 @@ class SalesPersonController extends Controller
         $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
         $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();
-
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
-
 
         return view('admin.sales_person.edit', $data);
     }
