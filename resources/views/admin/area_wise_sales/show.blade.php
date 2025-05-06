@@ -136,11 +136,7 @@
                 searchable: true,
                 orderable: true,
             },
-
-
-
         ],
-
     });
 
     function applyFilter() {
@@ -154,28 +150,6 @@
 
 
     /*** Order Popup Model ***/
-    // $(document).on('click', '.open-popup-model', function(e) {
-    //     e.preventDefault();
-    //     var url = $(this).attr('href');
-    //     var dataId = $(this).data('id');
-
-    //     // Optional: You can use data-id for extra logic
-    //     // Load content into the modal via AJAX
-    //     $('#popupModalContent').html('Loading...');
-
-    //     $.ajax({
-    //         url: url,
-    //         type: 'GET',
-    //         success: function(data) {
-    //             $('#popupModalContent').html(data);
-    //             $('#popupModal').modal('show');
-    //         },
-    //         error: function() {
-    //             $('#popupModalContent').html('<p class="text-danger">Failed to load content.</p>');
-    //         }
-    //     });
-    // });
-
     $(document).on('click', '.open-popup-model', function(e) {
         e.preventDefault();
         // var url = $(this).attr('href'); // URL of the order detail route
@@ -216,14 +190,6 @@
                 console.error('AJAX error:', xhr.responseText);
                 Swal.fire('Error', 'Could not load order details.', 'error');
             }
-            // error: function() {
-            //     // Error handling
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: 'Failed to load order details.'
-            //     });
-            // }
         });
 
 

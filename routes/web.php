@@ -126,6 +126,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
     // Route::get('/distributors_dealers/payment_history/{id}', [DistributorsDealersController::class, 'payment_history'])->name('distributors_dealers.payment_history');
     Route::get('/distributors_dealers/export-price-list/{dealer?}', [DistributorsDealersController::class, 'export_price_list'])->name('distributors_dealers.export_price_list');
+    Route::get('/replaceInWord/{id}/{dealer?}', [DistributorsDealersController::class, 'replaceInWord'])->name('distributors_dealers.replaceInWord');
     Route::delete('/documents_destroy/{id}', [DistributorsDealersController::class, 'documents_destroy'])->name('distributors_dealers.documents_destroy');
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
 
@@ -147,7 +148,7 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
         Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
         Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
-        Route::post('/replaceInWord', [GeneralSettingController::class, 'replaceInWord'])->name('.replaceInWord');
+       
         
     });
 

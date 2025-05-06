@@ -13,7 +13,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <img src="{{asset('images/logo.png')}}" style="margin-right:7px;height: 25px;" />
+                                <img src="https://gujjucoders.com/demo/Nanogen_CRM/public/images/logo.png" style="margin-right:7px;height: 25px;" />
                             </td>
                         </tr>
                     </table>

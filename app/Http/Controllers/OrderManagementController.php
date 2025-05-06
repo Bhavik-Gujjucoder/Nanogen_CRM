@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Models\OrderManagementProduct;
 
 class OrderManagementController extends Controller
@@ -219,6 +220,28 @@ class OrderManagementController extends Controller
             // $order->grand_total = $grand_total;
             $order->status = 1;
             $order->save();
+        }
+
+
+        try {
+            $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
+            
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['error' => 'Something went wrong!'], 500); 
+            // return redirect()->back()->with('error', 'Something is wrong!!');
+        }
+        //nanogen@gmail.com
+        if(getSetting('company_email'))
+        {
+            $order->email_for = 'admin';
+            Mail::send('email.order_email.order_create', compact('order'), fn($message) => $message->to(getSetting('company_email'))->subject('Order Created'));
+        }
+        else
+        {
+            $order->email_for = 'distributor';
+            $order->dealer_name = $order->distributors_dealers->applicant_name;
+            Mail::send('email.order_email.order_create', compact('order'), fn($message) => $message->to(getSetting('company_email'))->subject('Order Created'));
         }
         return redirect()->route('order_management.index')->with('success', 'Order created successfully.');
     }

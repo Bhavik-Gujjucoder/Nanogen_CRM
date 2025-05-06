@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GeneralSetting;
+use App\Models\DistributorsDealers;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -39,16 +40,34 @@ class GeneralSettingController extends Controller
                 'distributor_credit_limit' => 'required',
                 'dealer_credit_limit' => 'required',
             ]);
-        } else{
+        }elseif ($request->form_type == 'o_form'){
+            $request->validate([
+                'o_form_docx_file'  => 'required|file|mimes:docx',
+            ],[
+                'o_form_docx_file.required' => 'The o form docx file is required.'
+            ]);
+        } else{ 
             // 
         }
         
         $data = $request->except('_token');
         $data = $request->except('company_logo');
+        $data = $request->except('o_form_docx_file');
+        
         if (!$data) {
             return redirect()->back()->with('error', 'Request data is empty.');
         }
         else {
+            $data = $request->except(['_token', 'company_logo','form_type']);
+            // dd($data);
+            foreach ($data as $key => $value) {
+                // GeneralSetting::where('key', $key)->update(['value' => $value]);
+                GeneralSetting::updateOrCreate(
+                    ['key' => $key],         /* Search by key */
+                    ['value' => $value]      /* Update or set value */
+                );
+            }
+
             if ($request->hasFile('company_logo')) {
                 $general_setting = GeneralSetting::where('key', 'company_logo')->first();
                 /* Delete old profile picture if exists */
@@ -65,16 +84,22 @@ class GeneralSettingController extends Controller
                 $general_setting->save();
             }
 
-            $data = $request->except(['_token', 'company_logo','form_type']);
-            // dd($data);
-            foreach ($data as $key => $value) {
-                // dd($key);
-                // dd($key->toArray());
-                // GeneralSetting::where('key', $key)->update(['value' => $value]);
-                GeneralSetting::updateOrCreate(
-                    ['key' => $key],         /* Search by key */
-                    ['value' => $value]      /* Update or set value */
-                );
+            if ($request->hasFile('o_form_docx_file')) {
+                $general_setting = GeneralSetting::where('key', 'o_form_docx_file')->first();
+                /* Delete old profile picture if exists */
+                if ($request->o_form_docx_file) {
+                    Storage::disk('public')->delete('O-Form/' . $general_setting->o_form_docx_file);
+                }
+                /* Upload new profile picture */
+                $file = $request->file('o_form_docx_file');
+                // $filename = time() . '_' . $file->getClientOriginalName();
+                $filename = 'NANOGEN-O-FORM.docx';
+
+                $file->storeAs('O-Form', $filename, 'public');  /* Save in storage/app/public/O-Form */
+
+                /* Save new filename in database */
+                $general_setting->value = $filename;
+                $general_setting->save();
             }
 
          
@@ -82,30 +107,6 @@ class GeneralSettingController extends Controller
         }
     }
 
-    public function replaceInWord(Request $request)
-    {
-        // $request->validate([
-        //     'name' => 'required|string',
-        //     'company' => 'required|string',
-        // ]);
-
-        // Load the template
-        $templatePath = storage_path('app\public\test.docx');
-        $templateProcessor = new TemplateProcessor($templatePath);
-
-        // $variables = $templateProcessor->getVariables();
-        // dd($variables);
-        
-        // Replace placeholders
-        $templateProcessor->setValue('name', $request->name);
-        $templateProcessor->setValue('test', 'Gujjucoder');
-
-        // Save new file
-        $fileName = 'customized_' . time() . '.docx';
-        $savePath = storage_path("app/public/{$fileName}");
-        $templateProcessor->saveAs($savePath);
-
-        return response()->download($savePath);
-    }
+   
 
 }

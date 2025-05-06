@@ -193,9 +193,9 @@ class SalesPersonController extends Controller
                 'email' => $request->email,
                 'password' => $request->password,
             ];
-            // if($request->email){
-            //     Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
-            // }
+            if($request->email){
+                Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
+            }
             $user->assignRole('sales');
             DB::commit();
             return redirect()->route('sales_person.index')->with('success', 'Sales person created successfully!');

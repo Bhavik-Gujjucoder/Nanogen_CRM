@@ -44,7 +44,6 @@
                         <div class="col-md-12">
                             <div class="profile-pic-upload">
                                 <div class="profile-pic">
-
                                     @if (getSetting('company_logo') && !empty(getSetting('company_logo')))
                                         <img id="profilePreview"
                                             src="{{ getSetting('company_logo') ? asset('storage/company_logo/' . getSetting('company_logo')) : asset('images/default-user.png') }} "
@@ -52,6 +51,7 @@
                                             height="100%" style="object-fit: contain" alt="Profile Picture">
                                     @endif
                                 </div>
+
                                 <div class="upload-content">
                                     <div class="upload-btn @error('company_logo') is-invalid @enderror">
                                         <input type="file" name="company_logo" accept="image/*">
@@ -124,7 +124,6 @@
                                 @enderror
                             </div>
                         </div> --}}
-
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="col-form-label">GST(%) <span class="text-danger">*</span></label>
@@ -135,11 +134,9 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="d-flex align-items-center justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
-
                     </div>
                 </form>
             </div>
@@ -180,7 +177,7 @@
                 </form>
             </div>
 
-             <!--D I S T R I B U T O R S   &   D E A L E R S   T A B-->
+            <!--D I S T R I B U T O R S   &   D E A L E R S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'distributors-dealers' ? 'show active' : '' }}"
                 id="Distributors-Dealers" role="tabpanel" aria-labelledby="DistributorsDealers">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST"
@@ -244,26 +241,43 @@
                 </form>
             </div>
 
-             <!-- O - F O R M-->
+            <!-- O - F O R M-->
             <div class="tab-pane fade {{ $activeTab == 'o_form' ? 'show active' : '' }}" id="o_form"
                 role="tabpanel" aria-labelledby="o_form">
-                <form action="{{ route('admin.generalsetting.replaceInWord') }}" method="POST"
-                    enctype="multipart/form-data" enctype="multipart/form-data">
+                <form action="{{ route('admin.generalsetting.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="form_type" value="o_form">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="pdf_file" class="form-label">Upload PDF:</label>
-                        <input type="file" name="pdf_file" id="pdf_file" class="form-control" >
+                    <div class="upload-content">
+                        <div class="mb-3 col-md-6">
+                            <label for="docx_file" class="form-label">Upload Docx File</label>
+                            <input type="file" name="o_form_docx_file" id="docx_file"
+                                class="form-control @error('o_form_docx_file') is-invalid @enderror"
+                                accept=".docx">
+
+                            @error('o_form_docx_file')
+                                <div class="invalid-feedback">
+                                    <strong>{{ $message }}</strong>
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="">
+                        {{-- Download Docx File Code --}}
+                        @if (getSetting('o_form_docx_file') && !empty(getSetting('o_form_docx_file')))
+                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}" 
+                                class="btn btn-outline-primary">
+                                <i class="ti ti-download"></i> Download Docx File
+                            </a>
+                        @endif
+
+
+                    </div>
+                    {{-- <button type="submit" class="btn btn-primary">Replace Name</button> --}}
+                    <div class="d-flex align-items-center justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="name" class="form-label">New Name:</label>
-                        <input type="text" name="name" id="name" class="form-control"
-                            placeholder="e.g. John Doe" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Replace Name</button>
                 </form>
             </div>
         </div>

@@ -14,16 +14,16 @@
                 <td style="padding:5px 20px;background-color: #f4faf4;display: flex;flex-direction: row-reverse;">
                     <table width="100%" cellpadding="0" cellspacing="0" style="border: none;    flex: 1;">
                         <tr>
-                            <td style="text-align: left;object-fit: contain;"> <img src="{{ asset('images/logo.png') }}"
+                            <td style="text-align: left;object-fit: contain;"> <img src="https://gujjucoders.com/demo/Nanogen_CRM/public/images/logo.png"
                                     width="150" height="80" style="object-fit: contain;"></td>
                         </tr>
                         <tr>
                             <a href=""
                                 style="margin-right: 10px;display: inline-flex; padding: 2px;font-size: 12px; gap: 5px; align-items: center; justify-content: center; text-decoration: none; color: #767E9D;"><img
-                                    src="{{ asset('images/email.png') }}">info@nanogenagrochem.com</a>
+                                    src="https://gujjucoders.com/demo/Nanogen_CRM/public/images/email.png">info@nanogenagrochem.com</a>
                             <a href=" "
                                 style="display: inline-flex; padding:2px; font-size: 12px; gap: 5px; align-items: center; justify-content: center; text-decoration: none; color: #767E9D; "><img
-                                    src="{{ asset('images/telephone.png') }}"> +91 9313085584 </a>
+                                    src="https://gujjucoders.com/demo/Nanogen_CRM/public/images/telephone.png"> +91 9313085584 </a>
                         </tr>
                     </table>
                 </td>

@@ -6,8 +6,8 @@ use Mpdf\Mpdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\Country;
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
 use Mpdf\HTMLParserMode;
 use Illuminate\Http\Request;
 use Mpdf\Config\FontVariables;
@@ -21,6 +21,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\ProprietorPartnerDirector;
 use App\Models\DistributorsDealersDocuments;
 
@@ -31,8 +32,8 @@ class DistributorsDealersController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->dealer)
-        $data['page_title'] =  $request->dealer == 1 ? 'Dealers' : 'Distributors';
+        
+        $data['page_title'] = $request->dealer == 1 ? 'Dealers' : 'Distributors';
         if ($request->ajax()) {
 
             $data = DistributorsDealers::where('user_type', $request->dealer ? 2 : 1);
@@ -45,12 +46,14 @@ class DistributorsDealersController extends Controller
                 //             <span class="checkmarks"></span>
                 //         </label>';
                 // })
-                ->addColumn('action', function ($row) {
+                ->addColumn('action', function ($row) use ($request){
                     // $payment_history = '<a href="' . route('distributors_dealers.payment_history', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     // class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Payment History</a>';
 
                     $edit_btn = '<a href="' . route('distributors_dealers.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
+
+                    $o_form_download_btn = '<a href="' . route('distributors_dealers.replaceInWord', ['id'=> $row->id, 'dealer' => ($row->user_type == 2 ? 1 :  null)]) . '" class="dropdown-item"  data-id="' . $row->id . '" class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-download text-warning"></i> O-Form Download</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item delete_d_d"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('distributors_dealers.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
@@ -62,6 +65,7 @@ class DistributorsDealersController extends Controller
 
                     // Auth::user()->can('manage users') ? $action_btn .= $payment_history : '';
                     Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    Auth::user()->can('manage users') ? $action_btn .= $o_form_download_btn : '';
                     Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
                     return $action_btn . ' </div></div>';
                 })
@@ -320,5 +324,30 @@ class DistributorsDealersController extends Controller
         return $pdf->download($filename);
         //  return $pdf->stream($filename);   //only view perpose 
 
+    }
+
+
+    public function replaceInWord(Request $request, $id, $dealer = null)
+    {
+        // dd($request->all);
+        $d_d = DistributorsDealers::findOrFail($id);
+        // Load the template
+        // $templatePath = storage_path('app\public\NANOGEN_O_FORM.docx');
+
+        $templatePath = storage_path('app\public\O-FORM\NANOGEN-O-FORM.docx');
+
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        // Replace placeholders
+        $templateProcessor->setValue('Firm_Name', $d_d->firm_shop_name);
+        $templateProcessor->setValue('Firm_Address', $d_d->firm_shop_address);
+
+        $name = ($request->dealer == 1) ? $d_d->applicant_name .'(Dealer)' : $d_d->applicant_name .'(Distributor)'; 
+
+        $fileName = $name . 'O-Form.docx';
+        $savePath = storage_path("app/public/{$fileName}");
+        $templateProcessor->saveAs($savePath);
+
+        return response()->download($savePath);
     }
 }
