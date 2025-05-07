@@ -77,9 +77,9 @@ class UserController extends Controller
                 ->editColumn('status', function ($user) {
                     return $user->statusBadge();
                 })
-                ->editColumn('updated_at', function ($user) {
-                    return  Carbon::parse($user->updated_at)->diffForHumans();
-                })
+                // ->editColumn('updated_at', function ($user) {
+                //     return  Carbon::parse($user->updated_at)->diffForHumans();
+                // })
                 ->editColumn('created_at', function ($user) {
                     return  $user->created_at->format('d M Y, h:i A');
                 })

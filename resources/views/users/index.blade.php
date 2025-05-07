@@ -100,7 +100,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Role</th>
                         <th scope="col">Created</th>
-                        <th scope="col">Last Activity</th>
+                        {{-- <th scope="col">Last Activity</th> --}}
                         <th scope="col">Status</th>
                         <th class="" scope="col">Action</th>
                     </tr>
@@ -213,11 +213,11 @@
                 name: 'created_at',
                 searchable: true
             },
-            {
-                data: 'updated_at',
-                name: 'updated_at',
-                searchable: true
-            },
+            // {
+            //     data: 'updated_at',
+            //     name: 'updated_at',
+            //     searchable: true
+            // },
             {
                 data: 'status',
                 name: 'status',
