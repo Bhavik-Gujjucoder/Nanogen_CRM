@@ -35,7 +35,7 @@
                         <div class="mb-3">
                             <label class="col-form-label"> Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                name="name" value="{{ old('name') }}">
+                                name="name" value="{{ old('name') }}" placeholder="Name">
                             @error('name')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -47,7 +47,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Email <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                name="email" value="{{ old('email') }}">
+                                name="email" value="{{ old('email') }}" placeholder="Email">
                             @error('email')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -80,7 +80,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('phone_no') is-invalid @enderror"
-                                name="phone_no" value="{{ old('phone_no') }}"
+                                name="phone_no" value="{{ old('phone_no') }}" placeholder="Phone"
                                 oninput="this.value = this.value.slice(0, 11)">
                             @error('phone_no')
                                 <span class="invalid-feedback">{{ $message }}</span>
@@ -95,7 +95,7 @@
                             <div class="icon-form-end">
                                 <span class="form-icon gc-icon-set"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control icone @error('password') is-invalid @enderror"
-                                    name="password">
+                                    name="password" placeholder="Password">
                                     @error('password')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -111,7 +111,7 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
-                                    name="password_confirmation">
+                                    name="password_confirmation" placeholder="Confirm Password">
                                     @error('password_confirmation')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror

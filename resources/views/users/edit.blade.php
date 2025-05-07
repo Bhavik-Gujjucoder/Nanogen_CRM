@@ -40,7 +40,7 @@
                         <div class="mb-3">
                             <label class="col-form-label"> Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                name="name" value="{{ old('name', $user->name) }}">
+                                name="name" value="{{ old('name', $user->name) }}" placeholder="Name">
                             @error('name')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -52,7 +52,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                name="email" value="{{ old('email', $user->email) }}">
+                                name="email" value="{{ old('email', $user->email) }}" placeholder="Email">
                             @error('email')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -82,7 +82,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="col-form-label">Phone <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control @error('phone_no') is-invalid @enderror"
+                            <input type="number" class="form-control @error('phone_no') is-invalid @enderror" placeholder="Phone"
                                 name="phone_no" value="{{ old('phone_no', $user->phone_no) }}" oninput="this.value = this.value.slice(0, 11)">
                             @error('phone_no')
                                 <span class="invalid-feedback">{{ $message }}</span>
@@ -96,7 +96,7 @@
                             <label class="col-form-label">New Password</label>
                             <div class="icon-form-end">
                                 <span class="form-icon gc-icon-set"><i class="ti ti-eye-off"></i></span>
-                                <input type="password" class="form-control icone @error('password') is-invalid @enderror" name="password">
+                                <input type="password" class="form-control icone @error('password') is-invalid @enderror" name="password" placeholder="New Password">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -110,7 +110,7 @@
                             <label class="col-form-label">Confirm Password</label>
                             <div class="icon-form-end">
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
-                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation">
+                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" placeholder="Confirm Password">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
