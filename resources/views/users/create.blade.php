@@ -81,7 +81,7 @@
                             <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('phone_no') is-invalid @enderror"
                                 name="phone_no" value="{{ old('phone_no') }}" placeholder="Phone"
-                                oninput="this.value = this.value.slice(0, 11)">
+                                oninput="this.value = this.value.slice(0, 10)">
                             @error('phone_no')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
