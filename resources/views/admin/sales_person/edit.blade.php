@@ -43,7 +43,7 @@
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn">
-                                    <input type="file" name="profile_picture" accept="image/*" class="form-control @error('profile_picture') is-invalid @enderror"
+                                    <input type="file" name="profile_picture" accept=".jpg,.jpeg,.gif,.png" class="form-control @error('profile_picture') is-invalid @enderror"
                                         onchange="previewProfilePicture(event)" >
                                     <span>
                                         <i class="ti ti-file-broken"></i> Upload Profile Image
@@ -108,7 +108,7 @@
                             <div class="icon-form-end">
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    name="password">
+                                    name="password" placeholder="Password">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -122,7 +122,7 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
-                                    name="password_confirmation">
+                                    name="password_confirmation" placeholder="Confirm Password">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -145,7 +145,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Department <span class="text-danger">*</span></label>
                             <select class="select @error('department_id') is-invalid @enderror" name="department_id">
-                                <option value="">Select option</option>
+                                <option value="">Select Option</option>
                                 @foreach ($departments as $d)
                                     <option value="{{ $d->id }}"
                                         {{ old('department_id', $detail->department_id) == $d->id ? 'selected' : '' }}>
@@ -161,7 +161,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Position <span class="text-danger">*</span></label>
                             <select class="select @error('position_id') is-invalid @enderror" name="position_id">
-                                <option value="">Select option</option>
+                                <option value="">Select Option</option>
                                 @foreach ($positions as $p)
                                     <option value="{{ $p->id }}"
                                         {{ old('position_id', $detail->position_id) == $p->id ? 'selected' : '' }}>
@@ -178,7 +178,7 @@
                             <label class="col-form-label">Reporting Manager <span class="text-danger">*</span></label>
                             <select name="reporting_manager_id"
                                 class="select @error('reporting_manager_id') is-invalid @enderror">
-                                <option value="">Select option</option>
+                                <option value="">Select Option</option>
                                 @foreach ($reporting_managers as $manager)
                                     <option value="{{ $manager->id }}"
                                         {{ old('reporting_manager_id', $detail->reporting_manager_id) == $manager->id ? 'selected' : '' }}>
@@ -239,7 +239,7 @@
                             <label class="col-form-label">State/Province <span class="text-danger">*</span></label>
                             <select id="stateDropdown" class="form-select @error('state_id') is-invalid @enderror"
                                 name="state_id">
-                                <option value="">Select state</option>
+                                <option value="">Select State</option>
                                 @foreach ($states as $state)
                                     <option value="{{ $state->id }}"
                                         {{ old('state_id', $detail->state_id) == $state->id ? 'selected' : '' }}>
@@ -258,7 +258,7 @@
                             <label class="col-form-label">City <span class="text-danger">*</span></label>
                             <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
                                 name="city_id">
-                                <option value="">Select city</option>
+                                <option value="">Select City</option>
                                 {{-- @foreach ($cities as $city)
                                     <option value="{{ $city->id }}"
                                         {{ old('city_id', $detail->city_id) == $city->id ? 'selected' : '' }}>
@@ -278,7 +278,7 @@
                             <input type="text" name="postal_code"
                                 value="{{ old('postal_code', $detail->postal_code) }}"
                                 class="form-control @error('postal_code') is-invalid @enderror"
-                                placeholder="Postal/Zip code">
+                                placeholder="Postal Code" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);">
                             @error('postal_code')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -288,7 +288,7 @@
                         <label class="col-form-label">Country <span class="text-danger">*</span></label>
                         <select id="inputState" class="form-select @error('country_id') is-invalid @enderror"
                             name="country_id">
-                            <option value="">Select country</option>
+                            <option value="">Select Country</option>
                             @foreach ($countries as $county)
                                 <option value="{{ $county->id }}"
                                     {{ old('country_id', $detail->country_id) == $county->id ? 'selected' : '' }}>

@@ -70,7 +70,6 @@
             { data: 'employee_id', name: 'employee_id', searchable: true },
             { data: 'action', name: 'action', orderable: false, searchable: false },
         ],
-
     });
 
      /***** Search Box *****/
@@ -108,8 +107,6 @@
         }
     });
 
-
-
      // Handle Bulk Delete button click
      $('#bulk_delete_button').click(function() {
        confirmDeletion(function() {
@@ -132,6 +129,7 @@
                         // Optionally, reload the page to reflect changes
                         sales_person_table_show.ajax.reload();
                         // location.reload();
+                        $('#bulk_delete_button').hide();
                     },
                     error: function(xhr, status, error) {
                         show_error('An error occurred while deleting.');

@@ -80,26 +80,39 @@ class OrderManagementController extends Controller
                     return '-'; 
                 })
                 ->addColumn('order_status', function ($row) {
-                    $order_status = '
-                     <a  href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"   data-status="1">
-                        <span class="badge bg-warning">Pending</span>
-                    </a>
-                    <a  href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"   data-status="2">
-                        <span class="badge bg-warning">Processing</span>
-                    </a>
-                    <a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"  data-status="3">
-                        <span class="badge bg-info">Shipping</span>
-                    </a>
-                    <a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '"  data-status="4">
-                        <span class="badge bg-success">Delivered</span>
-                    </a>';
-
-                    $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '  <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">';
-                    Auth::user()->can('manage users') ? $action_btn .= $order_status : '';
-
-                    return $action_btn . ' </div></div>';
-                })
+                    $order_status = '';
+                
+                    if ($row->status < 1) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
+                                            <span class="badge bg-warning">Pending</span>
+                                          </a>';
+                    }
+                    if ($row->status < 2) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
+                                            <span class="badge bg-warning">Processing</span>
+                                          </a>';
+                    }
+                    if ($row->status < 3) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
+                                            <span class="badge bg-info">Shipping</span>
+                                          </a>';
+                    }
+                    if ($row->status < 4) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
+                                            <span class="badge bg-success">Delivered</span>
+                                          </a>';
+                    }
+                    
+                    if ($row->status < 4 && Auth::user()->can('manage users')) {
+                        $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
+                                        <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
+                                      </div>';
+                        return $action_btn;
+                    }
+                
+                    return $row->statusBadge();
+                })                
                 ->filterColumn('order_status', function ($query, $keyword) {
                     $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
                     // Find the matching status key (case-insensitive)
@@ -146,32 +159,37 @@ class OrderManagementController extends Controller
     {
         $order = OrderManagement::findOrFail($id);
         $order->status = $request->status;
-        // if($request->status == 3)
-        // {
-        //     $order->shipping_date = Carbon::now();
-        // }
+        if($request->status == 3)
+        {
+            $order->shipping_date = Carbon::now();
+        }
         $order->save();
 
-        // if($request->status == 3)
-        // {
-        //     $admin_email = [
-        //         getSetting('company_email'),
-        //     ];
-        //     if($admin_email)
+        // try {
+        //     if($request->status == 3)
         //     {
-        //         $order->admin_email = 'for_admin_email';
-        //         Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
+        //         $admin_email = getSetting('company_email');
+        //         if($admin_email)
+        //         {
+        //             $order = [];
+        //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
+        //             $order->admin_email = 'for_admin_email';
+        //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
+        //         }
+    
+    
+        //         $sales_person_email = $order->sales_person_detail->user->email;
+        //         if($sales_person_email) {
+        //             $order = [];
+        //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
+        //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
+        //         }
         //     }
-
-
-        //     $sales_person_email = [
-        //         $order->sales_person_detail->email,
-        //     ];
-
-        //     if($sales_person_email) {
-        //         Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
-        //     }
+        // } catch (\Throwable $th) {
+        //     dd($th);
+        //     return response()->json(['error' => 'Something went wrong!'], 500); 
         // }
+       
         return response()->json(['success' => true]);
     }
     /**
@@ -248,14 +266,15 @@ class OrderManagementController extends Controller
         }
 
 
-        try {
-            $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
+        // try {
+        //     $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
             
-        } catch (\Throwable $th) {
-            dd($th);
-            return response()->json(['error' => 'Something went wrong!'], 500); 
-            // return redirect()->back()->with('error', 'Something is wrong!!');
-        }
+        // } catch (\Throwable $th) {
+        //     dd($th);
+        //     return response()->json(['error' => 'Something went wrong!'], 500); 
+        //     // return redirect()->back()->with('error', 'Something is wrong!!');
+        // }
+        
         //nanogen@gmail.com
         if(getSetting('company_email'))
         {

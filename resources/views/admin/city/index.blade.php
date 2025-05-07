@@ -298,6 +298,7 @@
                         show_success(response.message);
                         // Optionally, reload the page to reflect changes
                         city_table.ajax.reload();
+                        
                         $('#bulk_delete_button').hide();
                         // location.reload();
                     },

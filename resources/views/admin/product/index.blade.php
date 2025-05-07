@@ -195,6 +195,7 @@
                         // Optionally, reload the page to reflect changes
                         product_table_show.ajax.reload();
                         // location.reload();
+                        $('#bulk_delete_button').hide();
                     },
                     error: function(xhr, status, error) {
                         show_error('An error occurred while deleting.');

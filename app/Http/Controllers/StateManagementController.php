@@ -92,6 +92,7 @@ class StateManagementController extends Controller
             'state_name' => $request->state_name,
             'status' => $request->status
         ]);
+        
         return response()->json(['success' => true, 'message' => 'State updated successfully']);
     }
 

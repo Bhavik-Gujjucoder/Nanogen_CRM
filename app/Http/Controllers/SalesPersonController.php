@@ -93,7 +93,7 @@ class SalesPersonController extends Controller
     public function create()
     {
         $data['page_title']         = 'Basic Information';
-        $data['reporting_managers'] = User::role(['reportingmanager'])->get();
+        $data['reporting_managers'] = User::role(['reportingmanager'])->where('status', 1)->get();
         $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
         $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
         $data['states']             = StateManagement::where('status', 1)->get()->all();
@@ -187,15 +187,14 @@ class SalesPersonController extends Controller
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
 
-
             $data = [
                 'name'  => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
                 'password' => $request->password,
             ];
-            if($request->email){
-                Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
-            }
+            // if($request->email){
+            //     Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
+            // }
             $user->assignRole('sales');
             DB::commit();
             return redirect()->route('sales_person.index')->with('success', 'Sales person created successfully!');
