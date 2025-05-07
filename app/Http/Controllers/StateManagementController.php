@@ -18,7 +18,12 @@ class StateManagementController extends Controller
         $data['page_title'] = 'State Management';
 
         if ($request->ajax()) {
-            $data = StateManagement::withCount('cities');
+            // $data = StateManagement::withCount('cities');
+            $data = StateManagement::withCount([
+                'cities as active_cities_count' => function ($query) {
+                    $query->where('status', 1);
+                }
+            ]);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -43,8 +48,8 @@ class StateManagementController extends Controller
                     return $action_btn . ' </div></div>';
                 })
 
-                ->addColumn('cities_count', function ($row) {
-                    return $row->cities_count;   /*withCount('cities') => cities_count */
+                ->addColumn('active_cities_count', function ($row) {
+                    return $row->active_cities_count;   /*withCount('cities') => cities_count */
                 })
                 ->orderColumn('cities_count', function ($query, $order) {
                     $query->orderBy('cities_count', $order);

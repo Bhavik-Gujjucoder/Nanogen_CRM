@@ -135,8 +135,8 @@
                 name: 'state_name',
                 searchable: true
             }, {
-                data: 'cities_count',
-                name: 'cities_count',
+                data: 'active_cities_count',
+                name: 'active_cities_count',
                 searchable: true
             },
             {

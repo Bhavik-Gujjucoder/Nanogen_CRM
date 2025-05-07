@@ -19,7 +19,7 @@ class StateManagement extends Model
 
     public function cities()
     {
-        return $this->hasMany(CityManagement::class, 'state_id');
+        return $this->hasMany(CityManagement::class, 'state_id')->where('status',1);
     }
 
 }
