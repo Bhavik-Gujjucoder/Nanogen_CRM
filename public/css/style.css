@@ -44335,3 +44335,9 @@ table.table.table-view.addnewfield th {
 table.table.table-view.addnewfield td {
     border-color: #e8e8e8
 }
+
+
+
+/* 07-05-20 */
+
+.checkboxs input~.checkmarks{border: 1px solid #0303038a;}

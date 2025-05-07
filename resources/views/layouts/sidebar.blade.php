@@ -85,7 +85,7 @@
 
                 <li>
                     <ul>
-                        <li><a href="{{ route('payment.index') }}"><i class="ti ti-message-exclamation"></i><span>Received Payment</span></a></li>
+                        {{-- <li><a href="{{ route('payment.index') }}"><i class="ti ti-message-exclamation"></i><span>Received Payment</span></a></li> --}}
                         <li><a href="{{ route('complain.index') }}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
                         <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade
                                     Management</span></a></li>
