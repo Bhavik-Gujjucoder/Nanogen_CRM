@@ -146,7 +146,32 @@ class OrderManagementController extends Controller
     {
         $order = OrderManagement::findOrFail($id);
         $order->status = $request->status;
+        // if($request->status == 3)
+        // {
+        //     $order->shipping_date = Carbon::now();
+        // }
         $order->save();
+
+        // if($request->status == 3)
+        // {
+        //     $admin_email = [
+        //         getSetting('company_email'),
+        //     ];
+        //     if($admin_email)
+        //     {
+        //         $order->admin_email = 'for_admin_email';
+        //         Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
+        //     }
+
+
+        //     $sales_person_email = [
+        //         $order->sales_person_detail->email,
+        //     ];
+
+        //     if($sales_person_email) {
+        //         Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
+        //     }
+        // }
         return response()->json(['success' => true]);
     }
     /**

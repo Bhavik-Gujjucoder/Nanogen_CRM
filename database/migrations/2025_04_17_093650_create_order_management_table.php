@@ -27,6 +27,7 @@ return new class extends Migration
             $table->double('gst_amount');
             $table->double('grand_total');
             $table->integer('status')->nullable();
+            $table->date('shipping_date')->nullable();
             $table->timestamps();
         });
     }

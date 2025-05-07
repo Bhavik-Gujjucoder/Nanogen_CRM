@@ -35,8 +35,8 @@
                             <div class="upload-content">
                                 <div class="upload-btn">
                                     <input type="file" name="profile_picture" id="profile_picture"
-                                        onchange="previewProfilePicture(event)"
-                                        class="form-control @error('profile_picture') is-invalid @enderror">
+                                        onchange="previewProfilePicture(event)" accept=".jpg,.jpeg,.gif,.png" 
+                                        class="form-control @error('profile_picture') is-invalid @enderror" >
                                     <span>
                                         <i class="ti ti-file-broken"></i>Upload Profile Image
                                     </span>
@@ -83,7 +83,8 @@
                         <div class="mb-3">
                             <label class="col-form-label">Phone Number <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('phone_number') is-invalid @enderror"
-                                name="phone_number" value="{{ old('phone_number') }}" placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                                name="phone_number" value="{{ old('phone_number') }}" placeholder="Phone Number"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                             @error('phone_number')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -97,7 +98,7 @@
                                 <span class="form-icon gc-icon-set"><i class="ti ti-eye-off"></i></span>
                                 <input type="password"
                                     class="form-control icone @error('password') is-invalid @enderror" name="password"
-                                    placeholder="Password">
+                                    placeholder="Password" value="{{ old('password') }}">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -219,8 +220,8 @@
                                 name="state_id"> {{-- id="inputState" --}}
                                 <option value="">Select state</option>
                                 @foreach ($states as $state)
-                                    <option value="{{ $state->id }}"
-                                        {{-- old('state_id') == $state->id ? 'selected' : '' --}}>{{ $state->state_name }}
+                                    <option value="{{ $state->id }}" {{-- old('state_id') == $state->id ? 'selected' : '' --}}>
+                                        {{ $state->state_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -234,7 +235,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">City <span class="text-danger">*</span></label>
                             <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
-                                name="city_id"> {{-- id="inputCity" --}}
+                                name="city_id" data-old="{{ old('city_id') }}"> {{-- id="inputCity" --}}
                                 <option value="">Select city</option>
                                 {{-- @foreach ($cities as $city)
                                     <option value="{{ $city->id }}"
@@ -291,6 +292,7 @@
     $(document).ready(function() {
         $('#stateDropdown').on('change', function() {
             var stateID = $(this).val();
+            var oldCityID = $('#cityDropdown').data('old'); // Get old city ID
             $('#cityDropdown').html('<option value="">Loading...</option>');
 
             if (stateID) {
@@ -304,16 +306,29 @@
                     success: function(data) {
                         $('#cityDropdown').empty().append(
                             '<option value="">Select City</option>');
+                        // $.each(data, function(key, city) {
+                        //     $('#cityDropdown').append('<option value="' + city.id +
+                        //         '">' + city.city_name + '</option>');
+                        // });
                         $.each(data, function(key, city) {
+                            let selected = oldCityID == city.id ? 'selected' : '';
                             $('#cityDropdown').append('<option value="' + city.id +
-                                '">' + city.city_name + '</option>');
+                                '" ' + selected + '>' + city.city_name +
+                                '</option>');
                         });
+
+                        // Clear old city ID so it doesn't affect subsequent changes
+                        $('#cityDropdown').removeAttr('data-old');
                     }
                 });
             } else {
                 $('#cityDropdown').html('<option value="">-- Select City --</option>');
             }
         });
+        // Trigger change on page load if old state exists
+        @if (old('state_id'))
+            $('#stateDropdown').val("{{ old('state_id') }}").trigger('change');
+        @endif
     });
 </script>
 <script>
