@@ -21,7 +21,7 @@
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn">
-                                    <input type="file" name="product_image" accept="image/*"
+                                    <input type="file" name="product_image" accept=".jpg,.jpeg,.gif,.png"
                                         onchange="previewProfilePicture(event)">
                                     <span>
                                         <i class="ti ti-file-broken"></i> Upload Product Image
