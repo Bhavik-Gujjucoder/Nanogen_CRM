@@ -22,7 +22,7 @@
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn @error('profile_picture') is-invalid @enderror">
-                                    <input type="file" name="profile_picture"  accept="image/*" onchange="previewProfilePicture(event)">
+                                    <input type="file" name="profile_picture"  accept=".jpg,.jpeg,.gif,.png" onchange="previewProfilePicture(event)">
                                     <span>
                                         <i class="ti ti-file-broken"></i>Upload File
                                     </span>
