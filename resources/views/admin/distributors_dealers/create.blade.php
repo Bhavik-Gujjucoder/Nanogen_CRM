@@ -22,13 +22,13 @@
                                 </div>
                                 <div class="upload-content">
                                     <div class="upload-btn">
-                                        <input name="profile_image" type="file" accept="image/*"
+                                        <input name="profile_image" type="file" accept=".jpg,.jpeg,.gif,.png" 
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload Profile Picture
                                         </span>
                                     </div>
-                                    <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                    <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 </div>
                             </div>
                         </div>
@@ -890,6 +890,7 @@
                     {{-- <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a> --}}
                     <button type="submit" class="btn btn-primary">Create</button>
                 </div>
+            </div>
                 <!-- /Basic Info -->
         </form>
     </div>
@@ -1268,14 +1269,20 @@
                 $(element).removeClass("is-invalid");
             },
             invalidHandler: function(event, validator) {
-                if (validator.errorList.length) {
-                    $('html, body').animate({
-                        scrollTop: $(validator.errorList[0].element).offset().top - 100
-                    }, 600);
-                    $(validator.errorList[0].element).focus();
-                }
-            }
+                // if (validator.errorList.length) {
+                //     $('html, body').animate({
+                //         scrollTop: $(validator.errorList[0].element).offset().top - 100
+                //     }, 600);
+                //     $(validator.errorList[0].element).focus();
+                // }
+            },
         });
+    });
+     // Catch all: prevent native submit unless valid
+     $("#userForm").on("submit", function(e) {
+        if (!$(this).valid()) {
+            e.preventDefault(); // Block submit if invalid
+        }
     });
 </script>
 

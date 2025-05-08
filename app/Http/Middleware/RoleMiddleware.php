@@ -34,7 +34,11 @@ class RoleMiddleware
                 return redirect()->route('sales.dashboard');
             } elseif ($user->hasRole('staff')) { 
                 return redirect()->route('staff.dashboard');
-            } else {
+            }  
+            // elseif ($user->hasRole('reportingmanager ')) { 
+            //     return redirect()->route('reportingmanager.dashboard');
+            // }
+             else {
                 abort(403, 'Unauthorized Access');
             }
         }

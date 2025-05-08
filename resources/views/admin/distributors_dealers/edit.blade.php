@@ -25,13 +25,13 @@
                                 </div>
                                 <div class="upload-content">
                                     <div class="upload-btn">
-                                        <input name="profile_image" type="file" accept="image/*"
+                                        <input name="profile_image" type="file" accept=".jpg,.jpeg,.gif,.png" 
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload Profile Picture
                                         </span>
                                     </div>
-                                    <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                    <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                             <div class="mb-3">
                                 <label class="col-form-label">State/Province <span
                                         class="text-danger">*</span></label>
-                                <select id="stateDropdown" class="form-select @error('state_id') is-invalid @enderror"
+                                <select id="stateDropdown" class="form-control "
                                     name="state_id">
                                     <option value="">Select state</option>
                                     @foreach ($states as $state)
@@ -176,22 +176,18 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('state_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <span id="state_id_error" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">City <span class="text-danger">*</span></label>
-                                <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
+                                <select id="cityDropdown" class="form-control "
                                     name="city_id">
                                     <option value="">Select city</option>
                                 </select>
-                                @error('city_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <span id="city_id_error" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -200,16 +196,14 @@
                                 <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
                                 <input type="text" name="postal_code"
                                     value="{{ old('postal_code', $distributor_dealers->postal_code) }}"
-                                    class="form-control @error('postal_code') is-invalid @enderror"
+                                    class="form-control "
                                     placeholder="Postal/Zip code">
-                                @error('postal_code')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                    <span id="postal_code_error" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="col-form-label">Country <span class="text-danger">*</span></label>
-                            <select id="inputState" class="form-select @error('country_id') is-invalid @enderror"
+                            <select id="inputState" class="form-control "
                                 name="country_id">
                                 <option value="">Select country</option>
                                 @foreach ($countries as $county)
@@ -219,17 +213,10 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('country_id')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            <span id="country_id_error" class="text-danger"></span>
                         </div>
                     </div>
-
                 </div>
-
-
-
-
                 <div class="applicationdtl delerbox-border-b">
                     <h5 class="mb-2">Details of Bank A/c.</h5>
                     <div class="row">
@@ -1219,6 +1206,11 @@
                     minlength: 12,
                     maxlength: 12
                 },
+                state_id: "required",
+                city_id: "required",
+                postal_code: "required",
+                country_id: "required",
+
                 bank_name_address: "required",
                 account_no: "required",
                 ifsc_code: "required",
@@ -1253,6 +1245,11 @@
                     minlength: "Aadhar card No must be 12 digits.",
                     maxlength: "Aadhar card No must be 12 digits."
                 },
+                state_id: "Please select a state.",
+                city_id: "Please select a city.",
+                postal_code: "Postal code is required.",
+                country_id: "Please select a country.",
+
                 bank_name_address: "The bank name and address field is required.",
                 account_no: "The account no field is required.",
                 ifsc_code: "The ifsc code field is required.",
@@ -1283,6 +1280,13 @@
             }
         });
     });
+// Catch all: prevent native submit unless valid
+    $("#userForm").on("submit", function(e) {
+        if (!$(this).valid()) {
+            e.preventDefault(); // Block submit if invalid
+        }
+    });
+
 </script>
 
 

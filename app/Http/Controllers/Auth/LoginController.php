@@ -68,6 +68,10 @@ class LoginController extends Controller
         if ($user->hasRole('staff')) {
             return redirect('/staff'); // Redirect to sales dashboard
         }
+
+        // if ($user->hasRole('reportingmanager')) {
+        //     return redirect('/reportingmanager'); // Redirect to sales dashboard
+        // }
         return redirect('/'); // Default fallback
     }
 }

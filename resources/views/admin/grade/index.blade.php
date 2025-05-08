@@ -39,9 +39,9 @@
                             </label>
                         </th>
                         <th scope="col"></th> <!-- class="no-sort" -->
-                        <th scope="col">Name</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Name</th>  {{--<span class="list"></span>--}}
+                        <th scope="col">Status</th>  {{--<span class="list"></span>--}}
+                        <th scope="col">Action</th>  {{--<span class="list"></span>--}}
                         {{-- class="text-end" --}}
                     </tr>
                 </thead>

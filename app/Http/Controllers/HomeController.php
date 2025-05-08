@@ -11,14 +11,19 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    protected $order_management,$dealer_distributor,$sales_person_detail,$product;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(OrderManagement $order_management, DistributorsDealers $dealer_distributor, SalesPersonDetail $sales_person_detail,Product $product)
     {
         $this->middleware('auth');
+        $this->order_management = $order_management;
+        $this->dealer_distributor = $dealer_distributor;
+        $this->sales_person_detail = $sales_person_detail;
+        $this->product = $product;
     }
 
     /**
@@ -35,21 +40,30 @@ class HomeController extends Controller
     public function staff_index()
     {
         $data['page_title'] = 'Staff Dashboard';
+        $data['total_distributor']  = $this->dealer_distributor->where('user_type', 1)->count();
+        $data['total_dealer']       = $this->dealer_distributor->where('user_type', 2)->count();
+        $data['total_sales_person'] = $this->sales_person_detail->whereNull('deleted_at')->count(); 
+        $data['total_product']      = $this->product->where('status', 1)->count();
+        $data['total_order']        = $this->order_management->count();                  
+        $data['order_grand_total']  = $this->order_management->sum('grand_total');       
+        $data['latest_orders']      = $this->order_management->latest()->take(5)->get(); 
+        $data['latest_dealers']     = $this->dealer_distributor->where('user_type', 2)->latest()->take(5)->get();
+        $data['latest_distributor'] = $this->dealer_distributor->where('user_type', 1)->latest()->take(5)->get();
         return view('staff.dashboard',$data);
     }
 
     public function admin_index()
     {
-        $data['page_title'] = 'Admin Dashboard';
-        $dealer_distributor = DistributorsDealers::get();
-        $data['total_distributor'] = $dealer_distributor->where('user_type', 1)->count();
-        $data['total_dealer'] = $dealer_distributor->where('user_type', 2)->count();
-        $data['total_sales_person'] = SalesPersonDetail::where('deleted_at',NULL)->count(); 
-        $data['total_product'] = Product::where('status', 1)->count();
-        $order = OrderManagement::get(); 
-        $data['total_order'] = $order->count();
-        $data['order_grand_total'] = $order->sum('grand_total');
-
+        $data['page_title']         = 'Admin Dashboard';
+        $data['total_distributor']  = $this->dealer_distributor->where('user_type', 1)->count();
+        $data['total_dealer']       = $this->dealer_distributor->where('user_type', 2)->count();
+        $data['total_sales_person'] = $this->sales_person_detail->whereNull('deleted_at')->count(); 
+        $data['total_product']      = $this->product->where('status', 1)->count();
+        $data['total_order']        = $this->order_management->count();                  
+        $data['order_grand_total']  = $this->order_management->sum('grand_total');       
+        $data['latest_orders']      = $this->order_management->latest()->take(5)->get(); 
+        $data['latest_dealers']     = $this->dealer_distributor->where('user_type', 2)->latest()->take(5)->get();
+        $data['latest_distributor'] = $this->dealer_distributor->where('user_type', 1)->latest()->take(5)->get();
         return view('admin.dashboard', $data);
     }
 

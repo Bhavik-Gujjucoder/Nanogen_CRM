@@ -44341,3 +44341,36 @@ table.table.table-view.addnewfield td {
 /* 07-05-20 */
 
 .checkboxs input~.checkmarks{border: 1px solid #0303038a;}
+
+
+span.list:after {
+    right: 13px !important;
+    content: "\f176" !important;
+    font-family: "Font Awesome 5 Free";
+    top: 50% !important;
+    transform: translateY(-50%);
+    color: #BABFC7 !important;
+    font-size: 12px !important;
+    opacity: 1 !important;
+    position: absolute;
+    font-weight: 600;
+    line-height: 1px !important;
+}
+
+span.list:before {
+    right: 0 !important;
+    content: "\f175" !important;
+    font-family: "Font Awesome 5 Free";
+    bottom: 12px !important;
+    color: #BABFC7 !important;
+    font-size: 12px !important;
+    opacity: 1 !important;
+    position: absolute;
+    font-weight: 600;
+    line-height: 1px !important;
+}
+
+span.list{width: fit-content;
+    display: inline-block;
+    position: relative;
+    padding-right: 30px;}
