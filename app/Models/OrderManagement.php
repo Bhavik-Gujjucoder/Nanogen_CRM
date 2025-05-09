@@ -65,4 +65,6 @@ class OrderManagement extends Model
             return $this->hasMany(OrderManagementProduct::class, 'order_id', 'id'); 
         }
 
+       
+
 }

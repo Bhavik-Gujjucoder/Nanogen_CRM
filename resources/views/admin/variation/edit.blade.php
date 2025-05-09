@@ -6,8 +6,6 @@
 <div class="card">
     <div class="card-body">
         <div class="prodctmain">
-
-
             <form action="{{ route('variation.update', $variation->id) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -78,7 +76,6 @@
                     <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>

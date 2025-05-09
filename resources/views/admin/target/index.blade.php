@@ -49,18 +49,20 @@
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort" scope="col"><label class="checkboxs">
-                            <input type="checkbox" id="select-all"><span class="target_checkbox"></span></label>
+                        <th class="no-sort" scope="col">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all" class="target_checkbox">
+                                <span class="checkmarks"></span>
+                            </label>
                         </th>
-                        <th scope="col">ID</th>
-                        <th scope="col">Subject</th>
+                        <th hidden>ID</th>
+                        <th scope="col">Target Name</th>
                         <th scope="col">Sales Person Name</th>
                         <th scope="col">Traget Value</th>
-                        {{-- <th scope="col">Grade</th> --}}
                         <th scope="col">Region</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
-                        <th class="{{--text-end--}}" scope="col">Action</th>
+                        <th class="{{-- text-end --}}" scope="col">Action</th>
                     </tr>
                 </thead>
             </table>
@@ -138,8 +140,8 @@
         ],
     });
 
-       /***** Search Box *****/
-       $('#customSearch').on('keyup', function() {
+    /***** Search Box *****/
+    $('#customSearch').on('keyup', function() {
         target_show.search(this.value).draw();
     });
 
@@ -179,8 +181,8 @@
         });
     }
 
-     /***** Bulk Delete *****/
-     $('#select-all').change(function() {
+    /***** Bulk Delete *****/
+    $('#select-all').change(function() {
         // Check/uncheck all checkboxes when the select-all checkbox is clicked
         $('.target_checkbox').prop('checked', this.checked);
 

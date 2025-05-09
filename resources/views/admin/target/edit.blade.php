@@ -1,15 +1,15 @@
 @extends('layouts.main')
 @section('content')
-<style>
-    .input-as-text {
-    border: none;
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    outline: none;
-}
-</style>
+    <style>
+        .input-as-text {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            outline: none;
+        }
+    </style>
 @section('title')
     {{ $page_title }}
 @endsection
@@ -23,28 +23,33 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label class="col-form-label">Subject <span class="text-danger">*</span></label>
+                        <label class="col-form-label">Target Name <span class="text-danger">*</span></label>
                         <input type="text" name="subject" value="{{ old('subject', $target->subject) }}"
-                            class="form-control" placeholder="Subject">
+                            class="form-control" placeholder="Target Name">
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Sales Person Name <span class="text-danger">*</span></label>
-                        <select name="salesman_id" class="form-control form-select search-dropdown">
-                            <option value="">Select</option>
-                            @if ($salesmans)
-                                @foreach ($salesmans as $s)
-                                    <option value="{{ $s->user_id }}"
-                                        {{ old('salesman_id', $target->salesman_id) == $s->user_id ? 'selected' : '' }}>
-                                        {{ $s->first_name . ' ' . $s->last_name }}
-                                    </option>
-                                @endforeach
-                            @else
-                                <option value="">No record</option>
-                            @endif
-                        </select>
+                        @if (auth()->user()->hasRole('sales'))
+                            <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
+                            <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
+                        @else
+                            <select name="salesman_id" class="form-control form-select search-dropdown">
+                                <option value="">Select</option>
+                                @if ($salesmans)
+                                    @foreach ($salesmans as $s)
+                                        <option value="{{ $s->user_id }}"
+                                            {{ old('salesman_id', $target->salesman_id) == $s->user_id ? 'selected' : '' }}>
+                                            {{ $s->first_name . ' ' . $s->last_name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
+                            </select>
+                        @endif
                     </div>
                 </div>
 
@@ -115,30 +120,34 @@
                                 @foreach ($target->target_grade as $t_g)
                                     <div class="product-group d-flex align-items-center mb-2">
                                         <div class="col-md-4">
-                                        <select class="form-select me-2" name="grade_id[]">
-                                            <option value="">Select</option>
-                                            @if ($grade)
-                                                @foreach ($grade as $g)
-                                                    <option value="{{ $g->id }}"
-                                                        {{ old('grade_id', $t_g->grade_id) == $g->id ? 'selected' : '' }}>
-                                                        {{ $g->name }}
-                                                    </option>
-                                                @endforeach
-                                            @else
-                                                <option value="">No record</option>
-                                            @endif
-                                        </select></div>
+                                            <select class="form-select me-2" name="grade_id[]">
+                                                <option value="">Select</option>
+                                                @if ($grade)
+                                                    @foreach ($grade as $g)
+                                                        <option value="{{ $g->id }}"
+                                                            {{ old('grade_id', $t_g->grade_id) == $g->id ? 'selected' : '' }}>
+                                                            {{ $g->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="">No record</option>
+                                                @endif
+                                            </select>
+                                        </div>
                                         <div class="col-md-4">
 
-                                        <input type="number" name="percentage[]"
-                                            value="{{ old('percentage', $t_g->percentage) }}" class="form-control me-2"
-                                            placeholder="Target To (%)"></div>
-                                            <div class="col-md-4">
+                                            <input type="number" name="percentage[]"
+                                                value="{{ old('percentage', $t_g->percentage) }}"
+                                                class="form-control me-2" placeholder="Target To (%)">
+                                        </div>
+                                        <div class="col-md-4">
                                             <strong>₹</strong> <input type="text" name="percentage_value[]"
-                                            value="{{ old('percentage_value',$t_g->percentage_value) }}" 
-                                            class="input-as-text" readonly> </div>
+                                                value="{{ old('percentage_value', $t_g->percentage_value) }}"
+                                                class="input-as-text" readonly>
+                                        </div>
 
-                                        <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
+                                        <button type="button"
+                                            class="btn btn-danger btn-sm remove-btn">Remove</button>
                                     </div>
                                 @endforeach
                             @endif
@@ -272,7 +281,7 @@
     }
 
     function check_atleast_one() {
-       let totalPercentage =  $('input[name="percentage[]"]').length;
+        let totalPercentage = $('input[name="percentage[]"]').length;
         if (totalPercentage) {
             return true;
         } else {
@@ -344,9 +353,9 @@
         },
         submitHandler: function(form) {
             if (check_total_percentage()) {
-                if(check_atleast_one()){
+                if (check_atleast_one()) {
                     form.submit(); //Submit only if check passes
-                }else{
+                } else {
                     $("#productError").text(
                         'Please add atleast one target').show();
                 }

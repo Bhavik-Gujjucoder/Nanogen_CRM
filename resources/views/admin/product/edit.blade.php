@@ -14,9 +14,8 @@
                     <div class="col-md-12">
                         <div class="profile-pic-upload">
                             <div class="profile-pic">
-                                <img id="profilePreview"
-                                    {{-- src="{{ asset('storage/product_images/' . ($product->product_image ?? 'images/default-user.png')) }}" --}}
-                                     src="{{ !empty($product->product_image) ? asset('storage/product_images/' . $product->product_image) : asset('images/default-user.png') }}"
+                                <img id="profilePreview" {{-- src="{{ asset('storage/product_images/' . ($product->product_image ?? 'images/default-user.png')) }}" --}}
+                                    src="{{ !empty($product->product_image) ? asset('storage/product_images/' . $product->product_image) : asset('images/default-user.png') }}"
                                     alt="Product Image" class="img-thumbnail mb-2">
                             </div>
                             <div class="upload-content">
@@ -27,7 +26,7 @@
                                         <i class="ti ti-file-broken"></i> Upload Product Image
                                     </span>
                                 </div>
-                                <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 <div id="product_image_error" class="error-message text-danger"></div>
                             </div>
                         </div>
@@ -122,7 +121,7 @@
                         @if ($product->product_variations)
                             <div id="fields-container">
                                 @foreach ($product->product_variations as $variation)
-                                    <div class="field-group ">
+                                    <div class="field-group  product-variaton-column">
                                         <input type="number" name="dealer_price[]"
                                             value="{{ $variation->dealer_price }}" class="form-control"
                                             placeholder="Dealer Price">
@@ -217,7 +216,7 @@
                     `<option value="${variation.id}">${variation.name}</option>`;
             });
             container.prepend(`
-            <div class="field-group">
+            <div class="field-group product-variaton-column">
                 <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
                 <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
                 <select class="select addfileddrop" name="variation_id[]">
@@ -347,7 +346,11 @@
                 $("#not_count_match").html(""); // Clear error message if all fields are filled
             }
 
-
+            // Check if at least one variation block exists
+            if ($(".product-variaton-column").length === 0) {
+                errorMessage = "At least one product variation is required.";
+                valid = false;
+            }
 
             // Show error if any field is empty
             if (errorMessage) {

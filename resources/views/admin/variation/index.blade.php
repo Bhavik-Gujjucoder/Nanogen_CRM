@@ -33,8 +33,8 @@
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="variation_checkbox"><span
-                                    class="checkmarks"></span>
+                                <input type="checkbox" id="select-all" class="variation_checkbox">
+                                <span class="checkmarks"></span>
                             </label>
                         </th>
                         {{-- <th scope="col">SR. Number</th> --}}

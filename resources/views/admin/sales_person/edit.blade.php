@@ -49,7 +49,7 @@
                                         <i class="ti ti-file-broken"></i> Upload Profile Image
                                     </span>
                                 </div>
-                                <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 {{-- <div id="profile_picture" class="error-message text-danger"></div> --}}
                                 @error('profile_picture')
                                     <span class="text-danger">{{ $message }}</span>

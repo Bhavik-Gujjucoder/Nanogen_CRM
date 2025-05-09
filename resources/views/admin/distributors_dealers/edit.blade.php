@@ -1280,7 +1280,7 @@
             }
         });
     });
-// Catch all: prevent native submit unless valid
+    // Catch all: prevent native submit unless valid
     $("#userForm").on("submit", function(e) {
         if (!$(this).valid()) {
             e.preventDefault(); // Block submit if invalid

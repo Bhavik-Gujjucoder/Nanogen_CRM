@@ -10,6 +10,7 @@ use App\Models\GradeManagement;
 use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TargetController extends Controller
 {
@@ -20,7 +21,10 @@ class TargetController extends Controller
     {
         $data['page_title'] = 'Target';
         if ($request->ajax()) {
-            $data = Target::query();
+            // $data = Target::query();
+            $data = Target::when(auth()->user()->hasRole('sales'), function ($query) {
+                $query->where('salesman_id', auth()->id());
+            });
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -123,6 +127,33 @@ class TargetController extends Controller
                 }
             }
         }
+        
+        // try {
+        //     if($request->salesman_id)
+        //     {
+        //         $admin_email = getSetting('company_email');
+        //         if($admin_email)
+        //         {
+        //             $id = $target->id;
+        //             $target = [];
+        //             $target = Target::with(['sales_person_detail'])->findOrFail($id);
+        //             $target->admin_email = 'for_admin_email';
+        //             Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($admin_email)->subject('Target Created'));
+        //         }
+
+
+        //         $sales_person_email = $target->sales_person_detail->user->email;
+        //         if($sales_person_email) {
+        //             $id = $target->id;
+        //             $target = [];
+        //             $target = Target::with(['sales_person_detail'])->findOrFail($id);
+        //             Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($sales_person_email)->subject('Target Created'));
+        //         }
+        //     }
+        // }
+        // catch (\Throwable $th) {
+        //     dd($th);
+        // }
 
 
         return redirect()->route('target.index')->with('success', 'Target created successfully.');

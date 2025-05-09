@@ -54,10 +54,10 @@
 
                                 <div class="upload-content">
                                     <div class="upload-btn @error('company_logo') is-invalid @enderror">
-                                        <input type="file" name="company_logo" accept="image/*">
+                                        <input type="file" name="company_logo" accept=".jpg,.jpeg,.gif,.png" >
                                         <span><i class="ti ti-file-broken"></i>Company Logo</span>
                                     </div>
-                                    <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                    <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                     @error('company_logo')
                                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                                     @enderror

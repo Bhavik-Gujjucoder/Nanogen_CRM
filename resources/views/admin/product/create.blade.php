@@ -26,7 +26,7 @@
                                         <i class="ti ti-file-broken"></i> Upload Product Image
                                     </span>
                                 </div>
-                                <p>JPG, GIF or PNG. Max size of 2MB</p>
+                                <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
                                 <div id="product_image_error" class="error-message text-danger"></div>
                             </div>
                         </div>

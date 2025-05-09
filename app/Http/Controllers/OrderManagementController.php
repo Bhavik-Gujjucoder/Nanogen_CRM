@@ -28,7 +28,9 @@ class OrderManagementController extends Controller
 
         $data['page_title'] = 'Order Management';
         if ($request->ajax()) {
-            $data = OrderManagement::query();
+            $data = OrderManagement::when(auth()->user()->hasRole('sales'), function ($query) {
+                $query->where('salesman_id', auth()->id());
+            });
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {

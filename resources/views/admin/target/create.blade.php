@@ -21,28 +21,33 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label class="col-form-label">Subject <span class="text-danger">*</span></label>
+                        <label class="col-form-label">Target Name <span class="text-danger">*</span></label>
                         <input type="text" name="subject" value="{{ old('subject') }}" class="form-control"
-                            placeholder="Subject">
+                            placeholder="Target Name">
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Sales Person Name <span class="text-danger">*</span></label>
-                        <select name="salesman_id" class="form-control form-select search-dropdown">
-                            <option value="">Select</option>
-                            @if ($salesmans)
-                                @foreach ($salesmans as $s)
-                                    <option value="{{ $s->user_id }}"
-                                        {{ old('salesman_id') == $s->user_id ? 'selected' : '' }}>
-                                        {{ $s->first_name . ' ' . $s->last_name }}
-                                    </option>
-                                @endforeach
-                            @else
-                                <option value="">No record</option>
-                            @endif
-                        </select>
+                        @if (auth()->user()->hasRole('sales'))
+                            <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
+                            <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
+                        @else
+                            <select name="salesman_id" class="form-control form-select search-dropdown">
+                                <option value="">Select</option>
+                                @if ($salesmans)
+                                    @foreach ($salesmans as $s)
+                                        <option value="{{ $s->user_id }}"
+                                            {{ old('salesman_id') == $s->user_id ? 'selected' : '' }}>
+                                            {{ $s->first_name . ' ' . $s->last_name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
+                            </select>
+                        @endif
                     </div>
                 </div>
 
@@ -107,30 +112,31 @@
                                         class="text-danger">*</span></label>
                             </div>
                             <div class="product-group d-flex align-items-center mb-2">
-                                    <input type="hidden" name="dummy_grade" id="dummyValidationField" />
+                                <input type="hidden" name="dummy_grade" id="dummyValidationField" />
                                 <div class="col-md-4">
-                                <select class="form-select me-2" name="grade_id[]">
-                                    <option value="">Select</option>
-                                    @if ($grade)
-                                        @foreach ($grade as $g)
-                                            <option value="{{ $g->id }}"
-                                                {{ old('grade_id') == $g->id ? 'selected' : '' }}>
-                                                {{ $g->name }}
-                                            </option>
-                                        @endforeach
-                                    @else
-                                        <option value="">No record</option>
-                                    @endif
-                                </select>
+                                    <select class="form-select me-2" name="grade_id[]">
+                                        <option value="">Select</option>
+                                        @if ($grade)
+                                            @foreach ($grade as $g)
+                                                <option value="{{ $g->id }}"
+                                                    {{ old('grade_id') == $g->id ? 'selected' : '' }}>
+                                                    {{ $g->name }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            <option value="">No record</option>
+                                        @endif
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
-                                <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                                    class="form-control me-2" placeholder="Target To (%)">
+                                    <input type="number" name="percentage[]" value="{{ old('percentage') }}"
+                                        class="form-control me-2" placeholder="Target To (%)">
                                 </div>
                                 <div class="col-md-4">
-                                <strong>₹</strong> <input type="text" name="percentage_value[]"
-                                    value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
-                                    readonly></div>
+                                    <strong>₹</strong> <input type="text" name="percentage_value[]"
+                                        value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
+                                        readonly>
+                                </div>
                                 {{-- /<div id="percentage_value"></div>  --}}
 
                                 <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
@@ -393,25 +399,65 @@
     /*** END ***/
 
 
+
+
+
+    const grades = @json($grade);
     /*** Add new Grade ***/
+    function getSelectedGrades() {
+        let selected = [];
+        document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
+            if (select.value) {
+                selected.push(parseInt(select.value));
+            }
+        });
+        return selected;
+    }
+
+    function refreshDropdowns() {
+        const selectedGrades = getSelectedGrades();
+        document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
+            const currentValue = select.value;
+            const optionsHtml = buildGradeOptions(selectedGrades.filter(id => id !== parseInt(currentValue)));
+            select.innerHTML = optionsHtml;
+            select.value = currentValue; // reassign current value to avoid losing selection
+        });
+    }
+
+    function buildGradeOptions(selectedGrades) {
+        let options = '<option value="">Select</option>';
+        grades.forEach(grade => {
+            if (!selectedGrades.includes(grade.id)) {
+                options += `<option value="${grade.id}">${grade.name}</option>`;
+            }
+        });
+        return options;
+    }
+
     document.getElementById('add-new').addEventListener('click', function() {
+        const selectedGrades = getSelectedGrades();
+
+
+        // Collect already selected grade IDs
+        document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
+            if (select.value) {
+                selectedGrades.push(parseInt(select.value));
+            }
+        });
+
+        console.log(selectedGrades);
+        const availableGrades = grades.filter(g => !selectedGrades.includes(g.id));
+
         let productContainer = document.getElementById('product-container');
         let newProductGroup = document.createElement('div');
         newProductGroup.classList.add('product-group', 'd-flex', 'align-items-center', 'mb-2');
+
+        const optionsHtml = buildGradeOptions(selectedGrades);
+
         newProductGroup.innerHTML = `<div class="col-md-4">
             <select class="form-select me-2" name="grade_id[]">
-                <option value="">Select</option>
-                @if ($grade)
-                    @foreach ($grade as $g)
-                        <option value="{{ $g->id }}"
-                            {{ old('grade_id') == $g->id ? 'selected' : '' }}>
-                            {{ $g->name }}
-                        </option>
-                    @endforeach
-                @else
-                    <option value="">No record</option>
-                @endif
-            </select></div><div class="col-md-4">
+                    ${optionsHtml}
+                </select></div><div class="col-md-4">
              <input type="number" name="percentage[]" value="{{ old('percentage') }}"
                 class="form-control me-2" placeholder="Target To (%)"></div><div class="col-md-4">
 
@@ -427,6 +473,14 @@
     document.getElementById('product-container').addEventListener('click', function(event) {
         if (event.target.classList.contains('remove-btn')) {
             event.target.parentElement.remove();
+            refreshDropdowns();
+        }
+    });
+
+    // Optional: Refresh when user changes dropdown selection
+    document.getElementById('product-container').addEventListener('change', function(e) {
+        if (e.target.name === 'grade_id[]') {
+            refreshDropdowns();
         }
     });
     /*** END ***/
