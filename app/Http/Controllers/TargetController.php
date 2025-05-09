@@ -138,7 +138,7 @@ class TargetController extends Controller
         //             $target = [];
         //             $target = Target::with(['sales_person_detail'])->findOrFail($id);
         //             $target->admin_email = 'for_admin_email';
-        //             Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($admin_email)->subject('Target Created'));
+        //             Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($admin_email)->subject('Target has been set'));
         //         }
 
 
@@ -147,7 +147,7 @@ class TargetController extends Controller
         //             $id = $target->id;
         //             $target = [];
         //             $target = Target::with(['sales_person_detail'])->findOrFail($id);
-        //             Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($sales_person_email)->subject('Target Created'));
+        //             Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($sales_person_email)->subject('Target has been set'));
         //         }
         //     }
         // }

@@ -74,7 +74,7 @@
                     <div class="mb-3">
                         <label class="col-form-label">Target Value <span class="text-danger">*</span></label>
                         <input type="number" name="target_value" value="{{ old('target_value') }}"
-                            class="form-control">
+                            class="form-control" placeholder="Target Value">
                     </div>
                 </div>
 
@@ -133,7 +133,7 @@
                                         class="form-control me-2" placeholder="Target To (%)">
                                 </div>
                                 <div class="col-md-4">
-                                    <strong>₹</strong> <input type="text" name="percentage_value[]"
+                                    <strong>₹</strong><input type="text" name="percentage_value[]"
                                         value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
                                         readonly>
                                 </div>

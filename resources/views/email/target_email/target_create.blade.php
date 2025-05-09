@@ -6,8 +6,20 @@
         <table width="100%" cellpadding="0" cellspacing="0" style="border: none;">
             <tr>
                 <td style="border-bottom: 1px solid #ddd;padding:0px 15px;">
-                    <p style="font-size:18px;font-weight: 600;margin-bottom: 5px;">New Sales Target Set</p>
-                    <p style="margin-top: 0px;">Let’s achieve great results together!</p> 
+                    <p style="font-size:18px;font-weight: 600;margin-bottom: 5px;">
+                    @if(!$target->admin_email)    
+                        Your target has been set.
+                    @else
+                        
+                    @endif
+                    </p>
+                    <p style="margin-top: 0px;">
+                    @if(!$target->admin_email)    
+                        Let’s achieve great results together!
+                    @else
+
+                    @endif
+                    </p> 
                 </td>
             </tr>
             <tr>
