@@ -109,12 +109,16 @@ class HomeController extends Controller
                     'percentage' => $totalAmount,
                     'percentage_value' => $target_grade->percentage_value,
                     'achieved_percentage' => round(($target_grade->percentage_value > 0 ? ($totalAmount / $target_grade->percentage_value) * 100 : 0), 2)
+                   
+
                 ];
 
             }
             $cTargets[] = [
                 'target_id' => $target->subject,//$target->id,
                 'grades'    => $grades,
+                'start_date' => $target->start_date->format('d M Y'),
+                'end_date'=> $target->end_date->format('d M Y')
             ];
         }
         $data['current_target_graph'] = $cTargets;

@@ -155,7 +155,6 @@ class TargetController extends Controller
         //     dd($th);
         // }
 
-
         return redirect()->route('target.index')->with('success', 'Target created successfully.');
     }
 

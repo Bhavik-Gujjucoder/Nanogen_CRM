@@ -184,10 +184,14 @@
 </div>
 <div class="row">
 @foreach ($current_target_graph as $index => $target)
+
+{{-- {{dd($target)}} --}}
 <div class="col-lg-6 d-flex">
     <div class="card flex-fill">
         <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
             <h5 class="mb-2">Running Target #{{ $target['target_id'] }}</h5> 
+            <strong>Start Date : {{ $target['start_date'] }}</strong>
+            <strong>End Date :  {{ $target['end_date'] }}</strong>
             </div>
             <div class="card-body pb-0">
                 <canvas id="gradeBarChart{{ $index }}" width="400" height="200"></canvas>
