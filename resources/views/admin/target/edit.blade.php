@@ -141,7 +141,7 @@
                                                 class="form-control me-2" placeholder="Target To (%)">
                                         </div>
                                         <div class="col-md-4">
-                                            <strong>₹</strong> <input type="text" name="percentage_value[]"
+                                            <strong>₹</strong><input type="text" name="percentage_value[]"
                                                 value="{{ old('percentage_value', $t_g->percentage_value) }}"
                                                 class="input-as-text" readonly>
                                         </div>
