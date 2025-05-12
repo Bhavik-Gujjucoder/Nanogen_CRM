@@ -222,22 +222,22 @@
 
 
     /***** Bulk Delete *****/
-    $('#select-all').change(function() {
-        // Check/uncheck all checkboxes when the select-all checkbox is clicked
-        $('.grade_checkbox').prop('checked', this.checked);
+    // $('#select-all').change(function() {
+    //     // Check/uncheck all checkboxes when the select-all checkbox is clicked
+    //     $('.grade_checkbox').prop('checked', this.checked);
 
-    });
+    // });
 
 
-    $(document).on('change', '.permission_checkbox', function() {
-        let count = $('.permission_checkbox:checked').length; // Count checked checkboxes
-        $('#checked-count').text(count); // Display count in an element
-        if (count > 0) {
-            $('#bulk_delete_button').show();
-        } else {
-            $('#bulk_delete_button').hide();
-        }
-    });
+    // $(document).on('change', '.permission_checkbox', function() {
+    //     let count = $('.permission_checkbox:checked').length; // Count checked checkboxes
+    //     $('#checked-count').text(count); // Display count in an element
+    //     if (count > 0) {
+    //         $('#bulk_delete_button').show();
+    //     } else {
+    //         $('#bulk_delete_button').hide();
+    //     }
+    // });
 
 
     // Handle Bulk Delete button click

@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -203,9 +204,20 @@ class UserController extends Controller
             // Save new filename in database
             $user->profile_picture = $filename;
         }
-
         $user->save();
         $user->syncRoles([$request->role]); // Update role
+        // if($user->status === "0")
+        // {
+        //     $data = [];
+        //     $data['name'] = $user->name;
+        //     Mail::send('email.user_email.deactive_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Deactivated'));
+        // }
+        // else{
+        //     $data = [];
+        //     $data['name'] = $request->name;
+        //     $data['email'] = $request->email;
+        // }
+        
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
 

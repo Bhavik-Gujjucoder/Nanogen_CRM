@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CityManagement;
+use Carbon\Carbon;
+use App\Models\Target;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\CityManagement;
 use App\Models\OrderManagement;
 use App\Models\SalesPersonDetail;
-use App\Models\DistributorsDealers;
-use App\Models\OrderManagementProduct;
-use App\Models\Target;
 use Illuminate\Support\Facades\DB;
+use App\Models\DistributorsDealers;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Models\OrderManagementProduct;
 
 class HomeController extends Controller
 {
@@ -181,38 +182,53 @@ class HomeController extends Controller
 
     public function monthly_report()
     {
-       $today = Carbon::now();
+        // try {
+        //     $today = Carbon::now();
+        //     if($today->day == 1)
+        //     {
+        //         $targetMonth = $today->copy()->subMonth();
+        //     }
+        //     else
+        //     {
+        //         $targetMonth = $today;
+        //     }
+            
+        //     $startOfMonth = $targetMonth->copy()->startOfMonth()->toDateString();
+        //     $endOfMonth = $targetMonth->copy()->endOfMonth()->toDateString();
+        //     $monthYear = $targetMonth->format('F Y');
 
-       if($today->day == 1)
-       {
-        $targetMonth = $today->copy()->subMonth();
-       }
-       else
-       {
-        $targetMonth = $today;
-       }
+        //     $total_sales = OrderManagement::whereBetween('order_date', [$startOfMonth, $endOfMonth])->sum('grand_total');
+        //     $order_ids = OrderManagement::whereBetween('order_date', [$startOfMonth, $endOfMonth])->pluck('id');
+        //     $top_product = OrderManagementProduct::whereIn('order_id', $order_ids)->selectRaw('product_id, SUM(price * qty) as total_sales')->groupBy('product_id')->orderByDesc('total_sales')->first();
 
-       $startOfMonth = $targetMonth->copy()->startOfMonth()->toDateString();
-       $endOfMonth = $targetMonth->copy()->endOfMonth()->toDateString();
+        //     $sales_man_ids = SalesPersonDetail::pluck('user_id');
+        //     $top_sales_person = OrderManagement::whereIn('salesman_id', $sales_man_ids)->whereBetween('order_date', [$startOfMonth, $endOfMonth])->selectRaw('salesman_id, SUM(grand_total) as top_sales')->groupBy('salesman_id')->orderByDesc('top_sales')->first();
 
-       $total_sales = OrderManagement::whereBetween('order_date', [$startOfMonth, $endOfMonth])->sum('grand_total');
-       $order_ids = OrderManagement::whereBetween('order_date', [$startOfMonth, $endOfMonth])->pluck('id');
-       $top_product = OrderManagementProduct::whereIn('order_id', $order_ids)->selectRaw('product_id, SUM(price * qty) as total_sales')->groupBy('product_id')->orderByDesc('total_sales')->first();
+        //     $dd_ids = DistributorsDealers::pluck('id'); 
+        //     $top_dd_id = OrderManagement::whereIn('dd_id', $dd_ids)->whereBetween('order_date', [$startOfMonth, $endOfMonth])->selectRaw('dd_id, SUM(grand_total) as top_sales')->groupBy('dd_id')->orderByDesc('top_sales')->first();
 
-       $sales_man_ids = SalesPersonDetail::pluck('user_id');
-       $top_sales_person = OrderManagement::whereIn('salesman_id', $sales_man_ids)->whereBetween('order_date', [$startOfMonth, $endOfMonth])->selectRaw('salesman_id, SUM(grand_total) as top_sales')->groupBy('salesman_id')->orderByDesc('top_sales')->first();
+        //     $last_month = $targetMonth->copy()->subMonth();
+        //     $last_month_start = $last_month->copy()->startOfMonth()->toDateString();
+        //     $last_month_end = $last_month->copy()->endOfMonth()->toDateString();
+        //     $total_last_month_sales = OrderManagement::whereBetween('order_date', [$last_month_start, $last_month_end])->sum('grand_total');
+        //     $sales_growth = ($total_sales - $total_last_month_sales) / $total_last_month_sales * 100;
 
-       $dd_ids = DistributorsDealers::pluck('id'); 
-       $top_dd_id = OrderManagement::whereIn('dd_id', $dd_ids)->whereBetween('order_date', [$startOfMonth, $endOfMonth])->selectRaw('dd_id, SUM(grand_total) as top_sales')->groupBy('dd_id')->orderByDesc('top_sales')->first();
+        //     $data['monthyear'] = $monthYear;
+        //     $data['total_sales'] = $total_sales;
+        //     $data['top_product'] = $top_product->product->product_name;
+        //     $data['top_sales_person'] = $top_sales_person->sales_person_detail->first_name .' '. $top_sales_person->sales_person_detail->last_name;
+        //     $data['top_dd_id'] = $top_dd_id->distributors_dealers->city->city_name;
+        //     $data['sales_growth'] = $sales_growth;
 
-       $last_month = $targetMonth->copy()->subMonth();
-       $last_month_start = $last_month->copy()->startOfMonth()->toDateString();
-       $last_month_end = $last_month->copy()->endOfMonth()->toDateString();
-       $total_last_month_sales = OrderManagement::whereBetween('order_date', [$last_month_start, $last_month_end])->sum('grand_total');
-       $sales_growth = ($total_sales - $total_last_month_sales) / $total_last_month_sales * 100;
+        //     Mail::send('email.monthly_sales.monthly_sales', ['data' => $data], fn($message) => $message->to(getSetting('company_email'))->subject('📊 Monthly Sales Report – '. $monthYear));
+        // }
+        // catch (\Throwable $th) {
+        //     dd($th);
+        //     return response()->json(['error' => 'Something went wrong!'], 500); 
+        // }
 
        //Debug
-       dd("Current Month: ". $startOfMonth . '  -  '. $endOfMonth, 'Total Sales: '. $total_sales, 'Top Product: '. $top_product->product->product_name, 'Top Sales Person: '. $top_sales_person->sales_person_detail->first_name . $top_sales_person->sales_person_detail->last_name, 'Top Sales Area: '. $top_dd_id->distributors_dealers->city->city_name, 'Sales Growth: '. $sales_growth.'%');
+       //    dd("Current Month: ". $startOfMonth . '  -  '. $endOfMonth, 'Total Sales: '. $total_sales, 'Top Product: '. $top_product->product->product_name, 'Top Sales Person: '. $top_sales_person->sales_person_detail->first_name . $top_sales_person->sales_person_detail->last_name, 'Top Sales Area: '. $top_dd_id->distributors_dealers->city->city_name, 'Sales Growth: '. $sales_growth.'%');
     }
    
 }

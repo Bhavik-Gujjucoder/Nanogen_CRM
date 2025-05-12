@@ -24,8 +24,8 @@ class PermissionController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
 
-                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteTarget"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('target.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
+                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deletePermission"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('permissions.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
                     $action_btn = '<div class="dropdown table-action">

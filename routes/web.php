@@ -52,12 +52,11 @@ Route::get('/clear', function () {
     return 'Cache Clear Succesfully...';
 });
 
-Route::resource('roles', RoleController::class);
-Route::resource('permissions', PermissionController::class);
-Route::middleware(['auth', 'role:superadmin'])->group(function () {
+Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
+    Route::resource('permissions', PermissionController::class);
+    Route::resource('roles', RoleController::class);
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 });
 
 Route::middleware(['auth', 'role:staff'])->group(function () {
@@ -72,7 +71,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:sales'])->group(function () {
     Route::get('/sales', [HomeController::class, 'sales_index'])->name('sales.dashboard');
-
 });
 
 Route::middleware(['auth', 'role:staff'])->group(function () {
@@ -132,12 +130,14 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::get('/distributors_dealers/export-price-list/{dealer?}', [DistributorsDealersController::class, 'export_price_list'])->name('distributors_dealers.export_price_list');
     Route::get('/replaceInWord/{id}/{dealer?}', [DistributorsDealersController::class, 'replaceInWord'])->name('distributors_dealers.replaceInWord');
     Route::delete('/documents_destroy/{id}', [DistributorsDealersController::class, 'documents_destroy'])->name('distributors_dealers.documents_destroy');
-    Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index','create']);
+    Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index', 'create']);
 
     /* Order Management */
-    Route::post('/order/status-update/{id}', [OrderManagementController::class, 'order_status'])->name('order_management.order_status');
-    Route::post('/order/bulk-delete', [OrderManagementController::class, 'bulkDelete'])->name('order_management.bulkDelete');
-    Route::resource('order_management', OrderManagementController::class);
+    // Route::middleware(['can:Order Management'])->group(function () {
+        Route::post('/order/status-update/{id}', [OrderManagementController::class, 'order_status'])->name('order_management.order_status');
+        Route::post('/order/bulk-delete', [OrderManagementController::class, 'bulkDelete'])->name('order_management.bulkDelete');
+        Route::resource('order_management', OrderManagementController::class);
+    // });
 
     /* Targets */
     Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
@@ -152,8 +152,6 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
         Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
         Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
-       
-        
     });
 
 
@@ -162,12 +160,8 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::post('/complain/bulk-delete', [ComplainController::class, 'bulkDelete'])->name('complain.bulkDelete');
 
     Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
-    Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get'); 
-    Route::post('/order_product_variation_price/get', [ProductController::class, 'get_product_variation_price'])->name('product.variation.price.get'); 
-
-   
-
-
+    Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get');
+    Route::post('/order_product_variation_price/get', [ProductController::class, 'get_product_variation_price'])->name('product.variation.price.get');
 });
 
 Route::get('/run-composer', function () {
