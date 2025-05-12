@@ -194,7 +194,6 @@ class HomeController extends Controller
        $startOfMonth = $targetMonth->copy()->startOfMonth()->toDateString();
        $endOfMonth = $targetMonth->copy()->endOfMonth()->toDateString();
 
-       
        $total_sales = OrderManagement::whereBetween('order_date', [$startOfMonth, $endOfMonth])->sum('grand_total');
        
        dd("Current Month: ". $startOfMonth . '  -  '. $endOfMonth, 'Total Sales: '. $total_sales);

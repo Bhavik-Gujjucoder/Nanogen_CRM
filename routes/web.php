@@ -67,7 +67,7 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [HomeController::class, 'admin_index'])->name('admin.dashboard');
-    Route::get('/get-monthly-report', [HomeController::class, 'monthly_report'])->name('admin.monthly_report');
+    // Route::get('/get-monthly-report', [HomeController::class, 'monthly_report'])->name('admin.monthly_report');
 });
 
 Route::middleware(['auth', 'role:sales'])->group(function () {
