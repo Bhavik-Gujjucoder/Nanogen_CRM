@@ -105,6 +105,7 @@ class ComplainController extends Controller
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'complain_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
@@ -131,8 +132,19 @@ class ComplainController extends Controller
         }else{
             $data['complain_image'] = null;
         }
+        $complain = Complain::create($data);
 
-        Complain::create($data);
+        if(isset($request->status)){
+            $status_history = new ComplainStatusHistory();
+            $history_data = [
+                'complain_id' => $complain->id,
+                'status' => $complain->status,
+                'remark' => $complain->remark,
+            ];
+            $status_history->create($history_data);
+        }
+
+
         return redirect()->route('complain.index')->with('success', 'Complain created successfully.');
     }
 

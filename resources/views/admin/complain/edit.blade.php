@@ -153,6 +153,8 @@
                                         Under review
                                     @elseif($history->status == 3)
                                         Completed
+                                    @elseif($history->status == 0)
+                                        Pending
                                     @endif
                                 </td>
                                 <td>{{ $history->remark }}</td>

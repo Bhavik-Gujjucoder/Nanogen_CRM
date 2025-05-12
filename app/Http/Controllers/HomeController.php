@@ -177,4 +177,10 @@ class HomeController extends Controller
             return redirect()->route('sales_person.edit', $sale_person_id);
         }
     }
+
+    // public function monthly_report()
+    // {
+       
+    // }
+   
 }

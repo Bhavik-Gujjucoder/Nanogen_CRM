@@ -26,7 +26,7 @@
                             @foreach ($distributor_dealers as $dd)
                                 <option value="{{ $dd->id }}"
                                     {{ old('dd_id', $order->dd_id) == $dd->id ? 'selected' : '' }}
-                                    data-user_type="{{ $dd->user_type }}">
+                                    data-user_type="{{ $dd->user_type }}"  data-mobile_no="{{ $dd->mobile_no }}">
                                     {{ $dd->applicant_name }}
                                     {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
                                 </option>
@@ -49,7 +49,7 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                     <input type="text" name="mobile_no" value="{{ old('mobile_no', $order->mobile_no) }}"
-                        class="form-control" placeholder="1234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                        class="form-control" placeholder="1234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -253,6 +253,13 @@
 @endsection
 @section('script')
 <script>
+      /*** party name select and phone number auto fillable ***/
+     $(function () {
+        $('[name="dd_id"]').change(function () {
+            $('[name="mobile_no"]').val($(this).find('option:selected').data('mobile_no') || '');
+        });
+    });
+
     /*** select option search functionality ***/
     $(document).ready(function() {
         // Initialize Select2

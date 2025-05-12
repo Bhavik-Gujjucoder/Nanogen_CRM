@@ -80,7 +80,14 @@ class OrderManagementController extends Controller
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
                     }
                     return '-'; 
-                })
+                }) 
+                 ->editColumn('grand_total', function ($row) {
+                    if ($row->grand_total) {
+                        return '₹' . $row->grand_total;
+                    }
+                    return '-'; 
+                }) 
+
                 ->addColumn('order_status', function ($row) {
                     $order_status = '';
                 
@@ -252,12 +259,12 @@ class OrderManagementController extends Controller
                 if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key];
                     OrderManagementProduct::create([
-                        'order_id' => $order->id,
+                        'order_id'   => $order->id,
                         'product_id' => $p,
-                        'price' => $price[$key],
-                        'qty' => $qty[$key],
+                        'price'      => $price[$key],
+                        'qty'        => $qty[$key],
                         'packing_size_id' => $packing_size_id[$key],
-                        'total' => $total[$key],
+                        'total'      => $total[$key],
                     ]);
                 }
             }
