@@ -67,7 +67,7 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [HomeController::class, 'admin_index'])->name('admin.dashboard');
-
+    Route::get('/get-monthly-report', [HomeController::class, 'monthly_report'])->name('admin.monthly_report');
 });
 
 Route::middleware(['auth', 'role:sales'])->group(function () {
@@ -164,6 +164,8 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
     Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get'); 
     Route::post('/order_product_variation_price/get', [ProductController::class, 'get_product_variation_price'])->name('product.variation.price.get'); 
+
+   
 
 
 });

@@ -53,6 +53,12 @@ class AreaWiseSalesController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
+                  ->editColumn('amount', function ($row) {
+                     if ($row->amount) {
+                        return '₹' . $row->amount;
+                    }
+                    return '-'; 
+                })
                 ->filterColumn('city_name', function ($query, $keyword) {
                     $query->where('city_name', 'like', "%$keyword%");
                 })
@@ -135,6 +141,12 @@ class AreaWiseSalesController extends Controller
                 })
                 ->editColumn('status', function ($row) {
                     return $row->statusBadge();
+                })
+                ->editColumn('grand_total', function ($row) {
+                     if ($row->grand_total) {
+                        return '₹' . $row->grand_total;
+                    }
+                    return '-'; 
                 })
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributors_dealers', function ($q) use ($keyword) {

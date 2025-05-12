@@ -178,9 +178,26 @@ class HomeController extends Controller
         }
     }
 
-    // public function monthly_report()
-    // {
+    public function monthly_report()
+    {
+       $today = Carbon::now();
+
+       if($today->day == 1)
+       {
+        $targetMonth = $today->copy()->subMonth();
+       }
+       else
+       {
+        $targetMonth = $today;
+       }
+
+       $startOfMonth = $targetMonth->copy()->startOfMonth()->toDateString();
+       $endOfMonth = $targetMonth->copy()->endOfMonth()->toDateString();
+
        
-    // }
+       $total_sales = OrderManagement::whereBetween('order_date', [$startOfMonth, $endOfMonth])->sum('grand_total');
+       
+       dd("Current Month: ". $startOfMonth . '  -  '. $endOfMonth, 'Total Sales: '. $total_sales);
+    }
    
 }

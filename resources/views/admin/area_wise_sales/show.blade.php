@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <h4 class="page-title mb-2">{{ $page_title }}</h4>
             <h5>{{ __('Region Name : ') }} {{ $city_name }}</h5>
-            <strong>{{ __('Total Sales Amount : ') }} {{ $city_wise_total_sales }}</strong>
+            <strong>{{ __('Total Sales Amount : ') }} ₹{{ $city_wise_total_sales }}</strong>
         </div>
         <div class="areawise col-md-4 d-flex">
             <div class="main-catgeory">
