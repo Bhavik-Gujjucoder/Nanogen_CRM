@@ -44374,3 +44374,6 @@ span.list{width: fit-content;
     display: inline-block;
     position: relative;
     padding-right: 30px;}
+
+
+table.gc-manage-table tbody td {white-space: normal;}    

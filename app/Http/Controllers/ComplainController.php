@@ -28,23 +28,24 @@ class ComplainController extends Controller
                         </label>';
                 })
                 ->addColumn('action', function ($row) {
-                
+
                     $edit_btn = '<a href="' . route('complain.edit', $row->id) . '" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deletecomplain"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('complain.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-'. $row->id.'" >'
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('complain.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
 
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-                    // Check if logged-in user is ID 1
-                    // // Show edit button for all users
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    // // Show delete button if the user is not ID 1
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })
@@ -53,22 +54,21 @@ class ComplainController extends Controller
                     $complainimage = isset($row->complain_image)
                         ? asset($imagePath)
                         : asset('images/default-user.png');
-                
+
                     $userLabel = $row->distributorsDealers?->user_type == 1 ? '(Distributor)'
-                              : ($row->distributorsDealers?->user_type == 2 ? '(Dealer)' : '');
-                
+                        : ($row->distributorsDealers?->user_type == 2 ? '(Dealer)' : '');
+
                     return '
                     <a href="' . $complainimage . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                         <img src="' . $complainimage . '" alt="Complain Image">
                     </a>
                     <span>' . ($row->distributorsDealers?->applicant_name ?? 'N/A') . '</span><br>
                     <small>' . $userLabel . '</small>';
-                    
                 })
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributorsDealers', function ($q) use ($keyword) {
                         $q->where('applicant_name', 'like', "%{$keyword}%")
-                          ->orWhereRaw("CASE 
+                            ->orWhereRaw("CASE 
                                             WHEN user_type = 1 THEN '(Distributor)' 
                                             WHEN user_type = 2 THEN '(Dealer)' 
                                             ELSE '' 
@@ -105,7 +105,7 @@ class ComplainController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'complain_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
@@ -129,12 +129,12 @@ class ComplainController extends Controller
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('complain_images', $filename, 'public'); // Save to storage/app/public/complain_images
             $data['complain_image'] = $filename;
-        }else{
+        } else {
             $data['complain_image'] = null;
         }
         $complain = Complain::create($data);
 
-        if(isset($request->status)){
+        if (isset($request->status)) {
             $status_history = new ComplainStatusHistory();
             $history_data = [
                 'complain_id' => $complain->id,
@@ -169,7 +169,7 @@ class ComplainController extends Controller
         ]);
 
         $complain = Complain::findOrFail($id);
-        if((int) $complain->status !== (int) $request->status){
+        if ((int) $complain->status !== (int) $request->status) {
             $complain_status_history = new ComplainStatusHistory();
             $complain_status_history_data = [
                 'complain_id' => $id,
@@ -178,7 +178,7 @@ class ComplainController extends Controller
             ];
             $complain_status_history->create($complain_status_history_data);
         }
-        
+
         $data = [
             'dd_id' => $request->dd_id,
             'date' => $request->date,
@@ -193,7 +193,7 @@ class ComplainController extends Controller
             if ($complain->complain_image) {
                 Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
             }
-            
+
             $file     = $request->file('complain_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('complain_images', $filename, 'public'); // Save to storage/app/public/complain_images
@@ -201,7 +201,7 @@ class ComplainController extends Controller
         }
 
         $complain->update($data);
-       
+
         return redirect()->route('complain.index')->with('success', 'Complain updated successfully.');
     }
 
@@ -224,11 +224,11 @@ class ComplainController extends Controller
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-        if (!empty($ids) && is_array($ids) ) {
+        if (!empty($ids) && is_array($ids)) {
             $complains = Complain::whereIn('id', $ids)->get();
 
             foreach ($complains as $complain) {
-              
+
                 $complain_status_history = ComplainStatusHistory::where('complain_id', $complain->id);
                 if ($complain_status_history) {
                     $complain_status_history->delete();
@@ -238,7 +238,6 @@ class ComplainController extends Controller
                     Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
                 }
                 $complain->delete();
-
             }
             return response()->json(['message' => 'Selected Complains deleted successfully!']);
         }

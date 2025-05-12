@@ -28,7 +28,7 @@
 
         <!-- Manage Users List -->
         <div class="table-responsive custom-table">
-            <table class="table dataTable no-footer" id="roles">
+            <table class="table dataTable no-footer gc-manage-table" id="roles">
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>

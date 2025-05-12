@@ -49,7 +49,8 @@ class AreaWiseSalesController extends Controller
                                     <div class="dropdown-menu dropdown-menu-right">';
 
 
-                    Auth::user()->can('manage orders') ? $action_btn .= $view_detail : '';
+                    // Auth::user()->can('manage orders') ? $action_btn .= $view_detail : '';
+                    $action_btn .= $view_detail;
 
                     return $action_btn . ' </div></div>';
                 })
