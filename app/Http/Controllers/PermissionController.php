@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -11,10 +13,35 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $permissions = Permission::all();
-        return view('permissions.index', compact('permissions'));
+        // $permissions = Permission::all();
+        $data['page_title'] = 'Permissions';
+
+            if ($request->ajax()) {
+            $data = Permission::query();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+
+                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteTarget"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('target.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
+                        . csrf_field() . method_field('DELETE') . '</form>';
+
+                    $action_btn = '<div class="dropdown table-action">
+                                    <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">';
+
+                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+
+                    return $action_btn . ' </div></div>';
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('permissions.index', $data);
     }
 
     /**
@@ -31,7 +58,7 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|unique:permissions,name']);
+        $request->validate(['name' => 'required|unique:permissions,name,NULL,id'],['name.required' => 'The Permission name field is required.']);
         Permission::create(['name' => $request->name]);
 
         return redirect()->route('permissions.index')->with('success', 'Permission created successfully.');
@@ -39,7 +66,7 @@ class PermissionController extends Controller
 
     /**
      * Display the specified resource.
-     */
+    */
     public function show(string $id)
     {
         //
