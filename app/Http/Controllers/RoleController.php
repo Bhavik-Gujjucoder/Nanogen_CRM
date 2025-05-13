@@ -18,7 +18,7 @@ class RoleController extends Controller
     {
         // $roles = Role::all();
 
-        $data['page_title'] = 'Roles';
+        $data['page_title'] = 'Role & Permissions';
 
         if ($request->ajax()) {
             $data = Role::with('permissions');
@@ -67,7 +67,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $data['page_title']  = 'Add role';
+        $data['page_title']  = 'Add Role & Permission';
         $data['permissions'] = Permission::all();
         return view('roles.create', $data);
     }
@@ -92,7 +92,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $data['page_title']   = 'Edit role';
+        $data['page_title']   = 'Edit Role & Permission';
         $data['permissions']  = Permission::all();
         $data['role']  = $role;
         return view('roles.edit', $data);
@@ -104,7 +104,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         // $request->validate(['name' => 'required|unique:roles,name,' . $role->id],['name.required' => 'The role name field is required.']);
-        $role->update(['name' => $request->name]);
+        // $role->update(['name' => $request->name]);
 
         if ($request->permissions) {
             $role->syncPermissions($request->permissions);
