@@ -131,7 +131,7 @@
                         @endcan
 
                         @can('Sales Reports')
-                            <li><a href="sales-reports.html"><i class="ti ti-file-invoice"></i><span>Sales
+                            <li><a href="#"><i class="ti ti-file-invoice"></i><span>Sales
                                         Reports</span></a></li>
                         @endcan
 
