@@ -61,8 +61,8 @@
                             <select class="form-control @error('role') is-invalid @enderror" name="role">
                                 <option value="">Select Role</option>
                                 @foreach ($roles as $key => $role)
-                                    @if ($role != 'superadmin')
-                                        <!-- Exclude superadmin -->
+                                    @if ($role != 'super admin')
+                                        <!-- Exclude super admin -->
                                         <option value="{{ $key }}" {{ old('role') == $key ? 'selected' : '' }}>
                                             {{ $role }}
                                         </option>

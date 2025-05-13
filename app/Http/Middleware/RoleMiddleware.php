@@ -26,7 +26,7 @@ class RoleMiddleware
         // Check if user has at least one of the required roles
         if (!$user->hasAnyRole($roles)) {  
             // Redirect based on role
-            if ($user->hasRole('superadmin')) {
+            if ($user->hasRole('super admin')) {
                 return redirect()->route('superadmin.dashboard');
             } elseif ($user->hasRole('admin')) {
                 return redirect()->route('admin.dashboard');
@@ -34,10 +34,9 @@ class RoleMiddleware
                 return redirect()->route('sales.dashboard');
             } elseif ($user->hasRole('staff')) { 
                 return redirect()->route('staff.dashboard');
-            }  
-            // elseif ($user->hasRole('reportingmanager ')) { 
-            //     return redirect()->route('reportingmanager.dashboard');
-            // }
+            } elseif ($user->hasRole('reporting manager')) { 
+                return redirect()->route('reportingmanager.dashboard');
+            }
              else {
                 abort(403, 'Unauthorized Access');
             }

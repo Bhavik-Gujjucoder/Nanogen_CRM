@@ -95,7 +95,7 @@ class SalesPersonController extends Controller
     public function create()
     {
         $data['page_title']         = 'Basic Information';
-        $data['reporting_managers'] = User::role(['reportingmanager'])->where('status', 1)->get();
+        $data['reporting_managers'] = User::role(['reporting manager'])->where('status', 1)->get();
         $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
         $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
         $data['states']             = StateManagement::where('status', 1)->get()->all();
@@ -214,7 +214,7 @@ class SalesPersonController extends Controller
     {
         $data['page_title']         = 'Edit Basic Information';
         $data['detail']             = SalesPersonDetail::findOrFail($id);
-        $data['reporting_managers'] = User::role(['reportingmanager'])->where('status', 1)->get();
+        $data['reporting_managers'] = User::role(['reporting manager'])->where('status', 1)->get();
         $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
         $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();

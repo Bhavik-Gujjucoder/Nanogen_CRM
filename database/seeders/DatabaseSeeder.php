@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // Define roles
         $roles = [
             'admin',
-            'superadmin',
+            'super admin',
             'sales'
         ];
 
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
 
         // Assign permissions to roles
         Role::findByName('admin')->givePermissionTo(['manage users', 'view reports']);
-        Role::findByName('superadmin')->givePermissionTo(Permission::all());
+        Role::findByName('super admin')->givePermissionTo(Permission::all());
         Role::findByName('sales')->givePermissionTo(['manage sales']);
 
         // Create users and assign roles
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Super Admin User',
                 'email' => 'superadmin@example.com',
                 'password' => Hash::make('password123'),
-                'role' => 'superadmin'
+                'role' => 'super admin'
             ],
             [
                 'name' => 'Sales User',

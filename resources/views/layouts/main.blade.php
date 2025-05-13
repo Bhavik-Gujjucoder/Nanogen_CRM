@@ -74,187 +74,190 @@
                         </div>
                     </li>
                     <!-- /Search -->
-                    <!-- Nav List -->
-                    <li class="nav-item nav-list">
-                        <ul class="nav">
-                            <li class="nav-item dropdown">
-                                <a href="javascript:void(0);" class="btn btn-header-list" data-bs-toggle="dropdown">
-                                    <i class="ti ti-layout-grid-add"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end menus-info">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <ul class="menu-list">
-                                                @can('State Management')
-                                                    <li>
-                                                        <a href="{{ route('state.index') }}">
-                                                            <div class="menu-details">
-                                                                <span class="menu-list-icon bg-green">
-                                                                    <i class="ti ti-map-pin-pin"></i>
-                                                                </span>
-                                                                <div class="menu-details-content">
-                                                                    <p>State Management</p>
-                                                                    <span>Add New State Management</span>
+                    @canany(['State Management', 'City Management', 'Sales Reports', 'Products and Catalogue', 'Pricing
+                        and Product Variation', 'Distributors', 'Dealers', 'Manage Users', 'Products Category'])
+                        <!-- Nav List -->
+                        <li class="nav-item nav-list">
+                            <ul class="nav">
+                                <li class="nav-item dropdown">
+                                    <a href="javascript:void(0);" class="btn btn-header-list" data-bs-toggle="dropdown">
+                                        <i class="ti ti-layout-grid-add"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end menus-info">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul class="menu-list">
+                                                    @can('State Management')
+                                                        <li>
+                                                            <a href="{{ route('state.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-green">
+                                                                        <i class="ti ti-map-pin-pin"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>State Management</p>
+                                                                        <span>Add New State Management</span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('City Management')
-                                                    <li>
-                                                        <a href="{{ route('city.index') }}">
-                                                            <div class="menu-details">
-                                                                <span class="menu-list-icon bg-violet">
-                                                                    <i class="ti ti-map-pin-pin"></i>
-                                                                </span>
-                                                                <div class="menu-details-content">
-                                                                    <p>City Management</p>
-                                                                    <span>Add City Management</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('City Management')
+                                                        <li>
+                                                            <a href="{{ route('city.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-violet">
+                                                                        <i class="ti ti-map-pin-pin"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>City Management</p>
+                                                                        <span>Add City Management</span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                @endcan
+                                                            </a>
+                                                        </li>
+                                                    @endcan
 
-                                                @can('Sales Reports')
-                                                    <li>
-                                                        <a href="{{ route('sales_person.index') }}">
-                                                            <div class="menu-details">
-                                                                <span class="menu-list-icon bg-info">
-                                                                    <i class="ti ti-file-invoice"></i>
-                                                                </span>
-                                                                <div class="menu-details-content">
-                                                                    <p>Sales Reports</p>
-                                                                    <span>Add New Sales Report</span>
+                                                    @can('Sales Reports')
+                                                        <li>
+                                                            <a href="{{ route('sales_person.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-info">
+                                                                        <i class="ti ti-file-invoice"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Sales Reports</p>
+                                                                        <span>Add New Sales Report</span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                  @can('Products and Catalogue')
-                                                <li>
-                                                    <a href="{{ route('product.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-danger">
-                                                                <i class="ti ti-atom-2"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Products and Catalogue</p>
-                                                                <span>Add New Products and Catalogue</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endcan
-                                                @can('Pricing and Product Variation')
-                                                <li>
-                                                    <a href="{{ route('variation.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-info">
-                                                                <i class="ti ti-medal"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Pricing and Product Variation</p>
-                                                                <span>Add New Pricing and Product
-                                                                    Variation</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endcan
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('Products and Catalogue')
+                                                        <li>
+                                                            <a href="{{ route('product.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-danger">
+                                                                        <i class="ti ti-atom-2"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Products and Catalogue</p>
+                                                                        <span>Add New Products and Catalogue</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('Pricing and Product Variation')
+                                                        <li>
+                                                            <a href="{{ route('variation.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-info">
+                                                                        <i class="ti ti-medal"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Pricing and Product Variation</p>
+                                                                        <span>Add New Pricing and Product
+                                                                            Variation</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
 
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <ul class="menu-list">
-                                                 @can('Distributors')
-                                                <li>
-                                                    <a href="{{ route('distributors_dealers.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-secondary">
-                                                                <i class="ti ti-chart-arcs"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Distributors</p>
-                                                                <span>Add New Distributors</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endcan
-                                                 @can('Dealers')
-                                                <li>
-                                                    <a href="{{ route('distributors_dealers.index', 1) }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-tertiary">
-                                                                <i class="ti ti-building-community"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Dealers</p>
-                                                                <span>Add New Dealers</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endcan
-                                                @if(Auth::user()->hasAnyRole(['admin', 'superadmin']))
-                                                <li>
-                                                    <a href="#">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-success">
-                                                                <i class="ti ti-navigation-cog"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Roles Permissions</p>
-                                                                <span>Add New Role</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endif
-                                                @can('Manage Users')
-                                                <li>
-                                                    <a href="{{ route('users.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-purple">
-                                                                <i class="ti ti-users"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Manage Users</p>
-                                                                <span>Add New Manage User</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endcan
-                                                 @can('Products Category')
-                                                <li>
-                                                    <a href="{{ route('category.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-info">
-                                                                <i class="ti ti-medal"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Products Category</p>
-                                                                <span>Add New Products Category</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                @endcan
-                                            </ul>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul class="menu-list">
+                                                    @can('Distributors')
+                                                        <li>
+                                                            <a href="{{ route('distributors_dealers.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-secondary">
+                                                                        <i class="ti ti-chart-arcs"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Distributors</p>
+                                                                        <span>Add New Distributors</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('Dealers')
+                                                        <li>
+                                                            <a href="{{ route('distributors_dealers.index', 1) }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-tertiary">
+                                                                        <i class="ti ti-building-community"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Dealers</p>
+                                                                        <span>Add New Dealers</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @if (Auth::user()->hasAnyRole(['admin', 'super admin']))
+                                                        <li>
+                                                            <a href="#">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-success">
+                                                                        <i class="ti ti-navigation-cog"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Roles Permissions</p>
+                                                                        <span>Add New Role</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                    @can('Manage Users')
+                                                        <li>
+                                                            <a href="{{ route('users.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-purple">
+                                                                        <i class="ti ti-users"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Manage Users</p>
+                                                                        <span>Add New Manage User</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('Products Category')
+                                                        <li>
+                                                            <a href="{{ route('category.index') }}">
+                                                                <div class="menu-details">
+                                                                    <span class="menu-list-icon bg-info">
+                                                                        <i class="ti ti-medal"></i>
+                                                                    </span>
+                                                                    <div class="menu-details-content">
+                                                                        <p>Products Category</p>
+                                                                        <span>Add New Products Category</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                            {{-- <li class="nav-item">
+                                </li>
+                                {{-- <li class="nav-item">
                                 <a href="lead-reports.html" class="btn btn-chart-pie">
                                     <i class="ti ti-chart-pie"></i>
                                 </a>
                             </li> --}}
-                        </ul>
-                    </li>
-                    <!-- /Nav List -->
+                            </ul>
+                        </li>
+                        <!-- /Nav List -->
+                    @endcanany
 
 
                     <!-- Notifications -->

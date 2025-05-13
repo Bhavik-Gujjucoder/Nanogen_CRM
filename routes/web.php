@@ -53,7 +53,7 @@ Route::get('/clear', function () {
     return 'Cache Clear Succesfully...';
 });
 
-Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
+Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('superadmin.dashboard');
@@ -77,13 +77,13 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/staff', [HomeController::class, 'staff_index'])->name('staff.dashboard');
 });
 
-// Route::middleware(['auth', 'role:reportingmanager'])->group(function () {
-//     Route::get('/reportingmanager', [HomeController::class, 'reporting_manager_index'])->name('reportingmanager.dashboard');
-// });
+Route::middleware(['auth', 'role:reporting manager'])->group(function () {
+    Route::get('/reporting_manager', [HomeController::class, 'reporting_manager_index'])->name('reportingmanager.dashboard');
+});
 
 Route::get('/my-profile', [HomeController::class, 'my_profile'])->name('my_profile');
 
-Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
+Route::middleware(['auth', 'role:admin,staff,sales,reporting manager'])->group(function () {
 
     /* Users */
     Route::middleware(['permission:Manage Users'])->group(function () {

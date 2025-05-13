@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Users';
         if ($request->ajax()) {
-            $data = User::role(['admin', 'staff', 'reportingmanager']);
+            $data = User::role(['admin', 'staff', 'reporting manager']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -97,8 +97,8 @@ class UserController extends Controller
     public function create()
     {
         $data['page_title'] = 'Create User';
-        // $data['roles']   = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
-        $data['roles']      = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
+        // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
+        $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id');
 
         return view('users.create', $data);
     }
@@ -114,7 +114,7 @@ class UserController extends Controller
             'email'    => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'role'     => [
                 'required',
-                Rule::exists('roles', 'id')->whereNot('name', 'superadmin') // Exclude superadmin
+                Rule::exists('roles', 'id')->whereNot('name', 'super admin') // Exclude super admin
             ],
             'phone_no' => 'required|digits_between:10,11|unique:users,phone_no,NULL,id,deleted_at,NULL',
             'password' => 'required|min:6|confirmed',
@@ -163,8 +163,8 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Edit User';
         $data['user']       = $user;
-        // $data['roles']   = Role::where('name', '!=', 'superadmin')->pluck('name', 'id'); // Get all roles
-        $data['roles']      = Role::whereNotIn('name', ['superadmin', 'sales'])->pluck('name', 'id');
+        // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
+        $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id');
         return view('users.edit', $data);
     }
 

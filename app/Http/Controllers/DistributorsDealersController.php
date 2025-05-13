@@ -33,6 +33,12 @@ class DistributorsDealersController extends Controller
     public function index(Request $request)
     {
 
+        if ($request->dealer == 1) {
+            $this->authorize('Dealers'); // or use: Gate::authorize('Dealer Access');
+        } else {
+            $this->authorize('Distributors');
+        }
+
         $data['page_title'] = $request->dealer == 1 ? 'Dealers' : 'Distributors';
         if ($request->ajax()) {
 
@@ -71,7 +77,7 @@ class DistributorsDealersController extends Controller
                     $action_btn .= $edit_btn;
                     $action_btn .= $o_form_download_btn;
                     $action_btn .= $delete_btn;
-                    
+
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('city_id', function ($row) {
@@ -86,9 +92,10 @@ class DistributorsDealersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $data['page_title'] = 'Create Distributors and Dealers';
+        $data['page_title'] = $request->dealer == 1 ? 'Create Dealers' : 'Create Distributors';
+        // $data['page_title'] = 'Create Distributors and Dealers';
         $data['products']   = Product::where('status', 1)->get()->all();
         $data['states']     = StateManagement::where('status', 1)->get()->all();
         $data['countries']  = Country::where('status', 1)->get()->all();
@@ -174,9 +181,9 @@ class DistributorsDealersController extends Controller
     public function edit(string $id)
     {
         $distributor_dealers = DistributorsDealers::findOrFail($id);
-
-        $data = [
-            'page_title'          => 'Edit Distributors and Dealers',
+        // $data['page_title'] = $request->dealer == 1 ? 'Create Dealers' : 'Create Distributors';
+        $data = [ 
+            'page_title'          =>  $distributor_dealers->user_type == 1 ? 'Edit Distributor' : 'Edit Dealer',
             'distributor_dealers' => $distributor_dealers,
             'products'            => Product::where('status', 1)->get()->all(),
             'states'              => StateManagement::where('status', 1)->get()->all(),

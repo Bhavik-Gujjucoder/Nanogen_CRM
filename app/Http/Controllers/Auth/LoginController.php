@@ -53,8 +53,8 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
 
-        if ($user->hasRole('superadmin')) {
-            return redirect('/'); // Redirect to Superadmin dashboard
+        if ($user->hasRole('super admin')) {
+            return redirect('/'); // Redirect to super admin dashboard
         }
 
         if ($user->hasRole('admin')) {
@@ -69,9 +69,9 @@ class LoginController extends Controller
             return redirect('/staff'); // Redirect to sales dashboard
         }
 
-        // if ($user->hasRole('reportingmanager')) {
-        //     return redirect('/reportingmanager'); // Redirect to sales dashboard
-        // }
+        if ($user->hasRole('reporting manager')) {
+            return redirect('/reporting_manager'); // Redirect to sales dashboard
+        }
         return redirect('/'); // Default fallback
     }
 }

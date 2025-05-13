@@ -65,7 +65,7 @@
                             <label class="col-form-label">Role <span class="text-danger">*</span></label>
                             <select class="form-select @error('role') is-invalid @enderror" name="role">
                                 @foreach ($roles as $key => $role)
-                                    @if($role != 'superadmin') {{-- Exclude superadmin --}}
+                                    @if($role != 'super admin') {{-- Exclude super admin --}}
                                         <option value="{{$role}}" {{ $user->hasRole($role) ? 'selected' : '' }}>
                                             {{ $role }}
                                         </option>

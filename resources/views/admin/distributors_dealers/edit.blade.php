@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="upload-content">
                                     <div class="upload-btn">
-                                        <input name="profile_image" type="file" accept=".jpg,.jpeg,.gif,.png" 
+                                        <input name="profile_image" type="file" accept=".jpg,.jpeg,.gif,.png"
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload Profile Picture
@@ -38,19 +38,22 @@
 
                         <div class="radio-group-bg">
                             <div class="radio-group-flex">
-                                <div class="radio-group-tab">
-                                    <input type="radio" name="user_type" value="1"
-                                        {{ old('user_type', $distributor_dealers->user_type) == '1' ? 'checked' : '' }}
-                                        id="distributor-radio" class="create-deitr" />
-                                    <label for="distributor-radio">Distributor</label>
-                                </div>
-
-                                <div class="radio-group-tab">
-                                    <input type="radio" name="user_type" value="2"
-                                        {{ old('user_type', $distributor_dealers->user_type) == '2' ? 'checked' : '' }}
-                                        id="dealers-radio" class="create-deitr" />
-                                    <label for="dealers-radio">Dealers</label>
-                                </div>
+                                @can('Distributors')
+                                    <div class="radio-group-tab">
+                                        <input type="radio" name="user_type" value="1"
+                                            {{ old('user_type', $distributor_dealers->user_type) == '1' ? 'checked' : '' }}
+                                            id="distributor-radio" class="create-deitr" />
+                                        <label for="distributor-radio">Distributor</label>
+                                    </div>
+                                @endcan
+                                @can('Dealers')
+                                    <div class="radio-group-tab">
+                                        <input type="radio" name="user_type" value="2"
+                                            {{ old('user_type', $distributor_dealers->user_type) == '2' ? 'checked' : '' }}
+                                            id="dealers-radio" class="create-deitr" />
+                                        <label for="dealers-radio">Dealers</label>
+                                    </div>
+                                @endcan
                             </div>
                         </div>
 
@@ -108,7 +111,8 @@
                                 <label class="col-form-label">Mobile No <span class="text-danger">*</span></label>
                                 <input type="number" name="mobile_no"
                                     value="{{ old('mobile_no', $distributor_dealers->mobile_no) }}"
-                                    class="form-control" placeholder="Mobile No" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                                    class="form-control" placeholder="Mobile No"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                                 <span id="mobile_no_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -136,7 +140,8 @@
                                         class="text-danger">*</span></label>
                                 <input type="number" name="aadhar_card"
                                     value="{{ old('aadhar_card', $distributor_dealers->aadhar_card) }}"
-                                    class="form-control" placeholder="Aadhar Card No" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
+                                    class="form-control" placeholder="Aadhar Card No"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
                                 <span id="aadhar_card_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -166,8 +171,7 @@
                             <div class="mb-3">
                                 <label class="col-form-label">State/Province <span
                                         class="text-danger">*</span></label>
-                                <select id="stateDropdown" class="form-control "
-                                    name="state_id">
+                                <select id="stateDropdown" class="form-control " name="state_id">
                                     <option value="">Select state</option>
                                     @foreach ($states as $state)
                                         <option value="{{ $state->id }}"
@@ -183,8 +187,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">City <span class="text-danger">*</span></label>
-                                <select id="cityDropdown" class="form-control "
-                                    name="city_id">
+                                <select id="cityDropdown" class="form-control " name="city_id">
                                     <option value="">Select city</option>
                                 </select>
                                 <span id="city_id_error" class="text-danger"></span>
@@ -196,15 +199,13 @@
                                 <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
                                 <input type="text" name="postal_code"
                                     value="{{ old('postal_code', $distributor_dealers->postal_code) }}"
-                                    class="form-control "
-                                    placeholder="Postal/Zip code">
-                                    <span id="postal_code_error" class="text-danger"></span>
+                                    class="form-control " placeholder="Postal/Zip code">
+                                <span id="postal_code_error" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="col-form-label">Country <span class="text-danger">*</span></label>
-                            <select id="inputState" class="form-control "
-                                name="country_id">
+                            <select id="inputState" class="form-control " name="country_id">
                                 <option value="">Select country</option>
                                 @foreach ($countries as $county)
                                     <option value="{{ $county->id }}"
@@ -385,7 +386,8 @@
                                             <th scope="col">Remarks</th>
                                             {{-- <th scope="col">Action</th> --}}
                                             <th scope="col">
-                                                <button type="button" id="addNewFirmRow" class="btn btn-primary">Add New</button>
+                                                <button type="button" id="addNewFirmRow" class="btn btn-primary">Add
+                                                    New</button>
                                             </th>
                                         </tr>
                                     </thead>
@@ -521,7 +523,8 @@
                                             <th scope="col">Marital Status</th> --}}
                                             {{-- <th scope="col">Action</th> --}}
                                             <th scope="col">
-                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add New</button>
+                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add
+                                                    New</button>
                                             </th>
                                         </tr>
                                     </thead>
@@ -1023,7 +1026,13 @@
                                                         pathinfo($document->file_name, PATHINFO_EXTENSION),
                                                     );
                                                     $fileUrl = asset('storage/' . $document->file_path);
-                                                    $isImage = in_array($extension, [ 'jpg', 'jpeg', 'png', 'gif', 'webp', ]);
+                                                    $isImage = in_array($extension, [
+                                                        'jpg',
+                                                        'jpeg',
+                                                        'png',
+                                                        'gif',
+                                                        'webp',
+                                                    ]);
                                                     $downloadTypes = ['doc', 'docx'];
                                                     $openInTab = !in_array($extension, $downloadTypes);
                                                     $icon = match ($extension) {
@@ -1062,7 +1071,8 @@
                                                             @endif
                                                         @endif
 
-                                                        <button type="button" class="btn btn-sm btn-danger delete_document"
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-danger delete_document"
                                                             data-id="{{ $document->id }}"
                                                             data-url="{{ route('distributors_dealers.documents_destroy', $document->id) }}">
                                                             <i class="ti ti-trash text-white"></i> Delete
@@ -1091,7 +1101,8 @@
                                         <input type="file" name="files[]" class="form-control mb-1"
                                             accept=".jpg,.jpeg,.png,.gif,.webp,.doc,.docx" />
                                         <div class="form-input-icon">
-                                            <button type="button" class="btn btn-danger removeFileBtn">Remove</button>
+                                            <button type="button"
+                                                class="btn btn-danger removeFileBtn">Remove</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1286,7 +1297,6 @@
             e.preventDefault(); // Block submit if invalid
         }
     });
-
 </script>
 
 

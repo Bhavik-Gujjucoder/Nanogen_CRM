@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="upload-content">
                                     <div class="upload-btn">
-                                        <input name="profile_image" type="file" accept=".jpg,.jpeg,.gif,.png" 
+                                        <input name="profile_image" type="file" accept=".jpg,.jpeg,.gif,.png"
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload Profile Picture
@@ -35,17 +35,20 @@
 
                         <div class="radio-group-bg">
                             <div class="radio-group-flex">
-                                <div class="radio-group-tab">
-                                    <input type="radio" name="user_type" value="1" id="distributor-radio"
-                                        class="create-deitr" {{ request('dealer') == 1 ? '' : 'checked' }} />
-                                    <label for="distributor-radio">Distributor</label>
-                                </div>
-
-                                <div class="radio-group-tab">
-                                    <input type="radio" name="user_type" value="2" id="dealers-radio"
-                                        class="create-deitr" {{ request('dealer') == 1 ? 'checked' : '' }} />
-                                    <label for="dealers-radio">Dealers</label>
-                                </div>
+                                @can('Distributors')
+                                    <div class="radio-group-tab">
+                                        <input type="radio" name="user_type" value="1" id="distributor-radio"
+                                            class="create-deitr" {{ request('dealer') == 1 ? '' : 'checked' }} />
+                                        <label for="distributor-radio">Distributor</label>
+                                    </div>
+                                @endcan
+                                @can('Dealers')
+                                    <div class="radio-group-tab">
+                                        <input type="radio" name="user_type" value="2" id="dealers-radio"
+                                            class="create-deitr" {{ request('dealer') == 1 ? 'checked' : '' }} />
+                                        <label for="dealers-radio">Dealers</label>
+                                    </div>
+                                @endcan
                             </div>
                         </div>
 
@@ -98,8 +101,8 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Mobile No <span class="text-danger">*</span></label>
                                 <input type="number" name="mobile_no" value="{{ old('mobile_no') }}"
-                                    class="form-control" placeholder="Mobile No" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);"
-                                    >
+                                    class="form-control" placeholder="Mobile No"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                                 <span id="mobile_no_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -125,8 +128,8 @@
                                 <label class="col-form-label">Aadhar Card No <span
                                         class="text-danger">*</span></label>
                                 <input type="number" name="aadhar_card" value="{{ old('aadhar_card') }}"
-                                    class="form-control" placeholder="Aadhar Card No" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);"
-                                    >
+                                    class="form-control" placeholder="Aadhar Card No"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
                                 <span id="aadhar_card_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -869,7 +872,8 @@
                                 <div id="fileUploadWrapper">
                                     <div class="col-md-5 file-group">
                                         <div class="form-input-icon input-group gropinginput box-bordernone">
-                                            <input type="file" name="files[]" class="form-control mb-1" accept=".jpg,.jpeg,.png,.gif,.webp,.doc,.docx"/>
+                                            <input type="file" name="files[]" class="form-control mb-1"
+                                                accept=".jpg,.jpeg,.png,.gif,.webp,.doc,.docx" />
                                             <div class="form-input-icon">
                                                 <button type="button"
                                                     class="btn btn-danger removeFileBtn">Remove</button>
@@ -891,7 +895,7 @@
                     <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </div>
-                <!-- /Basic Info -->
+            <!-- /Basic Info -->
         </form>
     </div>
 </div>
@@ -1278,8 +1282,8 @@
             },
         });
     });
-     // Catch all: prevent native submit unless valid
-     $("#userForm").on("submit", function(e) {
+    // Catch all: prevent native submit unless valid
+    $("#userForm").on("submit", function(e) {
         if (!$(this).valid()) {
             e.preventDefault(); // Block submit if invalid
         }
