@@ -131,12 +131,12 @@
                         @endcan
 
                         @can('Sales Reports')
-                            <li><a href="#"><i class="ti ti-file-invoice"></i><span>Sales
+                            <li><a href="javascript:void(0);"><i class="ti ti-file-invoice"></i><span>Sales
                                         Reports</span></a></li>
                         @endcan
 
                         @can('Trend Analysis')
-                            <li><a href="trend-analysis.html"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a>
+                            <li><a href="javascript:void(0);"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a>
                             </li>
                         @endcan
 
