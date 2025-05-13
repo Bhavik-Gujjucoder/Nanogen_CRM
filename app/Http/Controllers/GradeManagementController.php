@@ -14,7 +14,7 @@ class GradeManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
-    */
+     */
     public function index(Request $request)
     {
         $data['page_title'] = 'Grade Management';
@@ -40,18 +40,18 @@ class GradeManagementController extends Controller
                     // onclick="return confirm(`' . __('Do you want to delete this admin?') . '`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteGrade"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('grade.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-'. $row->id.'" >'
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('grade.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
 
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-                    // Check if logged-in user is ID 1
-                    // // Show edit button for all users
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    // // Show delete button if the user is not ID 1
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })
@@ -68,12 +68,12 @@ class GradeManagementController extends Controller
 
     /**
      * Store a newly created resource in storage.
-    */
+     */
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|unique:grade_management,name,NULL,id,deleted_at,NULL'
-        ],[
+        ], [
             'name.required' => 'The grade name field is required.',
             'name.unique'   => 'This grade name already exists.',
         ]);
@@ -88,18 +88,18 @@ class GradeManagementController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-    */
+     */
     public function edit(GradeManagement $grade)
     {
         return response()->json($grade);
     }
 
-     /**
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, GradeManagement $grade)
     {
-        $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id. ',id,deleted_at,NULL'],[
+        $request->validate(['name' => 'required|unique:grade_management,name,' . $grade->id . ',id,deleted_at,NULL'], [
             'name.required' => 'The grade name field is required.',
             'name.unique'   => 'This grade name already exists.',
         ]);
@@ -123,16 +123,15 @@ class GradeManagementController extends Controller
     }
 
 
-      /*****  Bulk delete method  *****/
-      public function bulkDelete(Request $request)
-      {
-          $ids = $request->ids;
-          if (!empty($ids)) {
+    /*****  Bulk delete method  *****/
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+        if (!empty($ids)) {
             GradeManagement::whereIn('id', $ids)->delete();
 
-              return response()->json(['message' => 'Selected Grade deleted successfully!']);
-          }
-          return response()->json(['message' => 'No records selected!'], 400);
-      }
-
+            return response()->json(['message' => 'Selected Grade deleted successfully!']);
+        }
+        return response()->json(['message' => 'No records selected!'], 400);
+    }
 }

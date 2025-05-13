@@ -22,10 +22,10 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
     <link href="{{ asset('css/toastify.css') }}" rel="stylesheet">
-        {{-- datepicker  --}}
-        {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> --}}
-        <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
-        {{-- END --}}
+    {{-- datepicker  --}}
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> --}}
+    <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
+    {{-- END --}}
 
     <!-- include summernote css/js -->
     <link rel="stylesheet" href="{{ asset('css/summernote-bs4.min.css') }}">
@@ -39,8 +39,8 @@
             <!-- Logo -->
             <div class="header-left active">
                 <a href="javascript:void(0)" class="logo logo-normal">
-                    @if (getSetting('company_logo') && !empty(getSetting('company_logo')) )
-                        <img src="{{ asset('storage/company_logo/'.getSetting('company_logo')) }}" alt="Logo">
+                    @if (getSetting('company_logo') && !empty(getSetting('company_logo')))
+                        <img src="{{ asset('storage/company_logo/' . getSetting('company_logo')) }}" alt="Logo">
                     @else
                         <img src="{{ asset('images/logo.png') }}" alt="Logo">
                     @endif
@@ -85,45 +85,53 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <ul class="menu-list">
-                                                <li>
-                                                    <a href="{{ route('state.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-green">
-                                                                <i class="ti ti-map-pin-pin"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
+                                                @can('State Management')
+                                                    <li>
+                                                        <a href="{{ route('state.index') }}">
+                                                            <div class="menu-details">
+                                                                <span class="menu-list-icon bg-green">
+                                                                    <i class="ti ti-map-pin-pin"></i>
+                                                                </span>
+                                                                <div class="menu-details-content">
                                                                     <p>State Management</p>
                                                                     <span>Add New State Management</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('city.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-violet">
-                                                                <i class="ti ti-map-pin-pin"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>City Management</p>
-                                                                <span>Add City Management</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('City Management')
+                                                    <li>
+                                                        <a href="{{ route('city.index') }}">
+                                                            <div class="menu-details">
+                                                                <span class="menu-list-icon bg-violet">
+                                                                    <i class="ti ti-map-pin-pin"></i>
+                                                                </span>
+                                                                <div class="menu-details-content">
+                                                                    <p>City Management</p>
+                                                                    <span>Add City Management</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('sales_person.index') }}">
-                                                        <div class="menu-details">
-                                                            <span class="menu-list-icon bg-info">
-                                                                <i class="ti ti-file-invoice"></i>
-                                                            </span>
-                                                            <div class="menu-details-content">
-                                                                <p>Sales Reports</p>
-                                                                <span>Add New Sales Report</span>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+
+                                                @can('Sales Reports')
+                                                    <li>
+                                                        <a href="{{ route('sales_person.index') }}">
+                                                            <div class="menu-details">
+                                                                <span class="menu-list-icon bg-info">
+                                                                    <i class="ti ti-file-invoice"></i>
+                                                                </span>
+                                                                <div class="menu-details-content">
+                                                                    <p>Sales Reports</p>
+                                                                    <span>Add New Sales Report</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                  @can('Products and Catalogue')
                                                 <li>
                                                     <a href="{{ route('product.index') }}">
                                                         <div class="menu-details">
@@ -137,6 +145,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endcan
+                                                @can('Pricing and Product Variation')
                                                 <li>
                                                     <a href="{{ route('variation.index') }}">
                                                         <div class="menu-details">
@@ -151,11 +161,13 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endcan
 
                                             </ul>
                                         </div>
                                         <div class="col-md-6">
                                             <ul class="menu-list">
+                                                 @can('Distributors')
                                                 <li>
                                                     <a href="{{ route('distributors_dealers.index') }}">
                                                         <div class="menu-details">
@@ -169,6 +181,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endcan
+                                                 @can('Dealers')
                                                 <li>
                                                     <a href="{{ route('distributors_dealers.index', 1) }}">
                                                         <div class="menu-details">
@@ -182,6 +196,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endcan
+                                                @if(Auth::user()->hasAnyRole(['admin', 'superadmin']))
                                                 <li>
                                                     <a href="#">
                                                         <div class="menu-details">
@@ -195,6 +211,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endif
+                                                @can('Manage Users')
                                                 <li>
                                                     <a href="{{ route('users.index') }}">
                                                         <div class="menu-details">
@@ -208,6 +226,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endcan
+                                                 @can('Products Category')
                                                 <li>
                                                     <a href="{{ route('category.index') }}">
                                                         <div class="menu-details">
@@ -221,6 +241,7 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @endcan
                                             </ul>
                                         </div>
                                     </div>
@@ -235,7 +256,7 @@
                     </li>
                     <!-- /Nav List -->
 
-                    
+
                     <!-- Notifications -->
                     {{-- <li class="nav-item dropdown nav-item-box">
                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="dropdown">
@@ -325,11 +346,10 @@
                                     {{-- <img src="{{ asset('storage/profile_pictures/' . (auth()->user()->profile_picture ?? 'images/default-user.png')) }}"
                                     class="img-fluid" alt="Profile"> --}}
 
-                                    <img src="{{ auth()->user()->profile_picture 
-                                    ? asset('storage/profile_pictures/' . auth()->user()->profile_picture) 
-                                    : asset('images/default-user.png') 
-                                }}" 
-                                class="img-fluid" alt="Profile">
+                                    <img src="{{ auth()->user()->profile_picture
+                                        ? asset('storage/profile_pictures/' . auth()->user()->profile_picture)
+                                        : asset('images/default-user.png') }}"
+                                        class="img-fluid" alt="Profile">
                                 </span>
                                 <span class="badge badge-success rounded-pill"></span>
                             </span>
@@ -340,9 +360,9 @@
                                     <i class="ti ti-layout-2"></i> Dashboard
                                 </a>
                                 <a class="dropdown-item" href="{{ route('my_profile') }}">
-                                    <i class="ti ti-user-pin"></i> My Profile 
+                                    <i class="ti ti-user-pin"></i> My Profile
                                 </a>
-                               
+
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
@@ -369,7 +389,7 @@
                         <i class="ti ti-layout-2"></i> Dashboard
                     </a>
                     <a class="dropdown-item" href="profile.html">
-                        <i class="ti ti-user-pin"></i> My Profile 
+                        <i class="ti ti-user-pin"></i> My Profile
                     </a>
                     <a class="dropdown-item" href="login.html">
                         <i class="ti ti-lock"></i> Logout
@@ -442,11 +462,11 @@
     <script src="{{ asset('js/summernote-bs4.min.js') }}"></script>
     {{-- End summernote --}}
 
-      {{-- datepicker  --}}
-      {{-- <script src="https://cdn.jsdelivr.net/npm/flatpickr.js"></script> --}}
-      <script src="{{ asset('js/flatpickr.js') }}"></script>
-      {{-- END --}}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    {{-- datepicker  --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/flatpickr.js"></script> --}}
+    <script src="{{ asset('js/flatpickr.js') }}"></script>
+    {{-- END --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
 
     @if (session('success'))

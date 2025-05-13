@@ -44,6 +44,7 @@ Route::get('/test-mail', function () {
         dd($th);
     }
 });
+
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
     Artisan::call('storage:link');
@@ -62,7 +63,6 @@ Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
 Route::middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/staff', [HomeController::class, 'staff_index']);
 });
-
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [HomeController::class, 'admin_index'])->name('admin.dashboard');
@@ -84,44 +84,54 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 Route::get('/my-profile', [HomeController::class, 'my_profile'])->name('my_profile');
 
 Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
+
     /* Users */
-    Route::resource('users', UserController::class);
-    Route::post('/user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete');
-
+    Route::middleware(['permission:Manage Users'])->group(function () {
+        Route::resource('users', UserController::class);
+        Route::post('/user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete');
+    });
     /* Grade */
-    Route::resource('grade', GradeManagementController::class);
-    Route::post('/grade/bulk-delete', [GradeManagementController::class, 'bulkDelete'])->name('grade.bulkDelete');
-
+    Route::middleware(['permission:Grade Management'])->group(function () {
+        Route::resource('grade', GradeManagementController::class);
+        Route::post('/grade/bulk-delete', [GradeManagementController::class, 'bulkDelete'])->name('grade.bulkDelete');
+    });
     /* Category */
-    Route::resource('category', CategoryController::class);
-    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');
-
+    Route::middleware(['permission:Products Category'])->group(function () {
+        Route::resource('category', CategoryController::class);
+        Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');
+    });
     /* Variation */
-    Route::resource('variation', VariationController::class);
-    Route::post('/variation/bulk-delete', [VariationController::class, 'bulkDelete'])->name('variation.bulkDelete');
-
+    Route::middleware(['permission:Pricing and Product Variation'])->group(function () {
+        Route::resource('variation', VariationController::class);
+        Route::post('/variation/bulk-delete', [VariationController::class, 'bulkDelete'])->name('variation.bulkDelete');
+    });
     /* Product */
-    Route::resource('product', ProductController::class);
-    Route::post('/product/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
-
+    Route::middleware(['permission:Products and Catalogue'])->group(function () {
+        Route::resource('product', ProductController::class);
+        Route::post('/product/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
+    });
     /* States Management */
-    Route::resource('state', StateManagementController::class);
-    Route::post('/state/bulk-delete', [StateManagementController::class, 'bulkDelete'])->name('state.bulkDelete');
-
+    Route::middleware(['permission:State Management'])->group(function () {
+        Route::resource('state', StateManagementController::class);
+        Route::post('/state/bulk-delete', [StateManagementController::class, 'bulkDelete'])->name('state.bulkDelete');
+    });
     /* City Management */
-    Route::resource('city', CityManagementController::class);
-    Route::post('/city/bulk-delete', [CityManagementController::class, 'bulkDelete'])->name('city.bulkDelete');
-
+    Route::middleware(['permission:City Management'])->group(function () {
+        Route::resource('city', CityManagementController::class);
+        Route::post('/city/bulk-delete', [CityManagementController::class, 'bulkDelete'])->name('city.bulkDelete');
+    });
     /* Sales Person Details */
-    Route::resource('sales_person', SalesPersonController::class);
-    Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
-    Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
-
+    Route::middleware(['permission:Sales Persons'])->group(function () {
+        Route::resource('sales_person', SalesPersonController::class);
+        Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
+        Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
+    });
     /* Area-wise Sales */
-    Route::resource('area_wise_sales', AreaWiseSalesController::class)->except(['show']);
-    Route::get('area_wise_sales/order_show/{id}', [AreaWiseSalesController::class, 'order_show'])->name('area_wise_sales.order_show');
-    Route::get('area_wise_sales/show/{city_id}', [AreaWiseSalesController::class, 'show'])->name('area_wise_sales.show');
-
+    Route::middleware(['permission:Area Wise Sales'])->group(function () {
+        Route::resource('area_wise_sales', AreaWiseSalesController::class)->except(['show']);
+        Route::get('area_wise_sales/order_show/{id}', [AreaWiseSalesController::class, 'order_show'])->name('area_wise_sales.order_show');
+        Route::get('area_wise_sales/show/{city_id}', [AreaWiseSalesController::class, 'show'])->name('area_wise_sales.show');
+    });
 
     /* Distributors & Dealers */
     Route::get('distributors_dealers/index/{dealer?}', [DistributorsDealersController::class, 'index'])->name('distributors_dealers.index');
@@ -133,31 +143,34 @@ Route::middleware(['auth', 'role:admin,staff,sales'])->group(function () {
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index', 'create']);
 
     /* Order Management */
-    // Route::middleware(['can:Order Management'])->group(function () {
+    Route::middleware(['permission:Order Management'])->group(function () {
         Route::post('/order/status-update/{id}', [OrderManagementController::class, 'order_status'])->name('order_management.order_status');
         Route::post('/order/bulk-delete', [OrderManagementController::class, 'bulkDelete'])->name('order_management.bulkDelete');
         Route::resource('order_management', OrderManagementController::class);
-    // });
-
+    });
     /* Targets */
-    Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
-    Route::resource('target', TargetController::class);
+    Route::middleware(['permission:Targets'])->group(function () {
+        Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
+        Route::resource('target', TargetController::class);
+    });
 
     /* Payments */
-    Route::resource('payment', PaymentsController::class);
+    // Route::resource('payment', PaymentsController::class);
 
     Route::post('/send-whatsapp-pdf', [WhatsAppController::class, 'sendPdf'])->name('send-whatsapp-pdf.sendPdf');
 
     /* General Settings */
-    Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
-        Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
-        Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
+    Route::middleware(['permission:General Setting'])->group(function () {
+        Route::prefix('general-setting')->name('admin.generalsetting')->group(function () {
+            Route::get('/create', [GeneralSettingController::class, 'create'])->name('.create');
+            Route::post('/store', [GeneralSettingController::class, 'store'])->name('.store');
+        });
     });
-
-
     /* Complain */
-    Route::resource('complain', ComplainController::class);
-    Route::post('/complain/bulk-delete', [ComplainController::class, 'bulkDelete'])->name('complain.bulkDelete');
+    Route::middleware(['permission:Complain'])->group(function () {
+        Route::resource('complain', ComplainController::class);
+        Route::post('/complain/bulk-delete', [ComplainController::class, 'bulkDelete'])->name('complain.bulkDelete');
+    });
 
     Route::post('/variation/get', [VariationController::class, 'get_variation_value'])->name('variation.get');
     Route::post('/order_product_variation/get', [ProductController::class, 'get_product_variation'])->name('product.variation.get');

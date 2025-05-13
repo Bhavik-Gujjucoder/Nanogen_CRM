@@ -40,8 +40,10 @@ class CategoryController extends Controller
                                              <div class="dropdown-menu dropdown-menu-right">';
 
 
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })

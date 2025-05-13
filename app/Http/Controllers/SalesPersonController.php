@@ -49,9 +49,11 @@ class SalesPersonController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
-                    Auth::user()->can('manage sales') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage sales') ? $action_btn .= $delete_btn : '';
-
+                    // Auth::user()->can('manage sales') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage sales') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
+                    
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('first_name', function ($row) {
@@ -121,7 +123,7 @@ class SalesPersonController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         $request->validate([
             'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
             'first_name'           => 'required|string|max:255',

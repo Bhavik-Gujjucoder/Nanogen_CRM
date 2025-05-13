@@ -38,13 +38,14 @@ class VariationController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
-
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
                     return $action_btn . ' </div></div>';
                 })
                 ->addColumn('value', function ($variation) {
-                    return $variation->variant_options->isNotEmpty() ? '<div class="option_value">'.$variation->variant_options->pluck('value')->implode(', ').'</div>' : '-';
+                    return $variation->variant_options->isNotEmpty() ? '<div class="option_value">' . $variation->variant_options->pluck('value')->implode(', ') . '</div>' : '-';
                 })
                 ->filterColumn('value', function ($query, $keyword) {
                     $query->whereHas('variant_options', function ($q) use ($keyword) {

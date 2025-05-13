@@ -42,8 +42,10 @@ class ProductController extends Controller
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })
@@ -51,11 +53,11 @@ class ProductController extends Controller
                     $productImage = !empty($product->product_image)
                         ? asset("storage/product_images/" . $product->product_image)
                         : asset("images/default-user.png"); // Change path if your default image is elsewhere
-                
+
                     $imageTag = '<a href="' . $productImage . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                                     <img class="" src="' . $productImage . '" alt="Product Image">
                                 </a>';
-                
+
                     return $imageTag . ' ' . $product->product_name;
                 })
                 ->editColumn('category_id', function ($product) {
@@ -79,7 +81,6 @@ class ProductController extends Controller
                 })
                 ->rawColumns(['checkbox', 'product_name', 'action', 'status']) //'value',
                 ->make(true);
-                
         }
 
         return view('admin.product.index', $data);
@@ -133,7 +134,7 @@ class ProductController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-    */
+     */
     public function edit(string $id)
     {
         $product = Product::findOrFail($id);
@@ -197,7 +198,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         ProductVariation::where('product_id', $id)->delete();
         if ($product->product_image) {
-          Storage::disk('public')->delete('product_images/' . $product->product_image);
+            Storage::disk('public')->delete('product_images/' . $product->product_image);
         }
         $product->delete();
         return redirect()->route('product.index')->with('success', 'Variation deleted successfully!');
@@ -222,14 +223,16 @@ class ProductController extends Controller
         return response()->json(['message' => 'No records selected!'], 400);
     }
 
-    
+
     public function get_product_variation(Request $request)
     {
         if (!empty($request->product_id)) {
             $product_variation = ProductVariation::with('variation_option_value')->where('product_id', $request->product_id)->get();
-            return response()->json(['product_variation'=> $product_variation,
-            'success' => true,
-            'message' => 'Selected products deleted successfully!']);
+            return response()->json([
+                'product_variation' => $product_variation,
+                'success' => true,
+                'message' => 'Selected products deleted successfully!'
+            ]);
         }
         return response()->json(['message' => 'No records selected!'], 400);
     }
@@ -238,16 +241,16 @@ class ProductController extends Controller
     {
         if ($request->variation_option_id) {
             $product = ProductVariation::with('variation_option_value')
-            ->where('product_id', $request->product_id)
-            ->where('variation_option_id', $request->variation_option_id)
-            ->first();
+                ->where('product_id', $request->product_id)
+                ->where('variation_option_id', $request->variation_option_id)
+                ->first();
 
-            return response()->json(['product'=> $product,
-            'success' => true,
-            'message' => 'Selected products deleted successfully!']);
+            return response()->json([
+                'product' => $product,
+                'success' => true,
+                'message' => 'Selected products deleted successfully!'
+            ]);
         }
         return response()->json(['message' => 'No records selected!'], 400);
     }
-    
 }
-

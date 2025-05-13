@@ -32,7 +32,8 @@ class PermissionController extends Controller
                                     <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">';
 
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })

@@ -18,7 +18,7 @@ class CityManagementController extends Controller
     {
         $data['page_title'] = 'City Management';
 
-        $data['states'] = StateManagement::where('status',1)->get();
+        $data['states'] = StateManagement::where('status', 1)->get();
         if ($request->ajax()) {
             $data = CityManagement::query();
             return DataTables::of($data)
@@ -34,15 +34,18 @@ class CityManagementController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i>Edit</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteCity"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('city.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-'. $row->id.'" >'
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('city.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
 
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
+                    
                     return $action_btn . ' </div></div>';
                 })
 
@@ -52,15 +55,15 @@ class CityManagementController extends Controller
                 ->editColumn('state_id', function ($row) {
                     return $row->state->state_name; // Get user roles
                 })
-                ->filterColumn('state_id', function($query, $keyword) {
-                    $query->whereHas('state', function($q) use ($keyword) {
+                ->filterColumn('state_id', function ($query, $keyword) {
+                    $query->whereHas('state', function ($q) use ($keyword) {
                         $q->where('state_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['action', 'status','checkbox'])
+                ->rawColumns(['action', 'status', 'checkbox'])
                 ->make(true);
         }
-        return view('admin.city.index',$data);
+        return view('admin.city.index', $data);
     }
 
     /**
@@ -71,7 +74,7 @@ class CityManagementController extends Controller
         $request->validate([
             'state_id'  => 'required',
             'city_name' => 'required|unique:city_management,city_name,NULL,id,deleted_at,NULL'
-        ],[
+        ], [
             'state_id.required' => 'The state name field is required.
 '
         ]);
@@ -98,8 +101,8 @@ class CityManagementController extends Controller
     {
         $request->validate([
             'state_id'  => 'required',
-            'city_name' => 'required|unique:city_management,city_name,' . $city->id. ',id,deleted_at,NULL'
-        ],[
+            'city_name' => 'required|unique:city_management,city_name,' . $city->id . ',id,deleted_at,NULL'
+        ], [
             'state_id.required' => 'The state name field is required.'
         ]);
         $city->update([

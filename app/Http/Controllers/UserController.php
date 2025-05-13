@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Users';
         if ($request->ajax()) {
-            $data = User::role(['admin', 'staff','reportingmanager']);
+            $data = User::role(['admin', 'staff', 'reportingmanager']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -49,12 +49,10 @@ class UserController extends Controller
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-                    // Check if logged-in user is ID 1
-                    // // Show edit button for all users
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    // // Show delete button if the user is not ID 1
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
-
+                    // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('name', function ($row) {
@@ -70,8 +68,8 @@ class UserController extends Controller
                 ->addColumn('role', function ($user) {
                     return $user->roles->pluck('name')->implode(', ');
                 })
-                ->filterColumn('role', function($query, $keyword) {
-                    $query->whereHas('roles', function($q) use ($keyword) {
+                ->filterColumn('role', function ($query, $keyword) {
+                    $query->whereHas('roles', function ($q) use ($keyword) {
                         $q->where('name', 'like', "%{$keyword}%");
                     });
                 })
@@ -87,7 +85,7 @@ class UserController extends Controller
                 ->filterColumn('created_at', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(created_at, '%d %b %Y, %h:%i %p') like ?", ["%{$keyword}%"]);
                 })
-                ->rawColumns(['action', 'status','checkbox','name'])
+                ->rawColumns(['action', 'status', 'checkbox', 'name'])
                 ->make(true);
         }
         return view('users.index', $data);
@@ -115,9 +113,9 @@ class UserController extends Controller
             'name'     => 'required|string|max:255|unique:users,name,NULL,id,deleted_at,NULL',
             'email'    => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'role'     => [
-                            'required',
-                            Rule::exists('roles', 'id')->whereNot('name', 'superadmin') // Exclude superadmin
-                        ],
+                'required',
+                Rule::exists('roles', 'id')->whereNot('name', 'superadmin') // Exclude superadmin
+            ],
             'phone_no' => 'required|digits_between:10,11|unique:users,phone_no,NULL,id,deleted_at,NULL',
             'password' => 'required|min:6|confirmed',
             'status'   => 'required|in:1,0'
@@ -148,6 +146,13 @@ class UserController extends Controller
         $user->save();
         // Assign role
         $user->assignRole(Role::find($request->role)->name);
+
+        // **** EMAIL ****  
+        // $data['name'] = $request->name;
+        // $data['email'] = $request->email;
+        // $data['password'] = $request->password;
+        // Mail::send('email.user_email.create', ['data' => $data], fn($message) => $message->to($user->email)->subject('User Account Created'));
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -206,18 +211,17 @@ class UserController extends Controller
         }
         $user->save();
         $user->syncRoles([$request->role]); // Update role
-        // if($user->status === "0")
-        // {
+        // **** EMAIL ****  
+        // if ($user->status === "0") {
         //     $data = [];
         //     $data['name'] = $user->name;
         //     Mail::send('email.user_email.deactive_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Deactivated'));
-        // }
-        // else{
+        // } else {
         //     $data = [];
         //     $data['name'] = $request->name;
-        //     $data['email'] = $request->email;
+        //     Mail::send('email.user_email.active_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Activated'));
         // }
-        
+
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
 
@@ -228,7 +232,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($user->id);
         if ($user->profile_picture) {
-          Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
+            Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
         }
 
         $user->delete();
@@ -238,7 +242,7 @@ class UserController extends Controller
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-        if (!empty($ids) && is_array($ids) ) {
+        if (!empty($ids) && is_array($ids)) {
             $users = User::whereIn('id', $ids)->get();
 
             foreach ($users as $u) {

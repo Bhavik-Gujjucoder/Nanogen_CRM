@@ -18,6 +18,11 @@ use App\Models\OrderManagementProduct;
 
 class OrderManagementController extends Controller
 {
+
+    public function __construct() {
+
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -50,9 +55,11 @@ class OrderManagementController extends Controller
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-                    
-                    Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
+
+                    // Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })
@@ -79,18 +86,18 @@ class OrderManagementController extends Controller
                     if ($row->sales_person_detail) {
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
                     }
-                    return '-'; 
-                }) 
-                 ->editColumn('grand_total', function ($row) {
+                    return '-';
+                })
+                ->editColumn('grand_total', function ($row) {
                     if ($row->grand_total) {
                         return '₹' . $row->grand_total;
                     }
-                    return '-'; 
-                }) 
+                    return '-';
+                })
 
                 ->addColumn('order_status', function ($row) {
                     $order_status = '';
-                
+
                     if ($row->status < 1) {
                         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
                                             <span class="badge bg-warning">Pending</span>
@@ -111,17 +118,17 @@ class OrderManagementController extends Controller
                                             <span class="badge bg-success">Delivered</span>
                                           </a>';
                     }
-                    
-                    if ($row->status < 4 && Auth::user()->can('manage users')) {
+
+                    if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { // Auth::user()->can('manage users')
                         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
                                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
                                       </div>';
                         return $action_btn;
                     }
-                
+
                     return $row->statusBadge();
-                })                
+                })
                 ->filterColumn('order_status', function ($query, $keyword) {
                     $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
                     // Find the matching status key (case-insensitive)
@@ -152,8 +159,8 @@ class OrderManagementController extends Controller
                 ->filterColumn('order_date', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
                 })
-                ->filterColumn('city', function($query, $keyword) {
-                    $query->whereHas('distributors_dealers.city', function($q) use ($keyword) {
+                ->filterColumn('city', function ($query, $keyword) {
+                    $query->whereHas('distributors_dealers.city', function ($q) use ($keyword) {
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
@@ -168,8 +175,7 @@ class OrderManagementController extends Controller
     {
         $order = OrderManagement::findOrFail($id);
         $order->status = $request->status;
-        if($request->status == 3)
-        {
+        if ($request->status == 3) {
             $order->shipping_date = Carbon::now();
         }
         $order->save();
@@ -185,8 +191,8 @@ class OrderManagementController extends Controller
         //             $order->admin_email = 'for_admin_email';
         //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
         //         }
-    
-    
+
+
         //         $sales_person_email = $order->sales_person_detail->user->email;
         //         if($sales_person_email) {
         //             $order = [];
@@ -198,7 +204,7 @@ class OrderManagementController extends Controller
         //     dd($th);
         //     return response()->json(['error' => 'Something went wrong!'], 500); 
         // }
-       
+
         return response()->json(['success' => true]);
     }
     /**
@@ -238,7 +244,7 @@ class OrderManagementController extends Controller
             'gst_amount',
             'grand_total'
         ]));
-        
+
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
         $order->unique_order_id = $data['unique_order_id'];
@@ -277,13 +283,13 @@ class OrderManagementController extends Controller
 
         // try {
         //     $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
-            
+
         // } catch (\Throwable $th) {
         //     dd($th);
         //     return response()->json(['error' => 'Something went wrong!'], 500); 
         //     // return redirect()->back()->with('error', 'Something is wrong!!');
         // }
-        
+
         //nanogen@gmail.com
         // if(getSetting('company_email'))
         // {
@@ -368,7 +374,4 @@ class OrderManagementController extends Controller
         }
         return response()->json(['message' => 'No records selected!'], 400);
     }
-
-
-   
 }

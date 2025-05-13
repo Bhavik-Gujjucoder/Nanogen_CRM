@@ -16,7 +16,7 @@ class TargetController extends Controller
 {
     /**
      * Display a listing of the resource.
-    */
+     */
     public function index(Request $request)
     {
         $data['page_title'] = 'Target';
@@ -44,20 +44,21 @@ class TargetController extends Controller
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-                    
-                    Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
 
+                    // Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn;
+                    $action_btn .= $delete_btn;
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('start_date', function ($row) {
                     return $row->start_date->format('d-m-Y');
                 })
                 ->editColumn('target_value', function ($row) {
-                     if ($row->target_value) {
+                    if ($row->target_value) {
                         return '₹' . $row->target_value;
                     }
-                    return '-'; 
+                    return '-';
                 })
                 ->editColumn('end_date', function ($row) {
                     return $row->end_date->format('d-m-Y');
@@ -66,25 +67,25 @@ class TargetController extends Controller
                     if ($row->sales_person_detail) {
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
                     }
-                    return '-'; 
+                    return '-';
                 })
                 ->editColumn('city_id', function ($row) {
                     if ($row->city) {
                         return $row->city->city_name;
                     }
-                    return '-'; 
+                    return '-';
                 })
-                ->filterColumn('salesman_id', function($query, $keyword) {
-                    $query->whereHas('sales_person_detail', function($q) use ($keyword) {
+                ->filterColumn('salesman_id', function ($query, $keyword) {
+                    $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
                         $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
                     });
                 })
-                ->filterColumn('city_id', function($query, $keyword) {
-                    $query->whereHas('city', function($q) use ($keyword) {
+                ->filterColumn('city_id', function ($query, $keyword) {
+                    $query->whereHas('city', function ($q) use ($keyword) {
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                
+
                 ->rawColumns(['checkbox', 'action']) //'value',
                 ->make(true);
         }
@@ -111,7 +112,12 @@ class TargetController extends Controller
     public function store(Request $request)
     {
         $target = Target::create($request->only([
-            'subject', 'salesman_id', 'city_id', 'target_value', 'start_date', 'end_date'
+            'subject',
+            'salesman_id',
+            'city_id',
+            'target_value',
+            'start_date',
+            'end_date'
         ]));
         $target->save();
 
@@ -133,7 +139,7 @@ class TargetController extends Controller
                 }
             }
         }
-        
+
         // try {
         //     if($request->salesman_id)
         //     {
@@ -184,18 +190,23 @@ class TargetController extends Controller
     {
         $target = Target::findOrFail($id);
         $target->update($request->only([
-           'subject', 'salesman_id', 'city_id', 'target_value', 'start_date', 'end_date'
+            'subject',
+            'salesman_id',
+            'city_id',
+            'target_value',
+            'start_date',
+            'end_date'
         ]));
 
-        if ($request->only(['grade_id', 'percentage', 'percentage_value'])) {   
+        if ($request->only(['grade_id', 'percentage', 'percentage_value'])) {
 
-            TargetGrade::where('target_id', $id)->delete(); 
+            TargetGrade::where('target_id', $id)->delete();
 
             $grade_id         = $request->input('grade_id');
             $percentage       = $request->input('percentage');
             $percentage_value = $request->input('percentage_value');
 
-            if($grade_id){
+            if ($grade_id) {
 
                 foreach ($grade_id as $key => $g) {
                     if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
@@ -234,6 +245,4 @@ class TargetController extends Controller
         }
         return response()->json(['message' => 'No records selected!'], 400);
     }
-
-
 }
