@@ -104,7 +104,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         // $request->validate(['name' => 'required|unique:roles,name,' . $role->id],['name.required' => 'The role name field is required.']);
-        // $role->update(['name' => $request->name]);
+        $role->update(['name' => $request->name]);
 
         if ($request->permissions) {
             $role->syncPermissions($request->permissions);
