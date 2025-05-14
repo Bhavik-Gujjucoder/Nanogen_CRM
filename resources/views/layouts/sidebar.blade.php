@@ -140,14 +140,25 @@
                             </li>
                         @endcan
 
-                        @can('Roles Permissions')
+                        {{-- @can('Roles Permissions')
                             <li>
                                 @can('Roles Permissions')
-                                    <a href="{{ route('roles.index') }}"><i class="ti ti-navigation-cog"></i><span>Roles & Permissions</span></a>
+                                    <a href="{{ route('roles.index') }}"><i class="ti ti-navigation-cog"></i><span>Roles &
+                                            Permissions</span></a>
                                 @endcan
-                                {{-- <a href="{{ route('permissions.index') }}"><i class="ti ti-navigation-cog"></i><span>Permissions</span></a> --}}
                             </li>
-                        @endcan
+                        @endcan --}}
+
+                        @auth
+                            @if (auth()->user()->hasAnyRole(['super admin', 'admin']))
+                                <li>
+                                    <a href="{{ route('roles.index') }}">
+                                        <i class="ti ti-navigation-cog"></i>
+                                        <span>Roles & Permissions</span>
+                                    </a>
+                                </li>
+                            @endif
+                        @endauth
 
                         @can('Manage Users')
                             <li><a href="{{ route('users.index') }}"
