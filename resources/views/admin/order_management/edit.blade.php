@@ -7,7 +7,8 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('order_management.update', $order->id) }}" id="orderForm" method="POST">
+        <form action="{{ route('order_management.update', $order->id) }}" id="orderForm" method="POST"
+            onsubmit="return validateProductRows();">
             @csrf
             @method('PUT')
             <div class="row mb-4 order-form">
@@ -26,7 +27,7 @@
                             @foreach ($distributor_dealers as $dd)
                                 <option value="{{ $dd->id }}"
                                     {{ old('dd_id', $order->dd_id) == $dd->id ? 'selected' : '' }}
-                                    data-user_type="{{ $dd->user_type }}"  data-mobile_no="{{ $dd->mobile_no }}">
+                                    data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}">
                                     {{ $dd->applicant_name }}
                                     {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
                                 </option>
@@ -49,14 +50,17 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                     <input type="text" name="mobile_no" value="{{ old('mobile_no', $order->mobile_no) }}"
-                        class="form-control" placeholder="1234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" readonly>
+                        class="form-control" placeholder="1234567890"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
                     @if (auth()->user()->hasRole('sales'))
-                        <input type="text" value="{{  $order->sales_person_detail->first_name .' '.  $order->sales_person_detail->last_name }}" class="form-control" readonly>
-                        <input type="hidden" name="salesman_id" value="{{ $order->salesman_id }}"> 
+                        <input type="text"
+                            value="{{ $order->sales_person_detail->first_name . ' ' . $order->sales_person_detail->last_name }}"
+                            class="form-control" readonly>
+                        <input type="hidden" name="salesman_id" value="{{ $order->salesman_id }}">
                     @else
                         <select name="salesman_id" class="form-control form-select search-dropdown">
                             <option value="">Select Salesman</option>
@@ -64,7 +68,7 @@
                                 @foreach ($salesmans as $s)
                                     <option value="{{ $s->user_id }}"
                                         {{ old('salesman_id', $order->salesman_id) == $s->user_id ? 'selected' : '' }}>
-                                        {{ $s->first_name.' '.$s->last_name }}
+                                        {{ $s->first_name . ' ' . $s->last_name }}
                                     </option>
                                 @endforeach
                             @else
@@ -126,7 +130,8 @@
                     </thead>
                     <tbody id="table-body">
                         @foreach ($order->products as $p)
-                            <tr class="field-group">
+                            <input type="hidden" name="has_products" id="has_products">
+                            <tr class="field-group all-products">
                                 <td data-label="S.No.">1</td>
                                 <td data-label="Product Name">
                                     <select name="product_id[]"
@@ -140,7 +145,7 @@
                                 </td>
                                 <td data-label="Packing Size">
                                     {{-- {{dd($p->variation_option->id)}} --}}
-                                   
+
                                     <select name="packing_size_id[]"
                                         class="form-control form-select product-field packing_size_field search-dropdown">
                                         {{-- <option selected>Select</option> --}}
@@ -171,6 +176,8 @@
                                 </td>
                             </tr>
                         @endforeach
+
+
                         {{-- <tr class="field-group">
                             <td data-label="S.No.">1</td>
                             <td data-label="Product Name">
@@ -205,11 +212,15 @@
                                     New</button>
                             </td>
                         </tr> --}}
+
                     </tbody>
                 </table>
                 <div id="productError" class="text-danger mb-3" style="display:none;">
                     {{-- Please fill all fields in each product row. --}}
                     Please enter values for all fields in every product row.
+                </div>
+                <div id="not_count_match" class="text-danger mt-2" style="display:none;">
+                    At list one product are required.
                 </div>
             </div>
 
@@ -253,9 +264,9 @@
 @endsection
 @section('script')
 <script>
-      /*** party name select and phone number auto fillable ***/
-     $(function () {
-        $('[name="dd_id"]').change(function () {
+    /*** party name select and phone number auto fillable ***/
+    $(function() {
+        $('[name="dd_id"]').change(function() {
             $('[name="mobile_no"]').val($(this).find('option:selected').data('mobile_no') || '');
         });
     });
@@ -318,6 +329,11 @@
             return isValid;
         }, "Please enter values for all fields in every product row.");
 
+        // Add custom validator method
+        $.validator.addMethod("hasProductRows", function(value, element) {
+            return $(".all-products").length > 0;
+        }, "At least one product is required.");
+
         $("#orderForm").validate({
             ignore: [],
             rules: {
@@ -351,7 +367,10 @@
                 },
                 dummy: {
                     validateProducts: true
-                }
+                },
+                has_products: {
+                    hasProductRows: true
+                },
             },
             messages: {
                 dd_id: "Please enter party name",
@@ -372,6 +391,8 @@
             errorPlacement: function(error, element) {
                 if (element.attr("name") === "dummy") {
                     $("#productError").text(error.text()).show();
+                } else if (element.attr("name") === "has_products") {
+                    $("#not_count_match").text(error.text()).show();
                 } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');
                     error.insertAfter(element.next(
@@ -379,12 +400,14 @@
                 } else {
                     error.addClass('text-danger');
                     error.insertAfter(element);
-
                 }
             },
             success: function(label, element) {
                 if ($(element).attr("name") === "dummy") {
                     $("#productError").hide();
+                }
+                if ($(element).attr("name") === "has_products") {
+                    $("#not_count_match").hide();
                 }
             }
         });
@@ -403,7 +426,7 @@
         $(".field-group:last td:last").html(
             '<button type="button" onclick="removeRow(this)" class="btn btn-danger">Remove</button>');
 
-        let newRow = `<tr class="field-group">
+        let newRow = `<tr class="field-group all-products">
                             <td data-label="S.No.">${newIndex}</td>
                             <td data-label="Product Name">
                                 <select name="product_id[]" class="form-control product-field form-select product_id-field search-dropdown">
