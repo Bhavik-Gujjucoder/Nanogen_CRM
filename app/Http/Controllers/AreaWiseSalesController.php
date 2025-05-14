@@ -55,7 +55,7 @@ class AreaWiseSalesController extends Controller
                 })
                   ->editColumn('amount', function ($row) {
                      if ($row->amount) {
-                        return '₹' . $row->amount;
+                        return IndianNumberFormat($row->amount);
                     }
                     return '-'; 
                 })
@@ -144,7 +144,7 @@ class AreaWiseSalesController extends Controller
                 })
                 ->editColumn('grand_total', function ($row) {
                      if ($row->grand_total) {
-                        return '₹' . $row->grand_total;
+                        return IndianNumberFormat($row->grand_total);
                     }
                     return '-'; 
                 })

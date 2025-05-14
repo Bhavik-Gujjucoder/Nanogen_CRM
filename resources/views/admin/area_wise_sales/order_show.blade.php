@@ -102,7 +102,7 @@
             <div class="col-md-12">
                 <div class="price-cls-new">
                     <label class="col-form-label">Total :</label>
-                    <p class="form-control-plaintext">{{ $order->total_order_amount ?? '-'}}</p>
+                    <p class="form-control-plaintext">{{ IndianNumberFormat($order->total_order_amount) ?? '-'}}</p>
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
             <div class="col-md-12">
                 <div class="price-cls-new">
                     <label class="col-form-label">GST ({{ $order->gst }}%) :</label>
-                    <p class="form-control-plaintext">{{ $order->gst_amount ?? '-'}}</p>
+                    <p class="form-control-plaintext">{{ IndianNumberFormat($order->gst_amount) ?? '-'}}</p>
                 </div>
             </div>
         </div>
@@ -118,7 +118,7 @@
             <div class="col-md-12">
                 <div class="price-cls-new">
                     <label class="col-form-label">Grand Total (Incl. GST) :</label>
-                    <p class="form-control-plaintext">{{ $order->grand_total ?? '-'}}</p>
+                    <p class="form-control-plaintext">{{ IndianNumberFormat($order->grand_total) ?? '-'}}</p>
                 </div>
             </div>
         </div>

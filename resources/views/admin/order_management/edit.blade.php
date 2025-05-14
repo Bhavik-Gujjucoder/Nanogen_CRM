@@ -593,9 +593,9 @@
         let gstAmount = (all_total * gst) / 100;
         let grandTotal = all_total + gstAmount;
 
-        $('#all_total').text('Total : ' + all_total.toFixed(2));
-        $('#gstAmount').text(gstAmount.toFixed(2));
-        $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
+        $('#all_total').text('Total : ' + all_total.toFixed(0));
+        $('#gstAmount').text(gstAmount.toFixed(0));
+        $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(0));
 
         $('input[name="total_order_amount"]').val(all_total.toFixed(0));
         $('input[name="gst_amount"]').val(gstAmount.toFixed(0));

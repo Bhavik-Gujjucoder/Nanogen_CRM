@@ -90,7 +90,7 @@ class OrderManagementController extends Controller
                 })
                 ->editColumn('grand_total', function ($row) {
                     if ($row->grand_total) {
-                        return '₹' . $row->grand_total;
+                        return IndianNumberFormat($row->grand_total);
                     }
                     return '-';
                 })

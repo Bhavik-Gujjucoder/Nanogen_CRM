@@ -80,10 +80,26 @@ class DistributorsDealersController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
+                ->editColumn('applicant_name', function ($row) {
+                    $profilePic = isset($row->profile_image)
+                        ? asset('storage/distributor_dealer_profile_image/' . $row->profile_image)
+                        : asset('images/default-user.png');
+
+                    return '
+                        <a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
+                            <img src="' . $profilePic . '" alt="User Image">
+                        </a>' . $row->applicant_name;
+                })
+
                 ->editColumn('city_id', function ($row) {
                     return $row->city ? $row->city->city_name : '-';
                 })
-                ->rawColumns(['action'])
+                ->filterColumn('city_id', function ($query, $keyword) {
+                    $query->whereHas('city', function ($q) use ($keyword) {
+                        $q->where('city_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->rawColumns(['action', 'applicant_name'])
                 ->make(true);
         }
         return view('admin.distributors_dealers.index', $data);
@@ -182,7 +198,7 @@ class DistributorsDealersController extends Controller
     {
         $distributor_dealers = DistributorsDealers::findOrFail($id);
         // $data['page_title'] = $request->dealer == 1 ? 'Create Dealers' : 'Create Distributors';
-        $data = [ 
+        $data = [
             'page_title'          =>  $distributor_dealers->user_type == 1 ? 'Edit Distributor' : 'Edit Dealer',
             'distributor_dealers' => $distributor_dealers,
             'products'            => Product::where('status', 1)->get()->all(),

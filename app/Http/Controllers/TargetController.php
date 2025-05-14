@@ -52,16 +52,16 @@ class TargetController extends Controller
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('start_date', function ($row) {
-                    return $row->start_date->format('d-m-Y');
+                    return $row->start_date->format('d M Y');
                 })
                 ->editColumn('target_value', function ($row) {
                     if ($row->target_value) {
-                        return '₹' . $row->target_value;
+                        return IndianNumberFormat($row->target_value);
                     }
                     return '-';
                 })
                 ->editColumn('end_date', function ($row) {
-                    return $row->end_date->format('d-m-Y');
+                    return $row->end_date->format('d M Y');
                 })
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {

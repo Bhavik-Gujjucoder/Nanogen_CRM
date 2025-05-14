@@ -26,3 +26,17 @@ if (!function_exists('getProductVariationOptions')) {
         return $product_variation = ProductVariation::with('variation_option_value')->where('product_id', $product_id)->get();
     }
 }
+
+if (!function_exists('IndianNumberFormat')) {
+    function IndianNumberFormat($number) {
+        $number = (string)$number;
+        $lastThree = substr($number, -3);
+        $restUnits = substr($number, 0, -3);
+        if ($restUnits != '') {
+            $restUnits = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $restUnits);
+            return '₹' . $restUnits . "," . $lastThree;
+        } else {
+            return '₹' . $lastThree;
+        }
+    }
+}

@@ -178,7 +178,7 @@
             <div class="card-body pb-0">
                 <div class="d-flex align-items-center justify-content-between flex-wrap">
                     <div class="mb-1">
-                        <h2 class="mb-1">₹{{ $order_grand_total }}</h2>
+                        <h2 class="mb-1">{{ IndianNumberFormat($order_grand_total) }}</h2>
                         {{-- <p><span class="text-success fw-bold">+40%</span> increased from last year</p> --}}
                     </div>
                     <p class="fs-13 text-gray-9 d-flex align-items-center mb-1"><i
@@ -220,7 +220,7 @@
                             </div>
                         </div>
                         <div class="text-sm-end mb-2">
-                            <h6 class="mb-1">₹{{ $order->grand_total }}</h6>
+                            <h6 class="mb-1">{{ IndianNumberFormat($order->grand_total) }}</h6>
                             <!-- <p class="fs-13">Basic (Monthly)</p> -->
                         </div>
                     </div>
