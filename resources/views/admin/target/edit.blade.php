@@ -146,7 +146,7 @@
                                                 class="input-as-text" readonly hidden>
 
                                             <input type="text" name="textpercentage_value[]"
-                                                value="{{ old('textpercentage_value') }}" class="input-as-text"
+                                                value="{{ old('textpercentage_value', IndianNumberFormat($t_g->percentage_value)) }}" class="input-as-text"
                                                 placeholder="" readonly>
                                         </div>
 
