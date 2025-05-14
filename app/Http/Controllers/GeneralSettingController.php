@@ -30,6 +30,11 @@ class GeneralSettingController extends Controller
                 // 'dealer_payment_reminder_interval'      => 'required',
                 'gst'             => 'required',
             ]);
+        }elseif ($request->form_type == 'general-setting') {
+            $request->validate([
+                'login_page_image' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'copyright_msg'    => 'required',
+            ]);
         } elseif ($request->form_type == 'email-detail') {
             $request->validate([
                 'email_template_header' => 'required',
@@ -52,13 +57,14 @@ class GeneralSettingController extends Controller
         
         $data = $request->except('_token');
         $data = $request->except('company_logo');
+        $data = $request->except('login_page_image');
         $data = $request->except('o_form_docx_file');
         
         if (!$data) {
             return redirect()->back()->with('error', 'Request data is empty.');
         }
         else {
-            $data = $request->except(['_token', 'company_logo','form_type']);
+            $data = $request->except(['_token', 'company_logo','login_page_image','form_type']);
             // dd($data);
             foreach ($data as $key => $value) {
                 // GeneralSetting::where('key', $key)->update(['value' => $value]);
@@ -84,6 +90,25 @@ class GeneralSettingController extends Controller
                 $general_setting->save();
             }
 
+            if ($request->hasFile('login_page_image')) {
+                
+                // $general_setting = GeneralSetting::where('key', 'login_page_image')->first();
+                $general_setting = GeneralSetting::firstOrNew(['key' => 'login_page_image']);
+                /* Delete old profile picture if exists */
+                if (isset($request->login_page_image) && $general_setting && $general_setting->login_page_image ) {
+                    Storage::disk('public')->delete('login_page_image/' . $general_setting->login_page_image);
+                }
+                /* Upload new profile picture */
+                $file = $request->file('login_page_image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('login_page_image', $filename, 'public');  /* Save in storage/app/public/login_page_image */
+
+                /* Save new filename in database */
+                $general_setting->value = $filename ?? '';
+                $general_setting->save();
+            }
+// dd($request->all());
+
             if ($request->hasFile('o_form_docx_file')) {
                 $general_setting = GeneralSetting::where('key', 'o_form_docx_file')->first();
                 /* Delete old profile picture if exists */
@@ -101,7 +126,7 @@ class GeneralSettingController extends Controller
                 $general_setting->value = $filename;
                 $general_setting->save();
             }
-
+// dd($request->all());
          
             return redirect()->back()->withSuccess('Setting update successfully.');
         }

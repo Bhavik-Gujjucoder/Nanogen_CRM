@@ -4,7 +4,7 @@
     {{ $page_title }}
 @endsection
 @php
-    $activeTab = old('form_type', 'company-detail'); // fallback to first tab
+    $activeTab = old('form_type', 'general-setting'); // fallback to first tab
 @endphp
 <div class="card">
     <div class="card-body">
@@ -12,19 +12,25 @@
         <!--ALL TABS-->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
+                <a class="nav-link {{ $activeTab == 'general-setting' ? 'active' : '' }}" id="GeneralSetting"
+                    data-bs-toggle="tab" href="#general-setting" role="tab" aria-controls="general-setting"
+                    aria-selected="true{{-- $activeTab == 'general-setting' ? 'true' : 'false' --}}">General Setting</a>
+            </li>
+            <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'company-detail' ? 'active' : '' }}" id="CompanyDetails"
                     data-bs-toggle="tab" href="#company-details" role="tab" aria-controls="company-details"
-                    aria-selected="true">Company Details</a>
+                    aria-selected="{{ $activeTab == 'company-detail' ? 'true' : 'false' }}">Company Details</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'email-detail' ? 'active' : '' }}" id="EmailDetails"
                     data-bs-toggle="tab" href="#email-detail" role="tab" aria-controls="email-detail"
-                    aria-selected="false">Email Details</a>
+                    aria-selected="{{ $activeTab == 'email-detail' ? 'true' : 'false' }}">Email Details</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'distributors-dealers' ? 'active' : '' }}" id="DistributorsDealers"
                     data-bs-toggle="tab" href="#Distributors-Dealers" role="tab"
-                    aria-controls="Distributors-Dealers" aria-selected="false">Distributors and
+                    aria-controls="Distributors-Dealers"
+                    aria-selected="{{ $activeTab == 'distributors-dealers' ? 'true' : 'false' }}">Distributors and
                     Dealers</a>
             </li>
             <li class="nav-item" role="presentation">
@@ -34,6 +40,59 @@
         </ul>
 
         <div class="tab-content mt-3" id="myTabContent">
+
+            <!--G E N E R A L   S E T T I N G   T A B-->
+            <div class="tab-pane fade show active {{-- $activeTab == 'general-setting' ? 'show active' : '' --}}" id="general-setting"
+                role="tabpanel" aria-labelledby="GeneralSetting">
+                <form action="{{ route('admin.generalsetting.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="form_type" value="general-setting">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="profile-pic-upload">
+                                <div class="profile-pic">
+                                    @if (getSetting('login_page_image') && !empty(getSetting('login_page_image')))
+                                        <img id="loginPagePreview"
+                                            src="{{ getSetting('login_page_image') ? asset('storage/login_page_image/' . getSetting('login_page_image')) : asset('images/default-user.png') }} "
+                                            alt="Profile Picture"class="img-thumbnail mb-2" width="96.36px"
+                                            height="100px" style="object-fit: contain" alt="Profile Picture">
+                                    @endif
+                                </div>
+
+                                <div class="upload-content">
+                                    <div class="upload-btn  @error('login_page_image') is-invalid @enderror">
+                                        <input type="file" name="login_page_image" accept=".jpg,.jpeg,.gif,.png"
+                                            onchange="previewProfilePicture(event, 'loginPagePreview')">
+                                        <span>
+                                            <i class="ti ti-file-broken"></i>Login Page Image
+                                        </span>
+                                    </div>
+                                    <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
+                                    @error('login_page_image')
+                                        <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Copyright Message<span
+                                        class="text-danger">*</span></label>
+                                <textarea class="form-control @error('copyright_msg') is-invalid @enderror" name="copyright_msg" placeholder="Copyright Message">{{ old('copyright_msg', getSetting('copyright_msg')) }}</textarea>
+                                @error('copyright_msg')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+
             <!--C O M P A N Y   D E T A I L S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'company-detail' ? 'show active' : '' }}" id="company-details"
                 role="tabpanel" aria-labelledby="CompanyDetails">
@@ -45,7 +104,7 @@
                             <div class="profile-pic-upload">
                                 <div class="profile-pic">
                                     @if (getSetting('company_logo') && !empty(getSetting('company_logo')))
-                                        <img id="profilePreview"
+                                        <img id="companyLogoPreview"
                                             src="{{ getSetting('company_logo') ? asset('storage/company_logo/' . getSetting('company_logo')) : asset('images/default-user.png') }} "
                                             alt="Profile Picture"class="img-thumbnail mb-2" width="100%"
                                             height="100%" style="object-fit: contain" alt="Profile Picture">
@@ -54,7 +113,8 @@
 
                                 <div class="upload-content">
                                     <div class="upload-btn @error('company_logo') is-invalid @enderror">
-                                        <input type="file" name="company_logo" accept=".jpg,.jpeg,.gif,.png" >
+                                        <input type="file" name="company_logo" accept=".jpg,.jpeg,.gif,.png"
+                                            onchange="previewProfilePicture(event, 'companyLogoPreview')">
                                         <span><i class="ti ti-file-broken"></i>Company Logo</span>
                                     </div>
                                     <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
@@ -68,7 +128,8 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Company Email Address <span
                                         class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('company_email') is-invalid @enderror"
+                                <input type="text"
+                                    class="form-control @error('company_email') is-invalid @enderror"
                                     name="company_email"
                                     value="{{ old('company_email', getSetting('company_email')) }}">
                                 @error('company_email')
@@ -80,7 +141,8 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Company Phone Number <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control @error('company_phone') is-invalid @enderror"
+                                <input type="number"
+                                    class="form-control @error('company_phone') is-invalid @enderror"
                                     name="company_phone"
                                     value="{{ old('company_phone', getSetting('company_phone')) }}"
                                     oninput="this.value = this.value.slice(0, 11)">
@@ -91,7 +153,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Company Address<span class="text-danger">*</span></label>
+                                <label class="col-form-label">Company Address<span
+                                        class="text-danger">*</span></label>
                                 <textarea class="form-control @error('company_address') is-invalid @enderror" name="company_address">{{ old('company_address', getSetting('company_address')) }}</textarea>
                                 @error('company_address')
                                     <span class="invalid-feedback">{{ $message }}</span>
@@ -252,8 +315,7 @@
                         <div class="mb-3 col-md-6">
                             <label for="docx_file" class="form-label">Upload Docx File</label>
                             <input type="file" name="o_form_docx_file" id="docx_file"
-                                class="form-control @error('o_form_docx_file') is-invalid @enderror"
-                                accept=".docx">
+                                class="form-control @error('o_form_docx_file') is-invalid @enderror" accept=".docx">
 
                             @error('o_form_docx_file')
                                 <div class="invalid-feedback">
@@ -265,7 +327,7 @@
                     <div class="">
                         {{-- Download Docx File Code --}}
                         @if (getSetting('o_form_docx_file') && !empty(getSetting('o_form_docx_file')))
-                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}" 
+                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}"
                                 class="btn btn-outline-primary">
                                 <i class="ti ti-download"></i> Download Docx File
                             </a>
@@ -293,5 +355,32 @@
             height: 350
         });
     });
+
+
+
+    // function previewProfilePicture(event) {
+    //     const file = event.target.files[0]; // Get the selected file
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = function(e) {
+    //             document.getElementById('profilePreview').src = e.target
+    //                 .result; // Set image preview source
+    //         }
+    //         reader.readAsDataURL(file); // Read the file as a Data URL
+    //     }
+    // }
+     function previewProfilePicture(event, targetId) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const image = document.getElementById(targetId);
+                if (image) {
+                    image.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 </script>
 @endsection
