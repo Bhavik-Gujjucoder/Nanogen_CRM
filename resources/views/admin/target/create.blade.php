@@ -133,8 +133,12 @@
                                         class="form-control me-2" placeholder="Target To (%)">
                                 </div>
                                 <div class="col-md-4">
-                                    <strong>₹</strong><input type="text" name="percentage_value[]"
+                                    <strong></strong><input type="text" name="percentage_value[]"
                                         value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
+                                        readonly hidden>
+
+                                       <input type="text" name="textpercentage_value[]"
+                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder=""
                                         readonly>
                                 </div>
                                 {{-- /<div id="percentage_value"></div>  --}}
@@ -168,6 +172,8 @@
         $('#product-container .product-group').each(function() {
             let $percentage = $(this).find('input[name="percentage[]"]');
             let $valueField = $(this).find('input[name="percentage_value[]"]');
+           let $valueFieldText = $(this).find('input[name="textpercentage_value[]"]');
+
             // let $valueField = $(this).find('#percentage_value');
             let percentage = parseFloat($percentage.val());
 
@@ -179,8 +185,10 @@
             if (!isNaN(targetValue) && !isNaN(percentage)) {
                 let result = (targetValue * percentage) / 100;
                 $valueField.val(result.toFixed(0));
+                 $valueFieldText.val(IndianNumberFormatscript(result.toFixed(0)));
             } else {
                 $valueField.val('');
+                $valueFieldText.val('');
             }
         });
 
