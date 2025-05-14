@@ -74,8 +74,18 @@
                         </div>
                     </li>
                     <!-- /Search -->
-                    @canany(['State Management', 'City Management', 'Sales Reports', 'Products and Catalogue', 'Pricing
-                        and Product Variation', 'Distributors', 'Dealers', 'Manage Users', 'Products Category'])
+                    @canany([
+                        'State Management',
+                        'City Management',
+                        'Sales Reports',
+                        'Products and Catalogue',
+                        'Pricing
+                        and Product Variation',
+                        'Distributors',
+                        'Dealers',
+                        'Manage Users',
+                        'Products Category',
+                        ])
                         <!-- Nav List -->
                         <li class="nav-item nav-list">
                             <ul class="nav">
@@ -498,6 +508,7 @@
         </script>
     @endif
 
+
     <script>
         function show_success(msg) {
             Toastify({
@@ -519,6 +530,17 @@
                 position: "right",
                 backgroundColor: "#f27474",
             }).showToast();
+        }
+
+        function IndianNumberFormatscript(number) {
+            number = number.toString();
+            let lastThree = number.substring(number.length - 3);
+            let otherNumbers = number.substring(0, number.length - 3);
+            if (otherNumbers !== '') {
+                lastThree = ',' + lastThree;
+            }
+            let formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+            return '₹' + formatted;
         }
     </script>
     @yield('script')

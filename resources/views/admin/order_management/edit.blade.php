@@ -593,13 +593,14 @@
         let gstAmount = (all_total * gst) / 100;
         let grandTotal = all_total + gstAmount;
 
-        $('#all_total').text('Total : ' + all_total.toFixed(0));
-        $('#gstAmount').text(gstAmount.toFixed(0));
-        $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(0));
+        $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
+        $('#gstAmount').text(IndianNumberFormatscript(gstAmount.toFixed(0)));
+        $('#grand_total').text('Grand Total (Incl. GST) : ' + IndianNumberFormatscript(grandTotal.toFixed(0)));
 
         $('input[name="total_order_amount"]').val(all_total.toFixed(0));
         $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
         $('input[name="grand_total"]').val(grandTotal.toFixed(0));
     }
+
 </script>
 @endsection
