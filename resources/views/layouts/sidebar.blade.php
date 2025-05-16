@@ -139,10 +139,11 @@
                             <li><a href="javascript:void(0);"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a>
                             </li>
                         @endcan
+                        
 
                         {{-- @can('Roles Permissions')
-                            <li>
-                                @can('Roles Permissions')
+                        <li>
+                        @can('Roles Permissions')
                                     <a href="{{ route('roles.index') }}"><i class="ti ti-navigation-cog"></i><span>Roles &
                                             Permissions</span></a>
                                 @endcan

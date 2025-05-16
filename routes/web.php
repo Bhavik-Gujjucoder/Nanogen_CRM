@@ -125,6 +125,8 @@ Route::middleware(['auth', 'role:admin,staff,sales,reporting manager'])->group(f
         Route::resource('sales_person', SalesPersonController::class);
         Route::post('/sales_person/bulk-delete', [SalesPersonController::class, 'bulkDelete'])->name('sales_person.bulkDelete');
         Route::post('/get-cities', [SalesPersonController::class, 'getCitiesByState'])->name('get.cities');
+
+        Route::get('sales_report/{id}', [SalesPersonController::class, 'sales_report'])->name('sales_person.sales_report');
     });
     /* Area-wise Sales */
     Route::middleware(['permission:Area Wise Sales'])->group(function () {

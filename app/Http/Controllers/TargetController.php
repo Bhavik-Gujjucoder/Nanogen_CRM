@@ -34,6 +34,11 @@ class TargetController extends Controller
                         </label>';
                 })
                 ->addColumn('action', function ($row) {
+                    $show_btn = '<a href="' . route('target.show', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i> Show Target</a>';
+
+                    
+
                     $edit_btn = '<a href="' . route('target.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
@@ -42,13 +47,15 @@ class TargetController extends Controller
                         . csrf_field() . method_field('DELETE') . '</form>';
 
                     $action_btn = '<div class="dropdown table-action">
-                                             <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                             <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
                     // Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
-                    $action_btn .= $edit_btn;
+                    
+                    $action_btn .= Auth::user()->hasAnyRole(['sales']) ? $show_btn : $edit_btn;
                     $action_btn .= $delete_btn;
+                    
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('start_date', function ($row) {
@@ -73,7 +80,7 @@ class TargetController extends Controller
                     if ($row->city) {
                         return $row->city->city_name;
                     }
-                    return '-';
+                    return '-';                                                 
                 })
                 ->filterColumn('salesman_id', function ($query, $keyword) {
                     $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
@@ -85,12 +92,9 @@ class TargetController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-
                 ->rawColumns(['checkbox', 'action']) //'value',
                 ->make(true);
         }
-
-
         return view('admin.target.index', $data);
     }
 
@@ -170,6 +174,15 @@ class TargetController extends Controller
         return redirect()->route('target.index')->with('success', 'Target created successfully.');
     }
 
+    public function Show(string $id)
+    {
+          $data['page_title'] = 'Show Target';
+        $data['target'] = Target::findOrFail($id);
+        $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
+        $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
+        $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
+        return view('admin.target.show', $data);
+    }
     /**
      * Show the form for editing the specified resource.
      */

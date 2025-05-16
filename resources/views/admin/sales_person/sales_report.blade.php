@@ -4,16 +4,7 @@
     {{ $page_title }}
 @endsection
 
-<!-- Welcome Wrap -->
-<div class="welcome-wrap mb-4">
-    <div class=" d-flex align-items-center justify-content-between flex-wrap">
-        <div class="mb-3">
-            <h2 class="mb-1 text-white">Welcome Back, {{ auth()->user()->name }}</h2>
-            <p class="text-light"></p>
-        </div>
-    </div>
-</div>
-<!-- /Welcome Wrap -->
+
 <div class="row">
 
     <!-- Total Earnings -->
@@ -46,7 +37,7 @@
         <div class="col-xxl-4 col-lg-6 d-flex"> <!-- -->
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                    <h5 class="mb-2">Total Orders</h5>
+                    <h5 class="mb-2">Total Number of Order</h5>
                 </div>
                 <div class="card-body">
                     <div id="company-chart"></div>
@@ -115,7 +106,7 @@
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 class="mb-2">Recent Orders</h5>
-                    <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+                    {{-- <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a> --}}
                 </div>
                 <div class="card-body pb-2">
                     @foreach ($latest_orders as $order)
@@ -140,8 +131,10 @@
                                             {{ $order->distributors_dealers->firm_shop_name }}
                                         </a>
                                     </h6>
-                                    <p class="fs-13 d-inline-flex align-items-center"> <a href="{{ route('order_management.edit', $order->id) }}">
-                                        <spa class="text-info">{{ $order->unique_order_id }}</spa></a>
+                                    <p class="fs-13 d-inline-flex align-items-center"> <a
+                                            href="{{ route('order_management.edit', $order->id) }}">
+                                            <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                        </a>
                                         <i class="ti ti-circle-filled fs-4 text-primary mx-1">
                                         </i>{{ $order->order_date->format('d M Y') }}
                                     </p>
@@ -165,7 +158,7 @@
                 <div class="card-header border-0 pb-0">
                     <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                         <h4><i class="ti ti-grip-vertical me-1"></i>Recent Target</h4>
-                        <a href="{{ route('target.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+                        {{-- <a href="{{ route('target.index') }}" class="btn btn-light btn-md mb-2">View All</a> --}}
                     </div>
                 </div>
                 <div class="card-body">
@@ -206,7 +199,7 @@
                         <h5 class="mb-2">Running Target #{{ $target['target_id'] }}</h5>
                         {{-- <strong>Start Date : {{ $target['start_date'] }}</strong>
                         <strong>End Date : {{ $target['end_date'] }}</strong> --}}
-                         <div>
+                        <div>
                             <strong>Start Date : </strong>{{ $target['start_date'] }}
                             &nbsp;&nbsp;&nbsp;<br>
                             <strong>End Date : </strong>{{ $target['end_date'] }}
@@ -221,25 +214,47 @@
     </div>
 @endcan
 
-{{-- <div class="col-lg-11 d-flex">
-    <div class="card flex-fill">
-        <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-            <h5 class="mb-2">Running Target</h5> 
-        </div>
-        <div class="card-body pb-0">
-            <canvas id="gradeBarChart" height="300"></canvas>
+<div class="row">
+    <div class="col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                <h5 class="mb-2">Last 12 months Order performance</h5>
+                {{-- <strong>Start Date : {{ $target['start_date'] }}</strong>
+                <strong>End Date : {{ $target['end_date'] }}</strong> --}}
+            </div>
+            <div class="card-body pb-0">
+                <canvas id="orderChart" height="190px"></canvas>
+            </div>
         </div>
     </div>
-</div> --}}
+    {{-- </div>
+
+<div class="row"> --}}
+    <div class="col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                <h5 class="mb-2">Last 12 months Revenu performance</h5>
+                {{-- <strong>Start Date : {{ $target['start_date'] }}</strong>
+                <strong>End Date : {{ $target['end_date'] }}</strong> --}}
+            </div>
+            <div class="card-body pb-0">
+                <canvas id="revenueChart" height="190px" ></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 @endsection
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 <script>
+    /***** Running Target *****/
     @foreach ($current_target_graph as $index => $target)
 
         const ctx{{ $index }} = document.getElementById('gradeBarChart{{ $index }}').getContext('2d');
-
         const gradeLabels{{ $index }} = @json(collect($target['grades'])->pluck('grade_id'));
         const achievedPercentages{{ $index }} = @json(collect($target['grades'])->pluck('achieved_percentage'));
 
@@ -280,49 +295,128 @@
             }
         });
     @endforeach
-</script>
-{{-- <script> 
+    /*** END ***/
 
+    /***** 12 Month Order Chart *****/
+    const order_chart = @json($order_chart);
+    const order_chart_labels = order_chart.map(d => d.month);
+    const order_chart_counts = order_chart.map(d => d.total);
 
-
-const ctx = document.getElementById('gradeBarChart').getContext('2d');
-
-        const gradeLabels = @json($current_target_graph->pluck('grade_id'));
-        const orderCounts = @json($current_target_graph->pluck('achieved_percentage'));
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: gradeLabels,
-                datasets: [{
-                    label: 'Order Count',
-                    data: orderCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y', // Makes it horizontal
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+    const order_chart_draw = document.getElementById('orderChart').getContext('2d');
+    const orderChart = new Chart(order_chart_draw, {
+        type: 'bar',
+        data: {
+            labels: order_chart_labels,
+            datasets: [{
+                label: 'Orders',
+                data: order_chart_counts,
+                backgroundColor: '#00918e',
+                borderRadius: 6,
+                barThickness: 40 //30
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                },
+                datalabels: {
+                    color: '#fff', // White text inside bars
+                    anchor: 'center',
+                    align: 'center',
+                    font: {
+                        weight: 'bold',
+                        size: 16 //14
                     },
-                    title: {
-                        display: true,
-                        text: 'Grade-wise Order Count'
+                    formatter: function(value) {
+                        return value;
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Set the interval to 1
                     }
                 },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45,
+                        autoSkip: false,
+                        font: {
+                            size: 12
                         }
                     }
                 }
             }
-        });
-    </script> --}}
+        },
+        plugins: [ChartDataLabels]
+    });
+    /*** END ***/
+
+    /***** 12 Month Revenu Chart *****/
+    const revenueData = @json($revenue_chart);
+    const labels = revenueData.map(d => d.month);
+    const totals = revenueData.map(d => d.total);
+
+    function indianNumberFormatScript(x) {
+        x = x.toString();
+        let afterPoint = '';
+        if (x.indexOf('.') > 0)
+            afterPoint = x.substring(x.indexOf('.'), x.length);
+        x = Math.floor(x).toString();
+        let lastThree = x.substring(x.length - 3);
+        let otherNumbers = x.substring(0, x.length - 3);
+        if (otherNumbers != '')
+            lastThree = ',' + lastThree;
+        return '₹' + otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
+    }
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenue',
+                data: totals,
+                backgroundColor: '#ff9933',
+                borderRadius: 6,
+                barThickness: 40
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    // min: 100,
+                    min: 0, 
+                    ticks: {
+                        stepSize: 5000, 
+                        precision: 0, // Force tick precision to avoid rounding
+                        callback: function(value) {
+                            return indianNumberFormatScript(value);
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let value = context.raw;
+                            return 'Revenue: ' + indianNumberFormatScript(value);
+                        }
+                    }
+                }
+            }
+        }
+    });
+    /*** END ***/
+</script>
 @endsection

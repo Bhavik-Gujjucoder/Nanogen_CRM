@@ -214,17 +214,31 @@
                     @foreach ($latest_orders as $order)
                         <div class="d-flex justify-content-between flex-wrap mb-3">
                             <div class="d-flex align-items-center mb-2">
-                                <a href="javscript:void(0);" class="avatar avatar-sm border flex-shrink-0">
+                                {{-- <a href="javscript:void(0);" class="avatar avatar-sm border flex-shrink-0">
                                     <img src="images/company-icon-01.svg" class="img-fluid w-auto h-auto" alt="img">
+                                </a> --}}
+                                
+                                <a href="{{ $order->distributors_dealers->profile_image
+                                    ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                    : asset('images/default-user.png') }}"
+                                    class="avatar avatar-sm border flex-shrink-0" target="_blank">
+                                    <img id="profilePreview"
+                                        src="{{ $order->distributors_dealers->profile_image
+                                            ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                            : asset('images/default-user.png') }}"
+                                        alt="Profile Image" class="img-thumbnail mb-2">
                                 </a>
+
                                 <div class="ms-2 flex-fill">
                                     <h6 class="fs-medium text-truncate mb-1">
                                         <a href="{{ route('order_management.edit', $order->id) }}">
                                             {{ $order->distributors_dealers->firm_shop_name }}
                                         </a>
                                     </h6>
-                                    <p class="fs-13 d-inline-flex align-items-center">
-                                        <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                    <p class="fs-13 d-inline-flex align-items-center"><a
+                                            href="{{ route('order_management.edit', $order->id) }}">
+                                            <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                        </a>
                                         <i class="ti ti-circle-filled fs-4 text-primary mx-1">
                                         </i>{{ $order->order_date->format('d M Y') }}
                                     </p>

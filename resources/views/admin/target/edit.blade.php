@@ -28,7 +28,7 @@
                             class="form-control" placeholder="Target Name">
                     </div>
                 </div>
-
+                
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Sales Person Name <span class="text-danger">*</span></label>
@@ -103,7 +103,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="col-md-7">
                     <div class="mb-3">
