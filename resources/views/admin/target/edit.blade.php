@@ -25,7 +25,7 @@
                     <div class="mb-3">
                         <label class="col-form-label">Target Name <span class="text-danger">*</span></label>
                         <input type="text" name="subject" value="{{ old('subject', $target->subject) }}"
-                            class="form-control" placeholder="Target Name">
+                            class="form-control" placeholder="Target Name" maxlength="255">
                     </div>
                 </div>
                 

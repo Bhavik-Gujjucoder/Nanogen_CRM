@@ -63,7 +63,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="first_name" value="{{ old('first_name', $detail->first_name) }}"
-                                class="form-control @error('first_name') is-invalid @enderror" placeholder="First Name">
+                                class="form-control @error('first_name') is-invalid @enderror" placeholder="First Name" maxlength="255">
                             @error('first_name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -73,7 +73,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="last_name" value="{{ old('last_name', $detail->last_name) }}"
-                                class="form-control @error('last_name') is-invalid @enderror" placeholder="Last Name">
+                                class="form-control @error('last_name') is-invalid @enderror" placeholder="Last Name" maxlength="255">
                             @error('last_name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -84,7 +84,7 @@
                             <label class="col-form-label">Email <span class="text-danger">*</span></label>
                             <input type="text" name="email"
                                 class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email', $detail->user->email) }}" placeholder="Email">
+                                value="{{ old('email', $detail->user->email) }}" placeholder="Email" maxlength="255">
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -108,7 +108,7 @@
                             <div class="icon-form-end">
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    name="password" placeholder="Password">
+                                    name="password" placeholder="Password" maxlength="255">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -122,7 +122,7 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
-                                    name="password_confirmation" placeholder="Confirm Password">
+                                    name="password_confirmation" placeholder="Confirm Password" maxlength="255">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -227,7 +227,7 @@
                             <input type="text" name="street_address"
                                 value="{{ old('street_address', $detail->street_address) }}"
                                 class="form-control @error('street_address') is-invalid @enderror"
-                                placeholder="Street Address">
+                                placeholder="Street Address" maxlength="255">
                             @error('street_address')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

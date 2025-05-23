@@ -8,10 +8,10 @@
         <div class="card flex-fill">
             <div class="card-body">
                 <form method="GET" action="{{ route('sales_person.sales_report', ['id' => $sales_user]) }}"
-                    class="row align-items-end g-3 mb-4" id="dateFilterForm">
+                    class="row g-3 mb-4" id="dateFilterForm">
 
                     <div class="col-md-3">
-                        <div class="mb-0">
+                        <div class="mb-3">
                             <label class="col-form-label">Start Date</label>
                             <div class="icon-form">
                                 <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div class="mb-0">
+                        <div class="mb-3">
                             <label class="col-form-label">End Date</label>
                             <div class="icon-form">
                                 <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
@@ -33,12 +33,12 @@
                         </div>
                     </div>
 
-                    <div class="col-md-1 d-grid">
-                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary">Filter</button>
                     </div>
-                    <div class="col-md-1 d-grid">
+                    <div class="col-md-2 d-grid">
                         <a href="{{ route('sales_person.sales_report', ['id' => $sales_user]) }}"
-                            class="btn btn-light w-100">Reset</a>
+                            class="btn btn-light">Reset</a>
                     </div>
                 </form>
             </div>
@@ -54,7 +54,7 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Number of Order</h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body">
                         <div id="company-chart"></div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
@@ -72,7 +72,7 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Revenue</h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body pb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
                                 <h5 class="mb-1">{{ IndianNumberFormat($order_grand_total) }}</h5>
@@ -94,30 +94,10 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Number of Target</h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body pb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
                                 <h5 class="mb-1">{{ $total_target }}</h5>
-                            </div>
-                            <p class="fs-13 text-gray-9 d-flex align-items-center mb-1"><i
-                                    class="ti ti-circle-filled me-1 fs-6 text-primary"></i>Target</p>
-                        </div>
-                        <div id="revenue-income"></div>
-                    </div>
-                </div>
-            </div>
-        @endcan
-
-          @can('Targets')
-            <div class="col-xxl-12 col-lg-6 d-flex">
-                <div class="card flex-fill">
-                    <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                        <h5 class="mb-2">Total Target Amount </h5>
-                    </div>
-                    <div class="card-body pb-4">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div class="mb-1">
-                                <h5 class="mb-1">{{ IndianNumberFormat($total_target_amount) }}</h5>
                             </div>
                             <p class="fs-13 text-gray-9 d-flex align-items-center mb-1"><i
                                     class="ti ti-circle-filled me-1 fs-6 text-primary"></i>Target</p>
@@ -132,73 +112,67 @@
     <div class="col-md-7">
         <div class="card flex-fill">
             <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                <h5 class="mb-2">All Target Performance</h5>
+                <h5 class="mb-2">All Target performance</h5>
             </div>
-            <div class="card-body pb-0" style="height:497px;width:400px;">
-            <canvas id="targetChart"></canvas>
-        </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-6 d-flex">
-        <div class="card flex-fill">
-            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                <h5 class="mb-2">{{ $order_chart_heading }}</h5> {{--Last 12 Months Order Performance--}}
-            </div>
-            <div class="card-body pb-0">
-                <canvas id="orderChart" height="190px"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6 d-flex">
-        <div class="card flex-fill">
-            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                <h5 class="mb-2">{{ $revenu_chart_heading }} </h5>{{--Last 12 Months Revenu Performance --}}
-            </div>
-            <div class="card-body pb-0">
-                <canvas id="revenueChart" height="190px"></canvas>
+            <div class="card-body pb-0" style="height:500px;width:400px;">
+                <canvas id="targetChart"></canvas>
             </div>
         </div>
     </div>
 </div>
-
 <div class="row">
     @can('Order Management')
-        <div class="col-xxl-6 col-xl-12 d-flex">
+        <div class="col-xxl-4 col-xl-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                    <h5 class="mb-2"><i class="ti ti-grip-vertical me-1"></i>Recent Orders</h5>
+                    <h5 class="mb-2">Recent Orders</h5>
                     {{-- <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a> --}}
                 </div>
                 <div class="card-body pb-2">
-                    <table class="table dataTable no-footer" id="order_management">
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort" scope="col">
-                                    <label class="checkboxs">
-                                        <input type="checkbox" id="select-all" class="order_checkbox"><span
-                                            class="checkmarks"></span></label>
-                                    </label>
-                                </th>
-                                <th hidden>ID</th>
-                                <th scope="col"><strong>Firm Name</strong></th>
-                                <th scope="col"><strong>Order ID</strong></th>
-                                <th scope="col"><strong>Order Date</strong></th>
-                                <th scope="col"><strong>Salesman</strong></th>
-                                <th scope="col"><strong>Total</strong></th>
-                            </tr>
-                        </thead>
-                    </table>
+                    @foreach ($latest_orders as $order)
+                        <div class="d-flex justify-content-between flex-wrap mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                {{-- <a href="javscript:void(0);" class="avatar avatar-sm border flex-shrink-0">
+                                    <img src="images/company-icon-01.svg" class="img-fluid w-auto h-auto" alt="img">
+                                </a> --}}
+                                <a href="{{ $order->distributors_dealers->profile_image
+                                    ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                    : asset('images/default-user.png') }}"
+                                    class="avatar avatar-sm border flex-shrink-0" target="_blank">
+                                    <img id="profilePreview"
+                                        src="{{ $order->distributors_dealers->profile_image
+                                            ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                            : asset('images/default-user.png') }}"
+                                        alt="Profile Image" class="img-thumbnail mb-2">
+                                </a>
+                                <div class="ms-2 flex-fill">
+                                    <h6 class="fs-medium text-truncate mb-1">
+                                        <a href="{{ route('order_management.edit', $order->id) }}">
+                                            {{ $order->distributors_dealers->firm_shop_name }}
+                                        </a>
+                                    </h6>
+                                    <p class="fs-13 d-inline-flex align-items-center"> <a
+                                            href="{{ route('order_management.edit', $order->id) }}">
+                                            <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                        </a>
+                                        <i class="ti ti-circle-filled fs-4 text-primary mx-1">
+                                        </i>{{ $order->order_date->format('d M Y') }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-sm-end mb-2">
+                                <h6 class="mb-1">{{ IndianNumberFormat($order->grand_total) }}</h6>
+                                <!-- <p class="fs-13">Basic (Monthly)</p> -->
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     @endcan
 
-    @can('Targets')
-        <div class="col-xxl-6 col-md-6 d-flex">
+    {{-- @can('Targets')
+        <div class="col-md-8 d-flex">
             <div class="card flex-fill">
                 <div class="card-header border-0 pb-0">
                     <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
@@ -207,18 +181,16 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive custom-table">
-                        <table class="table dataTable" id="target_table">
+                        <table class="table dataTable" id="deals-project">
                             <thead class="thead-light">
                                 <tr>
-                                    <th hidden>ID</th>
-                                    <th><strong>Name</strong></th>
-                                    <th scope="col"><strong>Salesman</strong></th>
-                                    <th><strong>Target Value</strong></th>
-                                    <th><strong>Start Date</strong></th>
-                                    <th><strong>End Date</strong></th>
+                                    <th>Target Name</th>
+                                    <th>Target Value</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
                                 </tr>
                             </thead>
-                            {{-- <tbody>
+                            <tbody>
                                 @foreach ($latest_target as $t)
                                     <tr>
                                         <td>{{ $t->subject }}</td>
@@ -227,13 +199,13 @@
                                         <td>{{ $t->end_date->format('d M Y') }}</td>
                                     </tr>
                                 @endforeach
-                            </tbody> --}}
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-    @endcan
+    @endcan --}}
 </div>
 @can('Targets')
     <div class="row">
@@ -260,7 +232,35 @@
     </div>
 @endcan
 
+<div class="row">
+    <div class="col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                <h5 class="mb-2">Last 12 months Order performance</h5>
+                {{-- <strong>Start Date : {{ $target['start_date'] }}</strong>
+                <strong>End Date : {{ $target['end_date'] }}</strong> --}}
+            </div>
+            <div class="card-body pb-0">
+                <canvas id="orderChart" height="190px"></canvas>
+            </div>
+        </div>
+    </div>
+    {{-- </div>
 
+<div class="row"> --}}
+    <div class="col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                <h5 class="mb-2">Last 12 months Revenu performance</h5>
+                {{-- <strong>Start Date : {{ $target['start_date'] }}</strong>
+                <strong>End Date : {{ $target['end_date'] }}</strong> --}}
+            </div>
+            <div class="card-body pb-0">
+                <canvas id="revenueChart" height="190px"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {{-- <div class="row">
@@ -281,149 +281,9 @@
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 <script>
-    /***** DataTable Order*****/
-    var order_management_show = $('#order_management').DataTable({
-        "pageLength": ($('#startDate').val() && $('#endDate').val()) ? 10 : 5,
-        "paging": true,
-        deferRender: true, // Prevents unnecessary DOM rendering
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        // dom: 'lrtip',
-        "dom": 'rtip',
-        "bInfo": false,
-        order: [
-            [1, 'desc']
-        ],
-        ajax: {
-            url: "{{ route('order_management.index') }}",
-            data: function(d) {
-                d.salemn_id = '{{ $sales_user }}'; // Pass selected group IDs as a parameter
-                d.start_date = $('#startDate').val();
-                d.end_date = $('#endDate').val();
-            }
-        },
-        columns: [{
-                data: 'id',
-                name: 'id',
-                visible: false,
-                searchable: false
-            },
-            {
-                data: 'firm_shop_name',
-                name: 'firm_shop_name',
-                searchable: true,
-            },
-            {
-                data: 'unique_ord_id',
-                name: 'unique_ord_id',
-                searchable: true
-            },
-
-            {
-                data: 'order_date',
-                name: 'order_date',
-                searchable: true,
-                orderable: true
-            },
-            {
-                data: 'salesman_id',
-                name: 'salesman_id',
-                searchable: true,
-                orderable: true
-            },
-            {
-                data: 'grand_total',
-                name: 'grand_total',
-                searchable: true,
-                orderable: true
-            },
-        ],
-        drawCallback: function() {
-            const hasDateFilter = $('#startDate').val() && $('#endDate').val();
-            if (!hasDateFilter) {
-                $('#order_management_paginate').hide(); // hide pagination controls
-            } else {
-                $('#order_management_paginate').show(); // show pagination when filtered
-            }
-        }
-    });
-
-    /***** DataTable Target*****/
-    var target_show = $('#target_table').DataTable({
-        // "pageLength": 10,
-        "pageLength": ($('#startDate').val() && $('#endDate').val()) ? 10 : 5,
-        "paging": true,
-        deferRender: true, // Prevents unnecessary DOM rendering
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        // dom: 'lrtip',
-        "dom": 'rtip',
-        "bInfo": false,
-        order: [
-            [0, 'desc']
-        ],
-        // ajax: "{{ route('target.index') }}",
-        ajax: {
-            url: "{{ route('target.index') }}",
-            data: function(d) {
-                d.salemn_id = '{{ $sales_user }}'; // Pass selected group IDs as a parameter
-                d.start_date = $('#startDate').val();
-                d.end_date = $('#endDate').val();
-            }
-        },
-        columns: [{
-                data: 'id',
-                name: 'id',
-                visible: false,
-                searchable: false
-            },
-            {
-                data: 'subject_name',
-                name: 'subject_name',
-                searchable: true
-            },
-            {
-                data: 'salesman_id',
-                name: 'salesman_id',
-                searchable: true
-            },
-            {
-                data: 'target_value',
-                name: 'target_value',
-                searchable: true,
-                orderable: true
-            },
-            // {
-            //     data: 'city_id',
-            //     name: 'city_id',
-            //     searchable: true,
-            //     orderable: true
-            // },
-            {
-                data: 'start_date',
-                name: 'start_date',
-                searchable: true
-            },
-            {
-                data: 'end_date',
-                name: 'end_date',
-                searchable: true
-            },
-        ],
-        drawCallback: function() {
-            const hasDateFilter = $('#startDate').val() && $('#endDate').val();
-            if (!hasDateFilter) {
-                $('#target_table_paginate').hide(); // hide pagination controls
-            } else {
-                $('#target_table_paginate').show(); // show pagination when filtered
-            }
-        }
-    });
-
-    /***** Running Target Graph*****/
+    /***** Running Target *****/
     @foreach ($current_target_graph as $index => $target)
 
         const ctx{{ $index }} = document.getElementById('gradeBarChart{{ $index }}').getContext('2d');
@@ -467,71 +327,68 @@
             }
         });
     @endforeach
-    /***Running Target Graph END ***/
+    /*** END ***/
 
     /***** 12 Month Order Chart *****/
-
     const order_chart = @json($order_chart);
     const order_chart_labels = order_chart.map(d => d.month);
     const order_chart_counts = order_chart.map(d => d.total);
 
-        const order_chart_draw = document.getElementById('orderChart').getContext('2d');
-        const orderChart = new Chart(order_chart_draw, {
-            type: 'bar',
-            data: {
-                labels: order_chart_labels,
-                datasets: [{
-                    label: 'Orders',
-                    data: order_chart_counts,
-                    backgroundColor: '#00918e',
-                    borderRadius: 6,
-                    barThickness: 40 //30
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    datalabels: {
-                        color: '#fff', // White text inside bars
-                        anchor: 'center',
-                        align: 'center',
-                        font: {
-                            weight: 'bold',
-                            size: 16 //14
-                        },
-                        formatter: function(value) {
-                            return value;
-                        }
-                    }
+    const order_chart_draw = document.getElementById('orderChart').getContext('2d');
+    const orderChart = new Chart(order_chart_draw, {
+        type: 'bar',
+        data: {
+            labels: order_chart_labels,
+            datasets: [{
+                label: 'Orders',
+                data: order_chart_counts,
+                backgroundColor: '#00918e',
+                borderRadius: 6,
+                barThickness: 40 //30
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1 // Set the interval to 1
-                        }
+                datalabels: {
+                    color: '#fff', // White text inside bars
+                    anchor: 'center',
+                    align: 'center',
+                    font: {
+                        weight: 'bold',
+                        size: 16 //14
                     },
-                    x: {
-                        ticks: {
-                            maxRotation: 45,
-                            minRotation: 45,
-                            autoSkip: false,
-                            font: {
-                                size: 12
-                            }
-                        }
+                    formatter: function(value) {
+                        return value;
                     }
                 }
             },
-            plugins: [ChartDataLabels]
-        });
-    
-    /***12 Month Order Chart END ***/
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Set the interval to 1
+                    }
+                },
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45,
+                        autoSkip: false,
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+    /*** END ***/
 
     /***** 12 Month Revenu Chart *****/
-
     const revenueData = @json($revenue_chart);
     const labels = revenueData.map(d => d.month);
     const totals = revenueData.map(d => d.total);
@@ -548,51 +405,51 @@
             lastThree = ',' + lastThree;
         return '₹' + otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
     }
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        const revenueChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Revenue',
-                    data: totals,
-                    backgroundColor: '#ff9933',
-                    borderRadius: 6,
-                    barThickness: 40
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        // min: 100,
-                        min: 0,
-                        ticks: {
-                            stepSize: 5000,
-                            precision: 0, // Force tick precision to avoid rounding
-                            callback: function(value) {
-                                return indianNumberFormatScript(value);
-                            }
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenue',
+                data: totals,
+                backgroundColor: '#ff9933',
+                borderRadius: 6,
+                barThickness: 40
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    // min: 100,
+                    min: 0,
+                    ticks: {
+                        stepSize: 5000,
+                        precision: 0, // Force tick precision to avoid rounding
+                        callback: function(value) {
+                            return indianNumberFormatScript(value);
                         }
                     }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let value = context.raw;
-                                return 'Revenue: ' + indianNumberFormatScript(value);
-                            }
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let value = context.raw;
+                            return 'Revenue: ' + indianNumberFormatScript(value);
                         }
                     }
                 }
             }
-        });
- 
-    /***12 Month Revenu Chart END ***/
+        }
+    });
+    /*** END ***/
 
 
     /*** All Target performance ***/
@@ -602,8 +459,8 @@
 
     const achived_target_chart = @json($achived_target);
 
-    if (achived_target_chart && achived_target_chart.achieved_percentage !== undefined && achived_target_chart
-        .achieved_percentage !== 0) {
+    // Only proceed if the summary data exists
+    if (achived_target_chart && achived_target_chart.achieved_percentage !== undefined) {
         const achived_target_chart_labels = ['Won', 'Lost']; //['Achieved', 'Not Achieved'];
         const achived_target_chart_percentage = [
             achived_target_chart.achieved_percentage,
@@ -632,6 +489,9 @@
                     },
                     tooltip: {
                         callbacks: {
+                            // label: function(context) {
+                            //     return context.label + ': ' + context.formattedValue + '%';
+                            // }
                             label: function(context) {
                                 const index = context.dataIndex;
                                 const label = context.label;
@@ -645,6 +505,7 @@
                                     // Not Achieved
                                     targetNames = loss_target_name.length ? loss_target_name : ['None'];
                                 }
+
                                 return [
                                     `${label}: ${value}%`,
                                     'Target Name:',
@@ -666,17 +527,65 @@
             // plugins: [ChartDataLabels] // Uncomment this if using ChartDataLabels plugin
         });
     } else {
-        console.warn("No summary target data is available for 'All Target Performance'.");
-
-        // Get the canvas container and inject message
-        const canvasContainer = document.getElementById("targetChart").parentNode;
-        canvasContainer.innerHTML = `
-        <div style="height: 380px; width: 380px; display: flex; justify-content: center; align-items: center; color: #999; font-weight: bold;">
-            No data available.
-        </div>
-    `;
+        console.warn("No summary target data available for chart.");
     }
-    /***All Target performance END ***/
+
+    // const achived_target_chart = @json($achived_target);
+    // if (achived_target_chart.length > 0) {
+    //     const achived_target_chart_amount = achived_target_chart.map(d => d.target);
+    //     const achived_target_chart_labels = achived_target_chart.map(d => d.target_name);
+    //     const achived_target_chart_percentage = achived_target_chart.map(d => d.achieved_percentage);
+
+    //     const target_chart_labels = achived_target_chart.map(d =>
+    //         `${d.target_name} (${indianNumberFormatScript(d.target)})`
+    //     );
+
+    //     const colors = achived_target_chart.map(() => getRandomColorHex());
+    //     // const target_chart_labels = achived_target_chart.map(d => `${d.target_name} (${d.target})`);
+    //     const ctx = document.getElementById("targetChart").getContext("2d");
+
+    //     const chart = new Chart(ctx, {
+    //         type: 'pie',
+    //         data: {
+    //             labels: target_chart_labels,
+    //             datasets: [{
+    //                 data: achived_target_chart_percentage,
+    //                 backgroundColor: colors,//['#007bff', '#ffc107', '#28a745', '#dc3545'],
+    //             }]
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             plugins: {
+    //                 title: {
+    //                     display: true,
+    //                     text: 'Achieved Target Percentages'
+    //                 },
+    //                 tooltip: {
+    //                     callbacks: {
+    //                         label: function(context) {
+    //                             // return context.label + ': ' + context.formattedValue + '%';
+    //                             return context.formattedValue + '%';
+    //                         }
+    //                     }
+    //                 },
+    //                 datalabels: {
+    //                     color: '#fff', // '#fff',
+    //                     formatter: (value) => value + '%',
+    //                     font: {
+    //                         weight: 'bold',
+    //                         size: 13
+    //                     },
+    //                     // formatter: (value) => value + '%'
+    //                 },
+
+    //             }
+    //         },
+    //         plugins: [ChartDataLabels] // ✅ Enable plugin here
+    //     });
+    // } else {
+    //     console.warn("No target data available for chart.");
+    // }
+    /*** END ***/
 </script>
 <script>
     /*** datepicker ***/
@@ -715,5 +624,7 @@
     });
 
     /*** END ***/
+
+   
 </script>
 @endsection

@@ -21,8 +21,6 @@ use Illuminate\Support\Facades\Log;
 use App\Models\OrderManagement;
 use App\Models\Target;
 use App\Models\OrderManagementProduct;
-use Carbon\CarbonPeriod;
-
 
 class SalesPersonController extends Controller
 {
@@ -367,55 +365,15 @@ class SalesPersonController extends Controller
 
     public function sales_report(Request $request)
     {
+        // dd($request->all());
         $sales_person = $this->sales_person_detail->where('user_id', $request->id)->first();
         $sales_user   = $sales_person->user_id;
         $data['sales_user']        = $sales_user;
         $data['page_title']        = 'Sales Person Report of ' . $sales_person->first_name . ' ' . $sales_person->last_name;
-
-        $order = $this->order_management->where('salesman_id', $sales_user);
-        if ($request->start_date && $request->end_date) {
-            $order = $order->whereBetween('order_date', [
-                Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d'),
-                Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d')
-            ]);
-        }
-        $data['total_order'] = $order->count();
-        $data['order_grand_total'] = $order->sum('grand_total');
-
-        $target = $this->target->where('salesman_id', $sales_user);
-        if ($request->start_date && $request->end_date) {
-            $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
-
-            $target->where(function ($sub) use ($startDate, $endDate) {
-                $sub->whereBetween('start_date', [$startDate, $endDate])
-                    ->orwhereBetween('end_date', [$startDate, $endDate]);
-            });
-        }
-        $targets = $target->get();
-        $data['total_target']    = $targets->count();
-        $data['total_target_amount']    = $targets->sum('target_value');
-
-
-        // $data['total_order']       = $this->order_management->where('salesman_id', $sales_user)->count();
-        // $data['order_grand_total'] = $this->order_management->where('salesman_id', $sales_user)->sum('grand_total');
-        // $data['total_target']      = $this->target->where('salesman_id', $sales_user)->count();
-
-
-
-
-        // if ($request->start_date && $request->end_date) {
-        //    $data['latest_orders']     = $this->order_management->where('salesman_id', $sales_user)
-        //             ->where(function ($sub) use ($startDate, $endDate) {
-        //                 $sub->whereBetween('order_date', [$startDate, $endDate]);
-        //             })
-        //         ->paginate(2)
-        //         ->appends($request->only('start_date', 'end_date'));
-        // } else {
-        //    $data['latest_orders']     = $this->order_management->where('salesman_id', $sales_user)->latest()->take(5)->get();
-        // }
-
+        $data['total_order']       = $this->order_management->where('salesman_id', $sales_user)->count();
+        $data['order_grand_total'] = $this->order_management->where('salesman_id', $sales_user)->sum('grand_total');
         $data['latest_orders']     = $this->order_management->where('salesman_id', $sales_user)->latest()->take(5)->get();
+        $data['total_target']      = $this->target->where('salesman_id', $sales_user)->count();
         $data['latest_target']     = $this->target->where('salesman_id', $sales_user)->latest()->take(5)->get();
 
         $data['current_target']    = $this->target->with('target_grade')
@@ -427,34 +385,12 @@ class SalesPersonController extends Controller
             ->where('end_date', '<', Carbon::today())
             ->get();
 
+        $startDate = Carbon::now()->subMonths(12)->startOfMonth()->toDateString();
+        $endDate   = Carbon::now()->endOfMonth()->toDateString();
+
 
 
         /***** Last 12 months order performance *****/
-        if ($request->start_date && $request->end_date) {
-            $startDateObj = Carbon::createFromFormat('d-m-Y', $request->start_date);
-            $endDateObj = Carbon::createFromFormat('d-m-Y', $request->end_date);
-
-            $monthCount = (int) ($startDateObj->diffInMonths($endDateObj) + 1);
-
-            $data['order_chart_heading'] = "Last {$monthCount} Months Order Performance";
-            $data['revenu_chart_heading'] = "Last {$monthCount} Months Revenue Performance";
-
-            // Use string format for DB queries
-            $startDate = $startDateObj->format('Y-m-d');
-            $endDate = $endDateObj->format('Y-m-d');
-
-            // $data['order_chart_heading'] = 'Order Performance';
-            // $data['revenu_chart_heading'] = 'Revenu Performance';
-
-
-
-        } else {
-            $startDate = Carbon::now()->subMonths(12)->startOfMonth()->toDateString();
-            $endDate   = Carbon::now()->endOfMonth()->toDateString();
-            $data['order_chart_heading'] = 'Last 12 Months Order Performance';
-            $data['revenu_chart_heading'] = 'Last 12 Months Revenu Performance';
-        }
-
         $orders = $this->order_management
             ->select(
                 DB::raw("DATE_FORMAT(order_date, '%b %Y') as month_year"),
@@ -467,11 +403,9 @@ class SalesPersonController extends Controller
             ->get();
 
         // Generate last 12 months list (with year)
-        // $months = collect(range(0, 11))->map(function ($i) {
-        //     return Carbon::now()->subMonths(11 - $i)->format('M Y');
-        // });
-        $months = collect(CarbonPeriod::create($startDate, '1 month', $endDate))
-            ->map(fn($date) => $date->format('M Y'));
+        $months = collect(range(0, 11))->map(function ($i) {
+            return Carbon::now()->subMonths(11 - $i)->format('M Y');
+        });
 
         // Merge with DB results
         $order_chart = $months->map(function ($monthYear) use ($orders) {
@@ -501,9 +435,9 @@ class SalesPersonController extends Controller
             ->get();
 
         // Prepare chart data (fill missing months if needed)
-        // $months = collect(range(0, 11))->map(function ($i) {
-        //     return Carbon::now()->subMonths(11 - $i)->format('M Y');
-        // });
+        $months = collect(range(0, 11))->map(function ($i) {
+            return Carbon::now()->subMonths(11 - $i)->format('M Y');
+        });
 
         $revenue_chart = $months->map(function ($month) use ($orders) {
             $order = $orders->firstWhere('month', $month);

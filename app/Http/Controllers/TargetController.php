@@ -11,6 +11,7 @@ use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class TargetController extends Controller
 {
@@ -21,11 +22,30 @@ class TargetController extends Controller
     {
         $data['page_title'] = 'Target';
         if ($request->ajax()) {
-            // $data = Target::query();
-            $data = Target::when(auth()->user()->hasRole('sales'), function ($query) {
-                $query->where('salesman_id', auth()->id());
+            $records = Target::query();
+
+            // Apply salesman filter if user has sales role
+            if (auth()->user()->hasRole('sales')) {
+                $records->where('salesman_id', auth()->id());
+            }
+            // dd($request->salemn_id);
+            $records->when($request->salemn_id, function ($query) use ($request) { 
+                $query->where('salesman_id', $request->salemn_id);
             });
-            return DataTables::of($data)
+            $records->when($request->start_date && $request->end_date, function ($sub) use ($request) {
+                $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
+                $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
+                $sub->whereBetween('start_date', [$startDate, $endDate]);
+                    // ->orWhereBetween('end_date', [$startDate, $endDate]); 
+            });
+
+
+            // $data = Target::when(auth()->user()->hasRole('sales'), function ($query) {
+            //     $query->where('salesman_id', auth()->id());
+            // });
+
+
+            return DataTables::of($records)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
                     return '<label class="checkboxs">
@@ -37,7 +57,7 @@ class TargetController extends Controller
                     $show_btn = '<a href="' . route('target.show', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i> Show Target</a>';
 
-                    
+
 
                     $edit_btn = '<a href="' . route('target.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
@@ -52,12 +72,20 @@ class TargetController extends Controller
 
                     // Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
-                    
+
                     $action_btn .= Auth::user()->hasAnyRole(['sales']) ? $show_btn : $edit_btn;
                     $action_btn .= $delete_btn;
-                    
+
                     return $action_btn . ' </div></div>';
                 })
+                ->addColumn('subject_name', function ($row) {
+                        if ($row->subject) {
+                            $target_name = $row->subject ?? '-';
+                            $url = route('target.edit', $row->id);
+                            return '<a href="' . $url . '">' . e($target_name) . '</a>';
+                        }
+                        return '-';
+                    })
                 ->editColumn('start_date', function ($row) {
                     return $row->start_date->format('d M Y');
                 })
@@ -80,7 +108,7 @@ class TargetController extends Controller
                     if ($row->city) {
                         return $row->city->city_name;
                     }
-                    return '-';                                                 
+                    return '-';
                 })
                 ->filterColumn('salesman_id', function ($query, $keyword) {
                     $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
@@ -92,7 +120,7 @@ class TargetController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['checkbox', 'action']) //'value',
+                ->rawColumns(['checkbox', 'action','subject_name']) //'value',
                 ->make(true);
         }
         return view('admin.target.index', $data);
@@ -176,7 +204,7 @@ class TargetController extends Controller
 
     public function Show(string $id)
     {
-          $data['page_title'] = 'Show Target';
+        $data['page_title'] = 'Show Target';
         $data['target'] = Target::findOrFail($id);
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
         $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();

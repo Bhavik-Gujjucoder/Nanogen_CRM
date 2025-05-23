@@ -80,18 +80,18 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Transport <span class="text-danger">*</span></label>
                     <input type="text" name="transport" value="{{ old('transport', $order->transport) }}"
-                        class="form-control" placeholder="Transport">
+                        class="form-control" placeholder="Transport" maxlength="255">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Freight <span class="text-danger">*</span></label>
                     <input type="text" name="freight" value="{{ old('freight', $order->freight) }}"
-                        class="form-control" placeholder="Freight">
+                        class="form-control" placeholder="Freight" maxlength="255">
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">GST No. <span class="text-danger">*</span></label>
                     <input type="text" name="gst_no" value="{{ old('gst_no', $order->gst_no) }}"
-                        class="form-control" placeholder="GST No">
+                        class="form-control" placeholder="GST No" maxlength="255">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Address <span class="text-danger">*</span></label>

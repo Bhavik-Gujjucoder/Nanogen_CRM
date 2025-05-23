@@ -63,14 +63,14 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="app_form_no"
                                     value="{{ old('app_form_no', $distributor_dealers->app_form_no) }}"
-                                    class="form-control" placeholder="Application Form No">
+                                    class="form-control" placeholder="Application Form No" maxlength="255">
                                 <span id="app_form_no_error" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Code No <span class="text-danger">*</span></label>
-                                <input type="text" name="code_no"
+                                <input type="text" name="code_no" maxlength="255"
                                     value="{{ old('code_no', $distributor_dealers->code_no) }}" class="form-control"
                                     placeholder="Code No">
                                 <span id="code_no_error" class="text-danger"></span>
@@ -83,7 +83,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="applicant_name"
                                     value="{{ old('applicant_name', $distributor_dealers->applicant_name) }}"
-                                    class="form-control" placeholder="Name of the Applicant">
+                                    class="form-control" placeholder="Name of the Applicant" maxlength="255">
                                 <span id="applicant_name_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="firm_shop_name"
                                     value="{{ old('firm_shop_name', $distributor_dealers->firm_shop_name) }}"
-                                    class="form-control" placeholder="Name of the Firm/Shop">
+                                    class="form-control" placeholder="Name of the Firm/Shop" maxlength="255">
                                 <span id="firm_shop_name_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                                 <label class="col-form-label">Pan Card No <span class="text-danger">*</span></label>
                                 <input type="text" name="pancard"
                                     value="{{ old('pancard', $distributor_dealers->pancard) }}" class="form-control"
-                                    placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()">
+                                    placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()" maxlength="10">
                                 <span id="pancard_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                                 <label class="col-form-label">GSTIN <span class="text-danger">*</span></label>
                                 <input type="text" name="gstin"
                                     value="{{ old('gstin', $distributor_dealers->gstin) }}" class="form-control"
-                                    placeholder="GSTIN">
+                                    placeholder="GSTIN" oninput="this.value = this.value.toUpperCase()" maxlength="15">
                                 <span id="gstin_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -227,7 +227,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="bank_name_address"
                                     value="{{ old('bank_name_address', $distributor_dealers->bank_name_address) }}"
-                                    class="form-control" placeholder="Name and Address of Bank">
+                                    class="form-control" placeholder="Name and Address of Bank" maxlength="255">
                                 <span id="bank_name_address_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -236,7 +236,7 @@
                                 <label class="col-form-label">Account No <span class="text-danger">*</span></label>
                                 <input type="text" name="account_no"
                                     value="{{ old('account_no', $distributor_dealers->account_no) }}"
-                                    class="form-control" placeholder="Account No">
+                                    class="form-control" placeholder="Account No"  maxlength="20">
                                 <span id="account_no_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -245,7 +245,7 @@
                                 <label class="col-form-label">IFSC Code <span class="text-danger">*</span></label>
                                 <input type="text" name="ifsc_code"
                                     value="{{ old('ifsc_code', $distributor_dealers->ifsc_code) }}"
-                                    class="form-control" placeholder="IFSC Code">
+                                    class="form-control" placeholder="IFSC Code" maxlength="11">
                                 <span id="ifsc_code_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -255,7 +255,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="security_cheque_detail"
                                     value="{{ old('security_cheque_detail', $distributor_dealers->security_cheque_detail) }}"
-                                    class="form-control" placeholder="Details of Security Cheque">
+                                    class="form-control" placeholder="Details of Security Cheque"   maxlength="255">
                                 <span id="security_cheque_detail_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -264,7 +264,7 @@
                                 <label class="col-form-label">Cheque No.1 </label>
                                 <input type="text" name="cheque_1"
                                     value="{{ old('cheque_1', $distributor_dealers->cheque_1) }}"
-                                    class="form-control" placeholder="Cheque No.1">
+                                    class="form-control" placeholder="Cheque No.1" maxlength="20">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -272,7 +272,7 @@
                                 <label class="col-form-label">Cheque No.2 </label>
                                 <input type="text" name="cheque_2"
                                     value="{{ old('cheque_2', $distributor_dealers->cheque_2) }}"
-                                    class="form-control" placeholder="Cheque No.2">
+                                    class="form-control" placeholder="Cheque No.2" maxlength="20">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -280,7 +280,7 @@
                                 <label class="col-form-label">Cheque No.3 </label>
                                 <input type="text" name="cheque_3"
                                     value="{{ old('cheque_3', $distributor_dealers->cheque_3) }}"
-                                    class="form-control" placeholder="Cheque No.3">
+                                    class="form-control" placeholder="Cheque No.3" maxlength="20">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -289,7 +289,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="name_authorised_signatory"
                                     value="{{ old('name_authorised_signatory', $distributor_dealers->name_authorised_signatory) }}"
-                                    class="form-control" placeholder="Name of Authorised Signatory">
+                                    class="form-control" placeholder="Name of Authorised Signatory" maxlength="255">
                                 <span id="name_authorised_signatory_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -338,7 +338,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="fertilizer_license"
                                     value="{{ old('fertilizer_license', $distributor_dealers->fertilizer_license) }}"
-                                    class="form-control" placeholder="Fertilizer License No">
+                                    class="form-control" placeholder="Fertilizer License No" maxlength="255">
                                 <span id="fertilizer_license_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -348,7 +348,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="pesticide_license"
                                     value="{{ old('pesticide_license', $distributor_dealers->pesticide_license) }}"
-                                    class="form-control" placeholder="Pesticide License No">
+                                    class="form-control" placeholder="Pesticide License No" maxlength="255">
                                 <span id="pesticide_license_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -359,7 +359,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="seed_license"
                                     value="{{ old('seed_license', $distributor_dealers->seed_license) }}"
-                                    class="form-control" placeholder="Seed License No">
+                                    class="form-control" placeholder="Seed License No" maxlength="255">
                                 <span id="seed_license_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -426,7 +426,7 @@
                                                 <td data-label="Company Name">
                                                     <input type="text" name="company_name[]"
                                                         value="{{ old('company_name', $c->company_name) }}"
-                                                        class="form-control" placeholder="Enter company name">
+                                                        class="form-control" placeholder="Enter company name" maxlength="255">
                                                 </td>
                                                 <td data-label="Products">
                                                     <select name="product_id[]" class="form-control">
@@ -558,7 +558,7 @@
                                                 <td data-label="Name">
                                                     <input type="text" name="name[]"
                                                         value="{{ old('name', $p->name) }}" placeholder="Enter name"
-                                                        class="form-control">
+                                                        class="form-control" maxlength="255">
                                                 </td>
                                                 <td data-label="Date of Birth" class="dateofbirth">
                                                     <div class="icon-form">
@@ -588,7 +588,7 @@
                                 <label class="col-form-label">Name and address of associate firm(s) </label>
                                 <input type="text" name="associate_name_address"
                                     value="{{ old('associate_name_address', $distributor_dealers->associate_name_address) }}"
-                                    class="form-control" placeholder="Name and address of associate firm(s)">
+                                    class="form-control" placeholder="Name and address of associate firm(s)" maxlength="255">
                                 <span id="associate_name_address_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -613,21 +613,21 @@
                                 <div class="mb-3">
                                     <input type="text" class="form-control" name="turnover1"
                                         value="{{ old('turnover1', $distributor_dealers->turnover1) }}"
-                                        placeholder="1st year turnover">
+                                        placeholder="1st year turnover" maxlength="255">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <input type="text" class="form-control" name="turnover2"
                                         value="{{ old('turnover2', $distributor_dealers->turnover2) }}"
-                                        placeholder="2nd year turnover">
+                                        placeholder="2nd year turnover" maxlength="255">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <input type="text" class="form-control" name="turnover3"
                                         value="{{ old('turnover3', $distributor_dealers->turnover3) }}"
-                                        placeholder="3rd year turnover">
+                                        placeholder="3rd year turnover" maxlength="255">
                                 </div>
                             </div>
 
@@ -668,7 +668,7 @@
                                                 <input type="text" name="godown_size_capacity"
                                                     value="{{ old('godown_size_capacity', $distributor_dealers->godown_size_capacity) }}"
                                                     class="form-control"
-                                                    placeholder="Indicate Size and Capacity of Godown">
+                                                    placeholder="Indicate Size and Capacity of Godown" maxlength="255">
                                                 <span id="godown_size_capacity_error" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -693,7 +693,7 @@
                                 <label class="col-form-label">Expected Minimum Sales</label>
                                 <input type="text" name="expected_minimum_sales" class="form-control"
                                     placeholder="Expected Minimum Sales"
-                                    value="{{ old('expected_minimum_sales', $distributor_dealers->expected_minimum_sales) }}">
+                                    value="{{ old('expected_minimum_sales', $distributor_dealers->expected_minimum_sales) }}" maxlength="255">
                                 <span id="expected_minimum_sales_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -701,7 +701,7 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Place</label>
                                 <input type="text" name="place" class="form-control" placeholder="Place"
-                                    value="{{ old('place', $distributor_dealers->place) }}">
+                                    value="{{ old('place', $distributor_dealers->place) }}" maxlength="255">
                                 <span id="place_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -734,7 +734,7 @@
                                     <label class="col-form-label">Location of business/premises</label>
                                     <input type="text" name="business_location"
                                         value="{{ old('business_location', $distributor_dealers->business_location) }}"
-                                        class="form-control" placeholder="Name and Address of Bank">
+                                        class="form-control" placeholder="Name and Address of Bank" maxlength="255">
                                     <span id="business_premises_location_error" class="text-danger"></span>
                                 </div>
                             </div>
@@ -749,7 +749,7 @@
                                         <label class="col-form-label">Area in sq. fee</label>
                                         <input type="text" class="form-control" name="godown_capacity_area"
                                             value="{{ old('godown_capacity_area', $distributor_dealers->godown_capacity_area) }}"
-                                            placeholder="Area in sq. fee">
+                                            placeholder="Area in sq. fee" maxlength="255">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -757,7 +757,7 @@
                                         <label class="col-form-label">Capacity in bags</label>
                                         <input type="text" class="form-control" name="godown_capacity_inbags"
                                             value="{{ old('godown_capacity_inbags', $distributor_dealers->godown_capacity_inbags) }}"
-                                            placeholder="Capacity in bags">
+                                            placeholder="Capacity in bags" maxlength="255">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -788,7 +788,7 @@
                                         <label class="col-form-label">Experience and capability </label>
                                         <input type="text" name="experience_capability" class="form-control"
                                             value="{{ old('experience_capability', $distributor_dealers->experience_capability) }}"
-                                            placeholder="Experience and capability">
+                                            placeholder="Experience and capability"     maxlength="255"> 
                                         <span id="experience_capability_error" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -799,7 +799,7 @@
                                         </label>
                                         <input type="text" name="financial_capability" class="form-control"
                                             value="{{ old('financial_capability', $distributor_dealers->financial_capability) }}"
-                                            placeholder="Financial standing and capability to invest">
+                                            placeholder="Financial standing and capability to invest" maxlength="255">
                                         <span id="financial_capability_error" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -858,7 +858,7 @@
                                         sales/month) </label>
                                     <input type="text" name="business_potential" class="form-control"
                                         placeholder="Estimated sales/month"
-                                        value="{{ old('business_potential', $distributor_dealers->market_potential) }}">
+                                        value="{{ old('business_potential', $distributor_dealers->market_potential) }}" maxlength="255">
                                 </div>
                             </div>
 
@@ -867,7 +867,7 @@
                                     <label class="col-form-label">Total market potential of the area </label>
                                     <input type="text" name="market_potential" class="form-control"
                                         placeholder="Total market potential"
-                                        value="{{ old('market_potential', $distributor_dealers->market_potential) }}">
+                                        value="{{ old('market_potential', $distributor_dealers->market_potential) }}" maxlength="255">
                                 </div>
                             </div>
 
@@ -876,7 +876,7 @@
                                     <label class="col-form-label">Assurance of minimum turnover</label>
                                     <input type="text" name="minimum_turnover" class="form-control"
                                         placeholder="Minimum turnover assurance"
-                                        value="{{ old('minimum_turnover', $distributor_dealers->minimum_turnover) }}">
+                                        value="{{ old('minimum_turnover', $distributor_dealers->minimum_turnover) }}" maxlength="255">
                                 </div>
                             </div>
 
@@ -886,7 +886,7 @@
                                         the area/town (major competitors) </label>
                                     <input type="text" name="competitor_count" class="form-control"
                                         placeholder="No. of major competitors"
-                                        value="{{ old('competitor_count', $distributor_dealers->competitor_count) }}">
+                                        value="{{ old('competitor_count', $distributor_dealers->competitor_count) }}" maxlength="255">
                                 </div>
                             </div>
 
@@ -895,7 +895,7 @@
                                     <label class="col-form-label">Credit limit </label>
                                     <input type="text" name="cr_limit" class="form-control"
                                         placeholder="Cr limit"
-                                        value="{{ old('cr_limit', $distributor_dealers->cr_limit) }}">
+                                        value="{{ old('cr_limit', $distributor_dealers->cr_limit) }}" maxlength="255">
                                 </div>
                             </div>
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('code_no');
             $table->string('applicant_name');
             $table->string('firm_shop_name');
-            $table->text('firm_shop_address');
+            $table->longText('firm_shop_address');
             $table->string('mobile_no');
             $table->string('pancard');
             $table->string('gstin')->nullable();
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->bigInteger('country_id')->nullable();
 
 
-            $table->text('bank_name_address');
+            $table->longText('bank_name_address');
             $table->string('account_no');
             $table->string('ifsc_code');
             $table->string('security_cheque_detail')->nullable();
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->text('applicant_signature')->nullable();
             $table->string('business_location')->nullable();
             $table->string('godown_size_capacity')->nullable();
-            $table->string('godown_address')->nullable();
+            $table->longText('godown_address')->nullable();
             $table->string('godown_capacity_area')->nullable();
             $table->string('godown_capacity_inbags')->nullable();
             $table->string('godown_construction')->nullable();
@@ -74,7 +74,7 @@ return new class extends Migration
             $table->string('cr_limit')->nullable();
             $table->string('credit_limit')->nullable();
             $table->string('credit_limit_type')->nullable();
-            $table->text('remarks')->nullable();
+            $table->longText('remarks')->nullable();
             $table->timestamps();
         });
     }

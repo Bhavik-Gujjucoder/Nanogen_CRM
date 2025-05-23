@@ -19,10 +19,8 @@ use App\Models\OrderManagementProduct;
 class OrderManagementController extends Controller
 {
 
-    public function __construct() {
+    public function __construct() {}
 
-    }
-    
     /**
      * Display a listing of the resource.
      */
@@ -33,140 +31,169 @@ class OrderManagementController extends Controller
 
         $data['page_title'] = 'Order Management';
         if ($request->ajax()) {
-            $data = OrderManagement::when(auth()->user()->hasRole('sales'), function ($query) {
-                $query->where('salesman_id', auth()->id());
-            });
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('checkbox', function ($row) {
-                    return '<label class="checkboxs">
+            $records = OrderManagement::query();
+
+            // Apply salesman filter if user has sales role
+            if (auth()->user()->hasRole('sales')) {
+                $records->where('salesman_id', auth()->id());
+            }
+
+            
+                $records->when($request->salemn_id, function ($query) use ($request) {
+                    $query->where('salesman_id', $request->salemn_id);
+                });
+
+                $records->when($request->start_date && $request->end_date, function ($sub) use ($request) {
+                    $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
+                    $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
+                    $sub->whereBetween('order_date', [$startDate, $endDate]);
+                });
+
+                return DataTables::of($records)
+                    ->addIndexColumn()
+                    ->addColumn('checkbox', function ($row) {
+                        return '<label class="checkboxs">
                             <input type="checkbox" class="checkbox-item order_checkbox" data-id="' . $row->id . '">
                             <span class="checkmarks"></span>
                         </label>';
-                })
-                ->addColumn('action', function ($row) {
-                    $edit_btn = '<a href="' . route('order_management.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    })
+                    ->addColumn('action', function ($row) {
+                        $edit_btn = '<a href="' . route('order_management.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
-                    $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteOrder"  data-id="' . $row->id . '"
+                        $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteOrder"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('order_management.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
-                        . csrf_field() . method_field('DELETE') . '</form>';
+                            . csrf_field() . method_field('DELETE') . '</form>';
 
-                    $action_btn = '<div class="dropdown table-action">
+                        $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
 
-                    // Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
-                    // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
-                    $action_btn .= $edit_btn;
-                    $action_btn .= $delete_btn;
+                        // Auth::user()->can('manage orders') ? $action_btn .= $edit_btn : '';
+                        // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
+                        $action_btn .= $edit_btn;
+                        $action_btn .= $delete_btn;
 
-                    return $action_btn . ' </div></div>';
-                })
-                ->editColumn('order_date', function ($row) {
-                    // return $row->order_date->format('d-m-Y');
-                    return Carbon::parse($row->order_date)->format('d M Y');
-                })
-                ->editColumn('dd_id', function ($row) {
-                    if ($row->distributors_dealers) {
-                        $type = $row->distributors_dealers->user_type == 1 ? '(Distributor)' : ($row->distributors_dealers->user_type == 2 ? '(Dealer)' : '');
-                        return $row->distributors_dealers->applicant_name . ' ' . $type;
-                    }
-                    return '-';
-                })
+                        return $action_btn . ' </div></div>';
+                    })
+                    ->editColumn('order_date', function ($row) {
+                        // return $row->order_date->format('d-m-Y');
+                        return Carbon::parse($row->order_date)->format('d M Y');
+                    })
+                    ->editColumn('dd_id', function ($row) {
+                        if ($row->distributors_dealers) {
+                            $type = $row->distributors_dealers->user_type == 1 ? '(Distributor)' : ($row->distributors_dealers->user_type == 2 ? '(Dealer)' : '');
+                            return $row->distributors_dealers->applicant_name . ' ' . $type;
+                        }
+                        return '-';
+                    })
+                    ->addColumn('firm_shop_name', function ($row) {
+                        if ($row->distributors_dealers) {
+                            $firmShopName = $row->distributors_dealers->firm_shop_name ?? '-';
+                            $url = route('order_management.edit', $row->id);
+                            return '<a href="' . $url . '">' . e($firmShopName) . '</a>';
+                        }
+                        return '-';
+                    })
+                    ->addColumn('unique_ord_id', function ($row) {
+                        $url = route('order_management.edit', $row->id);
+                        return '<a href="' . $url . '">' . e($row->unique_order_id) . '</a>';
+                    })
 
-                ->editColumn('city', function ($row) {
-                    if ($row->distributors_dealers) {
-                        return $row->distributors_dealers->city->city_name ?? '-';
-                    }
-                    return '-';
-                })
 
-                ->editColumn('salesman_id', function ($row) {
-                    if ($row->sales_person_detail) {
-                        return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
-                    }
-                    return '-';
-                })
-                ->editColumn('grand_total', function ($row) {
-                    if ($row->grand_total) {
-                        return IndianNumberFormat($row->grand_total);
-                    }
-                    return '-';
-                })
+                    ->editColumn('city', function ($row) {
+                        if ($row->distributors_dealers) {
+                            return $row->distributors_dealers->city->city_name ?? '-';
+                        }
+                        return '-';
+                    })
 
-                ->addColumn('order_status', function ($row) {
-                    $order_status = '';
+                    ->editColumn('salesman_id', function ($row) {
+                        if ($row->sales_person_detail) {
+                            return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
+                        }
+                        return '-';
+                    })
+                    ->editColumn('grand_total', function ($row) {
+                        if ($row->grand_total) {
+                            return IndianNumberFormat($row->grand_total);
+                        }
+                        return '-';
+                    })
 
-                    if ($row->status < 1) {
-                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
+                    ->addColumn('order_status', function ($row) {
+                        $order_status = '';
+
+                        if ($row->status < 1) {
+                            $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
                                             <span class="badge bg-warning">Pending</span>
                                           </a>';
-                    }
-                    if ($row->status < 2) {
-                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
+                        }
+                        if ($row->status < 2) {
+                            $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
                                             <span class="badge bg-warning">Processing</span>
                                           </a>';
-                    }
-                    if ($row->status < 3) {
-                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
+                        }
+                        if ($row->status < 3) {
+                            $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
                                             <span class="badge bg-info">Shipping</span>
                                           </a>';
-                    }
-                    if ($row->status < 4) {
-                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
+                        }
+                        if ($row->status < 4) {
+                            $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
                                             <span class="badge bg-success">Delivered</span>
                                           </a>';
-                    }
+                        }
 
-                    if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { // Auth::user()->can('manage users')
-                        $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
+                        if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { // Auth::user()->can('manage users')
+                            $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
                                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
                                       </div>';
-                        return $action_btn;
-                    }
-
-                    return $row->statusBadge();
-                })
-                ->filterColumn('order_status', function ($query, $keyword) {
-                    $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
-                    // Find the matching status key (case-insensitive)
-                    foreach ($statuses as $label => $value) {
-                        if (stripos($label, $keyword) !== false) {
-                            return $query->where('status', $value);
+                            return $action_btn;
                         }
-                    }
-                    // If not matched, prevent any result
-                    return $query->whereRaw('0 = 1');
-                })
-                ->filterColumn('dd_id', function ($query, $keyword) {
-                    $query->whereHas('distributors_dealers', function ($q) use ($keyword) {
-                        $q->where('applicant_name', 'like', "%{$keyword}%")
-                            ->orWhereRaw("CASE 
+
+                        return $row->statusBadge();
+                    })
+                    ->filterColumn('order_status', function ($query, $keyword) {
+                        $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
+                        // Find the matching status key (case-insensitive)
+                        foreach ($statuses as $label => $value) {
+                            if (stripos($label, $keyword) !== false) {
+                                return $query->where('status', $value);
+                            }
+                        }
+                        // If not matched, prevent any result
+                        return $query->whereRaw('0 = 1');
+                    })
+                    ->filterColumn('dd_id', function ($query, $keyword) {
+                        $query->whereHas('distributors_dealers', function ($q) use ($keyword) {
+                            $q->where('applicant_name', 'like', "%{$keyword}%")
+                                ->orWhereRaw("CASE 
                               WHEN user_type = 1 THEN 'Distributor'
                               WHEN user_type = 2 THEN 'Dealer'
                               ELSE ''
                           END LIKE ?", ["%{$keyword}%"]);
-                    });
-                })
-                ->filterColumn('salesman_id', function ($query, $keyword) {
-                    $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
-                        // $q->where('first_name', 'like', "%{$keyword}%");
-                        $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
-                    });
-                })
-                ->filterColumn('order_date', function ($query, $keyword) {
-                    $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
-                })
-                ->filterColumn('city', function ($query, $keyword) {
-                    $query->whereHas('distributors_dealers.city', function ($q) use ($keyword) {
-                        $q->where('city_name', 'like', "%{$keyword}%");
-                    });
-                })
-                ->rawColumns(['checkbox', 'action', 'order_status']) //'value',
-                ->make(true);
-        }
+                        });
+                    })
+                    ->filterColumn('salesman_id', function ($query, $keyword) {
+                        $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
+                            // $q->where('first_name', 'like', "%{$keyword}%");
+                            $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
+                        });
+                    })
+                    ->filterColumn('order_date', function ($query, $keyword) {
+                        $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
+                    })
+                    ->filterColumn('city', function ($query, $keyword) {
+                        $query->whereHas('distributors_dealers.city', function ($q) use ($keyword) {
+                            $q->where('city_name', 'like', "%{$keyword}%");
+                        });
+                    })
+                    ->rawColumns(['checkbox', 'action', 'order_status', 'firm_shop_name', 'unique_ord_id']) //'value',
+                    ->make(true);
+            }
+        
 
         return view('admin.order_management.index', $data);
     }
