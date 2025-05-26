@@ -51,20 +51,25 @@ class ComplainController extends Controller
                 })
                 ->editColumn('name', function ($row) {
                     $imagePath = 'storage/complain_images/' . $row->complain_image;
-                    $complainimage = isset($row->complain_image)
-                        ? asset($imagePath)
+                    // $complainimage = isset($row->complain_image)
+                    //     ? asset($imagePath)
+                    //     : asset('images/default-user.png');
+
+                    $profilePic = isset($row->distributorsDealers->profile_image)
+                        ? asset('storage/distributor_dealer_profile_image/' . $row->distributorsDealers->profile_image)
                         : asset('images/default-user.png');
 
                     $userLabel = $row->distributorsDealers?->user_type == 1 ? '(Distributor)'
                         : ($row->distributorsDealers?->user_type == 2 ? '(Dealer)' : '');
 
                     return '
-                    <a href="' . $complainimage . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
-                        <img src="' . $complainimage . '" alt="Complain Image">
+                    <a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
+                        <img src="' . $profilePic . '" alt="Complain Image">
                     </a>
                     <span>' . ($row->distributorsDealers?->applicant_name ?? 'N/A') . '</span><br>
                     <small>' . $userLabel . '</small>';
                 })
+
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributorsDealers', function ($q) use ($keyword) {
                         $q->where('applicant_name', 'like', "%{$keyword}%")
@@ -161,12 +166,18 @@ class ComplainController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'complain_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'complain_image' => 'required|max:2048',
         ], [
-            'complain_image.image' => 'Complain image must be an image.',
-            'complain_image.mimes' => 'Complain image must be a file of type: jpeg, png, jpg, gif.',
+            'complain_image.required' => 'Complain image must be an image.',
             'complain_image.max' => 'Complain image may not be greater than 2MB',
         ]);
+        // $request->validate([
+        //     'complain_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        // ], [
+        //     'complain_image.image' => 'Complain image must be an image.',
+        //     'complain_image.mimes' => 'Complain image must be a file of type: jpeg, png, jpg, gif.',
+        //     'complain_image.max' => 'Complain image may not be greater than 2MB',
+        // ]);
 
         $complain = Complain::findOrFail($id);
         if ((int) $complain->status !== (int) $request->status) {

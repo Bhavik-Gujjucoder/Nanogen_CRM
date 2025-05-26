@@ -15,23 +15,57 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <div class="profile-pic-upload">
-                                <div class="profile-pic">
+                                {{-- <div class="profile-pic">
                                     <img id="profilePreview"
                                         src="{{ $complain->complain_image ? asset('storage/complain_images/' . $complain->complain_image) : asset('images/default-user.png') }}"
                                         alt="Profile Picture" class="img-thumbnail mb-2">
-                                </div>
+                                </div> --}}
                                 <div class="upload-content">
                                     <div class="upload-btn  @error('complain_image') is-invalid @enderror">
-                                        <input type="file" name="complain_image" accept=".jpg,.jpeg,.gif,.png" 
+                                        <input type="file" name="complain_image" {{-- accept=".jpg,.jpeg,.gif,.png" --}}
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload File
                                         </span>
                                     </div>
-                                    <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
+
+                                    {{-- <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p> --}}
                                     @error('complain_image')
                                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                                     @enderror
+                                </div>
+
+                                @if ($complain->complain_image)
+                                    @php
+                                        $fileExtension = pathinfo($complain->complain_image, PATHINFO_EXTENSION);
+                                        $fileUrl = asset('storage/complain_images/' . $complain->complain_image);
+                                    @endphp
+
+                                    @if (strtolower($fileExtension) === 'pdf')
+                                        <!-- PDF Preview -->
+                                        <a href="{{ $fileUrl }}" target="_blank"
+                                        class="btn btn-sm btn-primary">Open PDF in new tab</a>
+                                        <br>
+                                        <iframe src="{{ $fileUrl }}"
+                                            style="width: 150px; height: 100px;"
+                                            class="mb-2"></iframe>
+                                    @elseif (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
+                                        <!-- Image Preview -->
+                                        <a href="{{ $fileUrl }}" target="_blank">
+                                            <img src="{{ $fileUrl }}" alt="Preview" class="img-thumbnail mb-2"
+                                                style="max-width: 200px;">
+                                        </a>
+                                    @else
+                                        <!-- Other File Preview -->
+                                        <a href="{{ $fileUrl }}" target="_blank"
+                                        class="btn btn-sm "><strong>{{ $complain->complain_image }}</strong></a>
+                                        {{-- <p>📁 <strong>{{ $complain->complain_image }}</strong></p> --}}
+                                    @endif
+                                @endif
+
+
+                                <div id="previewArea">
+
                                 </div>
                             </div>
                         </div>
@@ -274,17 +308,74 @@
     });
 
     /*** Image ***/
+    // function previewProfilePicture(event) {
+    //     const file = event.target.files[0]; // Get the selected file
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = function(e) {
+    //             document.getElementById('profilePreview').src = e.target
+    //                 .result; // Set image preview source
+    //         }
+    //         reader.readAsDataURL(file); // Read the file as a Data URL
+    //     }
+    // }
+
     function previewProfilePicture(event) {
-        const file = event.target.files[0]; // Get the selected file
-        if (file) {
+        const files = event.target.files;
+        const previewArea = document.getElementById('previewArea');
+        previewArea.innerHTML = ''; // Clear previous previews
+
+        Array.from(files).forEach(file => {
+            const fileType = file.type;
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('profilePreview').src = e.target
-                    .result; // Set image preview source
+                let element;
+
+                if (fileType.startsWith('image/')) {
+                    // Preview Image
+                    element = document.createElement('img');
+                    element.src = e.target.result;
+                    // element.style.maxWidth = '200px';
+                    // element.style.margin = '10px';
+                     element.style.height = '150px';
+                    element.style.width = '150px';
+                } else if (fileType === 'application/pdf') {
+                    // Preview PDF
+                    element = document.createElement('iframe');
+                    element.src = e.target.result;
+                    // element.width = '150px';
+                    // element.height = '100px';
+                    element.style.maxWidth = '200px';
+                    element.style.margin = '10px';
+                } else if (
+                    file.name.endsWith('.xlsx') ||
+                    file.name.endsWith('.xls') ||
+                    fileType ===
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                ) {
+                    // Excel File Preview - Show file name with icon
+                    element = document.createElement('div');
+                    element.innerHTML = `<p>📊 <strong>${file.name}</strong> (Excel file)</p>`;
+                } else {
+                    // Other file types
+                    element = document.createElement('div');
+                    element.innerHTML =
+                        `<p>📁 <strong>${file.name}</strong> (${fileType || 'Unknown type'})</p>`;
+                }
+
+                previewArea.appendChild(element);
+            };
+
+            // For non-previewable files like Excel, just skip reading
+            if (fileType.startsWith('image/') || fileType === 'application/pdf') {
+                reader.readAsDataURL(file);
+            } else {
+                reader.onload(); // Direct call for name-based preview
             }
-            reader.readAsDataURL(file); // Read the file as a Data URL
-        }
+        });
     }
+
 
     $('#status').change(function() {
         $('.remark').val('');

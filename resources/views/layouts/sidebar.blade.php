@@ -126,17 +126,15 @@
                         @endcan
 
                         @can('City Management')
-                            <li><a href="{{ route('city.index') }}"><i class="ti ti-map-pin-pin"></i><span>City
-                                        Management</span></a></li>
+                            <li><a href="{{ route('city.index') }}"><i class="ti ti-map-pin-pin"></i><span>City Management</span></a></li>
                         @endcan
 
                         @can('Sales Reports')
-                            <li><a href="javascript:void(0);"><i class="ti ti-file-invoice"></i><span>Sales
-                                        Reports</span></a></li>
+                            <li><a href="javascript:void(0);"><i class="ti ti-file-invoice"></i><span>Sales Reports</span></a></li>
                         @endcan
 
-                        @can('Trend Analysis')
-                            <li><a href="javascript:void(0);"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a>
+                        @can('Products and Catalogue')
+                            <li><a href="{{-- route('trend_analysis.product_report') --}}"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a>
                             </li>
                         @endcan
                         

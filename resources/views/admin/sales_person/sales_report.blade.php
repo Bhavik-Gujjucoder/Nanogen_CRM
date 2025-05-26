@@ -423,6 +423,9 @@
         }
     });
 
+
+
+
     /***** Running Target Graph*****/
     @foreach ($current_target_graph as $index => $target)
 
@@ -469,8 +472,9 @@
     @endforeach
     /***Running Target Graph END ***/
 
-    /***** 12 Month Order Chart *****/
 
+
+    /***** 12 Month Order Chart *****/
     const order_chart = @json($order_chart);
     const order_chart_labels = order_chart.map(d => d.month);
     const order_chart_counts = order_chart.map(d => d.total);
@@ -529,6 +533,8 @@
         });
     
     /***12 Month Order Chart END ***/
+
+
 
     /***** 12 Month Revenu Chart *****/
     const revenueData = @json($revenue_chart);
@@ -590,8 +596,9 @@
                 }
             }
         });
- 
+
     /***12 Month Revenu Chart END ***/
+
 
 
     /*** All Target performance ***/

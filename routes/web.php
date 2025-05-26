@@ -12,6 +12,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TrendAnalysisController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\PaymentsController;
@@ -110,6 +111,13 @@ Route::middleware(['auth', 'role:admin,staff,sales,reporting manager'])->group(f
         Route::resource('product', ProductController::class);
         Route::post('/product/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
     });
+
+    /* Trend Analysis */
+    Route::middleware(['permission:Products and Catalogue'])->group(function () {
+        Route::get('/trend_analysis/report/{product_id?}', [TrendAnalysisController::class, 'product_report'])->name('trend_analysis.product_report');
+    });
+
+
     /* States Management */
     Route::middleware(['permission:State Management'])->group(function () {
         Route::resource('state', StateManagementController::class);
