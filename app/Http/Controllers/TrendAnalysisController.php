@@ -51,7 +51,10 @@ class TrendAnalysisController extends Controller
         $to_date             = isset($product_data['end_date']) ? $product_data['end_date'] : null;   
         
         // dump ($product_id);
-        $data['number_of_orders'] = $this->order_management_product->where('product_id', $product_id)->distinct('order_id')->count('order_id');
+        $order_product = $this->order_management_product->where('product_id', $product_id);
+        $data['number_of_orders'] = $order_product->distinct('order_id')->count('order_id');
+        $data['revenue'] = $order_product->sum('total');
+
         // dd ($number_of_orders);
           
             // ->when($city_id, function ($query) use ($city_id) {

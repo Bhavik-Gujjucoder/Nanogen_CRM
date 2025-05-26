@@ -86,6 +86,16 @@
                         </div>
                     </div>
                 </div>
+
+                 <div class="col-md-2">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h6 class="mb-2">Revenue</h6>
+                            <h4 class="mb-0 text-muted">{{ IndianNumberFormat($revenue) }}</h4>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-2">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
@@ -110,14 +120,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h6 class="mb-2">Revenue</h6>
-                            <h4 class="mb-0 text-muted">₹5,00,000</h4>
-                        </div>
-                    </div>
-                </div>
+               
 
                 
             </div> <!-- end row -->

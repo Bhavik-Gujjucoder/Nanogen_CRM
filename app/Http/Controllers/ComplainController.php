@@ -164,9 +164,8 @@ class ComplainController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'complain_image' => 'required|max:2048',
+            'complain_image' => 'max:2048',
         ], [
-            'complain_image.required' => 'Complain image must be an image.',
             'complain_image.max' => 'Complain image may not be greater than 2MB',
         ]);
         // $request->validate([
