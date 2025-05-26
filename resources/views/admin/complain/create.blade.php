@@ -259,9 +259,9 @@
                     element.style.margin = '10px';
                 } else if (
                     file.name.endsWith('.xlsx') ||
-                    file.name.endsWith('.xls') ||
-                    fileType ===
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    file.name.endsWith('.xls') 
+                    // fileType ===
+                    // 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ) {
                     // Excel File Preview - Show file name with icon
                     element = document.createElement('div');
@@ -270,7 +270,7 @@
                     // Other file types
                     element = document.createElement('div');
                     element.innerHTML =
-                        `<p>📁 <strong>${file.name}</strong> (${fileType || 'Unknown type'})</p>`;
+                        `<p>📁 <strong>${file.name}</strong></p>`;
                 }
 
                 previewArea.appendChild(element);

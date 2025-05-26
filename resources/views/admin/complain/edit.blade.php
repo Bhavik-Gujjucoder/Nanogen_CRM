@@ -44,11 +44,11 @@
                                     @if (strtolower($fileExtension) === 'pdf')
                                         <!-- PDF Preview -->
                                         <a href="{{ $fileUrl }}" target="_blank"
-                                        class="btn btn-sm btn-primary">Open PDF in new tab</a>
+                                        class="btn btn-sm btn-primary">View File</a>
                                         <br>
-                                        <iframe src="{{ $fileUrl }}"
+                                        {{-- <iframe src="{{ $fileUrl }}"
                                             style="width: 150px; height: 100px;"
-                                            class="mb-2"></iframe>
+                                            class="mb-2"></iframe> --}}
                                     @elseif (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
                                         <!-- Image Preview -->
                                         <a href="{{ $fileUrl }}" target="_blank">
@@ -346,9 +346,10 @@
                     element.style.margin = '10px';
                 } else if (
                     file.name.endsWith('.xlsx') ||
-                    file.name.endsWith('.xls') ||
-                    fileType ===
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    file.name.endsWith('.xls') 
+                    // ||
+                    // fileType ===
+                    // 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ) {
                     // Excel File Preview - Show file name with icon
                     element = document.createElement('div');
