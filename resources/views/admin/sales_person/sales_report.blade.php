@@ -531,7 +531,6 @@
     /***12 Month Order Chart END ***/
 
     /***** 12 Month Revenu Chart *****/
-
     const revenueData = @json($revenue_chart);
     const labels = revenueData.map(d => d.month);
     const totals = revenueData.map(d => d.total);
@@ -601,13 +600,18 @@
     }
 
     const achived_target_chart = @json($achived_target);
+    
+    // if (achived_target_chart && achived_target_chart.achieved_percentage != undefined && achived_target_chart
+    // .achieved_percentage != 0) {
 
-    if (achived_target_chart && achived_target_chart.achieved_percentage !== undefined && achived_target_chart
-        .achieved_percentage !== 0) {
+        if (achived_target_chart) {
+            console.log(achived_target_chart)
+            
+            
         const achived_target_chart_labels = ['Won', 'Lost']; //['Achieved', 'Not Achieved'];
         const achived_target_chart_percentage = [
-            achived_target_chart.achieved_percentage,
-            achived_target_chart.not_achieved_percentage
+            parseFloat(achived_target_chart.achieved_percentage),
+            parseFloat(achived_target_chart.not_achieved_percentage)
         ];
         const won_target_name = achived_target_chart.achieved_targets; // achived target 
         const loss_target_name = achived_target_chart.not_achieved_targets; // not achived target
@@ -663,7 +667,7 @@
                     }
                 }
             },
-            // plugins: [ChartDataLabels] // Uncomment this if using ChartDataLabels plugin
+            plugins: [ChartDataLabels] // Uncomment this if using ChartDataLabels plugin
         });
     } else {
         console.warn("No summary target data is available for 'All Target Performance'.");

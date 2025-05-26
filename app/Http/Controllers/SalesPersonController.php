@@ -177,7 +177,6 @@ class SalesPersonController extends Controller
 
         DB::beginTransaction();
         try {
-            // dd($request->all());
             $user = new User();
 
             if ($request->hasFile('profile_picture')) {
@@ -393,8 +392,8 @@ class SalesPersonController extends Controller
             });
         }
         $targets = $target->get();
-        $data['total_target']    = $targets->count();
-        $data['total_target_amount']    = $targets->sum('target_value');
+        $data['total_target']        = $targets->count();
+        $data['total_target_amount'] = $targets->sum('target_value');
 
 
         // $data['total_order']       = $this->order_management->where('salesman_id', $sales_user)->count();
@@ -421,7 +420,6 @@ class SalesPersonController extends Controller
         $data['current_target']    = $this->target->with('target_grade')
             ->where('salesman_id', $sales_user)
             ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get();
-
         $data['past_targets']      = $this->target->with('target_grade')
             ->where('salesman_id', $sales_user)
             ->where('end_date', '<', Carbon::today())
@@ -539,6 +537,7 @@ class SalesPersonController extends Controller
                     'achieved_percentage' => round(($target_grade->percentage_value > 0 ? ($totalAmount / $target_grade->percentage_value) * 100 : 0), 2)
                 ];
             }
+
             $cTargets[] = [
                 'target_id' => $target->subject, //$target->id,
                 'grades'    => $grades,
@@ -562,7 +561,6 @@ class SalesPersonController extends Controller
         // foreach ($data['current_target'] as $target) {
         foreach ($data['past_targets'] as $target) {
             $allGradesAchieved = true;
-
             foreach ($target->target_grade as $target_grade) {
                 $gradeId = $target_grade->grade_id;
                 $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target) {
