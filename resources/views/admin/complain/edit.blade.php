@@ -62,11 +62,7 @@
                                         {{-- <p>📁 <strong>{{ $complain->complain_image }}</strong></p> --}}
                                     @endif
                                 @endif
-
-
-                                <div id="previewArea">
-
-                                </div>
+                                <div id="previewArea"></div>
                             </div>
                         </div>
 

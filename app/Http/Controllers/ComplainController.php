@@ -112,12 +112,10 @@ class ComplainController extends Controller
     {
 
         $request->validate([
-            'complain_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'complain_image' => 'required|max:2048',
         ], [
-            'complain_image.required' => 'Complain image is required.',
-            'complain_image.image' => 'Complain image must be an image.',
-            'complain_image.mimes' => 'Complain image must be a file of type: jpeg, png, jpg, gif.',
-            'complain_image.max' => 'Complain image may not be greater than 2MB',
+            'complain_image.required' => 'Complain file is required.',
+            'complain_image.max' => 'Complain file may not be greater than 2MB',
         ]);
 
         $data = [
