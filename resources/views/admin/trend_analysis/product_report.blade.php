@@ -32,7 +32,7 @@
                                 <select name="city_id" class="form-control select">
                                     <option value="">Select</option>
                                     @foreach ($citys as $city)
-                                        <option value="{{ $city->id }}">{{ $city->city_name }}</option>
+                                        <option value="{{ $city->id }}"  @if($city_id && $city->id == $city_id)  selected  @endif >{{ $city->city_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -91,7 +91,7 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">Revenue</h6>
-                            <h4 class="mb-0 text-muted">{{ IndianNumberFormat($revenue) }}</h4>
+                            <h4 class="mb-0 text-muted">₹{{ number_format($revenue) }}</h4>
                         </div>
                     </div>
                 </div>
@@ -100,19 +100,22 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">Total Sales</h6>
-                            <h4 class="mb-0 text-muted text-muted">500 Kg</h4>
+                            <h4 class="mb-0 text-muted text-muted"> {{ $gqty ?? 0}}</h4>
                         </div>
                     </div>
                 </div>
+                @foreach ($variation_qty as $variation)
+                    
                 <div class="col-md-2">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
-                            <h6 class="mb-2">1 KG Packing</h6>
-                            <h4 class="mb-0 text-muted">200</h4>
+                            <h6 class="mb-2">{{$variation->packing_size_name}} Packing</h6>
+                            <h4 class="mb-0 text-muted">{{$variation->total_qty}}</h4>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
+                @endforeach
+                {{-- <div class="col-md-2">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">4 KG Packing</h6>
@@ -120,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-               
+                --}}
 
                 
             </div> <!-- end row -->

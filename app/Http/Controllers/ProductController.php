@@ -31,6 +31,9 @@ class ProductController extends Controller
                         </label>';
                 })
                 ->addColumn('action', function ($row) {
+                    $trend_analysis_btn = '<a href="' . route('trend_analysis.product_report', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i>Trend Analysis</a>';
+
                     $edit_btn = '<a href="' . route('product.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
@@ -44,6 +47,7 @@ class ProductController extends Controller
 
                     // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $trend_analysis_btn;
                     $action_btn .= $edit_btn;
                     $action_btn .= $delete_btn;
 
