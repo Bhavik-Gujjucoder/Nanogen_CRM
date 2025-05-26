@@ -358,7 +358,7 @@
                     // Other file types
                     element = document.createElement('div');
                     element.innerHTML =
-                        `<p>📁 <strong>${file.name}</strong> (${fileType || 'Unknown type'})</p>`;
+                        `<p>📁 <strong>${file.name}</strong></p>`;
                 }
 
                 previewArea.appendChild(element);
