@@ -44,7 +44,7 @@
                                     @if (strtolower($fileExtension) === 'pdf')
                                         <!-- PDF Preview -->
                                         <a href="{{ $fileUrl }}" target="_blank"
-                                        class="btn btn-sm btn-primary">View File</a>
+                                        class="btn btn-sm btn-primary">View PDF File</a>
                                         <br>
                                         {{-- <iframe src="{{ $fileUrl }}"
                                             style="width: 150px; height: 100px;"
