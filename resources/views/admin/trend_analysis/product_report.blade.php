@@ -98,20 +98,6 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">Total Sales</h6>
-                            {{-- @foreach ($variation_qty as $variation)
-                                @php
-                                    $qty = $variation->total_qty * $variation->packing_size_name;
-                                    $unit = $variation->packing_size_unit;
-                                @endphp
-
-                                <span class="mb-0 text-muted">
-                                    ( {{ number_format($qty) }} {{ $unit }}
-                                    @if (strtolower($unit) == 'kg' && $qty >= 1000)
-                                        → {{ number_format($qty / 1000, 2) }} Tonne @endif )
-                                </span><br>
-                            @endforeach --}}
-
-                            
                             @php
                                 $grouped_variations = $variation_qty->groupBy(function ($variation) {
                                     return strtolower($variation->packing_size_unit); // Normalize unit for consistent grouping
@@ -127,10 +113,10 @@
                                 @endphp
 
                                 <span class="mb-0 text-muted">
-                                    {{--(--}} {{ number_format($totalQty) }} {{ ucfirst($unit) }}
+                                    {{-- ( --}} {{ number_format($totalQty) }} {{ ucfirst($unit) }}
                                     @if ($unit == 'kg' && $totalQty >= 1000)
                                         → {{ number_format($totalQty / 1000, 2) }} Tonne
-                                    @endif {{--)--}}
+                                    @endif {{-- ) --}}
                                 </span><br>
                             @endforeach
 
@@ -166,10 +152,26 @@
     </div>
 </div>
 
+@if (!empty($city_wise_chart))
+    
+    <div class="col-md-12">
+        <div class="card pro-ann-report-card">
+            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                <h5 class="mb-2">City Wise Analysis </h5>
+            </div>
+            <div class="card-body pb-0">
+                <canvas id="citywiseChart" height="190px"></canvas>
+            </div>
+        </div>
+    </div>
+@endif
+
 
 
 @endsection
 @section('script')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script>
     /*** datepicker ***/
     $(document).ready(function() {
@@ -206,6 +208,90 @@
         }
     });
 
+
+    function number_format_indian(x) {
+        x = x.toString().split('.')[0]; // Remove decimals if any
+        let lastThree = x.substring(x.length - 3);
+        let otherNumbers = x.substring(0, x.length - 3);
+        if (otherNumbers !== '')
+            lastThree = ',' + lastThree;
+        return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+    }
+
+
+    const city_wise_chart = @json($city_wise_chart);
+    const city_wise_chart_labels = city_wise_chart.map(d => d.city_name);
+    const city_wise_chart_counts = city_wise_chart.map(d => d.amount);
+
+    const city_wise_chart_draw = document.getElementById('citywiseChart').getContext('2d');
+    const cityChart = new Chart(city_wise_chart_draw, {
+        type: 'bar',
+        data: {
+            labels: city_wise_chart_labels,
+            datasets: [{
+                label: 'Orders',
+                data: city_wise_chart_counts,
+                backgroundColor: '#ff9933',
+                borderRadius: 6,
+                barThickness: 80, //30
+                unitTooltips: city_wise_chart.map(d => d.unit_totals2) // Custom field
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                },
+                datalabels: {
+                    color: '#black',
+                    anchor: 'center',
+                    align: 'center',
+                    font: {
+                        weight: 'bold',
+                        size: 16 //14
+                    },
+                    formatter: function(value) {
+                        return '₹' + number_format_indian(value);
+                    }
+                },
+                //imp tooltip: {
+                //     callbacks: {
+                //         label: function(context) {
+                //             const index = context.dataIndex;
+                //             const label = context.label;
+                //             const value = context.formattedValue;
+                //             const tooltip = context.dataset.unitTooltips?.[index] || '';
+
+                //             return [
+                //                 `${label}: ${value}`,
+                //                 'Units wise:',
+                //                 ...tooltip.split('\n')
+                //             ];
+                //         }
+                //     }
+                // },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Set the interval to 1
+                    }
+                },
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45,
+                        autoSkip: false,
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
     /*** END ***/
 </script>
 @endsection

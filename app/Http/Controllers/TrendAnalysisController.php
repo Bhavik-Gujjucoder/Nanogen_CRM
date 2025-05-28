@@ -54,10 +54,6 @@ class TrendAnalysisController extends Controller
         $from_date          = isset($product_data['start_date']) ? Carbon::createFromFormat('d-m-Y', $product_data['start_date'])->format('Y-m-d')  : null;
         $to_date            = isset($product_data['end_date']) ? Carbon::createFromFormat('d-m-Y', $product_data['end_date'])->format('Y-m-d') : null;
 
-        // $order_product = $this->order_management_product->where('product_id', $product_id);
-        // $data['number_of_orders'] = $order_product->distinct('order_id')->count('order_id');
-        // $data['revenue'] = $order_product->sum('total');
-
         $query = OrderManagementProduct::selectRaw('COUNT(DISTINCT order_id) as number_of_orders, SUM(total) as revenue,SUM(qty) as gqty')
             ->join('order_management', 'order_management_products.order_id', '=', 'order_management.id')
             ->where('product_id', $product_id)
@@ -85,9 +81,10 @@ class TrendAnalysisController extends Controller
                 'variation_options.unit as packing_size_unit',
                 DB::raw('SUM(order_management_products.qty) as total_qty'),
                 // DB::raw('COUNT(DISTINCT order_id) as number_of_orders')
-                
+
             )
             ->join('variation_options', 'order_management_products.packing_size_id', '=', 'variation_options.id')
+
             ->where('order_management_products.product_id', $product_id)
             ->groupBy('order_management_products.packing_size_id', 'variation_options.value', 'variation_options.unit')
             ->get();
@@ -98,22 +95,53 @@ class TrendAnalysisController extends Controller
         $data['variation_qty']    = $query2;
         $data['city_id']          = $city_id;
 
-        // ->when($city_id, function ($query) use ($city_id) {
-        //     return $query->whereHas('distributors_dealers', function ($q) use ($city_id) {
-        //         $q->where('city_id', $city_id);
-        //     });
-        // })
-        // ->when($from_date, function ($query) use ($from_date) {
-        //     return $query->whereDate('created_at', '>=', $from_date);
-        // })
-        // ->when($to_date, function ($query) use ($to_date) {
-        //     return $query->whereDate('created_at', '<=', $to_date);
-        // })
-        // ->selectRaw('SUM(grand_total) as total_sales, city_management.city_name')
-        // ->join('distributors_dealers', 'distributors_dealers.id', '=', 'order_management.dd_id')
-        // ->join('city_management', 'city_management.id', '=', 'distributors_dealers.city_id')
-        // ->groupBy('city_management.city_name')
-        // ->get();
+        // chart data
+
+        $city_wise_chart = OrderManagement::query()
+            ->join('order_management_products', 'order_management.id', '=', 'order_management_products.order_id')
+            ->join('distributors_dealers', 'distributors_dealers.id', '=', 'order_management.dd_id')
+            ->join('city_management', 'city_management.id', '=', 'distributors_dealers.city_id')
+            //imp ->when($city_id, function ($q) use ($city_id) {
+            //     $q->whereHas('distributors_dealers', function ($q2) use ($city_id) {
+            //         $q2->where('city_id', $city_id);
+            //     });
+            // })
+            ->where('order_management_products.product_id', $product_id)
+            //imp ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
+            //imp ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
+            ->select(
+                'city_management.city_name as city_name',
+                'city_management.id as city_id',
+                DB::raw('SUM(order_management_products.qty) as total_qty'),
+                DB::raw('SUM(order_management_products.total) as amount'),
+            )
+            ->groupBy('city_management.city_name', 'city_management.id')
+            ->get();
+
+        foreach ($city_wise_chart as $key => $city) {
+            $unit_totals = OrderManagementProduct::query()
+                ->join('order_management', 'order_management.id', '=', 'order_management_products.order_id')
+                ->join('variation_options', 'order_management_products.packing_size_id', '=', 'variation_options.id')
+                ->join('distributors_dealers', 'distributors_dealers.id', '=', 'order_management.dd_id')
+                ->where('order_management_products.product_id', $product_id)
+                //imp ->where('distributors_dealers.city_id', $city->city_id)
+                //imp ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
+                //imp ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
+                ->select(
+                    'variation_options.unit',
+                    DB::raw('SUM(order_management_products.qty * variation_options.value) as unit_total')
+                )
+                ->groupBy('variation_options.unit')
+                ->get();
+
+            $city_wise_chart[$key]['unit_totals'] = $unit_totals->map(fn($u) => [
+                'unit' => $u->unit,
+                'total' => $u->unit_total,
+            ]);
+            //imp $city_wise_chart[$key]['unit_totals2']  = $unit_totals->map(fn($u) => "{$u->unit} : {$u->unit_total}")->implode(' ');
+        }
+
+        $data['city_wise_chart'] = $city_wise_chart;
 
         return view('admin.trend_analysis.product_report', $data);
     }
