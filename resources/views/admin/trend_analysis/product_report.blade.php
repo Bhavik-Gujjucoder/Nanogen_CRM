@@ -7,9 +7,8 @@
     <div class="col-md-12">
         <div class="card flex-fill">
             <div class="card-body">
-                <form method="GET" action="{{ route('trend_analysis.product_report') }}{{-- route('sales_person.sales_report', ['id' => $sales_user]) --}}" class="row align-items-end g-3 mb-4"
-                    id="dateFilterForm">
-
+                <form method="GET" action="{{ route('trend_analysis.product_report') }}"
+                    class="row align-items-end g-3 mb-4" id="dateFilterForm">
                     <div class="col-md-2">
                         <div class="mb-0">
                             <label class="col-form-label">Product</label>
@@ -17,9 +16,9 @@
                                 <select name="product_id" class="form-control select">
                                     <option value="">Select</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" 
-                                            {{ request()->input('product_id') == $product->id ? 'selected' : '' }}
-                                            >{{ $product->product_name }}</option>
+                                        <option value="{{ $product->id }}"
+                                            {{ request()->input('product_id') == $product->id ? 'selected' : '' }}>
+                                            {{ $product->product_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -32,13 +31,14 @@
                                 <select name="city_id" class="form-control select">
                                     <option value="">Select</option>
                                     @foreach ($citys as $city)
-                                        <option value="{{ $city->id }}"  @if($city_id && $city->id == $city_id)  selected  @endif >{{ $city->city_name }}</option>
+                                        <option value="{{ $city->id }}"
+                                            @if ($city_id && $city->id == $city_id) selected @endif>{{ $city->city_name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-2">
                         <div class="mb-0">
                             <label class="col-form-label">Start Date</label>
@@ -50,7 +50,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-2">
                         <div class="mb-0">
                             <label class="col-form-label">End Date</label>
@@ -61,7 +60,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-1 d-grid">
                         <button type="submit" class="btn btn-primary w-100">Filter</button>
                     </div>
@@ -75,10 +73,10 @@
     </div>
 </div>
 <div class="col-md-12">
-    <div class="card">
+    <div class="card pro-ann-report-card">
         <div class="card-body">
-            <div class="row p-3" >
-                <div class="col-md-2 offset-md-1">
+            <div class="row pt-2">
+                <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 col-lg-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">Number of Orders</h6>
@@ -87,7 +85,7 @@
                     </div>
                 </div>
 
-                 <div class="col-md-2">
+                <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 col-lg-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">Revenue</h6>
@@ -96,26 +94,63 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 col-lg-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">Total Sales</h6>
-                            <h4 class="mb-0 text-muted text-muted"> {{ $gqty ?? 0}}</h4>
+                            {{-- @foreach ($variation_qty as $variation)
+                                @php
+                                    $qty = $variation->total_qty * $variation->packing_size_name;
+                                    $unit = $variation->packing_size_unit;
+                                @endphp
+
+                                <span class="mb-0 text-muted">
+                                    ( {{ number_format($qty) }} {{ $unit }}
+                                    @if (strtolower($unit) == 'kg' && $qty >= 1000)
+                                        → {{ number_format($qty / 1000, 2) }} Tonne @endif )
+                                </span><br>
+                            @endforeach --}}
+
+                            
+                            @php
+                                $grouped_variations = $variation_qty->groupBy(function ($variation) {
+                                    return strtolower($variation->packing_size_unit); // Normalize unit for consistent grouping
+                                });
+                            @endphp
+
+                            @foreach ($grouped_variations as $unit => $variations)
+                                @php
+                                    $totalQty = 0;
+                                    foreach ($variations as $variation) {
+                                        $totalQty += $variation->total_qty * $variation->packing_size_name;
+                                    }
+                                @endphp
+
+                                <span class="mb-0 text-muted">
+                                    {{--(--}} {{ number_format($totalQty) }} {{ ucfirst($unit) }}
+                                    @if ($unit == 'kg' && $totalQty >= 1000)
+                                        → {{ number_format($totalQty / 1000, 2) }} Tonne
+                                    @endif {{--)--}}
+                                </span><br>
+                            @endforeach
+
                         </div>
                     </div>
                 </div>
+
                 @foreach ($variation_qty as $variation)
-                    
-                <div class="col-md-2">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h6 class="mb-2">{{$variation->packing_size_name}} Packing</h6>
-                            <h4 class="mb-0 text-muted">{{$variation->total_qty}}</h4>
+                    <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 col-lg-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-3">
+                                <h6 class="mb-2">{{ $variation->packing_size_name }}
+                                    {{ $variation->packing_size_unit }}
+                                    Packing</h6>
+                                <h4 class="mb-0 text-muted">{{ number_format($variation->total_qty) }} </h4>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endforeach
-                {{-- <div class="col-md-2">
+                {{-- <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 col-lg-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-3">
                             <h6 class="mb-2">4 KG Packing</h6>
@@ -125,7 +160,7 @@
                 </div>
                 --}}
 
-                
+
             </div> <!-- end row -->
         </div>
     </div>

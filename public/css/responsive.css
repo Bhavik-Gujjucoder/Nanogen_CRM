@@ -144,6 +144,7 @@
     transform: translateY(0%);
   }
 
+  .round-chart-box {height:auto; padding-bottom: 25px !important;}
 
 
 }

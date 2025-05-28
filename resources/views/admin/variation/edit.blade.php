@@ -27,12 +27,12 @@
                             <div class="d-flex align-items-center">
                                 <div class="me-2">
                                     <input type="radio" class="status-radio" id="active1" name="status"
-                                        value="1" {{ old('status',  $variation->status) == '1' ? 'checked' : '' }}>
+                                        value="1" {{ old('status', $variation->status) == '1' ? 'checked' : '' }}>
                                     <label for="active1">Active</label>
                                 </div>
                                 <div>
                                     <input type="radio" class="status-radio" id="inactive1" name="status"
-                                        value="0" {{ old('status',$variation->status) == '0' ? 'checked' : '' }}>
+                                        value="0" {{ old('status', $variation->status) == '0' ? 'checked' : '' }}>
                                     <label for="inactive1">Inactive</label>
                                 </div>
                             </div>
@@ -44,10 +44,15 @@
                             <div class="priceproductvariation-list">
                                 @foreach ($variation->variant_options as $index => $option)
                                     <div class="field-group gap-2 mb-2">
-                                        <input type="text" name="weight[]"
+                                         <input type="hidden" name="variation_option_id[]" value="{{ $option->id }}">
+                                        <input type="number" name="weight[]"
                                             value="{{ old('weight.' . $index, $option->value) }}"
-                                            placeholder="KG/GM/L/ML" class="form-control">
-
+                                            placeholder="weight" class="form-control">
+                                         <select name="unit[]" class="form-control">
+                                            <option value="Kg" {{ old('unit.' . $index, $option->unit) == 'Kg' ? 'selected' : ''}}>Kg</option>
+                                            <option value="Ltr" {{ old('unit.' . $index, $option->unit) == 'Ltr' ? 'selected' : ''}}>Ltr</option>
+                                            <option value="Ml" {{ old('unit.' . $index, $option->unit) == 'Ml' ? 'selected' : ''}}>Ml</option>
+                                        </select>
                                         {{-- <button type="button" class="remove-btn btn btn-danger"
                                             onclick="removeField(this)">Remove</button> --}}
 
@@ -56,9 +61,14 @@
                                 {{-- If no existing variations, show an empty field --}}
                                 @if ($variation->variant_options->isEmpty())
                                     <div class="field-group gap-2 mb-2">
-                                        <input type="text" name="weight[]" placeholder="KG/GM/L/ML"
+                                        <input type="number" name="weight[]" placeholder="weight"
                                             class="form-control">
-                                            <button type="button" class="remove-btn btn btn-danger"
+                                        <select name="unit[]" class="form-control ">
+                                            <option value="Kg">Kg</option>
+                                            <option value="Ltr">Ltr</option>
+                                            <option value="Ml">Ml</option>
+                                        </select>
+                                        <button type="button" class="remove-btn btn btn-danger"
                                             onclick="removeField(this)">Remove</button>
                                     </div>
                                 @endif
@@ -89,7 +99,12 @@
         // Convert the last "Add New" button to a "Remove" button
         let newRow = `
         <div class="field-group gap-2 mb-2">
-            <input type="text" name="weight[]" placeholder="KG/GM/L/ML" class="form-control">
+            <input type="number" name="weight[]" placeholder="weight" class="form-control">
+             <select name="unit[]" class="form-control">
+                     <option value="Kg">Kg</option>
+                    <option value="Ltr">Ltr</option>
+                    <option value="Ml">Ml</option>
+                </select>
             <button type="button" class="remove-btn btn btn-danger"
                                             onclick="removeField(this)">Remove</button>
         </div>
@@ -103,7 +118,7 @@
 
         // Ensure at least one field remains
         // if (container.find(".field-group").length > 1) {
-            $(button).closest(".field-group").remove();
+        $(button).closest(".field-group").remove();
         // }
     }
 

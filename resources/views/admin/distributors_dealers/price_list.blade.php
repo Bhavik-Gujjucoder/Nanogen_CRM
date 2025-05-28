@@ -501,7 +501,7 @@
                                                 @endif
                                                 <td>
                                                     <span
-                                                        class="first-count">{{ $variation->variation_option_value->value }}</span>{{-- WEIGHT --}}
+                                                        class="first-count">{{ $variation->variation_option_value->value }} {{ $variation->variation_option_value->unit }}</span>{{-- WEIGHT --}}
                                                 </td>
                                                 <td>
                                                     <span class="first-count">{{ $price }}</span>

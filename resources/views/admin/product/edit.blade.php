@@ -142,7 +142,7 @@
                                             @foreach (getVariationOptions($variation->variation_id) as $item)
                                                 <option value="{{ $item->id }}"
                                                     {{ $variation->variation_option_value ? ($variation->variation_option_value->id == $item->id ? 'selected' : '') : '' }}>
-                                                    {{ $item->value }}</option>
+                                                    {{ $item->value }} {{ $item->unit }}</option>
                                             @endforeach
                                         </select>
                                         <button type="button" class="remove-btn btn btn-danger mb-1"
@@ -189,7 +189,7 @@
                             let sizeOptions = '<option value="">Select option</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
-                                    `<option value="${size.id}">${size.value}</option>`;
+                                    `<option value="${size.id}">${size.value} ${size.unit}</option>`;
                             });
                             // Only replace the options, keep the existing dropdown
                             sizeDropdown.html(sizeOptions);

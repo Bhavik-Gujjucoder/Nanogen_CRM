@@ -152,7 +152,7 @@
                                         @foreach (getProductVariationOptions($p->product_id) as $item)
                                             <option value="{{ $item->variation_option_value->id ?? '' }}"
                                                 {{ $p->variation_option ? ($p->variation_option->id == $item->variation_option_id ? 'selected' : '') : '' }}>
-                                                {{ $item->variation_option_value->value ?? '' }}</option>
+                                                {{ $item->variation_option_value->value ?? '' }} {{ $item->variation_option_value->unit ?? '' }}</option>
                                         @endforeach
 
                                         {{-- <option value="{{ $p->variation_option->id }}" selected>{{ $p->variation_option->value }}</option> --}}
@@ -502,9 +502,13 @@
                 success: function(response) {
                     if (response.success) {
                         let sizeOptions = '<option value="">Select</option>';
+
                         $.each(response.product_variation, function(index, product_variation) {
-                            sizeOptions +=
-                                `<option value="${product_variation.variation_option_value.id}">${product_variation.variation_option_value.value}</option>`;
+                            if (product_variation.variation_option_value) {
+                           let val = product_variation.variation_option_value;
+                                sizeOptions +=
+                                    `<option value="${val.id}">${val.value} ${val.unit}</option>`; //${val.unit}
+                            }
                         });
 
                         // Only replace the options, keep the existing dropdown

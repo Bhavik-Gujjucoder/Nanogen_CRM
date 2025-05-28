@@ -136,8 +136,7 @@
                                         </select>
                                     </div>
                                     <button type="button" class="add-btn btn btn-primary mb-1"
-                                        onclick="addField('yes')">Add
-                                        New</button>
+                                        onclick="addField('yes')">Add New</button>
                                     <div>
                                     </div>
                                     {{-- </div> --}}
@@ -183,25 +182,25 @@
             let file = product_image_field[0].files[0]; // Get the selected file
 
             // if (!product_image_field.val().trim()) {
-            // if (!file) {
-            //     $("#product_image_error").html("The product image is required.");
-            //     valid = false;
-            // } else {
-            //     // Check file type (JPG, GIF, PNG)
-            //     let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
-            //     let fileExtension = file.name.split('.').pop().toLowerCase();
+                // if (!file) {
+                //     $("#product_image_error").html("The product image is required.");
+                //     valid = false;
+                // } else {
+                //     // Check file type (JPG, GIF, PNG)
+                //     let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+                //     let fileExtension = file.name.split('.').pop().toLowerCase();
 
-            //     if (!validExtensions.includes(fileExtension)) {
-            //         $("#product_image_error").html(
-            //             "Invalid file type. Only JPG, GIF, and PNG are allowed.");
-            //         valid = false;
-            //     }
+                //     if (!validExtensions.includes(fileExtension)) {
+                //         $("#product_image_error").html(
+                //             "Invalid file type. Only JPG, GIF, and PNG are allowed.");
+                //         valid = false;
+                //     }
 
-            //     // Check file size (max 800KB)
-            //     if (file.size > 2097152) { // 2MB = 2,097,152 bytes || 800KB = 800000 bytes  ||  8KB = 8,192 bytes.
-            //         $("#product_image_error").html("File size must be less than 2MB.");
-            //         valid = false;
-            //     }
+                //     // Check file size (max 800KB)
+                //     if (file.size > 2097152) { // 2MB = 2,097,152 bytes || 800KB = 800000 bytes  ||  8KB = 8,192 bytes.
+                //         $("#product_image_error").html("File size must be less than 2MB.");
+                //         valid = false;
+                //     }
             // }
 
             // Only validate if file is selected
@@ -222,8 +221,6 @@
                     valid = false;
                 }
             }
-
-
 
             /* Validate Product Name */
             let product_name_field = $("input[name='product_name']");
@@ -342,7 +339,7 @@
                             let sizeOptions = '<option value="">Select option</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
-                                    `<option value="${size.id}">${size.value}</option>`;
+                                    `<option value="${size.id}">${size.value} ${size.unit}</option>`;
                             });
 
                             // Only replace the options, keep the existing dropdown
@@ -430,13 +427,14 @@
                     <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
                     <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
                     <select class="select addfileddrop" name="variation_id[]">
-                            <option value="">Select Variation</option>
-                            ${variationOptions}
-                        </select>
+                        <option value="">Select Variation</option>
+                        ${variationOptions}
+                    </select>
+
                     <select class="select addfileddrop load_variation_value" name="variation_option_id[]">
                         <option>Select option</option>
-
                     </select>
+
                     <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>
                 </div>
             `);

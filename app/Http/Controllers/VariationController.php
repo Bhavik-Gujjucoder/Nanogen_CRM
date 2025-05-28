@@ -26,6 +26,7 @@ class VariationController extends Controller
                             <span class="checkmarks"></span>
                         </label>';
                 })
+
                 ->addColumn('action', function ($row) {
                     $edit_btn = '<a href="' . route('variation.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
@@ -45,7 +46,10 @@ class VariationController extends Controller
                     return $action_btn . ' </div></div>';
                 })
                 ->addColumn('value', function ($variation) {
-                    return $variation->variant_options->isNotEmpty() ? '<div class="option_value">' . $variation->variant_options->pluck('value')->implode(', ') . '</div>' : '-';
+                    return $variation->variant_options->isNotEmpty() ? '<div class="option_value">' .
+                        $variation->variant_options->map(function ($option) {
+                            return $option->value . ' ' . $option->unit;
+                        })->implode(', ') . '</div>' : '-';
                 })
                 ->filterColumn('value', function ($query, $keyword) {
                     $query->whereHas('variant_options', function ($q) use ($keyword) {
@@ -78,6 +82,8 @@ class VariationController extends Controller
     {
         $name   = $request->name;
         $weight = $request->weight;
+        $unit   = $request->unit;
+
         if ($name) {
             $variation =  Variation::create([
                 'name'   => $name,
@@ -86,10 +92,11 @@ class VariationController extends Controller
         }
 
         if (!empty($weight) && isset($variation)) {
-            foreach ($weight as $weightValue) {
+            foreach ($weight as $key => $weightValue) {
                 VariationOption::create([
                     'variation_id' => $variation->id,
                     'value'  => $weightValue,
+                    'unit'  => $unit[$key] ?? null,
                 ]);
             }
         }
@@ -113,27 +120,40 @@ class VariationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $name      = $request->name;
-        $weight    = $request->weight;
+        $name   = $request->name;
+        $weight = $request->weight;
+        $unit   = $request->unit;
+        $optionIds = $request->variation_option_id; // New field to track existing option IDs
+
         $variation = Variation::findOrFail($id);
+
         $variation->update([
             'name'   => $name,
             'status' => $request->status
         ]);
 
-        VariationOption::where('variation_id', $id)->delete();
-
         if (!empty($weight) && isset($variation)) {
-            foreach ($weight as $weightValue) {
-                VariationOption::create([
+            foreach ($weight as $key => $weightValue) {
+                $data = [
                     'variation_id' => $variation->id,
-                    'value' => $weightValue,
-                ]);
+                    'value'        => $weightValue,
+                    'unit'         => $unit[$key] ?? null,
+                ];
+
+                if (!empty($optionIds[$key])) {
+                    // Update existing option
+                    VariationOption::where('id', $optionIds[$key])
+                        ->update($data);
+                } else {
+                    // Create new option
+                    VariationOption::create($data);
+                }
             }
         }
 
         return redirect()->route('variation.index')->with('success', 'Variation updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.

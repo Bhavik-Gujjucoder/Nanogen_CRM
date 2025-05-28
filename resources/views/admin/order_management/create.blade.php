@@ -399,11 +399,19 @@
                 },
                 success: function(response) {
                     if (response.success) {
+                        console.log('yes');
+                        console.log(response);
                         let sizeOptions = '<option value="">Select</option>';
+                        
                         $.each(response.product_variation, function(index, product_variation) {
-                            sizeOptions +=
-                                `<option value="${product_variation.variation_option_value.id}">${product_variation.variation_option_value.value}</option>`;
+                            if (product_variation.variation_option_value) {
+                           let val = product_variation.variation_option_value;
+                                sizeOptions +=
+                                    `<option value="${val.id}">${val.value} ${val.unit}</option>`; //${val.unit}
+                            }
                         });
+
+                        console.log(sizeOptions);
 
                         // Only replace the options, keep the existing dropdown
                         sizeDropdown.html(sizeOptions);

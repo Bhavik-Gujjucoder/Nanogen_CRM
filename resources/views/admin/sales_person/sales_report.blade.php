@@ -47,9 +47,9 @@
 </div>
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-6">
         @can('Order Management')
-            <div class="col-xxl-12 col-lg-6 d-flex"> <!-- -->
+            <div class="col-xxl-12 d-flex"> <!-- -->
                 <div class="card flex-fill">
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Number of Order</h5>
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-12 col-lg-6 d-flex">
+            <div class="col-xxl-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Revenue</h5>
@@ -89,7 +89,7 @@
         @endcan
 
         @can('Targets')
-            <div class="col-xxl-12 col-lg-6 d-flex">
+            <div class="col-xxl-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Number of Target</h5>
@@ -109,7 +109,7 @@
         @endcan
 
           @can('Targets')
-            <div class="col-xxl-12 col-lg-6 d-flex">
+            <div class="col-xxl-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Target Amount </h5>
@@ -129,12 +129,12 @@
         @endcan
     </div>
 
-    <div class="col-md-7">
+    <div class="col-md-6">
         <div class="card flex-fill">
             <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                 <h5 class="mb-2">All Target Performance</h5>
             </div>
-            <div class="card-body pb-0" style="height:497px;width:400px;">
+            <div class="card-body pb-0 round-chart-box">
             <canvas id="targetChart"></canvas>
         </div>
         </div>

@@ -44377,3 +44377,7 @@ span.list{width: fit-content;
 
 
 table.gc-manage-table tbody td {white-space: normal;}    
+
+.round-chart-box {height:497px; max-width:490px; width: 100%; margin-left: auto; margin-right: auto;}
+
+.pro-ann-report-card > .card-body {padding-bottom: 0px !important;}

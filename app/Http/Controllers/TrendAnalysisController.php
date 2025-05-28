@@ -45,22 +45,18 @@ class TrendAnalysisController extends Controller
      */
     public function product_report(Request $request)
     {
-        $product_data        = $request->all();
-        $data['page_title']  = 'Trend Analysis';
-        $data['products']    = $this->product->where('status', 1)->get();
-        $data['citys']       = $this->city->where('status', 1)->get();
-        $product_id          = isset($product_data['product_id']) ? $product_data['product_id'] : null;
-        $city_id             = isset($product_data['city_id']) ? $product_data['city_id'] : null;
-        $from_date           = isset($product_data['start_date']) ? Carbon::createFromFormat('d-m-Y',$product_data['start_date'])->format('Y-m-d')  : null;
-        $to_date             = isset($product_data['end_date']) ? Carbon::createFromFormat('d-m-Y',$product_data['end_date'])->format('Y-m-d') : null;
-
-        // dump ($product_id);
-
+        $product_data       = $request->all();
+        $data['page_title'] = 'Trend Analysis';
+        $data['products']   = $this->product->where('status', 1)->get();
+        $data['citys']      = $this->city->where('status', 1)->get();
+        $product_id         = isset($product_data['product_id']) ? $product_data['product_id'] : null;
+        $city_id            = isset($product_data['city_id']) ? $product_data['city_id'] : null;
+        $from_date          = isset($product_data['start_date']) ? Carbon::createFromFormat('d-m-Y', $product_data['start_date'])->format('Y-m-d')  : null;
+        $to_date            = isset($product_data['end_date']) ? Carbon::createFromFormat('d-m-Y', $product_data['end_date'])->format('Y-m-d') : null;
 
         // $order_product = $this->order_management_product->where('product_id', $product_id);
         // $data['number_of_orders'] = $order_product->distinct('order_id')->count('order_id');
         // $data['revenue'] = $order_product->sum('total');
-
 
         $query = OrderManagementProduct::selectRaw('COUNT(DISTINCT order_id) as number_of_orders, SUM(total) as revenue,SUM(qty) as gqty')
             ->join('order_management', 'order_management_products.order_id', '=', 'order_management.id')
@@ -75,33 +71,32 @@ class TrendAnalysisController extends Controller
             ->first();
 
         $query2 = OrderManagementProduct::query()
-        ->when($city_id, function ($q) use ($city_id) {
-            $q->whereHas('order.distributors_dealers', function ($q2) use ($city_id) {
-                $q2->where('city_id', $city_id);
-            });
+            ->when($city_id, function ($q) use ($city_id) {
+                $q->whereHas('order.distributors_dealers', function ($q2) use ($city_id) {
+                    $q2->where('city_id', $city_id);
+                });
             })
             ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
             ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
-            
+            ->join('order_management', 'order_management_products.order_id', '=', 'order_management.id')
             ->select(
                 'order_management_products.packing_size_id',
                 'variation_options.value as packing_size_name',
-                DB::raw('SUM(order_management_products.qty) as total_qty')
-                )
+                'variation_options.unit as packing_size_unit',
+                DB::raw('SUM(order_management_products.qty) as total_qty'),
+                // DB::raw('COUNT(DISTINCT order_id) as number_of_orders')
+                
+            )
             ->join('variation_options', 'order_management_products.packing_size_id', '=', 'variation_options.id')
-                ->join('order_management', 'order_management_products.order_id', '=', 'order_management.id')
             ->where('order_management_products.product_id', $product_id)
-            ->groupBy('order_management_products.packing_size_id', 'variation_options.value')
+            ->groupBy('order_management_products.packing_size_id', 'variation_options.value', 'variation_options.unit')
             ->get();
 
-        // dd($query2);
 
         $data['number_of_orders'] = $query->number_of_orders;
-        $data['revenue'] = $query->revenue;
-        $data['gqty'] = $query->gqty;
-        $data['variation_qty'] = $query2;
-        $data['city_id'] = $city_id;
-        // dd ($number_of_orders);
+        $data['revenue']          = $query->revenue;
+        $data['variation_qty']    = $query2;
+        $data['city_id']          = $city_id;
 
         // ->when($city_id, function ($query) use ($city_id) {
         //     return $query->whereHas('distributors_dealers', function ($q) use ($city_id) {
@@ -119,10 +114,6 @@ class TrendAnalysisController extends Controller
         // ->join('city_management', 'city_management.id', '=', 'distributors_dealers.city_id')
         // ->groupBy('city_management.city_name')
         // ->get();
-
-
-
-
 
         return view('admin.trend_analysis.product_report', $data);
     }

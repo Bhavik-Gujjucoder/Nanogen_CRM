@@ -13,7 +13,8 @@
                         <div class="mb-3">
                             <label class="col-form-label @error('name') is-invalid @enderror">Variation Name <span
                                     class="text-danger">*</span></label>
-                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Variation Name" class="form-control">
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                placeholder="Variation Name" class="form-control">
                             <div id="name_error" class="error-message text-danger"></div>
                         </div>
                     </div>
@@ -40,7 +41,12 @@
                         <div class="mb-3">
                             <div class="priceproductvariation-list">
                                 <div class="field-group gap-2 mb-2">
-                                    <input type="text" name="weight[]" placeholder="KG/GM/L/ML" class="form-control">
+                                    <input type="number" name="weight[]" placeholder="weight" class="form-control">
+                                    <select name="unit[]" class="form-control">
+                                        <option value="Kg">Kg</option>
+                                        <option value="Ltr">Ltr</option>
+                                        <option value="Ml">Ml</option>
+                                    </select>
 
                                     <button type="button" class="add-btn  btn btn-primary"
                                         onclick="addField('yes')">Add New</button>
@@ -74,7 +80,12 @@
 
         let newRow = `
             <div class="field-group gap-2 mb-2">
-                <input type="text" name="weight[]" placeholder="KG/GM/L/ML" class="form-control">
+                <input type="number" name="weight[]" placeholder="weight" class="form-control">
+                <select name="unit[]" class="form-control">
+                     <option value="Kg">Kg</option>
+                    <option value="Ltr">Ltr</option>
+                    <option value="Ml">Ml</option>
+                </select>
                 <button type="button" class="add-btn btn btn-primary" onclick="addField()">Add New</button>
             </div>
         `;

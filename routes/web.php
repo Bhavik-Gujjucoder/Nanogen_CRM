@@ -114,9 +114,8 @@ Route::middleware(['auth', 'role:admin,staff,sales,reporting manager'])->group(f
 
     /* Trend Analysis */
     Route::middleware(['permission:Products and Catalogue'])->group(function () {
-        Route::get('/trend_analysis/report/{product_id?}', [TrendAnalysisController::class, 'product_report'])->name('trend_analysis.product_report');
-    });
-
+        Route::get('/trend_analysis/report', [TrendAnalysisController::class, 'product_report'])->name('trend_analysis.product_report');
+    }); //{product_id?}
 
     /* States Management */
     Route::middleware(['permission:State Management'])->group(function () {
