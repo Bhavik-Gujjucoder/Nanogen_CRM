@@ -129,7 +129,7 @@
                         @endcan
 
                         @can('Products and Catalogue')
-                            <li><a href="{{-- route('trend_analysis.product_report') --}}"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a></li>
+                            <li><a href="{{ route('trend_analysis.product_report') }}"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a></li>
                         @endcan
                         
 
