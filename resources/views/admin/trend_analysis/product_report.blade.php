@@ -129,22 +129,12 @@
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-3">
                                 <h6 class="mb-2">{{ $variation->packing_size_name }}
-                                    {{ $variation->packing_size_unit }}
-                                    Packing</h6>
+                                    {{ $variation->packing_size_unit }} Packing</h6>
                                 <h4 class="mb-0 text-muted">{{ number_format($variation->total_qty) }} </h4>
                             </div>
                         </div>
                     </div>
                 @endforeach
-                {{-- <div class="col-xxl-2 col-xl-3 col-md-4 col-sm-6 col-lg-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h6 class="mb-2">4 KG Packing</h6>
-                            <h4 class="mb-0 text-muted">300</h4>
-                        </div>
-                    </div>
-                </div>
-                --}}
 
 
             </div> <!-- end row -->
@@ -152,15 +142,16 @@
     </div>
 </div>
 
-@if (!empty($city_wise_chart))
-    
+{{-- <pre>{{ print_r($city_wise_chart, true) }}</pre> --}}
+
+@if ($city_wise_chart->isNotEmpty())
     <div class="col-md-12">
         <div class="card pro-ann-report-card">
             <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                 <h5 class="mb-2">City Wise Analysis </h5>
             </div>
             <div class="card-body pb-0">
-                <canvas id="citywiseChart" height="190px"></canvas>
+                <canvas id="citywiseChart" height="100%"></canvas>
             </div>
         </div>
     </div>
@@ -254,22 +245,35 @@
                         return '₹' + number_format_indian(value);
                     }
                 },
-                //imp tooltip: {
-                //     callbacks: {
-                //         label: function(context) {
-                //             const index = context.dataIndex;
-                //             const label = context.label;
-                //             const value = context.formattedValue;
-                //             const tooltip = context.dataset.unitTooltips?.[index] || '';
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            const label = context.label;
+                            const value = context.formattedValue;
+                            const tooltip = context.dataset.unitTooltips?.[index] || '';
 
-                //             return [
-                //                 `${label}: ${value}`,
-                //                 'Units wise:',
-                //                 ...tooltip.split('\n')
-                //             ];
-                //         }
-                //     }
-                // },
+                            // return [
+                            //     `${label}: ${value}`,
+                            //     'Units wise:',
+                            //     ...tooltip.split('\n')
+                            // ];
+
+                            const lines = tooltip
+                                .split('\n')
+                                .filter(line => line.trim() !== '') // optional: remove empty lines
+                                .map(line => `• ${line}`); // bullet formatting
+
+                            return [
+                                `${label}: ${ '₹' + value}`, // Main value (add % if needed)
+                                'Units wise:',
+                                ...lines
+                            ];
+
+
+                        }
+                    }
+                },
             },
             scales: {
                 y: {

@@ -101,14 +101,14 @@ class TrendAnalysisController extends Controller
             ->join('order_management_products', 'order_management.id', '=', 'order_management_products.order_id')
             ->join('distributors_dealers', 'distributors_dealers.id', '=', 'order_management.dd_id')
             ->join('city_management', 'city_management.id', '=', 'distributors_dealers.city_id')
-            //imp ->when($city_id, function ($q) use ($city_id) {
-            //     $q->whereHas('distributors_dealers', function ($q2) use ($city_id) {
-            //         $q2->where('city_id', $city_id);
-            //     });
-            // })
+            ->when($city_id, function ($q) use ($city_id) {
+                $q->whereHas('distributors_dealers', function ($q2) use ($city_id) {
+                    $q2->where('city_id', $city_id);
+                });
+            })
             ->where('order_management_products.product_id', $product_id)
-            //imp ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
-            //imp ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
+            ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
+            ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
             ->select(
                 'city_management.city_name as city_name',
                 'city_management.id as city_id',
@@ -124,9 +124,9 @@ class TrendAnalysisController extends Controller
                 ->join('variation_options', 'order_management_products.packing_size_id', '=', 'variation_options.id')
                 ->join('distributors_dealers', 'distributors_dealers.id', '=', 'order_management.dd_id')
                 ->where('order_management_products.product_id', $product_id)
-                //imp ->where('distributors_dealers.city_id', $city->city_id)
-                //imp ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
-                //imp ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
+                ->where('distributors_dealers.city_id', $city->city_id)
+                ->when($from_date, fn($q) => $q->whereDate('order_management.order_date', '>=', $from_date))
+                ->when($to_date, fn($q) => $q->whereDate('order_management.order_date', '<=', $to_date))
                 ->select(
                     'variation_options.unit',
                     DB::raw('SUM(order_management_products.qty * variation_options.value) as unit_total')
@@ -138,9 +138,24 @@ class TrendAnalysisController extends Controller
                 'unit' => $u->unit,
                 'total' => $u->unit_total,
             ]);
-            //imp $city_wise_chart[$key]['unit_totals2']  = $unit_totals->map(fn($u) => "{$u->unit} : {$u->unit_total}")->implode(' ');
-        }
+            // $city_wise_chart[$key]['unit_totals2']  = $unit_totals->map(fn($u) => " {$u->unit_total} {$u->unit}")->implode(' ');
 
+            // $city_wise_chart[$key]['unit_totals2'] = $unit_totals->map(function ($u) {
+            //     return number_format($u->unit_total) . ' ' . $u->unit;
+            // })->implode(' ');
+
+            $city_wise_chart[$key]['unit_totals2'] = $unit_totals->map(function ($u) {
+                $formatted = number_format($u->unit_total) . ' ' . $u->unit;
+
+                // Add tonne if unit is kg
+                if (strtolower($u->unit) === 'kg') {
+                    $tonnes = $u->unit_total / 1000;
+                    $formatted .= ' → ' . number_format($tonnes, 2) . ' Tonne';
+                }
+
+                return $formatted;
+            })->implode("\n");
+        }
         $data['city_wise_chart'] = $city_wise_chart;
 
         return view('admin.trend_analysis.product_report', $data);
