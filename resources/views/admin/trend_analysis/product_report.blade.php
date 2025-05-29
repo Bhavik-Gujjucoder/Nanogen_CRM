@@ -13,7 +13,7 @@
                         <div class="mb-0">
                             <label class="col-form-label">Product</label>
                             <div class="icon-form">
-                                <select name="product_id" class="form-control select">
+                                <select name="product_id" class="form-control select search-dropdown">
                                     <option value="">Select</option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}"
@@ -28,7 +28,7 @@
                         <div class="mb-0">
                             <label class="col-form-label">Area/City</label>
                             <div class="icon-form">
-                                <select name="city_id" class="form-control select">
+                                <select name="city_id" class="form-control select search-dropdown">
                                     <option value="">Select</option>
                                     @foreach ($citys as $city)
                                         <option value="{{ $city->id }}"
@@ -164,6 +164,14 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script>
+     /*** select option search functionality ***/
+    $(document).ready(function() {
+        $('.search-dropdown').select2({
+            placeholder: "Select",
+            // allowClear: true
+        });
+    });
+
     /*** datepicker ***/
     $(document).ready(function() {
         const startPicker = flatpickr("#startDate", {
