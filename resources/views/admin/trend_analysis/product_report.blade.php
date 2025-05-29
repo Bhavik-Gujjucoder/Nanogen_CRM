@@ -148,6 +148,17 @@
     <div class="col-md-12">
         <div class="card pro-ann-report-card">
             <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                <h5 class="mb-2">Unit Wise Sales by City </h5>
+            </div>
+            <div class="card-body pb-0">
+                <canvas id="unitWiseChart" height="100%"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card pro-ann-report-card">
+            <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                 <h5 class="mb-2">City Wise Analysis </h5>
             </div>
             <div class="card-body pb-0">
@@ -158,13 +169,12 @@
 @endif
 
 
-
 @endsection
 @section('script')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script>
-     /*** select option search functionality ***/
+    /*** select option search functionality ***/
     $(document).ready(function() {
         $('.search-dropdown').select2({
             placeholder: "Select",
@@ -218,6 +228,7 @@
     }
 
 
+    /*** CITY WISE CHART ***/
     const city_wise_chart = @json($city_wise_chart);
     const city_wise_chart_labels = city_wise_chart.map(d => d.city_name);
     const city_wise_chart_counts = city_wise_chart.map(d => d.amount);
@@ -269,15 +280,14 @@
 
                             const lines = tooltip
                                 .split('\n')
-                                .filter(line => line.trim() !== '') // optional: remove empty lines
-                                .map(line => `• ${line}`); // bullet formatting
+                                .filter(line => line.trim() !== '') /**** optional: remove empty lines ***/
+                                .map(line => `• ${line}`); /**** bullet formatting ***/
 
                             return [
-                                `${label}: ${ '₹' + value}`, // Main value (add % if needed)
+                                `${label}: ${ '₹' + value}`, /**** Main value (add % if needed) ***/
                                 'Units wise:',
                                 ...lines
                             ];
-
 
                         }
                     }
@@ -304,6 +314,109 @@
         },
         plugins: [ChartDataLabels]
     });
+
+    /*** UNIT WISE CHART ***/
+    const unit_chart_labels = city_wise_chart.map(d => d.city_name);
+    const units = ['Kg', 'Ltr'];
+    const datasets = units.map(unit => {
+        return {
+            label: unit,
+            data: city_wise_chart.map(city => {
+                const match = city.unit_totals.find(u => u.unit.toLowerCase() === unit.toLowerCase());
+                return match ? match.total : 0;
+            }),
+            backgroundColor: unit === 'Kg' ? '#3399ff' : '#66cc66',
+            /*** Assign color per unit ***/
+            // stack: 'units',
+            yAxisID: unit === 'Kg' ? 'yKg' : 'yLtr'
+        };
+    });
+
+    const unit_wise_chat_draw = document.getElementById('unitWiseChart').getContext('2d');
+    const unitWiseChart = new Chart(unit_wise_chat_draw, {
+        type: 'bar',
+        data: {
+            labels: unit_chart_labels,
+            datasets: datasets
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    // text: 'Unit-wise Sales by City'
+                },
+                tooltip: {
+                    callbacks: {
+                        // label: function(context) {
+                        //     return number_format_indian(context.raw) + ' ' + context.dataset.label;
+                        // }
+                        label: function(context) {
+                            const value = context.raw;
+                            const unit = context.dataset.label;
+
+                            if (unit === 'Kg') {
+                                const tonne = (value / 1000).toFixed(2).replace(/\.00$/, '');
+                                return number_format_indian(value) + ' Kg → ' + tonne + ' Tonne ';
+                            }
+
+                            return number_format_indian(value) + ' ' + unit;
+                        }
+
+                    }
+                }
+            },
+            responsive: true,
+            scales: {
+                x: {
+                    // stacked: true
+                    stacked: false
+
+                },
+                // y: {
+                //     beginAtZero: true,
+                //     stacked: true,
+                //     ticks: {
+                //         callback: function(value) {
+                //             return number_format_indian(value);
+                //         }
+                //     }
+                // }
+                yKg: {
+                    beginAtZero: true,
+                    position: 'left',
+                    // stacked: false,
+                    title: {
+                        display: true,
+                        text: 'Kg (in Tonne)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return number_format_indian(value / 1000) + ' Tonne'; // Convert to tonnes
+                        }
+                    }
+                },
+                yLtr: {
+                    beginAtZero: true,
+                    position: 'right',
+                    // stacked: false,
+                    grid: {
+                        drawOnChartArea: false // prevent double grid lines
+                    },
+                    title: {
+                        display: true,
+                        text: 'Litres'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return number_format_indian(value) + ' Ltr';
+                        }
+                    }
+                }
+
+            }
+        }
+    });
+
     /*** END ***/
 </script>
 @endsection

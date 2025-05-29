@@ -29,23 +29,22 @@ class TargetController extends Controller
                 $records->where('salesman_id', auth()->id());
             }
             // dd($request->salemn_id);
-            $records->when($request->salemn_id, function ($query) use ($request) { 
+            $records->when($request->salemn_id, function ($query) use ($request) {
                 $query->where('salesman_id', $request->salemn_id);
             });
             $records->when($request->start_date && $request->end_date, function ($sub) use ($request) {
                 $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
                 $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
                 $sub->whereBetween('start_date', [$startDate, $endDate]);
-                    // ->orWhereBetween('end_date', [$startDate, $endDate]); 
+                // ->orWhereBetween('end_date', [$startDate, $endDate]); 
             });
 
+           
 
-            // $data = Target::when(auth()->user()->hasRole('sales'), function ($query) {
-            //     $query->where('salesman_id', auth()->id());
-            // });
 
 
             return DataTables::of($records)
+            // return DataTables::of(collect($records)) // ✅ wrap in collect()
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
                     return '<label class="checkboxs">
@@ -79,13 +78,20 @@ class TargetController extends Controller
                     return $action_btn . ' </div></div>';
                 })
                 ->addColumn('subject_name', function ($row) {
-                        if ($row->subject) {
-                            $target_name = $row->subject ?? '-';
-                            $url = route('target.edit', $row->id);
-                            return '<a href="' . $url . '">' . e($target_name) . '</a>';
-                        }
-                        return '-';
-                    })
+                    if ($row->subject) {
+                        $target_name = $row->subject ?? '-';
+                        $url = route('target.edit', $row->id);
+                        return '<a href="' . $url . '">' . e($target_name) . '</a>';
+                    }
+                    return '-';
+                })
+                ->addColumn('target_result', function ($row) { // 🟨 Add this new column
+                    if ($row->target_result === 'Win') {
+                        return '<span class="badge bg-success">Win</span>';
+                    } else {
+                        return '<span class="badge bg-danger">Lost</span>';
+                    }
+                })
                 ->editColumn('start_date', function ($row) {
                     return $row->start_date->format('d M Y');
                 })
@@ -120,7 +126,7 @@ class TargetController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['checkbox', 'action','subject_name']) //'value',
+                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result']) //'value',
                 ->make(true);
         }
         return view('admin.target.index', $data);

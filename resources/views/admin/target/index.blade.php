@@ -62,6 +62,7 @@
                         <th scope="col">Region</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
+                        {{-- <th scope="col">Target Result</th> --}}
                         <th class="{{-- text-end --}}" scope="col">Action</th>
                     </tr>
                 </thead>
@@ -131,6 +132,7 @@
                 name: 'end_date',
                 searchable: true
             },
+            // { data: 'target_result', name: 'target_result' },
             {
                 data: 'action',
                 name: 'action',

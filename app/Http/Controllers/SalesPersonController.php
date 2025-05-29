@@ -49,6 +49,7 @@ class SalesPersonController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Sales Person';
+        
         if ($request->ajax()) {
             $data = SalesPersonDetail::with('user');
             return DataTables::of($data)
