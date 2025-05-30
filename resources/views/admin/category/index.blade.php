@@ -71,7 +71,7 @@
                         <label class="col-form-label">Select Parent Category</label>
                         <select class="select" name="parent_category_id" style="height: 210px;" ">
                             <option value="0">{{ __('Select Parent Category') }}</option>
-                               @foreach ($category as $c)
+                                @foreach ($category as $c)
                             <option value="{{ $c->id }}">{{ $c->category_name }}</option>
                             @endforeach
                         </select>
@@ -80,7 +80,7 @@
                     <div class="mb-3">
                         <label class="col-form-label">Category Name *</span></label>
                         <input type="text" name="category_name" value="" class="form-control"
-                            placeholder="Enter category name">
+                            placeholder="Enter category name" maxlength="250">
                         <span class="category_name_error"></span>
                     </div>
 
@@ -125,16 +125,22 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('category.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
                 orderable: false,
                 searchable: false
-            },{
+            }, {
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
                 orderable: false,
@@ -145,7 +151,7 @@
             //     name: 'id',
             //     searchable: true
             // },
-             {
+            {
                 data: 'category_name',
                 name: 'category_name',
                 searchable: true
@@ -201,12 +207,22 @@
             $('#modalTitle').text('Edit Product Category');
             $('#submitBtn').text('Update');
             $('input[name="category_id"]').val(category_id);
-            if (category.parent_category_id) {
+            // if (category.parent_category_id) {
+            //     $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
+            //         'change');
+            // } else {
+            //     $('select[name="parent_category_id"]').parent().hide();
+            // }
+            if (category.parent_category_id !== null && category.parent_category_id !== undefined &&
+                category.parent_category_id != 0) {
                 $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
                     'change');
+                $('select[name="parent_category_id"]').parent().show();
             } else {
+                $('select[name="parent_category_id"]').val(0).trigger('change');
                 $('select[name="parent_category_id"]').parent().hide();
             }
+            
             $('input[name="category_name"]').val(category.category_name);
             $('input[name="status"][value="' + category.status + '"]').prop('checked', true);
             $('#adminModal').modal('show');
@@ -271,23 +287,23 @@
             form.submit(); // Submit the form if confirmed
         });
         // Swal.fire({
-            //     title: "Are you sure?",
-            //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
-            //     icon: 'warning',
-            //     showCancelButton: true,
-            //     confirmButtonText: 'Yes, delete it!',
-            //     cancelButtonText: 'Cancel',
-            //     customClass: {
-            //         popup: 'my-custom-popup', // Custom class for the popup
-            //         title: 'my-custom-title', // Custom class for the title
-            //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
-            //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
-            //         icon: 'my-custom-icon swal2-warning'
-            //     }
-            // }).then((result) => {
-            //     if (result.isConfirmed) {
-            //         form.submit(); // Submit form if confirmed
-            //     }
+        //     title: "Are you sure?",
+        //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes, delete it!',
+        //     cancelButtonText: 'Cancel',
+        //     customClass: {
+        //         popup: 'my-custom-popup', // Custom class for the popup
+        //         title: 'my-custom-title', // Custom class for the title
+        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+        //         icon: 'my-custom-icon swal2-warning'
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         form.submit(); // Submit form if confirmed
+        //     }
         // });
     });
 
@@ -308,19 +324,19 @@
 
     });
 
-    $(document).on('change', '.category_checkbox', function () {
+    $(document).on('change', '.category_checkbox', function() {
         let count = $('.category_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
-     // Handle Bulk Delete button click
-     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.category_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
