@@ -32,10 +32,11 @@ use App\Http\Controllers\DistributorsDealersController;
 //     return view('welcome');
 // });
 
+// →→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
+
 Auth::routes();
 Route::get('/test-mail', function () {
     try {
-        //code...
         Mail::raw('This is a test email', function ($message) {
             $message->to('dharaj.gc@gmail.com')
                 ->subject('Test Email');
