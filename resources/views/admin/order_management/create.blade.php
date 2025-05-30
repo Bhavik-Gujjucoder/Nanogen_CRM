@@ -279,7 +279,7 @@
                 }
             },
             messages: {
-                dd_id: "Please enter party name",
+                dd_id: "Please select party name",
                 order_date: "Please enter a valid order date",
                 mobile_no: {
                     required: "Please enter mobile number",
@@ -287,7 +287,7 @@
                     minlength: "Mobile number must be 10 digits",
                     maxlength: "Mobile number must be 10 digits"
                 },
-                salesman_id: "Please enter salesman name",
+                salesman_id: "Please select salesman name",
                 transport: "Please enter transport details",
                 freight: "Please enter freight value",
                 gst_no: "Please enter GST number",

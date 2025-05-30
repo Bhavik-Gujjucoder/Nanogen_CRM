@@ -36,7 +36,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Product Name <span class="text-danger">*</span></label>
                             <input type="text" name="product_name" value="{{ old('product_name') }}"
-                                class="form-control" placeholder="Product Name">
+                                class="form-control" placeholder="Product Name" maxlength="255">
                             <div id="product_name_error" class="error-message text-danger"></div>
                         </div>
                     </div>
@@ -63,7 +63,6 @@
                         <div class="mb-3">
                             <label class="col-form-label">Grade <span class="text-danger">*</span></label>
                             <select class="select" name="grade_id" value="{{ old('grade_id') }}">
-
                                 <option value="">Select grade</option>
                                 @if ($grads)
                                     @foreach ($grads as $g)
