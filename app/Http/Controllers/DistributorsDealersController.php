@@ -135,13 +135,13 @@ class DistributorsDealersController extends Controller
             }
             $d_d->save();
 
-            if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
+            // if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
 
-                $company_name    = $request->input('company_name');
-                $product_id      = $request->input('product_id');
-                $quantity        = $request->input('quantity');
-                $company_remarks = $request->input('company_remarks');
-
+            $company_name    = $request->input('company_name');
+            $product_id      = $request->input('product_id');
+            $quantity        = $request->input('quantity');
+            $company_remarks = $request->input('company_remarks');
+            if (!empty($company_name)) {
                 foreach ($company_name as $key => $company_name) {
                     if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
                         DealershipCompanies::create([
@@ -155,11 +155,12 @@ class DistributorsDealersController extends Controller
                 }
             }
 
-            if ($request->has(['name', 'birthdate', 'address'])) {
-                $name      = $request->input('name');
-                $birthdate = $request->input('birthdate');
-                $address   = $request->input('address');
-
+            // if ($request->has(['name', 'birthdate', 'address'])) {
+            $name      = $request->input('name');
+            $birthdate = $request->input('birthdate');
+            $address   = $request->input('address');
+            
+            if (!empty($name)) {
                 foreach ($name as $key => $name) {
                     if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
                         ProprietorPartnerDirector::create([
@@ -230,13 +231,13 @@ class DistributorsDealersController extends Controller
                 $d_d->save();
             }
 
-            if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
-                DealershipCompanies::where('dd_id', $id)->delete();
-                $company_name    = $request->input('company_name');
-                $product_id      = $request->input('product_id');
-                $quantity        = $request->input('quantity');
-                $company_remarks = $request->input('company_remarks');
-
+            // if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
+            DealershipCompanies::where('dd_id', $id)->delete();
+            $company_name    = $request->input('company_name');
+            $product_id      = $request->input('product_id');
+            $quantity        = $request->input('quantity');
+            $company_remarks = $request->input('company_remarks');
+            if (!empty($company_name)) {
                 foreach ($company_name as $key => $company_name) {
                     if (!empty($company_name) || !empty($product_id[$key]) || !empty($quantity[$key]) || !empty($company_remarks[$key])) {
                         DealershipCompanies::create([
@@ -249,13 +250,15 @@ class DistributorsDealersController extends Controller
                     }
                 }
             }
+            // }
 
-            if ($request->has(['name', 'birthdate', 'address'])) {
-                ProprietorPartnerDirector::where('dd_id', $id)->delete();
-                $names      = $request->input('name');
-                $birthdate = $request->input('birthdate');
-                $address   = $request->input('address');
+            // if ($request->has(['name', 'birthdate', 'address'])) {
+            ProprietorPartnerDirector::where('dd_id', $id)->delete();
+            $names      = $request->input('name');
+            $birthdate = $request->input('birthdate');
+            $address   = $request->input('address');
 
+            if (!empty($names)) {
                 foreach ($names as $key => $name) {
                     if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
                         ProprietorPartnerDirector::create([

@@ -121,7 +121,8 @@
                                 <label class="col-form-label">Pan Card No <span class="text-danger">*</span></label>
                                 <input type="text" name="pancard"
                                     value="{{ old('pancard', $distributor_dealers->pancard) }}" class="form-control"
-                                    placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()" maxlength="10">
+                                    placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()"
+                                    maxlength="10">
                                 <span id="pancard_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -130,7 +131,8 @@
                                 <label class="col-form-label">GSTIN <span class="text-danger">*</span></label>
                                 <input type="text" name="gstin"
                                     value="{{ old('gstin', $distributor_dealers->gstin) }}" class="form-control"
-                                    placeholder="GSTIN" oninput="this.value = this.value.toUpperCase()" maxlength="15">
+                                    placeholder="GSTIN" oninput="this.value = this.value.toUpperCase()"
+                                    maxlength="15">
                                 <span id="gstin_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -236,7 +238,7 @@
                                 <label class="col-form-label">Account No <span class="text-danger">*</span></label>
                                 <input type="text" name="account_no"
                                     value="{{ old('account_no', $distributor_dealers->account_no) }}"
-                                    class="form-control" placeholder="Account No"  maxlength="20">
+                                    class="form-control" placeholder="Account No" maxlength="20">
                                 <span id="account_no_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -255,7 +257,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="security_cheque_detail"
                                     value="{{ old('security_cheque_detail', $distributor_dealers->security_cheque_detail) }}"
-                                    class="form-control" placeholder="Details of Security Cheque"   maxlength="255">
+                                    class="form-control" placeholder="Details of Security Cheque" maxlength="255">
                                 <span id="security_cheque_detail_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -392,68 +394,73 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- <tr>
-                                            <td data-label="S.No.">1</td>
-                                            <td data-label="Company Name">
-                                                <input type="text" name="company_name[]" value=""
-                                                    class="form-control" placeholder="Enter company name">
-                                            </td>
-                                            <td data-label="Products">
-                                                <select name="product_id[]" class="form-control">
-                                                    <option value="">Select product</option>
-                                                    @foreach ($products as $product)
-                                                        <option value="{{ $product->id }}">
-                                                            {{ $product->product_name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td data-label="Quantity">
-                                                <input type="number" name="quantity[]" value=""
-                                                    class="form-control" placeholder="Enter quantity">
-                                            </td>
-                                            <td data-label="Remarks">
-                                                <input type="text" name="company_remarks[]" value=""
-                                                    class="form-control" placeholder="Enter remarks">
-                                            </td>
-                                            <td data-label="Action">
-                                                <button type="button" id="addNewFirmRow" class="btn btn-primary">Add
-                                                    New</button>
-                                            </td>
-                                        </tr> --}}
-                                        @foreach ($distributor_dealers->dealership_companies as $c)
+                                        @if ($distributor_dealers->dealership_companies->isEmpty())
                                             <tr>
-                                                <td data-label="S.No.">{{ $loop->iteration }}</td>
+                                                <td data-label="S.No.">1</td>
                                                 <td data-label="Company Name">
-                                                    <input type="text" name="company_name[]"
-                                                        value="{{ old('company_name', $c->company_name) }}"
-                                                        class="form-control" placeholder="Enter company name" maxlength="255">
+                                                    <input type="text" name="company_name[]" value=""
+                                                        class="form-control" placeholder="Enter company name">
                                                 </td>
                                                 <td data-label="Products">
                                                     <select name="product_id[]" class="form-control">
                                                         <option value="">Select product</option>
                                                         @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}"
-                                                                {{ $product->id == $c->product_id ? 'selected' : '' }}>
+                                                            <option value="{{ $product->id }}">
                                                                 {{ $product->product_name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
                                                 <td data-label="Quantity">
-                                                    <input type="number" name="quantity[]"
-                                                        value="{{ old('quantity', $c->quantity) }}"
+                                                    <input type="number" name="quantity[]" value=""
                                                         class="form-control" placeholder="Enter quantity">
                                                 </td>
                                                 <td data-label="Remarks">
-                                                    <input type="text" name="company_remarks[]"
-                                                        value="{{ old('company_remarks', $c->company_remarks) }}"
+                                                    <input type="text" name="company_remarks[]" value=""
                                                         class="form-control" placeholder="Enter remarks">
                                                 </td>
                                                 <td data-label="Action">
-                                                    <button type="button"
-                                                        class="btn btn-danger deleteFirmRow">Delete</button>
+                                                    <button type="button" id="addNewFirmRow"
+                                                        class="btn btn-primary">Add
+                                                        New</button>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @else
+                                            @foreach ($distributor_dealers->dealership_companies as $c)
+                                                <tr>
+                                                    <td data-label="S.No.">{{ $loop->iteration }}</td>
+                                                    <td data-label="Company Name">
+                                                        <input type="text" name="company_name[]"
+                                                            value="{{ old('company_name', $c->company_name) }}"
+                                                            class="form-control" placeholder="Enter company name"
+                                                            maxlength="255">
+                                                    </td>
+                                                    <td data-label="Products">
+                                                        <select name="product_id[]" class="form-control">
+                                                            <option value="">Select product</option>
+                                                            @foreach ($products as $product)
+                                                                <option value="{{ $product->id }}"
+                                                                    {{ $product->id == $c->product_id ? 'selected' : '' }}>
+                                                                    {{ $product->product_name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td data-label="Quantity">
+                                                        <input type="number" name="quantity[]"
+                                                            value="{{ old('quantity', $c->quantity) }}"
+                                                            class="form-control" placeholder="Enter quantity">
+                                                    </td>
+                                                    <td data-label="Remarks">
+                                                        <input type="text" name="company_remarks[]"
+                                                            value="{{ old('company_remarks', $c->company_remarks) }}"
+                                                            class="form-control" placeholder="Enter remarks">
+                                                    </td>
+                                                    <td data-label="Action">
+                                                        <button type="button"
+                                                            class="btn btn-danger deleteFirmRow">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -523,61 +530,63 @@
                                             <th scope="col">Marital Status</th> --}}
                                             {{-- <th scope="col">Action</th> --}}
                                             <th scope="col">
-                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add
-                                                    New</button>
+                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add New</button>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- <tr>
-                                            <td data-label="S.No.">1</td>
-                                            <td data-label="Name">
-                                                <input type="text" name="name[]" value="{{ old('name') }}"
-                                                    placeholder="Enter name" class="form-control">
-                                            </td>
-                                            <td data-label="Date of Birth" class="dateofbirth">
-                                                <div class="icon-form">
-                                                    <span class="form-icon"><i
-                                                            class="ti ti-calendar-check"></i></span>
-                                                    <input type="text" name="birthdate[]"
-                                                        value="{{ old('birthdate') }}"
-                                                        class="form-control datePicker" placeholder="">
-                                                </div>
-                                            </td>
-                                            <td data-label="Address">
-                                                <textarea name="address[]" placeholder="Enter address" class="form-control">{{ old('address') }}</textarea>
-                                            </td>
-                                            <td>
-                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add
-                                                    New</button>
-                                            </td>
-                                        </tr> --}}
-                                        @foreach ($distributor_dealers->proprietor_partner_director as $p)
+                                        @if ($distributor_dealers->proprietor_partner_director->isEmpty())
                                             <tr>
-                                                <td data-label="S.No.">{{ $loop->iteration }}</td>
+                                                <td data-label="S.No.">1</td>
                                                 <td data-label="Name">
-                                                    <input type="text" name="name[]"
-                                                        value="{{ old('name', $p->name) }}" placeholder="Enter name"
-                                                        class="form-control" maxlength="255">
+                                                    <input type="text" name="name[]" value="{{ old('name') }}"
+                                                        placeholder="Enter name" class="form-control">
                                                 </td>
                                                 <td data-label="Date of Birth" class="dateofbirth">
                                                     <div class="icon-form">
                                                         <span class="form-icon"><i
                                                                 class="ti ti-calendar-check"></i></span>
-                                                        <input type="text" name="birthdate[]" {{-- value="{{ old('birthdate',$p->birthdate) }}" --}}
-                                                            value="{{ old('birthdate', \Carbon\Carbon::parse($p->birthdate)->format('d-m-Y')) }}"
+                                                        <input type="text" name="birthdate[]"
+                                                            value="{{ old('birthdate') }}"
                                                             class="form-control datePicker" placeholder="">
                                                     </div>
                                                 </td>
                                                 <td data-label="Address">
-                                                    <textarea name="address[]" placeholder="Enter address" class="form-control">{{ old('address', $p->address) }}</textarea>
+                                                    <textarea name="address[]" placeholder="Enter address" class="form-control">{{ old('address') }}</textarea>
                                                 </td>
                                                 <td>
-                                                    <button type="button"
-                                                        class="btn btn-danger deletePropRow">Delete</button>
+                                                    <button type="button" id="addNewPropRow" class="btn btn-primary">Add
+                                                        New</button>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @else
+                                            @foreach ($distributor_dealers->proprietor_partner_director as $p)
+                                                <tr>
+                                                    <td data-label="S.No.">{{ $loop->iteration }}</td>
+                                                    <td data-label="Name">
+                                                        <input type="text" name="name[]"
+                                                            value="{{ old('name', $p->name) }}" placeholder="Enter name"
+                                                            class="form-control" maxlength="255">
+                                                    </td>
+                                                    <td data-label="Date of Birth" class="dateofbirth">
+                                                        <div class="icon-form">
+                                                            <span class="form-icon"><i
+                                                                    class="ti ti-calendar-check"></i></span>
+                                                            <input type="text" name="birthdate[]" {{-- value="{{ old('birthdate',$p->birthdate) }}" --}}
+                                                                value="{{ old('birthdate', \Carbon\Carbon::parse($p->birthdate)->format('d-m-Y')) }}"
+                                                                class="form-control datePicker" placeholder="">
+                                                        </div>
+                                                    </td>
+                                                    <td data-label="Address">
+                                                        <textarea name="address[]" placeholder="Enter address" class="form-control">{{ old('address', $p->address) }}</textarea>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button"
+                                                            class="btn btn-danger deletePropRow">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -588,7 +597,8 @@
                                 <label class="col-form-label">Name and address of associate firm(s) </label>
                                 <input type="text" name="associate_name_address"
                                     value="{{ old('associate_name_address', $distributor_dealers->associate_name_address) }}"
-                                    class="form-control" placeholder="Name and address of associate firm(s)" maxlength="255">
+                                    class="form-control" placeholder="Name and address of associate firm(s)"
+                                    maxlength="255">
                                 <span id="associate_name_address_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -668,7 +678,8 @@
                                                 <input type="text" name="godown_size_capacity"
                                                     value="{{ old('godown_size_capacity', $distributor_dealers->godown_size_capacity) }}"
                                                     class="form-control"
-                                                    placeholder="Indicate Size and Capacity of Godown" maxlength="255">
+                                                    placeholder="Indicate Size and Capacity of Godown"
+                                                    maxlength="255">
                                                 <span id="godown_size_capacity_error" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -693,7 +704,8 @@
                                 <label class="col-form-label">Expected Minimum Sales</label>
                                 <input type="text" name="expected_minimum_sales" class="form-control"
                                     placeholder="Expected Minimum Sales"
-                                    value="{{ old('expected_minimum_sales', $distributor_dealers->expected_minimum_sales) }}" maxlength="255">
+                                    value="{{ old('expected_minimum_sales', $distributor_dealers->expected_minimum_sales) }}"
+                                    maxlength="255">
                                 <span id="expected_minimum_sales_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -788,7 +800,7 @@
                                         <label class="col-form-label">Experience and capability </label>
                                         <input type="text" name="experience_capability" class="form-control"
                                             value="{{ old('experience_capability', $distributor_dealers->experience_capability) }}"
-                                            placeholder="Experience and capability"     maxlength="255"> 
+                                            placeholder="Experience and capability" maxlength="255">
                                         <span id="experience_capability_error" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -858,7 +870,8 @@
                                         sales/month) </label>
                                     <input type="text" name="business_potential" class="form-control"
                                         placeholder="Estimated sales/month"
-                                        value="{{ old('business_potential', $distributor_dealers->market_potential) }}" maxlength="255">
+                                        value="{{ old('business_potential', $distributor_dealers->market_potential) }}"
+                                        maxlength="255">
                                 </div>
                             </div>
 
@@ -867,7 +880,8 @@
                                     <label class="col-form-label">Total market potential of the area </label>
                                     <input type="text" name="market_potential" class="form-control"
                                         placeholder="Total market potential"
-                                        value="{{ old('market_potential', $distributor_dealers->market_potential) }}" maxlength="255">
+                                        value="{{ old('market_potential', $distributor_dealers->market_potential) }}"
+                                        maxlength="255">
                                 </div>
                             </div>
 
@@ -876,7 +890,8 @@
                                     <label class="col-form-label">Assurance of minimum turnover</label>
                                     <input type="text" name="minimum_turnover" class="form-control"
                                         placeholder="Minimum turnover assurance"
-                                        value="{{ old('minimum_turnover', $distributor_dealers->minimum_turnover) }}" maxlength="255">
+                                        value="{{ old('minimum_turnover', $distributor_dealers->minimum_turnover) }}"
+                                        maxlength="255">
                                 </div>
                             </div>
 
@@ -886,7 +901,8 @@
                                         the area/town (major competitors) </label>
                                     <input type="text" name="competitor_count" class="form-control"
                                         placeholder="No. of major competitors"
-                                        value="{{ old('competitor_count', $distributor_dealers->competitor_count) }}" maxlength="255">
+                                        value="{{ old('competitor_count', $distributor_dealers->competitor_count) }}"
+                                        maxlength="255">
                                 </div>
                             </div>
 
@@ -895,7 +911,8 @@
                                     <label class="col-form-label">Credit limit </label>
                                     <input type="text" name="cr_limit" class="form-control"
                                         placeholder="Cr limit"
-                                        value="{{ old('cr_limit', $distributor_dealers->cr_limit) }}" maxlength="255">
+                                        value="{{ old('cr_limit', $distributor_dealers->cr_limit) }}"
+                                        maxlength="255">
                                 </div>
                             </div>
 
