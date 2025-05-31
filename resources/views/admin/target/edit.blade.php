@@ -28,7 +28,7 @@
                             class="form-control" placeholder="Target Name" maxlength="255">
                     </div>
                 </div>
-                
+
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Sales Person Name <span class="text-danger">*</span></label>
@@ -134,19 +134,19 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-
                                             <input type="number" name="percentage[]"
                                                 value="{{ old('percentage', $t_g->percentage) }}"
                                                 class="form-control me-2" placeholder="Target To (%)">
                                         </div>
-                                        <div class="col-md-4">
-                                            <strong></strong><input type="text" name="percentage_value[]"
+                                        <div class="col-md-2">
+                                            <strong></strong>
+                                            <input type="text" name="percentage_value[]"
                                                 value="{{ old('percentage_value', $t_g->percentage_value) }}"
                                                 class="input-as-text" readonly hidden>
 
                                             <input type="text" name="textpercentage_value[]"
-                                                value="{{ old('textpercentage_value', IndianNumberFormat($t_g->percentage_value)) }}" class="input-as-text"
-                                                placeholder="" readonly>
+                                                value="{{ old('textpercentage_value', IndianNumberFormat($t_g->percentage_value)) }}"
+                                                class="input-as-text" placeholder="" readonly>
                                         </div>
 
                                         <button type="button"
@@ -181,7 +181,7 @@
         $('#product-container .product-group').each(function() {
             let $percentage = $(this).find('input[name="percentage[]"]');
             let $valueField = $(this).find('input[name="percentage_value[]"]');
-             let $valueFieldText = $(this).find('input[name="textpercentage_value[]"]');
+            let $valueFieldText = $(this).find('input[name="textpercentage_value[]"]');
             let percentage = parseFloat($percentage.val());
 
             if (!isNaN(percentage)) {
@@ -403,7 +403,8 @@
         let productContainer = document.getElementById('product-container');
         let newProductGroup = document.createElement('div');
         newProductGroup.classList.add('product-group', 'd-flex', 'align-items-center', 'mb-2');
-        newProductGroup.innerHTML = `<div class="col-md-4">
+        newProductGroup.innerHTML = `
+        <div class="col-md-4">
             <select class="form-select me-2" name="grade_id[]">
                 <option value="">Select</option>
                 @if ($grade)
@@ -416,12 +417,19 @@
                 @else
                     <option value="">No record</option>
                 @endif
-            </select></div><div class="col-md-4">
-             <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                class="form-control me-2" placeholder="Target To (%)"></div>
-<div class="col-md-4">
-            <strong>₹</strong><input type="text" name="percentage_value[]" value="{{ old('percentage_value') }}"
+            </select>
+        </div>
+        <div class="col-md-4">
+                <input type="number" name="percentage[]" value="{{ old('percentage') }}"
+                    class="form-control me-2" placeholder="Target To (%)"></div>
+        
+            <input type="hidden" name="percentage_value[]" value="{{ old('percentage_value') }}"
                 class="input-as-text" readonly></div>
+
+            <input type="text" name="textpercentage_value[]"
+                value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder=""
+                readonly>
+        </div>
 
             <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
         `;

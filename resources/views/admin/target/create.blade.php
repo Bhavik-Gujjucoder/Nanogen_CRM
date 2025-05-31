@@ -461,10 +461,13 @@
 
         const optionsHtml = buildGradeOptions(selectedGrades);
 
-        newProductGroup.innerHTML = `<div class="col-md-4">
+        newProductGroup.innerHTML = `
+        <div class="col-md-4">
             <select class="form-select me-2" name="grade_id[]">
                     ${optionsHtml}
-                </select></div><div class="col-md-4">
+                </select>
+        </div>
+        <div class="col-md-4">
              <input type="number" name="percentage[]" value="{{ old('percentage') }}"
                 class="form-control me-2" placeholder="Target To (%)"></div><div class="col-md-4">
 
