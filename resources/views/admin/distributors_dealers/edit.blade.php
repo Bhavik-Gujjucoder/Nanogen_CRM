@@ -236,7 +236,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Account No <span class="text-danger">*</span></label>
-                                <input type="text" name="account_no"
+                                <input type="number" name="account_no"
                                     value="{{ old('account_no', $distributor_dealers->account_no) }}"
                                     class="form-control" placeholder="Account No" maxlength="20">
                                 <span id="account_no_error" class="text-danger"></span>
@@ -264,7 +264,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Cheque No.1 </label>
-                                <input type="text" name="cheque_1"
+                                <input type="number" name="cheque_1"
                                     value="{{ old('cheque_1', $distributor_dealers->cheque_1) }}"
                                     class="form-control" placeholder="Cheque No.1" maxlength="20">
                             </div>
@@ -272,7 +272,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Cheque No.2 </label>
-                                <input type="text" name="cheque_2"
+                                <input type="number" name="cheque_2"
                                     value="{{ old('cheque_2', $distributor_dealers->cheque_2) }}"
                                     class="form-control" placeholder="Cheque No.2" maxlength="20">
                             </div>
@@ -280,7 +280,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Cheque No.3 </label>
-                                <input type="text" name="cheque_3"
+                                <input type="number" name="cheque_3"
                                     value="{{ old('cheque_3', $distributor_dealers->cheque_3) }}"
                                     class="form-control" placeholder="Cheque No.3" maxlength="20">
                             </div>

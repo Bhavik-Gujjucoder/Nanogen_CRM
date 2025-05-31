@@ -159,7 +159,7 @@ class DistributorsDealersController extends Controller
             $name      = $request->input('name');
             $birthdate = $request->input('birthdate');
             $address   = $request->input('address');
-            
+
             if (!empty($name)) {
                 foreach ($name as $key => $name) {
                     if (!empty($name) || !empty($birthdate[$key]) || !empty($address[$key])) {
@@ -211,7 +211,7 @@ class DistributorsDealersController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
+    */
     public function update(Request $request, string $id)
     {
         try {
