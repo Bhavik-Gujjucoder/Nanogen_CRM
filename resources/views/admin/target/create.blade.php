@@ -133,7 +133,8 @@
                                         class="form-control me-2" placeholder="Target To (%)">
                                 </div>
                                 <div class="col-md-4">
-                                    <strong></strong><input type="text" name="percentage_value[]"
+                                    <strong></strong>
+                                    <input type="text" name="percentage_value[]"
                                         value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
                                         readonly hidden>
 
@@ -185,7 +186,7 @@
             if (!isNaN(targetValue) && !isNaN(percentage)) {
                 let result = (targetValue * percentage) / 100;
                 $valueField.val(result.toFixed(0));
-                 $valueFieldText.val(IndianNumberFormatscript(result.toFixed(0)));
+                $valueFieldText.val(IndianNumberFormatscript(result.toFixed(0)));
             } else {
                 $valueField.val('');
                 $valueFieldText.val('');
@@ -444,8 +445,6 @@
 
     document.getElementById('add-new').addEventListener('click', function() {
         const selectedGrades = getSelectedGrades();
-
-
         // Collect already selected grade IDs
         document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
             if (select.value) {
@@ -469,8 +468,18 @@
              <input type="number" name="percentage[]" value="{{ old('percentage') }}"
                 class="form-control me-2" placeholder="Target To (%)"></div><div class="col-md-4">
 
-            <strong>₹</strong><input type="text" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                class="input-as-text" readonly></div>
+            
+            <input type="hidden" name="percentage_value[]" value="{{ old('percentage_value') }}"
+                class="input-as-text" readonly>
+
+                <input type="text" name="textpercentage_value[]"
+                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder=""
+                                        readonly>
+                
+                
+                </div>
+
+
 
             <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
         `;
