@@ -335,7 +335,7 @@ class OrderManagementController extends Controller
         $data = [
             'page_title' => 'Edit Order',
             'order' => $order,
-            'products' => Product::where('status', 1)->get(),
+            'products' => Product::get(),
             'distributor_dealers' => DistributorsDealers::get(),
             'salesmans' => SalesPersonDetail::where('deleted_at', NULL)->get(),
         ];
