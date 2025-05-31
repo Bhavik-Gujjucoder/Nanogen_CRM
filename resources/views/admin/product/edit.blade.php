@@ -145,8 +145,13 @@
                                                     {{ $item->value }} {{ $item->unit }}</option>
                                             @endforeach
                                         </select>
-                                        <button type="button" class="remove-btn btn btn-danger mb-1"
-                                            onclick="removeField(this)">Remove</button>
+
+                                        @if ( !in_array($variation->variation_option_value->id,
+                                                App\Models\OrderManagementProduct::pluck('packing_size_id')->all()))
+                                            <button type="button" class="remove-btn btn btn-danger mb-1"
+                                                onclick="removeField(this)">Remove</button>
+                                        @endif
+
                                     </div>
                                 @endforeach
                             </div>

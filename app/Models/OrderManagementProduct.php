@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Product;
 use App\Models\OrderManagement;
 use App\Models\VariationOption;
+use App\Models\ProductVariation; 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\hasOne;
 
@@ -45,5 +46,10 @@ class OrderManagementProduct extends Model
     {
         return $this->belongsTo(OrderManagement::class, 'order_id');
     }
+
+//     public function productVariation()
+// {
+//     return $this->belongsTo(ProductVariation::class, 'packing_size_id', 'variation_option_id');
+// }
     
 }
