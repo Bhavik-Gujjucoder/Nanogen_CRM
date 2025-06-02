@@ -147,9 +147,9 @@
                                         </select>
 
                                         @if ( !in_array($variation->variation_option_value->id,
-                                                App\Models\OrderManagementProduct::pluck('packing_size_id')->all()))
+                                                App\Models\OrderManagementProduct::where('product_id',$product->id)->pluck('packing_size_id')->all()))
                                             <button type="button" class="remove-btn btn btn-danger mb-1"
-                                                onclick="removeField(this)">Remove</button>
+                                                onclick="removeField(this)">Remove</button> 
                                         @endif
 
                                     </div>
