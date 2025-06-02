@@ -27,6 +27,7 @@ use App\Http\Controllers\GradeManagementController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\StateManagementController;
 use App\Http\Controllers\DistributorsDealersController;
+use App\Services\SendGridService;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -35,17 +36,38 @@ use App\Http\Controllers\DistributorsDealersController;
 // →→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
 
 Auth::routes();
-Route::get('/test-mail', function () {
+// Route::get('/test-mail', function () {
+//     try {
+//         Mail::raw('This is a test email', function ($message) {
+//             $message->to('dharaj.gc@gmail.com')
+//                 ->subject('Test Email');
+//         });
+//         return 'Test email sent!';
+//     } catch (\Throwable $th) {
+//         dd($th);
+//     }
+// });
+
+
+
+Route::get('/test-email', function (SendGridService $sendGrid) {
     try {
-        Mail::raw('This is a test email', function ($message) {
-            $message->to('dharaj.gc@gmail.com')
-                ->subject('Test Email');
-        });
-        return 'Test email sent!';
-    } catch (\Throwable $th) {
-        dd($th);
+         $response = $sendGrid->sendEmail(
+            'parthb.gc@gmail.com',     // Change to your test email
+            'Test Email from Laravel',
+            'This is a test email sent via SendGrid service.'
+        );
+        return response()->json([
+            'status' => method_exists($response, 'statusCode') ? $response->statusCode() : 500,
+            'body' => method_exists($response, 'body') ? $response->body() : null,
+        ]);
+
+        // return 'Test email sent successfully!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
     }
 });
+
 
 Route::get('/clear', function () {
     Artisan::call('cache:clear');
