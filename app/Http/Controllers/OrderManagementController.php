@@ -207,30 +207,30 @@ class OrderManagementController extends Controller
         }
         $order->save();
 
-        // try {
-        //     if($request->status == 3)
-        //     {
-        //         $admin_email = getSetting('company_email');
-        //         if($admin_email)
-        //         {
-        //             $order = [];
-        //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
-        //             $order->admin_email = 'for_admin_email';
-        //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
-        //         }
+        try {
+            if($request->status == 3)
+            {
+                $admin_email = getSetting('company_email');
+                if($admin_email)
+                {
+                    $order = [];
+                    $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
+                    $order->admin_email = 'for_admin_email';
+                    Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
+                }
 
 
-        //         $sales_person_email = $order->sales_person_detail->user->email;
-        //         if($sales_person_email) {
-        //             $order = [];
-        //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
-        //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
-        //         }
-        //     }
-        // } catch (\Throwable $th) {
-        //     dd($th);
-        //     return response()->json(['error' => 'Something went wrong!'], 500); 
-        // }
+                $sales_person_email = $order->sales_person_detail->user->email;
+                if($sales_person_email) {
+                    $order = [];
+                    $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
+                    Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
+                }
+            }
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['error' => 'Something went wrong!'], 500); 
+        }
 
         return response()->json(['success' => true]);
     }
@@ -317,7 +317,7 @@ class OrderManagementController extends Controller
         //     return response()->json(['error' => 'Something went wrong!'], 500); 
         //     // return redirect()->back()->with('error', 'Something is wrong!!');
         // }
-        
+
 
         if(getSetting('company_email'))
         {
