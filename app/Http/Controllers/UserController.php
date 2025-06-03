@@ -148,10 +148,10 @@ class UserController extends Controller
         $user->assignRole(Role::find($request->role)->name);
 
         // **** EMAIL ****  
-        // $data['name'] = $request->name;
-        // $data['email'] = $request->email;
-        // $data['password'] = $request->password;
-        // Mail::send('email.user_email.create', ['data' => $data], fn($message) => $message->to($user->email)->subject('User Account Created'));
+        $data['name'] = $request->name;
+        $data['email'] = $request->email;
+        $data['password'] = $request->password;
+        Mail::send('email.user_email.create', ['data' => $data], fn($message) => $message->to($user->email)->subject('User Account Created'));
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -212,15 +212,15 @@ class UserController extends Controller
         $user->save();
         $user->syncRoles([$request->role]); // Update role
         // **** EMAIL ****  
-        // if ($user->status === "0") {
-        //     $data = [];
-        //     $data['name'] = $user->name;
-        //     Mail::send('email.user_email.deactive_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Deactivated'));
-        // } else {
-        //     $data = [];
-        //     $data['name'] = $request->name;
-        //     Mail::send('email.user_email.active_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Activated'));
-        // }
+        if ($user->status === "0") {
+            $data = [];
+            $data['name'] = $user->name;
+            Mail::send('email.user_email.deactive_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Deactivated'));
+        } else {
+            $data = [];
+            $data['name'] = $request->name;
+            Mail::send('email.user_email.active_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Activated'));
+        }
 
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
