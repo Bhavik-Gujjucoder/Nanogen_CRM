@@ -57,7 +57,7 @@ Route::get('/test-sendgrid', function (SendGridService $sendGrid) {
 
 
 
-Route::get('/test-email', function (SendGridService $sendGrid) {
+Route::get('/test-email', function () {
     // try {
     //      $response = $sendGrid->sendEmail(
     //         'parthb.gc@gmail.com',     // Change to your test email
