@@ -33,4 +33,26 @@ class SendGridService
 
         // return $this->sendgrid->send($email);
     }
+
+    //  public function sendEmail($to, $subject, $content)
+    // {
+    //     $email = new Mail();
+    //     $email->setFrom(env('SENDGRID_FROM_EMAIL'), env('SENDGRID_FROM_NAME'));
+    //     $email->setSubject($subject);
+    //     $email->addTo($to);
+    //     $email->addContent("text/plain", $content);
+    //     $email->addContent("text/html", nl2br($content));
+
+    //     $sendgrid = new SendGrid(env('SENDGRID_API_KEY'));
+
+    //     try {
+    //         $response = $sendgrid->send($email);
+    //         dd( $response);
+    //         return $response->statusCode() === 202;
+    //     } catch (\Exception $e) {
+    //           dd($e->getMessage());
+    //         report($e);
+    //         return false;
+    //     }
+    // }
 }

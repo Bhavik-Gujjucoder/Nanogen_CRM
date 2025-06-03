@@ -49,23 +49,48 @@ Auth::routes();
 // });
 
 
+Route::get('/test-sendgrid', function (SendGridService $sendGrid) {
+    $success = $sendGrid->sendEmail('demon@mailinator.com', 'Test Subject', 'This is a test message via SendGrid API');
+    dd( $success);
+    return $success ? 'Email sent!' : 'Failed to send email.';
+});
+
+
 
 Route::get('/test-email', function (SendGridService $sendGrid) {
-    try {
-         $response = $sendGrid->sendEmail(
-            'parthb.gc@gmail.com',     // Change to your test email
-            'Test Email from Laravel',
-            'This is a test email sent via SendGrid service.'
-        );
-        return response()->json([
-            'status' => method_exists($response, 'statusCode') ? $response->statusCode() : 500,
-            'body' => method_exists($response, 'body') ? $response->body() : null,
-        ]);
+    // try {
+    //      $response = $sendGrid->sendEmail(
+    //         'parthb.gc@gmail.com',     // Change to your test email
+    //         'Test Email from Laravel',
+    //         'This is a test email sent via SendGrid service.'
+    //     );
+    //     return response()->json([
+    //         'status' => method_exists($response, 'statusCode') ? $response->statusCode() : 500,
+    //         'body' => method_exists($response, 'body') ? $response->body() : null,
+    //     ]);
 
-        // return 'Test email sent successfully!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
+    //     // return 'Test email sent successfully!';
+    // } catch (\Exception $e) {
+    //     return 'Error: ' . $e->getMessage();
+    // }
+     $data = [
+            'name' => 'John Doe',
+            'message' => 'This is a test email.'
+        ];
+        try {
+            $data["mail_message"] = "Hello!";
+
+            Mail::send('email.mailtest', $data, function ($message) {
+                $message
+                ->to('bhavikg.gc@gmail.com')
+                ->subject('TEST');
+            });
+
+            return 'Test email sent successfully!';
+        } catch (\Exception $e) {
+            dd($e);
+            return 'Failed to send test email: ' . $e->getMessage();
+        }
 });
 
 
