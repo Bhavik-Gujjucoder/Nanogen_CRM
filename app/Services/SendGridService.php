@@ -30,7 +30,6 @@ class SendGridService
             return $e->getMessage();
         }
 
-
         // return $this->sendgrid->send($email);
     }
 
