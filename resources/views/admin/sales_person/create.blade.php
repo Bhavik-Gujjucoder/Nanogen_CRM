@@ -198,7 +198,7 @@
                     </div>
                 </div>
             </div>
-            <div class="jobdetail">
+            <div class="jobdetail mb-4">
                 <h5 class="mb-3">Address Details</h5>
                 <div class="row">
                     <div class="col-md-4">

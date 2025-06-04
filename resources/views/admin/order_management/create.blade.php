@@ -92,7 +92,7 @@
             </div>
             <input type="hidden" name="dummy" id="dummyValidationField" />
 
-            <div class="table-responsive">
+            <div class="table-responsive gc-order-management-table">
                 <table class="table table-view addnewfield">
                     <thead>
                         <tr>
