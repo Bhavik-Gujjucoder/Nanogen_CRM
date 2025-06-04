@@ -46,6 +46,17 @@ class HomeController extends Controller
     public function index()
     {
         $data['page_title'] = 'Super Admin Dashboard';
+
+        $data['total_distributor']  = $this->dealer_distributor->where('user_type', 1)->count();
+        $data['total_dealer']       = $this->dealer_distributor->where('user_type', 2)->count();
+        $data['total_sales_person'] = $this->sales_person_detail->whereNull('deleted_at')->count();
+        $data['total_product']      = $this->product->where('status', 1)->count();
+        $data['total_order']        = $this->order_management->count();
+        $data['order_grand_total']  = $this->order_management->sum('grand_total');
+        $data['latest_orders']      = $this->order_management->latest()->take(5)->get();
+        $data['latest_dealers']     = $this->dealer_distributor->where('user_type', 2)->latest()->take(5)->get();
+        $data['latest_distributor'] = $this->dealer_distributor->where('user_type', 1)->latest()->take(5)->get();
+        $data['total_city']         = CityManagement::count();
         return view('superadmin.dashboard', $data);
     }
 
