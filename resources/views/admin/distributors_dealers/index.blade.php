@@ -16,7 +16,7 @@
             </div>
             <div class="col-sm-8">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end">
-                    <div class="dropdown me-2">
+                    <div class="dropdown me-2 gc-export-menu">
                         <!-- <a href="javascript:void(0);" class="dropdown-toggle"
                       data-bs-toggle="dropdown"><i
                       class="ti ti-package-export me-2"></i>Export</a> -->

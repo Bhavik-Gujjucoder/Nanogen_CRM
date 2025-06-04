@@ -14,7 +14,7 @@
     </div>
 </div>
 <!-- /Welcome Wrap -->
-<div class="row">
+<div class="row detials-gc-user">
 
     <!-- Total Earnings -->
     {{-- <div class="col-xl-3 col-sm-6 d-flex">
