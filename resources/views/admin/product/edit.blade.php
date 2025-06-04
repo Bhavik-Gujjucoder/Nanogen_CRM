@@ -104,7 +104,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 mt-0">
+                    <div class="col-md-12 mt-0 gc-price-menu">
                         <div class="field-group field-group-new">
                             <label for="col-form-label" class="col-form-label">Dealer Price <span
                                     class="text-danger">*</span></label>
