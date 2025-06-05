@@ -419,9 +419,11 @@
                                                         class="form-control" placeholder="Enter remarks">
                                                 </td>
                                                 <td data-label="Action">
-                                                    <button type="button" id="addNewFirmRow"
+                                                    {{-- <button type="button" id="addNewFirmRow"
                                                         class="btn btn-primary">Add
-                                                        New</button>
+                                                        New</button> --}}
+                                                        <button type="button"
+                                                            class="btn btn-danger deleteFirmRow">Delete</button>
                                                 </td>
                                             </tr>
                                         @else
