@@ -369,9 +369,26 @@
                         </a>
                         <div class="dropdown-menu menu-drop-user">
                             <div class="profilename">
-                                <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
-                                    <i class="ti ti-layout-2"></i> Dashboard
-                                </a>
+                                @if (Auth::user()->hasRole('admin'))
+                                    <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                        <i class="ti ti-layout-2"></i> Dashboard
+                                    </a>
+                               
+                                @elseif(Auth::user()->hasRole('staff'))
+                                    <a class="dropdown-item" href="{{ route('staff.dashboard') }}">
+                                        <i class="ti ti-layout-2"></i> Dashboard
+                                    </a>
+                                @elseif(Auth::user()->hasRole('sales'))
+                                    <a class="dropdown-item" href="{{ route('sales.dashboard') }}">
+                                        <i class="ti ti-layout-2"></i> Dashboard
+                                    </a>
+                                @elseif(Auth::user()->hasRole('reporting manager'))
+                                    <a class="dropdown-item" href="{{ route('reporting_manager.dashboard') }}">
+                                        <i class="ti ti-layout-2"></i> Dashboard
+                                    </a>
+                                @endif
+
+
                                 <a class="dropdown-item" href="{{ route('my_profile') }}">
                                     <i class="ti ti-user-pin"></i> My Profile
                                 </a>
