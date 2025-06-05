@@ -196,7 +196,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         // dd($user);
-        if ($user->hasrole('admin') || $user->hasrole('staff')) {
+        if ($user->hasrole('super admin') ||$user->hasrole('admin') || $user->hasrole('staff')) {
             return redirect()->route('users.edit', $user->id);
         }
         if ($user->hasrole('sales')) {
