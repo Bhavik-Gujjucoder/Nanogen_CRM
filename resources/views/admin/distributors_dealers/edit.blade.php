@@ -1191,6 +1191,7 @@
             if (!$(this).hasClass('flatpickr-input')) {
                 flatpickr(this, {
                     dateFormat: "d-m-Y", // CORRECTED format
+                    disableMobile: true,
                     maxDate: "today",
                     onReady: removeTodayHighlight,
                     onMonthChange: removeTodayHighlight,
