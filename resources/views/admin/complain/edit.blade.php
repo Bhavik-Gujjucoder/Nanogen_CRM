@@ -44,7 +44,7 @@
                                     @if (strtolower($fileExtension) === 'pdf')
                                         <!-- PDF Preview -->
                                         <a href="{{ $fileUrl }}" target="_blank"
-                                        class="btn btn-sm btn-primary">View PDF File</a>
+                                            class="btn btn-sm btn-primary">View PDF File</a>
                                         <br>
                                         {{-- <iframe src="{{ $fileUrl }}"
                                             style="width: 150px; height: 100px;"
@@ -58,7 +58,7 @@
                                     @else
                                         <!-- Other File Preview -->
                                         <a href="{{ $fileUrl }}" target="_blank"
-                                        class="btn btn-sm "><strong>{{ $complain->complain_image }}</strong></a>
+                                            class="btn btn-sm "><strong>{{ $complain->complain_image }}</strong></a>
                                         {{-- <p>📁 <strong>{{ $complain->complain_image }}</strong></p> --}}
                                     @endif
                                 @endif
@@ -156,54 +156,50 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
-    </div>
-    @if (!$complain_status_history->isEmpty())
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <h5>Complain Status History</h5>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($complain_status_history as $history)
-                            <tr>
-                                <td>{{ \Carbon\Carbon::parse($history->created_at)->format('d-m-Y') }}</td>
-                                <td>
-                                    @if ($history->status == 1)
-                                        In progress
-                                    @elseif($history->status == 2)
-                                        Under review
-                                    @elseif($history->status == 3)
-                                        Completed
-                                    @elseif($history->status == 0)
-                                        Pending
-                                    @endif
-                                </td>
-                                <td>{{ $history->remark }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            @if (!$complain_status_history->isEmpty())
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h5>Complain Status History</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($complain_status_history as $history)
+                                    <tr>
+                                        <td>{{ \Carbon\Carbon::parse($history->created_at)->format('d-m-Y') }}</td>
+                                        <td>
+                                            @if ($history->status == 1)
+                                                In progress
+                                            @elseif($history->status == 2)
+                                                Under review
+                                            @elseif($history->status == 3)
+                                                Completed
+                                            @elseif($history->status == 0)
+                                                Pending
+                                            @endif
+                                        </td>
+                                        <td>{{ $history->remark }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+            <div class="d-flex align-items-center justify-content-end">
+                <!-- <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a> -->
+                <button type="submit" class="btn btn-primary mb-4">Update</button>
             </div>
-        </div>
-    @endif
-    <div class="d-flex align-items-center justify-content-end">
-        <!-- <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a> -->
-        <button type="submit" class="btn btn-primary">Update</button>
+        </form>
     </div>
-
-
-    </form>
 </div>
-</div>
+
 
 @endsection
 @section('script')
@@ -335,7 +331,7 @@
                     element.src = e.target.result;
                     // element.style.maxWidth = '200px';
                     // element.style.margin = '10px';
-                     element.style.height = '150px';
+                    element.style.height = '150px';
                     element.style.width = '150px';
                 } else if (fileType === 'application/pdf') {
                     // Preview PDF
@@ -347,7 +343,7 @@
                     element.style.margin = '10px';
                 } else if (
                     file.name.endsWith('.xlsx') ||
-                    file.name.endsWith('.xls') 
+                    file.name.endsWith('.xls')
                     // ||
                     // fileType ===
                     // 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
