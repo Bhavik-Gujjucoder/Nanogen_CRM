@@ -131,6 +131,7 @@
     /*** datepicker ***/
     flatpickr("#datePicker", {
         dateFormat: "d-m-Y",
+        disableMobile: true,
         maxDate: "today",
         defaultDate: "{{ old('date', isset($detail) ? \Carbon\Carbon::parse($detail->date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
         onReady: removeTodayHighlight,

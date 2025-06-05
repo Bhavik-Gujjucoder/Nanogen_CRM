@@ -186,6 +186,7 @@
     $(document).ready(function() {
         const startPicker = flatpickr("#startDate", {
             dateFormat: "d-m-Y",
+            disableMobile: true,
             maxDate: "today",
             defaultDate: "{{ old('start_date', request()->start_date) }}",
             onChange: function(selectedDates, dateStr, instance) {
@@ -201,6 +202,7 @@
 
         const endPicker = flatpickr("#endDate", {
             dateFormat: "d-m-Y",
+            disableMobile: true,
             maxDate: "today",
             defaultDate: "{{ old('end_date', request()->end_date) }}",
             onReady: removeTodayHighlight,

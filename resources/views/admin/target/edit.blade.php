@@ -238,6 +238,7 @@
     $(document).ready(function() {
         const startPicker = flatpickr("#startDate", {
             dateFormat: "d-m-Y",
+            disableMobile: true,
             // maxDate: "today",
             defaultDate: "{{ old('start_date', isset($target) ? \Carbon\Carbon::parse($target->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
             onChange: function(selectedDates, dateStr, instance) {
@@ -253,6 +254,7 @@
 
         const endPicker = flatpickr("#endDate", {
             dateFormat: "d-m-Y",
+            disableMobile: true,
             // maxDate: "today",
             defaultDate: "{{ old('end_date', isset($target) ? \Carbon\Carbon::parse($target->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
             onReady: removeTodayHighlight,
