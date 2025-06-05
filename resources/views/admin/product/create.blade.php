@@ -108,13 +108,13 @@
                                     <div>
                                         <label class="col-form-label">Dealer Price <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" name="dealer_price[]" placeholder="Price"
+                                        <input type="number" name="dealer_price[]" placeholder="Dealer Price"
                                             class="form-control">
                                     </div>
                                     <div>
                                         <label class="col-form-label">Distributor Price <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" name="distributor_price[]" placeholder="Price"
+                                        <input type="number" name="distributor_price[]" placeholder="Distributor Price"
                                             class="form-control">
                                     </div>
                                     <div>
@@ -423,8 +423,8 @@
             });
             container.append(`
                 <div class="field-group">
-                    <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
-                    <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
+                    <input type="number" name="dealer_price[]" placeholder="Dealer Price" class="form-control">
+                    <input type="number" name="distributor_price[]" placeholder="Distributor Price" class="form-control">
                     <select class="select addfileddrop" name="variation_id[]">
                         <option value="">Select Variation</option>
                         ${variationOptions}

@@ -222,8 +222,8 @@
             });
             container.prepend(`
             <div class="field-group product-variaton-column">
-                <input type="number" name="dealer_price[]" placeholder="Price" class="form-control">
-                <input type="number" name="distributor_price[]" placeholder="Price" class="form-control">
+                <input type="number" name="dealer_price[]" placeholder="Dealer Price" class="form-control">
+                <input type="number" name="distributor_price[]" placeholder="Distributor Price" class="form-control">
                 <select class="select addfileddrop" name="variation_id[]">
                         <option value="">Select Variation</option>
                         ${variationOptions}
