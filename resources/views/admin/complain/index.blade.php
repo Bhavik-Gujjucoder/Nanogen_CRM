@@ -15,7 +15,7 @@
         </div>
         <div class="col-sm-8">
             <div
-            class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end">
+            class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end gc-complain-menu">
             <div class="dropdown me-2">
                 <div class="dropdown-menu  dropdown-menu-end">
                     <ul>
