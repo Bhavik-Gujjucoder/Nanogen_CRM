@@ -107,6 +107,45 @@
         //     className: 'word-wrap',
         //     width: '300px' // optional: controls how early wrap starts
         // }]
+        columnDefs: [
+    {
+        targets: 1, // checkbox column
+        createdCell: function (td) {
+            $(td).attr('data-label', 'Select');
+        }
+    },
+    {
+        targets: 2, // DT_RowIndex
+        createdCell: function (td) {
+            $(td).attr('data-label', '');
+        }
+    },
+    {
+        targets: 3, // name
+        createdCell: function (td) {
+            $(td).attr('data-label', 'Variation Name');
+        }
+    },
+    {
+        targets: 4, // value
+        createdCell: function (td) {
+            $(td).attr('data-label', 'Options');
+        }
+    },
+    {
+        targets: 5, // status
+        createdCell: function (td) {
+            $(td).attr('data-label', 'Status');
+        }
+    },
+    {
+        targets: 6, // action
+        createdCell: function (td) {
+            $(td).attr('data-label', 'Action');
+        }
+    }
+]
+
 
 
 
