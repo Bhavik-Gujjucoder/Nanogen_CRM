@@ -32,7 +32,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th hidden>ID</th>
-                        <th scope="col"></th>
+                        <th scope="col">Sr no</th>
                         <th scope="col">Name</th>
                         <th scope="col">Permissions</th>
                         <th scope="col">Action</th>
@@ -83,58 +83,91 @@
 {{-- </div> --}}
 @endsection
 @section('script')
-    <script>
-        var roles_table = $('#roles').DataTable({
-            "pageLength": 10,
-            deferRender: true, // Prevents unnecessary DOM rendering
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            dom: 'lrtip',
-            order: [
-                [0, 'desc']
-            ], // Order by 'id' in descending order
-            ajax: "{{ route('roles.index') }}",
-            columns: [{
-                    data: 'id',
-                    name: 'id',
-                    visible: false,
-                    searchable: false
-                },
-                {
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'name',
-                    name: 'name',
-                    searchable: true
-                },
-                {
-                    data: 'permission_name',
-                    name: 'permission_name',
-                    searchable: true
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
-            ],
+<script>
+    var roles_table = $('#roles').DataTable({
+        "pageLength": 10,
+        deferRender: true, // Prevents unnecessary DOM rendering
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        dom: 'lrtip',
+        order: [
+            [0, 'desc']
+        ], // Order by 'id' in descending order
+        ajax: "{{ route('roles.index') }}",
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'name',
+                name: 'name',
+                searchable: true
+            },
+            {
+                data: 'permission_name',
+                name: 'permission_name',
+                searchable: true
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ],
 
-        });
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 2, // Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Name');
+                }
+            },
+            {
+                targets: 3, // Permissions
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Permissions');
+                }
+            },
+            {
+                targets: 4, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
 
-         /*** Custom Search Box ***/
+
+    });
+
+    /*** Custom Search Box ***/
     $('#customSearch').on('keyup', function() {
         roles_table.search(this.value).draw();
     });
 
 
 
-           /***** conformation *****/
+    /***** conformation *****/
     function confirmDeletion(callback) {
         Swal.fire({
             title: "Are you sure?",
@@ -160,7 +193,7 @@
     /*** single grade delete ***/
     $(document).on('click', '.deleteRole', function(event) {
         event.preventDefault();
-        let userId = $(this).data('id');        // Get the user ID
+        let userId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + userId); // Select the correct form
         console.log(form);
 
@@ -168,5 +201,5 @@
             form.submit(); // Submit the form if confirmed
         });
     });
-    </script>
+</script>
 @endsection
