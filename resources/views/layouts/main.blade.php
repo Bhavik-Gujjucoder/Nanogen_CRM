@@ -373,7 +373,6 @@
                                     <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
                                         <i class="ti ti-layout-2"></i> Dashboard
                                     </a>
-                               
                                 @elseif(Auth::user()->hasRole('staff'))
                                     <a class="dropdown-item" href="{{ route('staff.dashboard') }}">
                                         <i class="ti ti-layout-2"></i> Dashboard
@@ -415,7 +414,8 @@
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="index.html">
+
+                    {{-- <a class="dropdown-item" href="index.html">
                         <i class="ti ti-layout-2"></i> Dashboard
                     </a>
                     <a class="dropdown-item" href="profile.html">
@@ -423,7 +423,40 @@
                     </a>
                     <a class="dropdown-item" href="login.html">
                         <i class="ti ti-lock"></i> Logout
+                    </a> --}}
+
+                    @if (Auth::user()->hasRole('admin'))
+                        <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                            <i class="ti ti-layout-2"></i> Dashboard
+                        </a>
+                    @elseif(Auth::user()->hasRole('staff'))
+                        <a class="dropdown-item" href="{{ route('staff.dashboard') }}">
+                            <i class="ti ti-layout-2"></i> Dashboard
+                        </a>
+                    @elseif(Auth::user()->hasRole('sales'))
+                        <a class="dropdown-item" href="{{ route('sales.dashboard') }}">
+                            <i class="ti ti-layout-2"></i> Dashboard
+                        </a>
+                    @elseif(Auth::user()->hasRole('reporting manager'))
+                        <a class="dropdown-item" href="{{ route('reporting_manager.dashboard') }}">
+                            <i class="ti ti-layout-2"></i> Dashboard
+                        </a>
+                    @endif
+
+
+                    <a class="dropdown-item" href="{{ route('my_profile') }}">
+                        <i class="ti ti-user-pin"></i> My Profile
                     </a>
+
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                        <i class="ti ti-lock"></i> {{ __('Logout') }}
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
 
                 </div>
             </div>
@@ -562,6 +595,5 @@
     </script>
     @yield('script')
 </body>
+
 </html>
-
-
