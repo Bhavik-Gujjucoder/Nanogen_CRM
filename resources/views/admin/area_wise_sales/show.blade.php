@@ -37,7 +37,7 @@
             <table class="table table-nowrap table-hover mb-0" id="area_wise_show">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Sr no</th>
                         <th scope="col">Order No</th>
                         <th scope="col">Distributor Name</th>
                         <th scope="col">Sales Person</th>
@@ -137,6 +137,56 @@
                 orderable: true,
             },
         ],
+        columnDefs: [{
+                targets: 0, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr no');
+                }
+            },
+            {
+                targets: 1, // Order No
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Order No');
+                }
+            },
+            {
+                targets: 2, // Distributor Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Distributor Name');
+                }
+            },
+            {
+                targets: 3, // Sales Person
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sales Person');
+                }
+            },
+            {
+                targets: 4, // Product & Quantity
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Product & Quantity');
+                }
+            },
+            {
+                targets: 5, // Date
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Date');
+                }
+            },
+            {
+                targets: 6, // Sales Amount
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sales Amount');
+                }
+            },
+            {
+                targets: 7, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            }
+        ]
+
     });
 
     function applyFilter() {
@@ -153,7 +203,7 @@
     $(document).on('click', '.open-popup-model', function(e) {
         e.preventDefault();
         // var url = $(this).attr('href'); // URL of the order detail route
-        
+
         let order_id = $(this).data('id'); // Data ID passed from the anchor tag
         let url = order_id ? '{{ route('area_wise_sales.order_show', ':id') }}'.replace(':id', order_id) : "";
 

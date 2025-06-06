@@ -69,10 +69,10 @@
 
                     <div class="mb-3">
                         <label class="col-form-label">Select Parent Category</label>
-                        <select class="select" name="parent_category_id" style="height: 210px;" ">
+                        <select class="select" name="parent_category_id" style="height: 210px;">
                             <option value="0">{{ __('Select Parent Category') }}</option>
                             @foreach ($category as $c)
-                            <option value="{{ $c->id }}">{{ $c->category_name }}</option>
+                                <option value="{{ $c->id }}">{{ $c->category_name }}</option>
                             @endforeach
                         </select>
                     </div>

@@ -122,7 +122,7 @@
                             <th scope="col">QTY <span class="text-danger">*</span></th>
                             <th scope="col">Total <span class="text-danger">*</span></th>
                             {{-- <th scope="col">Action</th> --}}
-                            <th data-label="Add-Action">
+                            <th data-label="Add-Action" scope="col"> 
                                 <button type="button" onclick="addpropRow()" class="btn btn-primary">Add New</button>
                             </th>
                         </tr>
