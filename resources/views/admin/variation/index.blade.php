@@ -38,7 +38,7 @@
                             </label>
                         </th>
                         {{-- <th scope="col">SR. Number</th> --}}
-                        <th class="no-sort" scope="col"></th>
+                        <th class="no-sort" scope="col">SR. Number</th>
                         <th scope="col">Variation Name</th>
                         <th scope="col">Options</th>
                         <th scope="col">Status</th>
@@ -63,10 +63,16 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('variation.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
@@ -108,43 +114,50 @@
         //     width: '300px' // optional: controls how early wrap starts
         // }]
         columnDefs: [
-    {
-        targets: 1, // checkbox column
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Select');
-        }
-    },
-    {
-        targets: 2, // DT_RowIndex
-        createdCell: function (td) {
-            $(td).attr('data-label', '');
-        }
-    },
-    {
-        targets: 3, // name
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Variation Name');
-        }
-    },
-    {
-        targets: 4, // value
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Options');
-        }
-    },
-    {
-        targets: 5, // status
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Status');
-        }
-    },
-    {
-        targets: 6, // action
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Action');
-        }
-    }
-]
+            {
+                targets: 1, // checkbox column
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // DT_RowIndex
+                createdCell: function(td) {
+                    $(td).attr('data-label', '');
+                }
+            },
+            {
+                targets: 3, // name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Variation Name');
+                }
+            },
+            {
+                targets: 4, // value
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Options');
+                }
+            },
+            {
+                targets: 5, // status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 6, // action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            },
+             {
+                targets: 7, // checkbox column
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'SR. Number');
+                }
+            },
+
+        ]
 
 
 
