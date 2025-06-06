@@ -246,6 +246,29 @@
             },
         ],
 
+        createdRow: function(row, data, dataIndex) {
+            // Define labels matching your table header
+            const labels = [
+                'Select', // for checkbox
+                'Sr. No.', // for index
+                'Name',
+                'Phone',
+                'Email',
+                'Role',
+                'Created',
+                'Status',
+                'Action'
+            ];
+
+            // Apply data-label attributes
+            $('td', row).each(function(index) {
+                // Skip hidden ID column if applicable
+                if (labels[index]) {
+                    $(this).attr('data-label', labels[index]);
+                }
+            });
+        }
+
     });
 
     // Custom Search Box
