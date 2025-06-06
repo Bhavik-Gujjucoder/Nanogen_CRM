@@ -102,11 +102,11 @@
                 searchable: false
             },
         ],
-        columnDefs: [{
-            targets: 1, // index of 'value' column
-            className: 'word-wrap',
-            width: '300px' // optional: controls how early wrap starts
-        }]
+        // columnDefs: [{
+        //     targets: 1, // index of 'value' column
+        //     className: 'word-wrap',
+        //     width: '300px' // optional: controls how early wrap starts
+        // }]
 
 
 
