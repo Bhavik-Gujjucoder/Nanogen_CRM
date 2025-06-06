@@ -249,9 +249,7 @@
         // alert(category_id);
         $("#categoryForm .text-danger").text('');
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
-        $('select[name="parent_category_id"]').select2({
-            dropdownParent: $('#adminModal')
-        });
+      
         $.get('{{ route('category.edit', ':id') }}'.replace(':id', category_id), function(category) {
             console.log(category);
             $('#modalTitle').text('Edit Product Category');
