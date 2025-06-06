@@ -56,6 +56,7 @@
                             </label>
                         </th>
                         <th hidden>ID</th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Target Name</th>
                         <th scope="col">Sales Person Name</th>
                         <th scope="col">Traget Value</th>
@@ -101,6 +102,12 @@
                 searchable: false
             },
             {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            }, // Auto-increment number
+            {
                 data: 'subject',
                 name: 'subject',
                 searchable: true
@@ -140,6 +147,68 @@
                 searchable: false
             },
         ],
+        columnDefs: [{
+                targets: 0, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 1, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // Target Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Target Name');
+                }
+            },
+            {
+                targets: 4, // Sales Person Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sales Person Name');
+                }
+            },
+            {
+                targets: 5, // Target Value
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Target Value');
+                }
+            },
+            {
+                targets: 6, // Region
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Region');
+                }
+            },
+            {
+                targets: 7, // Start Date
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Start Date');
+                }
+            },
+            {
+                targets: 8, // End Date
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'End Date');
+                }
+            },
+            {
+                targets: 9, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
     });
 
     /***** Search Box *****/
