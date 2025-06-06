@@ -15,11 +15,6 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <div class="profile-pic-upload">
-                                {{-- <div class="profile-pic">
-                                    <img id="profilePreview"
-                                        src="{{ $complain->complain_image ? asset('storage/complain_images/' . $complain->complain_image) : asset('images/default-user.png') }}"
-                                        alt="Profile Picture" class="img-thumbnail mb-2">
-                                </div> --}}
                                 <div class="upload-content">
                                     <div class="upload-btn  @error('complain_image') is-invalid @enderror">
                                         <input type="file" name="complain_image" {{-- accept=".jpg,.jpeg,.gif,.png" --}}
@@ -27,9 +22,8 @@
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload File
                                         </span>
+                                         <div id="previewArea"></div>
                                     </div>
-
-                                    {{-- <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p> --}}
                                     @error('complain_image')
                                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                                     @enderror
@@ -62,7 +56,7 @@
                                         {{-- <p>📁 <strong>{{ $complain->complain_image }}</strong></p> --}}
                                     @endif
                                 @endif
-                                <div id="previewArea"></div>
+                                {{-- <div id="previewArea"></div> --}}
                             </div>
                         </div>
 
