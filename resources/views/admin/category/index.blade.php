@@ -407,8 +407,8 @@
                         // Swal.fire("Deleted!", response.message, "success");
                         show_success(response.message);
                         // Optionally, reload the page to reflect changes
-                        category_table_show.ajax.reload();
-                        // location.reload();
+                        // category_table_show.ajax.reload();
+                        location.reload();
                         $('#bulk_delete_button').hide();
                     },
                     error: function(xhr, status, error) {

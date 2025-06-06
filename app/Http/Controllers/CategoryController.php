@@ -78,7 +78,7 @@ class CategoryController extends Controller
             'is_parent'     => $is_parent
         ]);
 
-        return redirect()->route('category.index')->with('success', 'Product Category created successfully.');
+        return redirect()->route('category.index')->with('message', 'Product Category created successfully.');
     }
 
 
