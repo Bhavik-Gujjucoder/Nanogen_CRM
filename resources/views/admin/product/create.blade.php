@@ -105,20 +105,20 @@
                                 <div class="field-group field-group-new">
 
                                     {{-- <div class="field-group"> --}}
-                                    <div class="mb-3">
+                                    <div>
                                         <label class="col-form-label">Dealer Price <span
                                                 class="text-danger">*</span></label>
                                         <input type="number" name="dealer_price[]" placeholder="Dealer Price"
                                             class="form-control">
                                     </div>
-                                    <div class="mb-3">
+                                    <div>
                                         <label class="col-form-label">Distributor Price <span
                                                 class="text-danger">*</span></label>
                                         <input type="number" name="distributor_price[]" placeholder="Distributor Price"
                                             class="form-control">
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="col-form-label">Variation Name <span
+                                    <div>
+                                        <label class="col-form-label gc-variation-name">Variation Name <span
                                                 class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
@@ -127,7 +127,7 @@
                                                 @endforeach
                                         </select>
                                     </div>
-                                    <div class="mb-3">
+                                    <div>
                                         <label class="col-form-label">Variation Value <span
                                                 class="text-danger">*</span></label>
                                         <select class="select addfileddrop" name="variation_option_id[]">
