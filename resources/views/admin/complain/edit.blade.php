@@ -21,8 +21,8 @@
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload File
+                                            <div id="previewArea"></div>
                                         </span>
-                                         <div id="previewArea"></div>
                                     </div>
                                     @error('complain_image')
                                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
