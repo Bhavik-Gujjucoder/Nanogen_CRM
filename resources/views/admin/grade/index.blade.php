@@ -38,10 +38,10 @@
                                     class="checkmarks"></span>
                             </label>
                         </th>
-                        <th scope="col"></th> <!-- class="no-sort" -->
-                        <th scope="col">Name</th>  {{--<span class="list"></span>--}}
-                        <th scope="col">Status</th>  {{--<span class="list"></span>--}}
-                        <th scope="col">Action</th>  {{--<span class="list"></span>--}}
+                        <th scope="col">Sr no</th> <!-- class="no-sort" -->
+                        <th scope="col">Name</th> {{-- <span class="list"></span> --}}
+                        <th scope="col">Status</th> {{-- <span class="list"></span> --}}
+                        <th scope="col">Action</th> {{-- <span class="list"></span> --}}
                         {{-- class="text-end" --}}
                     </tr>
                 </thead>
@@ -114,10 +114,16 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[2, 'desc']], // Order by 'id' in descending order
+        order: [
+            [2, 'desc']
+        ], // Order by 'id' in descending order
         ajax: "{{ route('grade.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
@@ -126,7 +132,7 @@
             },
             {
                 data: 'DT_RowIndex',
-                name: 'DT_RowIndex', 
+                name: 'DT_RowIndex',
                 orderable: false,
                 searchable: false
             },
@@ -152,6 +158,44 @@
                 searchable: false
             },
         ],
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Name');
+                }
+            },
+            {
+                targets: 4, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 5, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
 
     });
 
@@ -246,7 +290,7 @@
     /*** single grade delete ***/
     $(document).on('click', '.deleteGrade', function(event) {
         event.preventDefault();
-        let userId = $(this).data('id');        // Get the user ID
+        let userId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + userId); // Select the correct form
         console.log(form);
 
