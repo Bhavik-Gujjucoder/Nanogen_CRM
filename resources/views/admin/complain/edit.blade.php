@@ -164,16 +164,16 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th data-label="Date">Date</th>
-                                    <th data-label="Status">Status</th>
-                                    <th data-label="Remarks">Remarks</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($complain_status_history as $history)
                                     <tr>
-                                        <td>{{ \Carbon\Carbon::parse($history->created_at)->format('d-m-Y') }}</td>
-                                        <td>
+                                        <td data-label="Date">{{ \Carbon\Carbon::parse($history->created_at)->format('d-m-Y') }}</td>
+                                        <td data-label="Status">
                                             @if ($history->status == 1)
                                                 In progress
                                             @elseif($history->status == 2)
@@ -184,7 +184,7 @@
                                                 Pending
                                             @endif
                                         </td>
-                                        <td>{{ $history->remark }}</td>
+                                        <td data-label="Remarks">{{ $history->remark }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
