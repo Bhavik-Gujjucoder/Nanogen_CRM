@@ -38,7 +38,7 @@
                             </label>
 
                         </th>
-                        <th class="no-sort" scope="col">SR. Number</th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">State Name</th>
                         <th scope="col">City Name</th>
                         <th scope="col">Status</th>
@@ -67,7 +67,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="col-form-label">City Name *</label>
-                        <input type="text" name="city_name" placeholder="City Name" value="" class="form-control">
+                        <input type="text" name="city_name" placeholder="City Name" value=""
+                            class="form-control">
                         <span class="city_name_error"></span>
                     </div>
                     <div class="mb-3">
@@ -75,7 +76,7 @@
                         <select name="state_id" class="select">
                             <option value="" selected>Select state</option>
                             @foreach ($states as $state)
-                                <option value="{{$state->id}}">{{$state->state_name}}</option>
+                                <option value="{{ $state->id }}">{{ $state->state_name }}</option>
                             @endforeach
                         </select>
                         <span class="state_id_error"></span>
@@ -120,10 +121,16 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('city.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
@@ -156,6 +163,50 @@
                 searchable: false
             },
         ],
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // State Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'State Name');
+                }
+            },
+            {
+                targets: 4, // City Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'City Name');
+                }
+            },
+            {
+                targets: 5, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 6, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
 
     });
 
@@ -185,22 +236,22 @@
 
         $.get('{{ route('city.edit', ':id') }}'.replace(':id', city_id),
 
-        function(city) {
-            $('#modalTitle').text('Edit City Management');
+            function(city) {
+                $('#modalTitle').text('Edit City Management');
 
-            $('input[name="city_id"]').val(city_id);
-            $('input[name="status"][value="' + city.status + '"]').prop('checked', true);
-            $('input[name="city_name"]').val(city.city_name);
-            $('select[name="state_id"]').val(city.state_id).trigger('change');
-            $('#adminModal').modal('show');
-        });
+                $('input[name="city_id"]').val(city_id);
+                $('input[name="status"][value="' + city.status + '"]').prop('checked', true);
+                $('input[name="city_name"]').val(city.city_name);
+                $('select[name="state_id"]').val(city.state_id).trigger('change');
+                $('#adminModal').modal('show');
+            });
     });
 
     // Handle Add & Edit Form Submission
     $('#adminForm').submit(function(e) {
         e.preventDefault();
-         $("#adminForm .error-text").text('');
-         $("#adminForm .text-danger").text('');
+        $("#adminForm .error-text").text('');
+        $("#adminForm .text-danger").text('');
         let city_id = $('input[name="city_id"]').val();
         let url = city_id ? '{{ route('city.update', ':id') }}'.replace(':id', city_id) :
             "{{ route('city.store') }}";
@@ -246,14 +297,14 @@
             $('input[name=' + key + ']').each(function() {
                 $(this).addClass('is-invalid'); // Add invalid class to the input field
                 $('.' + key + '_error').text(value[0]).addClass(
-                'text-danger'); // Show the error message
+                    'text-danger'); // Show the error message
             });
 
             // Handle select fields
             $('select[name=' + key + ']').each(function() {
                 $(this).addClass('is-invalid'); // Add invalid class to the select field
                 $('.' + key + '_error').text(value[0]).addClass(
-                'text-danger'); // Show the error message
+                    'text-danger'); // Show the error message
             });
         });
     }
@@ -298,7 +349,7 @@
                         show_success(response.message);
                         // Optionally, reload the page to reflect changes
                         city_table.ajax.reload();
-                        
+
                         $('#bulk_delete_button').hide();
                         // location.reload();
                     },
