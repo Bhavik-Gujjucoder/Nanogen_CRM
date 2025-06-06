@@ -120,7 +120,7 @@
                                     <div class="gc-variation-name">
                                         <label class="col-form-label">Variation Name <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select addfileddrop load_variation_value" name="variation_id[]">
+                                        <select class="select form-control addfileddrop load_variation_value" name="variation_id[]">
                                             <option value="">Select Variation</option>
                                                 @foreach ($variations as $v)
                                                     <option value="{{ $v->id }}">{{ $v->name }}</option>
@@ -130,7 +130,7 @@
                                     <div>
                                         <label class="col-form-label">Variation Value <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select addfileddrop" name="variation_option_id[]">
+                                        <select class="select form-control addfileddrop" name="variation_option_id[]">
                                             <option value="">Select Variation Value</option>
                                         </select>
                                     </div>
@@ -425,12 +425,12 @@
                 <div class="field-group">
                     <input type="number" name="dealer_price[]" placeholder="Dealer Price" class="form-control">
                     <input type="number" name="distributor_price[]" placeholder="Distributor Price" class="form-control">
-                    <select class="select addfileddrop" name="variation_id[]">
+                    <select class="select form-control addfileddrop" name="variation_id[]">
                         <option value="">Select Variation</option>
                         ${variationOptions}
                     </select>
 
-                    <select class="select addfileddrop load_variation_value" name="variation_option_id[]">
+                    <select class="select form-control addfileddrop load_variation_value" name="variation_option_id[]">
                         <option>Select Variation Value</option>
                     </select>
 
