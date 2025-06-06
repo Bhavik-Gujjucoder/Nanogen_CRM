@@ -103,7 +103,7 @@
 
                 <div class="col-md-7">
                     <div class="mb-3">
-                        <div id="product-container">
+                        <div id="product-container" class="gc-target-grades">
                             <div class="d-flex align-items-center mb-2">
                                 <label class="col-md-4 col-form-label">Grade <span class="text-danger">*</span></label>
                                 <label class="col-md-4 col-form-label">Target Percentage <span
@@ -486,7 +486,7 @@
 
 
 
-            <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
+            <button type="button" class="btn btn-danger  remove-btn">Remove</button>
         `;
         productContainer.appendChild(newProductGroup);
         $("#productError").hide();
