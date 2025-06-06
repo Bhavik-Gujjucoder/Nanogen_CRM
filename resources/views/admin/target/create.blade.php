@@ -144,13 +144,13 @@
                                 </div>
                                 {{-- /<div id="percentage_value"></div>  --}}
 
-                                <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
+                                <button type="button" class="btn btn-danger remove-btn">Remove</button>
                             </div>
                         </div>
                         <div id="productError" class="text-danger mb-3" style="display:none;">
                             Please fill all fields in each product row.
                         </div>
-                        <button type="button" class="btn btn-primary btn-sm mt-2" id="add-new">Add New</button>
+                        <button type="button" class="btn btn-primary mt-2" id="add-new">Add New</button>
                     </div>
                 </div>
             </div>

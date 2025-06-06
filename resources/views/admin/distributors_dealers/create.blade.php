@@ -809,7 +809,7 @@
                                 </div>
 
                                 {{-- @if (request('dealer') != 1) --}}
-                                <div class="col-md-5 ">
+                                <div class="col-md-5 mb-3">
                                     <label class="col-form-label">Payment Reminder </label>
                                     <div class="form-input-icon input-group gropinginput box-bordernone">
                                         <input type="number" step="any" class="form-control" placeholder="0"
