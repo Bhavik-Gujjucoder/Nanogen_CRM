@@ -34,10 +34,11 @@
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="state_checkbox"><span class="checkmarks"></span>
+                                <input type="checkbox" id="select-all" class="state_checkbox"><span
+                                    class="checkmarks"></span>
                             </label>
                         </th>
-                        <th class="no-sort" scope="col"></th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">State Name</th>
                         <th scope="col">Number of City</th>
                         <th scope="col">Status</th>
@@ -62,7 +63,8 @@
                         aria-label="Close">
                         <i class="ti ti-x"></i>
                     </button> --}}
-                    <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"><i class="ti ti-x"></i></button>
+                    <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"><i
+                            class="ti ti-x"></i></button>
                 </div>
             </div>
             <form id="adminForm">
@@ -71,7 +73,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="col-form-label">State Name *</label>
-                        <input type="text" name="state_name" value="" class="form-control" placeholder="State Name">
+                        <input type="text" name="state_name" value="" class="form-control"
+                            placeholder="State Name">
                         <span class="state_name_error"></span>
                     </div>
 
@@ -115,10 +118,16 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('state.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
@@ -151,6 +160,51 @@
                 searchable: false
             },
         ],
+
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // State Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'State Name');
+                }
+            },
+            {
+                targets: 4, // Number of City
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Number of City');
+                }
+            },
+            {
+                targets: 5, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 6, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
 
     });
 
@@ -234,26 +288,26 @@
     }
 
 
-     /***** Bulk Delete *****/
-     $('#select-all').change(function() {
+    /***** Bulk Delete *****/
+    $('#select-all').change(function() {
         // Check/uncheck all checkboxes when the select-all checkbox is clicked
         $('.state_checkbox').prop('checked', this.checked);
 
     });
 
-    $(document).on('change', '.state_checkbox', function () {
+    $(document).on('change', '.state_checkbox', function() {
         let count = $('.state_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
     // Handle Bulk Delete button click
     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.state_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
