@@ -69,7 +69,7 @@
 
                     <div class="mb-3">
                         <label class="col-form-label">Select Parent Category</label>
-                        <select class="select" name="parent_category_id" style="height: 210px;">
+                        <select class="select parent_category_id" name="parent_category_id" style="height: 210px;">
                             <option value="0">{{ __('Select Parent Category') }}</option>
                             @foreach ($category as $c)
                                 <option value="{{ $c->id }}">{{ $c->category_name }}</option>
@@ -227,9 +227,13 @@
         category_table_show.search(this.value).draw();
     });
 
-        $('select[name="parent_category_id"]').select2({
-            dropdownParent: $('#adminModal')
-        });
+
+    $(document).ready(function () {
+    $('.parent_category_id').select2({
+        dropdownParent: $('#adminModal'),
+    });
+});
+   
     /***** Open Modal for Add a New product category *****/
     $('#openModal').click(function() {
         $('#categoryForm')[0].reset();
@@ -242,6 +246,7 @@
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
 
     });
+    
 
     /***** Open Modal for Editing an Admin *****/
     $(document).on('click', '.edit-btn', function() {
