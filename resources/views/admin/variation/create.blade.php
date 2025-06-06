@@ -39,7 +39,7 @@
 
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <div class="priceproductvariation-list">
+                            <div class="priceproductvariation-list gc-variation-list">
                                 <div class="field-group gap-2 mb-2">
                                     <input type="number" name="weight[]" placeholder="weight" class="form-control">
                                     <select name="unit[]" class="form-control">

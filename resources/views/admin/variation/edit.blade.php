@@ -41,7 +41,7 @@
 
                     <div class="col-md-12">
                         <div class="mb-3">
-                            <div class="priceproductvariation-list">
+                            <div class="priceproductvariation-list gc-variation-list">
                                 @foreach ($variation->variant_options as $index => $option)
                                     <div class="field-group gap-2 mb-2">
                                          <input type="hidden" name="variation_option_id[]" value="{{ $option->id }}">
