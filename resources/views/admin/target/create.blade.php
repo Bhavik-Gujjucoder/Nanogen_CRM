@@ -115,7 +115,7 @@
                                 <input type="hidden" name="dummy_grade" id="dummyValidationField" />
                                 <div class="col-md-4">
                                     <select class="form-select me-2" name="grade_id[]">
-                                        <option value="">Select</option>
+                                        <option value="">Select Grade</option>
                                         @if ($grade)
                                             @foreach ($grade as $g)
                                                 <option value="{{ $g->id }}"
@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                                        class="form-control me-2" placeholder="Target To (%)">
+                                        class="form-control me-2" placeholder="Target Percentage">
                                 </div>
                                 <div class="col-md-4">
                                     <strong></strong>
@@ -139,7 +139,7 @@
                                         readonly hidden>
 
                                        <input type="text" name="textpercentage_value[]"
-                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder=""
+                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
                                         readonly>
                                 </div>
                                 {{-- /<div id="percentage_value"></div>  --}}
@@ -471,14 +471,14 @@
         </div>
         <div class="col-md-4">
              <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                class="form-control me-2" placeholder="Target To (%)"></div><div class="col-md-4">
+                class="form-control me-2" placeholder="Target Percentage"></div><div class="col-md-4">
 
             
             <input type="hidden" name="percentage_value[]" value="{{ old('percentage_value') }}"
                 class="input-as-text" readonly>
 
                 <input type="text" name="textpercentage_value[]"
-                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder=""
+                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
                                         readonly>
                 
                 

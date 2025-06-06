@@ -120,7 +120,7 @@
                                     <div class="product-group d-flex align-items-center mb-2">
                                         <div class="col-md-4">
                                             <select class="form-select me-2" name="grade_id[]">
-                                                <option value="">Select</option>
+                                                <option value="">Select Grade</option>
                                                 @if ($grade)
                                                     @foreach ($grade as $g)
                                                         <option value="{{ $g->id }}"
@@ -136,7 +136,7 @@
                                         <div class="col-md-4">
                                             <input type="number" name="percentage[]"
                                                 value="{{ old('percentage', $t_g->percentage) }}"
-                                                class="form-control me-2" placeholder="Target To (%)">
+                                                class="form-control me-2" placeholder="Target Percentage">
                                         </div>
                                         <div class="col-md-2">
                                             <strong></strong>
@@ -146,7 +146,7 @@
 
                                             <input type="text" name="textpercentage_value[]"
                                                 value="{{ old('textpercentage_value', IndianNumberFormat($t_g->percentage_value)) }}"
-                                                class="input-as-text" placeholder="" readonly>
+                                                class="input-as-text" placeholder="₹0" readonly>
                                         </div>
 
                                         <button type="button"
@@ -408,7 +408,7 @@
         newProductGroup.innerHTML = `
         <div class="col-md-4">
             <select class="form-select me-2" name="grade_id[]">
-                <option value="">Select</option>
+                <option value="">Select Grade</option>
                 @if ($grade)
                     @foreach ($grade as $g)
                         <option value="{{ $g->id }}"
@@ -423,13 +423,13 @@
         </div>
         <div class="col-md-4">
                 <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                    class="form-control me-2" placeholder="Target To (%)"></div>
+                    class="form-control me-2" placeholder="Target Percentage"></div>
         
             <input type="hidden" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                class="input-as-text" readonly></div>
+                class="input-as-text" readonly ></div>
 
             <input type="text" name="textpercentage_value[]"
-                value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder=""
+                value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
                 readonly>
         </div>
 
