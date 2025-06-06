@@ -14,7 +14,7 @@ class CategoryController extends Controller
         $data['page_title'] = 'Product Category';
         // $data['category'] = Category::where('is_parent', 1)->orWhereHas('children')->get();
         $data['category'] = Category::where('is_parent', 1)->where('status', 1)->get()->all();
-        dd($data['category']);
+        // dd($data['category']);
 
         if ($request->ajax()) {
             $data = Category::query();
