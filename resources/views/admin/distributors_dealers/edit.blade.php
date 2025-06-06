@@ -1062,7 +1062,7 @@
                                                     };
                                                 @endphp
 
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-md-4 col-sm-4 mb-3">
                                                     <div class="border rounded p-2 h-100 bg-white shadow-sm">
                                                         <div class="fw-semibold mb-2">{{ $loop->iteration }}.</div>
 
