@@ -2,7 +2,6 @@
 @section('content')
 @section('title')
     {{ $page_title }} <br>
-   
 @endsection
 
 
@@ -25,7 +24,7 @@
             <table class="table" id="area_wise">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">Id</th>
+                        <th scope="col">Sr no</th>
                         <th scope="col">City Name</th>
                         <th scope="col">Sales Amount</th>
                         <th class="no-sort" scope="col">Action</th>
@@ -50,8 +49,7 @@
             [0, 'desc']
         ],
         ajax: "{{ route('area_wise_sales.index') }}",
-        columns: [
-          {
+        columns: [{
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
                 orderable: false,
@@ -77,10 +75,37 @@
             },
         ],
 
+        columnDefs: [{
+                targets: 0, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 1, // City Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'City Name');
+                }
+            },
+            {
+                targets: 2, // Sales Amount
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sales Amount');
+                }
+            },
+            {
+                targets: 3, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
+
     });
 
-       /***** Search Box *****/
-       $('#customSearch').on('keyup', function() {
+    /***** Search Box *****/
+    $('#customSearch').on('keyup', function() {
         area_wise.search(this.value).draw();
     });
 </script>
