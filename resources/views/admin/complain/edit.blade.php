@@ -164,9 +164,9 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Remarks</th>
+                                    <th data-label="Date">Date</th>
+                                    <th data-label="Status">Status</th>
+                                    <th data-label="Remarks">Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
