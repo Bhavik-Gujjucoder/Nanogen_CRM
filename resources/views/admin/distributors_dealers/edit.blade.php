@@ -1038,7 +1038,7 @@
                                 <label class="form-label fw-bold">Uploaded Documents:</label>
                                 <div class="border p-3 rounded bg-light">
                                     @if ($distributor_dealers->documents->count())
-                                        <div class="row">
+                                        <div class="row gc-dd-document">
                                             @foreach ($distributor_dealers->documents as $document)
                                                 @php
                                                     $extension = strtolower(
