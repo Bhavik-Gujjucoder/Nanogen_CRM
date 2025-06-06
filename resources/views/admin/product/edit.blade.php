@@ -191,7 +191,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            let sizeOptions = '<option value="">Select option</option>';
+                            let sizeOptions = '<option value="">Select Variation Value</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
                                     `<option value="${size.id}">${size.value} ${size.unit}</option>`;
@@ -229,7 +229,7 @@
                         ${variationOptions}
                     </select>
                 <select class="select addfileddrop load_variation_value" name="variation_option_id[]">
-                    <option>Select option</option>
+                    <option>Select Variation Value</option>
 
                 </select>
                 <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>

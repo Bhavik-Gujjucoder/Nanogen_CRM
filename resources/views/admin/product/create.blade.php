@@ -335,7 +335,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            let sizeOptions = '<option value="">Select option</option>';
+                            let sizeOptions = '<option value="">Select Variation Value</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
                                     `<option value="${size.id}">${size.value} ${size.unit}</option>`;
