@@ -47,7 +47,7 @@
                                          <input type="hidden" name="variation_option_id[]" value="{{ $option->id }}">
                                         <input type="number" name="weight[]"
                                             value="{{ old('weight.' . $index, $option->value) }}"
-                                            placeholder="weight" class="form-control">
+                                            placeholder="Weight" class="form-control">
                                          <select name="unit[]" class="form-control">
                                             <option value="Kg" {{ old('unit.' . $index, $option->unit) == 'Kg' ? 'selected' : ''}}>Kg</option>
                                             <option value="Ltr" {{ old('unit.' . $index, $option->unit) == 'Ltr' ? 'selected' : ''}}>Ltr</option>
@@ -104,7 +104,7 @@
         // Convert the last "Add New" button to a "Remove" button
         let newRow = `
         <div class="field-group gap-2 mb-2">
-            <input type="number" name="weight[]" placeholder="weight" class="form-control">
+            <input type="number" name="weight[]" placeholder="Weight" class="form-control">
              <select name="unit[]" class="form-control">
                      <option value="Kg">Kg</option>
                     <option value="Ltr">Ltr</option>

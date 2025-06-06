@@ -131,7 +131,7 @@
                                         <label class="col-form-label">Variation Value <span
                                                 class="text-danger">*</span></label>
                                         <select class="select addfileddrop" name="variation_option_id[]">
-                                            <option value="">Select option</option>
+                                            <option value="">Select Variation Value</option>
                                         </select>
                                     </div>
                                     <button type="button" class="add-btn btn btn-primary mb-1"
@@ -431,7 +431,7 @@
                     </select>
 
                     <select class="select addfileddrop load_variation_value" name="variation_option_id[]">
-                        <option>Select option</option>
+                        <option>Select Variation Value</option>
                     </select>
 
                     <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>

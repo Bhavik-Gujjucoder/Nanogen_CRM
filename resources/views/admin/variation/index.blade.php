@@ -26,7 +26,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive custom-table">
-            <table class="table" id="variation_table">
+            <table class="table " id="variation_table">
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>

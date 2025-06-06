@@ -41,7 +41,7 @@
                         <div class="mb-3">
                             <div class="priceproductvariation-list gc-variation-list">
                                 <div class="field-group gap-2 mb-2">
-                                    <input type="number" name="weight[]" placeholder="weight" class="form-control">
+                                    <input type="number" name="weight[]" placeholder="Weight" class="form-control">
                                     <select name="unit[]" class="form-control">
                                         <option value="Kg">Kg</option>
                                         <option value="Ltr">Ltr</option>
@@ -80,7 +80,7 @@
 
         let newRow = `
             <div class="field-group gap-2 mb-2">
-                <input type="number" name="weight[]" placeholder="weight" class="form-control">
+                <input type="number" name="weight[]" placeholder="Weight" class="form-control">
                 <select name="unit[]" class="form-control">
                      <option value="Kg">Kg</option>
                     <option value="Ltr">Ltr</option>
