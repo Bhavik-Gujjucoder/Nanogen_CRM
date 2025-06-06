@@ -11,7 +11,7 @@
             <div class="col-sm-4">
                 <div class="icon-form mb-3 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
-                    <input type="text" class="form-control"  id="customSearch" placeholder="Search">
+                    <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
             </div>
             <div class="col-sm-8">
@@ -39,7 +39,8 @@
 
                     {{-- <a href="#" class="btn btn-primary"><i class="ti ti-square-rounded-plus me-2"></i>Export Price List</a> --}}
 
-                    <a href="{{ route('distributors_dealers.export_price_list',request('dealer')) }}" class="btn btn-primary" >
+                    <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}"
+                        class="btn btn-primary">
                         <i class="ti ti-square-rounded-plus me-2"></i>Export Price List
                     </a>
 
@@ -48,10 +49,11 @@
                         <input type="text" name="phone" placeholder="Enter phone number" value="+919099909076" />
                         <button type="submit">Send WhatsApp PDF</button>
                     </form> --}}
-                    
 
-                    <a href="{{ route('distributors_dealers.create',request('dealer')) }}" class="btn btn-primary"><i
-                            class="ti ti-square-rounded-plus me-2"></i> {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
+
+                    <a href="{{ route('distributors_dealers.create', request('dealer')) }}" class="btn btn-primary"><i
+                            class="ti ti-square-rounded-plus me-2"></i>
+                        {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
                 </div>
             </div>
         </div>
@@ -70,13 +72,13 @@
                             </label>
                         </th> --}}
                         <th hidden>ID</th>
-                        <th class="no-sort" scope="col"></th>
+                        <th class="no-sort" scope="col">Sr no</th>
 
                         <th scope="col"> {{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}</th>
                         <th scope="col">Phone</th>
                         <th scope="col">City</th>
                         <th scope="col">Code</th>
-                        <th class="" scope="col">Action</th> {{--class="text-end"--}}
+                        <th class="" scope="col">Action</th> {{-- class="text-end" --}}
                     </tr>
                 </thead>
             </table>
@@ -96,12 +98,23 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('distributors_dealers.index', request('dealer')) }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             // { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
             {
                 data: 'applicant_name',
                 name: 'applicant_name',
@@ -130,9 +143,55 @@
             },
         ],
 
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 2, // Dealer/Distributor Name (based on request)
+                createdCell: function(td) {
+                    const label = '{{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}';
+                    $(td).attr('data-label', label);
+                }
+            },
+            {
+                targets: 3, // Phone
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Phone');
+                }
+            },
+            {
+                targets: 4, // City
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'City');
+                }
+            },
+            {
+                targets: 5, // Code
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Code');
+                }
+            },
+            {
+                targets: 6, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
+
     });
-     /*** Custom Search Box ***/
-     $('#customSearch').on('keyup', function() {
+    /*** Custom Search Box ***/
+    $('#customSearch').on('keyup', function() {
         distributors_dealers_table.search(this.value).draw();
     });
 
