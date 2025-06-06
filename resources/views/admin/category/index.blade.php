@@ -38,7 +38,7 @@
                                     class="checkmarks"></span>
                             </label>
                         </th>
-                        <th class="no-sort" scope="col"></th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Category Name</th>
                         <th scope="col">Parent Category Name</th>
                         <th scope="col">Status</th>
@@ -71,7 +71,7 @@
                         <label class="col-form-label">Select Parent Category</label>
                         <select class="select" name="parent_category_id" style="height: 210px;" ">
                             <option value="0">{{ __('Select Parent Category') }}</option>
-                                @foreach ($category as $c)
+                                 @foreach ($category as $c)
                             <option value="{{ $c->id }}">{{ $c->category_name }}</option>
                             @endforeach
                         </select>
@@ -175,6 +175,51 @@
             },
         ],
 
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // Category Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Category Name');
+                }
+            },
+            {
+                targets: 4, // Parent Category Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Parent Category Name');
+                }
+            },
+            {
+                targets: 5, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 6, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
+
     });
 
     /***** Search Box *****/
@@ -222,7 +267,7 @@
                 $('select[name="parent_category_id"]').val(0).trigger('change');
                 $('select[name="parent_category_id"]').parent().hide();
             }
-            
+
             $('input[name="category_name"]').val(category.category_name);
             $('input[name="status"][value="' + category.status + '"]').prop('checked', true);
             $('#adminModal').modal('show');
