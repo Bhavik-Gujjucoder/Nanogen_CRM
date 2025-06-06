@@ -6,73 +6,79 @@
 
 <div class="card">
     <div class="card-header">
-       <!-- Search -->
-       <div class="row align-items-center">
-          <div class="col-sm-4">
-             <div class="icon-form mb-3 mb-sm-0">
-                <span class="form-icon"><i class="ti ti-search"></i></span>
-                <input type="text" class="form-control" id="customSearch" placeholder="Search Leads">
-             </div>
-          </div>
-          <div class="col-sm-8">
-             <div
-                class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+        <!-- Search -->
+        <div class="row align-items-center">
+            <div class="col-sm-4">
+                <div class="icon-form mb-3 mb-sm-0">
+                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                    <input type="text" class="form-control" id="customSearch" placeholder="Search Leads">
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
 
-               
 
-                   <a href="{{ route('product.create') }}" class="btn btn-primary"><i
-                   class="ti ti-square-rounded-plus me-2"></i>Add Product</a>
-             </div>
-          </div>
-       </div>
-       <!-- /Search -->
+
+                    <a href="{{ route('product.create') }}" class="btn btn-primary"><i
+                            class="ti ti-square-rounded-plus me-2"></i>Add Product</a>
+                </div>
+            </div>
+        </div>
+        <!-- /Search -->
     </div>
     <div class="card-body">
 
 
-       <!-- List -->
-       <div class="table-responsive custom-table">
-          <table class="table" id="product_table">
-            <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
-             <thead class="thead-light">
-                <tr>
-                    <th hidden>ID</th>
-                   <th class="no-sort" scope="col">
-                        <label class="checkboxs">
-                            <input type="checkbox" id="select-all" class="product_checkbox"><span class="checkmarks"></span>
-                        </label>
-                    </th>
-                   <th class="no-sort" scope="col"></th>
-                   <th scope="col">Product Name</th>
-                   <th scope="col">Category</th>
-                   <th scope="col">Grade</th>
-                   <th scope="col">Status</th>
-                   {{-- <th scope="col">Available Packages</th>
+        <!-- List -->
+        <div class="table-responsive custom-table">
+            <table class="table" id="product_table">
+                <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
+                <thead class="thead-light">
+                    <tr>
+                        <th hidden>ID</th>
+                        <th class="no-sort" scope="col">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all" class="product_checkbox"><span
+                                    class="checkmarks"></span>
+                            </label>
+                        </th>
+                        <th class="no-sort" scope="col">Sr no</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Grade</th>
+                        <th scope="col">Status</th>
+                        {{-- <th scope="col">Available Packages</th>
                    <th scope="col">Price</th> --}}
-                   <th class="no-sort" scope="col">Action</th>
-                </tr>
-             </thead>
-          </table>
-       </div>
+                        <th class="no-sort" scope="col">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
 
     </div>
- </div>
+</div>
 
 @endsection
 @section('script')
 <script>
-     /***** DataTable *****/
-     var product_table_show = $('#product_table').DataTable({
+    /***** DataTable *****/
+    var product_table_show = $('#product_table').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
         processing: true,
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('product.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
@@ -114,6 +120,56 @@
                 searchable: false
             },
         ],
+        columnDefs: [{
+                targets: 0, // ID (hidden)
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 1, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // Product Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Product Name');
+                }
+            },
+            {
+                targets: 4, // Category
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Category');
+                }
+            },
+            {
+                targets: 5, // Grade
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Grade');
+                }
+            },
+            {
+                targets: 6, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 7, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
 
     });
 
@@ -123,8 +179,8 @@
     });
 
 
-     /***** Alert Delete-MSG *****/
-     $(document).on('click', '.deleteVariation', function(event) {
+    /***** Alert Delete-MSG *****/
+    $(document).on('click', '.deleteVariation', function(event) {
         event.preventDefault();
         let variationId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + variationId); // Select the correct form
@@ -163,19 +219,19 @@
         $('.product_checkbox').prop('checked', this.checked);
     });
 
-    $(document).on('change', '.product_checkbox', function () {
+    $(document).on('change', '.product_checkbox', function() {
         let count = $('.product_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
-     // Handle Bulk Delete button click
-     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.product_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
@@ -208,6 +264,5 @@
         });
         // Get the IDs of selected checkboxes
     });
-
- </script>
+</script>
 @endsection
