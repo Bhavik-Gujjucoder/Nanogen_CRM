@@ -13,10 +13,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <div class="profile-pic-upload">
-                                {{-- <div class="profile-pic">
-                                    <img id="profilePreview" src="{{ asset('images/default-user.png') }}"
-                                        alt="Profile Picture" class="img-thumbnail mb-2">
-                                </div> --}}
+                              
                                 <div class="upload-content">
                                     <div class="upload-btn  @error('complain_image') is-invalid @enderror">
                                         <input type="file" name="complain_image" {{--accept=".jpg,.jpeg,.gif,.png"--}} 
@@ -25,12 +22,11 @@
                                             <i class="ti ti-file-broken"></i>Upload File
                                         </span>
                                     </div>
-                                    {{-- <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p> --}}
+                                    <div id="previewArea"></div>
                                     @error('complain_image')
                                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                                     @enderror
                                 </div>
-                                <div id="previewArea"></div>
                             </div>
                         </div>
 
