@@ -17,7 +17,7 @@
             <div class="col-sm-8">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
 
-                    <a href="{{ route('sales_person.create')}}" class="btn btn-primary"><i
+                    <a href="{{ route('sales_person.create') }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add Sales Person</a>
                 </div>
             </div>
@@ -29,17 +29,19 @@
         <div class="table-responsive custom-table">
             <table class="table dataTable no-footer" id="sales_person_table">
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
-                <thead class="thead-light" >
+                <thead class="thead-light">
                     <tr>
                         <th class="no-sort" scope="col"><label class="checkboxs">
-                            <input type="checkbox" id="select-all" class="sales_person_checkbox"><span class="checkmarks"></span></label>
+                                <input type="checkbox" id="select-all" class="sales_person_checkbox"><span
+                                    class="checkmarks"></span></label>
                         </th>
                         <th hidden>ID</th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Name</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
                         <th scope="col">Employee ID</th>
-                        
+
                         <th class="" scope="col">Action</th>
                     </tr>
                 </thead>
@@ -60,28 +62,118 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[1, 'desc']],  
-        ajax: "{{ route('sales_person.index') }}",
-        columns: [
-            { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
-            { data: 'id', name: 'id', visible: false, searchable: false },
-            { data: 'first_name', name: 'first_name', searchable: true },
-            { data: 'user.phone_no', name: 'user.phone_no', searchable: true, orderable: true },
-            { data: 'user.email', name: 'user.email', searchable: true, orderable: true },
-            { data: 'employee_id', name: 'employee_id', searchable: true },
-            { data: 'action', name: 'action', orderable: false, searchable: false },
+        order: [
+            [1, 'desc']
         ],
+        ajax: "{{ route('sales_person.index') }}",
+        columns: [{
+                data: 'checkbox',
+                name: 'checkbox',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            }, // Auto-increment number
+            {
+                data: 'first_name',
+                name: 'first_name',
+                searchable: true
+            },
+            {
+                data: 'user.phone_no',
+                name: 'user.phone_no',
+                searchable: true,
+                orderable: true
+            },
+            {
+                data: 'user.email',
+                name: 'user.email',
+                searchable: true,
+                orderable: true
+            },
+            {
+                data: 'employee_id',
+                name: 'employee_id',
+                searchable: true
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ],
+        columnDefs: [{
+                targets: 0, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 1, // ID (hidden) – optional
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 2, // Sr no
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Sr. No.');
+                }
+            },
+            {
+                targets: 3, // Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Name');
+                }
+            },
+            {
+                targets: 4, // Phone
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Phone');
+                }
+            },
+            {
+                targets: 5, // Email
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Email');
+                }
+            },
+            {
+                targets: 6, // Employee ID
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Employee ID');
+                }
+            },
+            {
+                targets: 7, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
     });
 
-     /***** Search Box *****/
-     $('#customSearch').on('keyup', function() {
+    /***** Search Box *****/
+    $('#customSearch').on('keyup', function() {
         sales_person_table_show.search(this.value).draw();
     });
 
 
     /* delete */
     $(document).on('click', '.deleteSalesPerson', function(event) {
-    event.preventDefault();
+        event.preventDefault();
         let userId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + userId); // Select the correct form
         console.log(form);
@@ -91,26 +183,26 @@
         });
     });
 
-     /***** Bulk Delete *****/
-     $('#select-all').change(function() {
+    /***** Bulk Delete *****/
+    $('#select-all').change(function() {
         // Check/uncheck all checkboxes when the select-all checkbox is clicked
         $('.sales_person_checkbox').prop('checked', this.checked);
 
     });
 
-    $(document).on('change', '.sales_person_checkbox', function () {
+    $(document).on('change', '.sales_person_checkbox', function() {
         let count = $('.sales_person_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
-     // Handle Bulk Delete button click
-     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+    // Handle Bulk Delete button click
+    $('#bulk_delete_button').click(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.sales_person_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
