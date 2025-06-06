@@ -89,20 +89,22 @@
                 <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete Selected</button>
                 <thead class="thead-light">
                     <tr>
-                        <th hidden>ID</th>
-                        <th class="no-sort" scope="col">
+                        <th hidden data-label="ID">ID</th>
+                        <th class="no-sort" scope="col" data-label="Select">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="user_checkbox"><span class="checkmarks"></span>
+                                <input type="checkbox" id="select-all" class="user_checkbox"><span
+                                    class="checkmarks"></span>
                             </label>
                         </th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Role</th>
-                        <th scope="col">Created</th>
-                        {{-- <th scope="col">Last Activity</th> --}}
-                        <th scope="col">Status</th>
-                        <th class="" scope="col">Action</th>
+                        <th scope="col" data-label="Sr. No.">Sr no</th>
+                        <th scope="col" data-label="Name">Name</th>
+                        <th scope="col" data-label="Phone">Phone</th>
+                        <th scope="col" data-label="Email">Email</th>
+                        <th scope="col" data-label="Role">Role</th>
+                        <th scope="col" data-label="Created">Created</th>
+                        {{-- <th scope="col" data-label="Last Activity">Last Activity</th> --}}
+                        <th scope="col" data-label="Status">Status</th>
+                        <th class="" scope="col" data-label="Action">Action</th>
                     </tr>
                 </thead>
             </table>
@@ -157,7 +159,8 @@
                             placeholder="Re-enter password">
                     </div>
                     <div class="float-end">
-                        <button type="submit" class="bntsize table-sm-btn big-btn blackbg" id="submitBtn">Save</button>
+                        <button type="submit" class="bntsize table-sm-btn big-btn blackbg"
+                            id="submitBtn">Save</button>
                         <button type="button" class="bntsize table-sm-btn big-btn redbg"
                             data-bs-dismiss="modal">Cancel</button>
                     </div>
@@ -178,16 +181,28 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        order: [[0, 'desc']],  
+        order: [
+            [0, 'desc']
+        ],
         ajax: "{{ route('users.index') }}",
-        columns: [
-            { data: 'id', name: 'id', visible: false, searchable: false },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
             {
                 data: 'checkbox',
                 name: 'checkbox',
                 orderable: false,
                 searchable: false
             },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            }, // Auto-increment number
             {
                 data: 'name',
                 name: 'name',
@@ -286,7 +301,7 @@
     });
 
     $(document).on('click', '.deleteUser', function(event) {
-    event.preventDefault();
+        event.preventDefault();
         let userId = $(this).data('id'); // Get the user ID
         let form = $('#delete-form-' + userId); // Select the correct form
         console.log(form);
@@ -316,26 +331,26 @@
         // });
     });
 
-     /***** Bulk Delete *****/
-     $('#select-all').change(function() {
+    /***** Bulk Delete *****/
+    $('#select-all').change(function() {
         // Check/uncheck all checkboxes when the select-all checkbox is clicked
         $('.user_checkbox').prop('checked', this.checked);
 
     });
 
-    $(document).on('change', '.user_checkbox', function () {
+    $(document).on('change', '.user_checkbox', function() {
         let count = $('.user_checkbox:checked').length; // Count checked checkboxes
         $('#checked-count').text(count); // Display count in an element
-        if(count > 0){
+        if (count > 0) {
             $('#bulk_delete_button').show();
-        }else{
+        } else {
             $('#bulk_delete_button').hide();
         }
     });
 
     // Handle Bulk Delete button click
     $('#bulk_delete_button').click(function() {
-       confirmDeletion(function() {
+        confirmDeletion(function() {
             var selectedIds = $('.user_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
