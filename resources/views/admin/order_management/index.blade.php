@@ -38,7 +38,7 @@
                             </label>
                         </th>
                         <th hidden>ID</th>
-                        <th class="no-sort" scope="col">SR. Number</th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Order ID</th>
                         <th scope="col">Party Name</th>
                         <th scope="col">City</th>
@@ -166,7 +166,7 @@
             {
                 targets: 2, // SR. Number
                 createdCell: function(td) {
-                    $(td).attr('data-label', 'SR. Number');
+                    $(td).attr('data-label', 'Sr no');
                 }
             },
             {

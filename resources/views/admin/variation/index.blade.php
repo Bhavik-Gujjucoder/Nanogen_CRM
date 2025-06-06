@@ -38,7 +38,7 @@
                             </label>
                         </th>
                         {{-- <th scope="col">SR. Number</th> --}}
-                        <th class="no-sort" scope="col">SR. Number</th>
+                        <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Variation Name</th>
                         <th scope="col">Options</th>
                         <th scope="col">Status</th>
@@ -122,7 +122,7 @@
             {
                 targets: 2, // SR. Number
                 createdCell: function(td) {
-                    $(td).attr('data-label', 'SR. Number');
+                    $(td).attr('data-label', 'Sr no');
                 }
             },
             {
