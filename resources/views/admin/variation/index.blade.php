@@ -113,44 +113,43 @@
         //     className: 'word-wrap',
         //     width: '300px' // optional: controls how early wrap starts
         // }]
-        columnDefs: [
-    {
-        targets: 1, // Checkbox column
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Select');
-        }
-    },
-    {
-        targets: 2, // SR. Number
-        createdCell: function (td) {
-            $(td).attr('data-label', 'SR. Number');
-        }
-    },
-    {
-        targets: 3, // Variation Name
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Variation Name');
-        }
-    },
-    {
-        targets: 4, // Options
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Options');
-        }
-    },
-    {
-        targets: 5, // Status
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Status');
-        }
-    },
-    {
-        targets: 6, // Action
-        createdCell: function (td) {
-            $(td).attr('data-label', 'Action');
-        }
-    }
-]
+        columnDefs: [{
+                targets: 1, // Checkbox column
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 2, // SR. Number
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'SR. Number');
+                }
+            },
+            {
+                targets: 3, // Variation Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Variation Name');
+                }
+            },
+            {
+                targets: 4, // Options
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Options');
+                }
+            },
+            {
+                targets: 5, // Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Status');
+                }
+            },
+            {
+                targets: 6, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
 
 
 

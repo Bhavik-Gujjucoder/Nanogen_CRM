@@ -38,7 +38,7 @@
                             </label>
                         </th>
                         <th hidden>ID</th>
-                        <th class="no-sort" scope="col"></th>
+                        <th class="no-sort" scope="col">SR. Number</th>
                         <th scope="col">Order ID</th>
                         <th scope="col">Party Name</th>
                         <th scope="col">City</th>
@@ -151,6 +151,80 @@
                 searchable: false
             },
         ],
+        columnDefs: [{
+                targets: 0, // Checkbox
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Select');
+                }
+            },
+            {
+                targets: 1, // ID (hidden) — skip or still apply if needed
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'ID');
+                }
+            },
+            {
+                targets: 2, // SR. Number
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'SR. Number');
+                }
+            },
+            {
+                targets: 3, // Order ID
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Order ID');
+                }
+            },
+            {
+                targets: 4, // Party Name
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Party Name');
+                }
+            },
+            {
+                targets: 5, // City
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'City');
+                }
+            },
+            {
+                targets: 6, // Order Date
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Order Date');
+                }
+            },
+            {
+                targets: 7, // Contact Number
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Contact Number');
+                }
+            },
+            {
+                targets: 8, // Salesman
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Salesman');
+                }
+            },
+            {
+                targets: 9, // Total
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Total');
+                }
+            },
+            {
+                targets: 10, // Order Status
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Order Status');
+                }
+            },
+            {
+                targets: 11, // Action
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Action');
+                }
+            }
+        ]
+
     });
 
     /*** Order Status update ***/
