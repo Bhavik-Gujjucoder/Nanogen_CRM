@@ -117,7 +117,7 @@
                                         <input type="number" name="distributor_price[]" placeholder="Distributor Price"
                                             class="form-control">
                                     </div>
-                                    <div>
+                                    <div class="mb-3">
                                         <label class="col-form-label">Variation Name <span
                                                 class="text-danger">*</span></label>
                                         <select class="select addfileddrop load_variation_value" name="variation_id[]">
