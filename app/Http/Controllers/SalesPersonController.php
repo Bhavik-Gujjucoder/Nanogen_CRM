@@ -340,8 +340,17 @@ class SalesPersonController extends Controller
         if (isset($user->profile_picture)) {
             Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
         }
-        $user->delete();
-        $detail->delete();
+        if(!$user) {
+            return redirect()->route('sales_person.index')->with('error', 'Sales person not found.');
+        }else{
+            $user->delete();
+        }
+
+        if (!$detail) {
+            return redirect()->route('sales_person.index')->with('error', 'Sales person detail not found.');
+        }else{
+            $detail->delete();
+        }
 
         return redirect()->route('sales_person.index')->with('success', 'Sales person deleted successfully.');
     }
