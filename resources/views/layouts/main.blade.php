@@ -442,22 +442,17 @@
                             <i class="ti ti-layout-2"></i> Dashboard
                         </a>
                     @endif
-
-
                     <a class="dropdown-item" href="{{ route('my_profile') }}">
                         <i class="ti ti-user-pin"></i> My Profile
                     </a>
-
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
                         <i class="ti ti-lock"></i> {{ __('Logout') }}
                     </a>
-
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
                     </form>
-
                 </div>
             </div>
             <!-- /Mobile Menu -->
