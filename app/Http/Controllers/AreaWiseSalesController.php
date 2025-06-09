@@ -24,6 +24,7 @@ class AreaWiseSalesController extends Controller
     {
         $data['page_title'] = 'Area-wise Sales';
         if ($request->ajax()) {
+
             $data = OrderManagement::query()
                 // ->join('sales_person_details', 'sales_person_details.user_id', '=', 'order_management.salesman_id')
                 // ->join('city_management', 'city_management.id', '=', 'sales_person_details.city_id')
@@ -34,6 +35,9 @@ class AreaWiseSalesController extends Controller
                     'city_management.id as city_id',
                     DB::raw('SUM(order_management.grand_total) as amount')
                 )
+                ->when(auth()->user()->hasRole('sales'), function ($sub) use ($request) {
+                    $sub->where('order_management.salesman_id', auth()->id());
+                })
                 ->groupBy('city_management.city_name', 'city_management.id');
             // ->get();
 
