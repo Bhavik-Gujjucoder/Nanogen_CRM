@@ -296,8 +296,8 @@
             data: $(this).serialize() + "&_method=" + method,
             success: function(response) {
                 $('#adminModal').modal('hide');
-                category_table_show.ajax.reload();
-                // location.reload();
+                // category_table_show.ajax.reload();
+                location.reload();
                 show_success(response.message);
             },
             error: function(response) {
