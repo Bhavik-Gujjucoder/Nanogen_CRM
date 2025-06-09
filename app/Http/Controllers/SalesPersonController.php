@@ -337,7 +337,7 @@ class SalesPersonController extends Controller
         $detail = SalesPersonDetail::findOrFail($id);
         $user   = User::where('id', $detail->user_id)->first();
 
-        if ($user->profile_picture) {
+        if (isset($user->profile_picture)) {
             Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
         }
         $user->delete();

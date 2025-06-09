@@ -231,7 +231,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user = User::findOrFail($user->id);
-        if (isset($user->profile_picture)) {
+        if ($user->profile_picture) {
             Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
         }
 
