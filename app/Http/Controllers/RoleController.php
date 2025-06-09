@@ -93,7 +93,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $data['page_title']   = 'Edit Role & Permission';
-        $data['permissions']  = Permission::where('deleted_at', null)->get()->all();
+        $data['permissions']  = Permission::all(); //where('deleted_at', null)->get()->all();
         $data['role']  = $role;
         return view('roles.edit', $data);
     }
