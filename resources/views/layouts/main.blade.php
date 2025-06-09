@@ -382,7 +382,7 @@
                                         <i class="ti ti-layout-2"></i> Dashboard
                                     </a>
                                 @elseif(Auth::user()->hasRole('reporting manager'))
-                                    <a class="dropdown-item" href="{{ route('reporting_manager.dashboard') }}">
+                                    <a class="dropdown-item" href="{{ route('reportingmanager.dashboard') }}">
                                         <i class="ti ti-layout-2"></i> Dashboard
                                     </a>
                                 @endif
@@ -438,7 +438,7 @@
                             <i class="ti ti-layout-2"></i> Dashboard
                         </a>
                     @elseif(Auth::user()->hasRole('reporting manager'))
-                        <a class="dropdown-item" href="{{ route('reporting_manager.dashboard') }}">
+                        <a class="dropdown-item" href="{{ route('reportingmanager.dashboard') }}">
                             <i class="ti ti-layout-2"></i> Dashboard
                         </a>
                     @endif
