@@ -129,7 +129,6 @@ class GeneralSettingController extends Controller
                 /* Save new filename in database */
                 $general_setting->value = $filename;
                 $general_setting->save();
-                Artisan::call('config:cache'); // Create symbolic link for public storage
             }
 // dd($request->all());
          
