@@ -326,8 +326,9 @@
                     </div>
                     <div class="">
                         {{-- Download Docx File Code --}}
+                        {{-- {{dd(  storage_path().'/O-Form/' .getSetting('o_form_docx_file'))}} --}}
                         @if (getSetting('o_form_docx_file') && !empty(getSetting('o_form_docx_file')))
-                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}"
+                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}?v={{ time() }}" 
                                 class="btn btn-outline-primary">
                                 <i class="ti ti-download"></i> Download Docx File
                             </a>

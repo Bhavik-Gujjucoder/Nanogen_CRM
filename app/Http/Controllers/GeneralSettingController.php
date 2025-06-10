@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\GeneralSetting;
 use App\Models\DistributorsDealers;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -111,9 +112,12 @@ class GeneralSettingController extends Controller
 
             if ($request->hasFile('o_form_docx_file')) {
                 $general_setting = GeneralSetting::where('key', 'o_form_docx_file')->first();
+
+
+
                 /* Delete old profile picture if exists */
-                if ($request->o_form_docx_file) {
-                    Storage::disk('public')->delete('O-Form/' . $general_setting->o_form_docx_file);
+                if ($general_setting) { 
+                    Storage::disk('public')->delete('O-Form/' . $general_setting->value);  
                 }
                 /* Upload new profile picture */
                 $file = $request->file('o_form_docx_file');
@@ -125,6 +129,7 @@ class GeneralSettingController extends Controller
                 /* Save new filename in database */
                 $general_setting->value = $filename;
                 $general_setting->save();
+                Artisan::call('config:cache'); // Create symbolic link for public storage
             }
 // dd($request->all());
          
