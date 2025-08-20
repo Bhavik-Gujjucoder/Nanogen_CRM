@@ -179,7 +179,9 @@ class HomeController extends Controller
     }
 
     public function reporting_manager_index(){
-          $data['page_title']         = 'Reporting Manager Dashboard';
+        $login_user = Auth::user()->id;
+        // dd($login_user);
+        $data['page_title']         = 'Reporting Manager Dashboard';
         $data['total_distributor']  = $this->dealer_distributor->where('user_type', 1)->count();
         $data['total_dealer']       = $this->dealer_distributor->where('user_type', 2)->count();
         $data['total_sales_person'] = $this->sales_person_detail->whereNull('deleted_at')->count();

@@ -353,7 +353,7 @@ class DistributorsDealersController extends Controller
         Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
 
         return $pdf->download($filename);
-        //  return $pdf->stream($filename);   //only view perpose 
+        //  return $pdf->stream($filename);   //only pdf view perpose  
 
     }
 

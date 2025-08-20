@@ -41,6 +41,7 @@
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
                         <th scope="col">Employee ID</th>
+                        {{-- <th scope="col">Reporting Manager</th> --}}
 
                         <th class="" scope="col">Action</th>
                     </tr>
@@ -106,6 +107,12 @@
                 name: 'employee_id',
                 searchable: true
             },
+            // {
+            //     data: 'reporting_manager_id',
+            //     name: 'reporting_manager_id',
+            //     searchable: true
+            // },
+
             {
                 data: 'action',
                 name: 'action',
@@ -155,6 +162,12 @@
                     $(td).attr('data-label', 'Employee ID');
                 }
             },
+            // {
+            //     targets: 7, // Reporting Manager
+            //     createdCell: function(td) {
+            //         $(td).attr('data-label', 'Reporting Manager');
+            //     }
+            // },
             {
                 targets: 7, // Action
                 createdCell: function(td) {

@@ -97,9 +97,14 @@ class SalesPersonController extends Controller
                     }
                     return $name;
                 })
+
                 ->editColumn('user.phone_no', function ($row) {
                     return $row->user ? $row->user->phone_no : '-';
                 })
+                // ->editColumn('reporting_manager_id', function ($row) {
+                //     return $row->reporting_manager ? $row->reporting_manager->name : '-';
+                // })
+
                 ->editColumn('user.email', function ($row) {
                     return $row->user ? $row->user->email : '-';
                 })

@@ -276,7 +276,7 @@
         users_table.search(this.value).draw();
     });
 
-    //  Open Modal for Adding a New Admin
+    // Open Modal for Adding a New Admin
     $('#openModal').click(function() {
         $('#modalTitle').text('Add Admin');
         $('#submitBtn').text('Create');

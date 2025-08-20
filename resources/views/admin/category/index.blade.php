@@ -125,10 +125,10 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
+        ajax: "{{ route('category.index') }}",
         order: [
             [0, 'desc']
         ],
-        ajax: "{{ route('category.index') }}",
         columns: [{
                 data: 'id',
                 name: 'id',

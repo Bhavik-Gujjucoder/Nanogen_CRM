@@ -96,7 +96,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $data['page_title'] = 'Create User';
+        $data['page_title'] = 'Add Users';
         // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
         $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id');
 

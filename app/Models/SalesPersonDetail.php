@@ -21,4 +21,9 @@ class SalesPersonDetail extends Model
     {
         return $this->hasOne(CityManagement::class, 'id','city_id');
     }
+
+    // public function reporting_manager()
+    // {
+    //     return $this->hasMany(User::class, 'id','reporting_manager_id');
+    // }
 }

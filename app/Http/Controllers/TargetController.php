@@ -144,6 +144,16 @@ class TargetController extends Controller
         return view('admin.target.create', $data);
     }
 
+
+     public function demo_create()
+    {
+        $data['page_title'] = 'Create Target';
+        $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
+        $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
+        $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
+        return view('admin.target.demo_create', $data);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

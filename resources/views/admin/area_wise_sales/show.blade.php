@@ -4,29 +4,58 @@
 @endsection
 <div class="page-header">
     <div class="row align-items-center">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <h4 class="page-title mb-2">{{ $page_title }}</h4>
             <h5>{{ __('Region Name : ') }} {{ $city_name }}</h5>
             <strong>{{ __('Total Sales Amount : ') }} {{ IndianNumberFormat($city_wise_total_sales) }}</strong>
         </div>
-        <div class="areawise col-md-4 d-flex">
-            <div class="main-catgeory">
-                <h6> Main Category </h6>
-                <select name="category_id" class="form-control select" onchange="applyFilter()">
-                    <option value="">Select</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="individual-product">
-                <h6> Individual Product </h6>
-                <select name="product_id" class="form-control select" onchange="applyFilter()">
-                    <option value="">Select</option>
-                    @foreach ($products as $product)
-                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
-                    @endforeach
-                </select>
+        <div class="areawise col-md-8">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label">Start Date <span class="text-danger">*</span></label>
+                        <div class="icon-form">
+                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                            <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
+                                class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="col-form-label">End Date <span class="text-danger">*</span></label>
+                        <div class="icon-form">
+                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                            <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"
+                                class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="main-catgeory">
+                        <label class="col-form-label"> Main Category </label>
+                        <select name="category_id" class="form-control select" onchange="applyFilter()">
+                            <option value="">Select</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="individual-product">
+                        <label class="col-form-label"> Individual Product </label>
+                        <select name="product_id" class="form-control select" onchange="applyFilter()">
+                            <option value="">Select</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -89,6 +118,9 @@
                     .val(); // Pass selected group IDs as a parameter
                 d.category_id = $('select[name="category_id"]')
                     .val(); // Pass selected group IDs as a parameter
+
+                d.start_date = $('#startDate').val(); // Pass start date
+                d.end_date = $('#endDate').val(); // Pass end date
             }
         },
         columns: [{
@@ -245,5 +277,44 @@
 
 
     });
+
+    /*** datepicker ***/
+    $(document).ready(function() {
+        const startPicker = flatpickr("#startDate", {
+            dateFormat: "d-m-Y",
+            disableMobile: true,
+            // maxDate: "today",
+            // defaultDate: "{{ old('start_date', isset($detail) ? \Carbon\Carbon::parse($detail->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+            onChange: function(selectedDates, dateStr, instance) {
+                // Set selected start date as minDate for end date
+                endPicker.set('minDate', dateStr);
+                removeTodayHighlight(selectedDates, dateStr, instance);
+            },
+            onReady: removeTodayHighlight,
+            onMonthChange: removeTodayHighlight,
+            onYearChange: removeTodayHighlight,
+            onOpen: removeTodayHighlight
+        });
+
+        const endPicker = flatpickr("#endDate", {
+            dateFormat: "d-m-Y",
+            disableMobile: true,
+            // maxDate: "today",
+            // defaultDate: "{{ old('end_date', isset($detail) ? \Carbon\Carbon::parse($detail->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+            onReady: removeTodayHighlight,
+            onMonthChange: removeTodayHighlight,
+            onYearChange: removeTodayHighlight,
+            onOpen: removeTodayHighlight
+        });
+
+        function removeTodayHighlight(selectedDates, dateStr, instance) {
+            const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");
+            if (todayElem && !todayElem.classList.contains("selected")) {
+                todayElem.classList.remove("today");
+            }
+        }
+    });
+
+    /*** END ***/
 </script>
 @endsection

@@ -90,15 +90,26 @@ class AreaWiseSalesController extends Controller
         $data['city_wise_total_sales'] = (clone $city_wise_total_sales)->sum('grand_total');
         
         if ($request->ajax()) {
-            // $data = OrderManagement::with('sales_person_detail')
-            // ->whereHas('sales_person_detail', function($q) use ($city_id) {
-            //     $q->where('city_id', $city_id);
-            // });
+            /* $data = OrderManagement::with('sales_person_detail')
+                ->whereHas('sales_person_detail', function($q) use ($city_id) {
+                $q->where('city_id', $city_id);
+            }); */
+
             $data = OrderManagement::with('distributors_dealers')->with('products.product.category')
                 ->whereHas('distributors_dealers', function ($q) use ($city_id) {
                     $q->where('city_id', $city_id);
                 })
-                // Filter by product_id & category_id
+
+                /* Filter by start_date & end_date */
+                ->when($request->start_date, function ($query) use ($request) {
+                    $query->whereDate('order_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+                })
+                ->when($request->end_date, function ($query) use ($request) {
+                    $query->whereDate('order_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+                })
+
+
+                /* Filter by product_id & category_id */
                 ->when($request->product_id, function ($query) use ($request) {
                     $query->whereHas('products.product', function ($q) use ($request) {
                         $q->where('products.id', $request->product_id);
