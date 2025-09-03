@@ -108,7 +108,6 @@ class AreaWiseSalesController extends Controller
                     $query->whereDate('order_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
                 })
 
-
                 /* Filter by product_id & category_id */
                 ->when($request->product_id, function ($query) use ($request) {
                     $query->whereHas('products.product', function ($q) use ($request) {
@@ -121,17 +120,13 @@ class AreaWiseSalesController extends Controller
                     });
                 });
 
-            
-
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('unique_order_id', function ($row) {
                     $order_id = $row->unique_order_id;
                     return '<a href="' . route('area_wise_sales.order_show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
                                 <i class="ti ti-eye #1ecbe2"></i>  ' . $order_id . '</a>';
-
-                    // '. route('order_management.edit', $row->id) .'
-
+                    /* '. route('order_management.edit', $row->id) .' */
                 })
                 ->editColumn('dd_id', function ($row) {
                     if ($row->distributors_dealers) {
@@ -148,7 +143,7 @@ class AreaWiseSalesController extends Controller
                 })
                 ->addColumn('product_qty', function ($row) {
                     return $row->products->map(function ($orderProduct) {
-                        return $orderProduct->product->product_name . ' (' . $orderProduct->qty . ')';
+                        return '⮞ '. $orderProduct->product->product_name . ' (' . $orderProduct->qty . ')';
                     })->implode('<br> ');
                 })
                 ->editColumn('order_date', function ($row) {

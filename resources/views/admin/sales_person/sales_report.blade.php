@@ -214,8 +214,10 @@
                                     <th><strong>Name</strong></th>
                                     <th scope="col"><strong>Salesman</strong></th>
                                     <th><strong>Target Value</strong></th>
-                                    <th><strong>Start Date</strong></th>
-                                    <th><strong>End Date</strong></th>
+                                    <th><strong>Quarterly</strong></th>
+                                    
+                                    {{-- <th><strong>Start Date</strong></th>
+                                    <th><strong>End Date</strong></th> --}}
                                 </tr>
                             </thead>
                             {{-- <tbody>
@@ -396,22 +398,28 @@
                 searchable: true,
                 orderable: true
             },
+            {
+                data: 'quarterly',
+                name: 'quarterly',
+                searchable: true,
+                orderable: true
+            },
             // {
             //     data: 'city_id',
             //     name: 'city_id',
             //     searchable: true,
             //     orderable: true
             // },
-            {
-                data: 'start_date',
-                name: 'start_date',
-                searchable: true
-            },
-            {
-                data: 'end_date',
-                name: 'end_date',
-                searchable: true
-            },
+            // {
+            //     data: 'start_date',
+            //     name: 'start_date',
+            //     searchable: true
+            // },
+            // {
+            //     data: 'end_date',
+            //     name: 'end_date',
+            //     searchable: true
+            // },
         ],
         drawCallback: function() {
             const hasDateFilter = $('#startDate').val() && $('#endDate').val();

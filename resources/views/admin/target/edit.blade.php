@@ -16,10 +16,10 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('target.update', $target->id) }}" id="target_form" enctype="multipart/form-data"
-            method="POST">
+        <form action="{{ route('target.update', $target->id) }}" id="target_form" method="POST">
             @csrf
             @method('PUT')
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-3">
@@ -75,57 +75,95 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Target Value <span class="text-danger">*</span></label>
-                        <input type="number" name="target_value"
-                            value="{{ old('target_value', $target->target_value) }}" class="form-control">
+                        <input type="number" name="target_value" id="mainTargetValue"
+                            value="{{ old('target_value', $target->target_value) }}" class="form-control"
+                            placeholder="Target Value">
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="col-form-label">Start Date <span class="text-danger">*</span></label>
-                        <div class="icon-form">
-                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="start_date"
-                                value="{{ old('start_date', $target->start_date->format('d-m-y')) }}" id="startDate"
-                                class="form-control" placeholder="DD/MM/YY">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="col-form-label">End Date <span class="text-danger">*</span></label>
-                        <div class="icon-form">
-                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="end_date"
-                                value="{{ old('end_date', $target->end_date->format('d-m-y')) }}" id="endDate"
-                                class="form-control" placeholder="DD/MM/YY">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-7">
-                    <div class="mb-3">
-                        <div id="product-container" class="gc-target-grades">
-                            <div class="d-flex align-items-center mb-2 gc-grade-labal">
-                                <label class="col-md-4 col-form-label">Grade <span class="text-danger">*</span></label>
-                                <label class="col-md-4 col-form-label">Target Percentage <span
-                                        class="text-danger">*</span></label>
-                                <label class="col-md-3 col-form-label">Target Value <span
-                                        class="text-danger">*</span></label>
-                                <input type="hidden" name="dummy_grade" id="dummyValidationField" />
+                <!-- Wrap a full quarterly + grade block -->
+                <div id="out_of_percentage" class="text-danger mb-2" style="display:block;"></div>
+                @if ($target->target_quarterly)
+                    @foreach ($target->target_quarterly as $q => $quarterly)
+                        <div class="quarterly-block mb-4 p-3 border rounded">
+                            <!-- quarterly Section -->
+                            <div class="row align-items-center gap-0 quarterly-row">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="col-form-label flex-shrink-0">Quarterly <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select me-2 selectQuarter" name="quarterly[]">
+                                            <option value="">Select Quarter</option>
+                                            <option value="1"
+                                                {{ $quarterly->quarterly == '1' ? 'selected' : '' }}>Quarterly 1
+                                            </option>
+                                            <option value="2"
+                                                {{ $quarterly->quarterly == '2' ? 'selected' : '' }}>Quarterly 2
+                                            </option>
+                                            <option value="3"
+                                                {{ $quarterly->quarterly == '3' ? 'selected' : '' }}>Quarterly 3
+                                            </option>
+                                            <option value="4"
+                                                {{ $quarterly->quarterly == '4' ? 'selected' : '' }}>Quarterly 4
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="col-form-label flex-shrink-0">Quarterly Percentage <span
+                                                class="text-danger">*</span></label>
+                                        <input type="number" name="quarterly_percentage[]"
+                                            value="{{ old('quarterly_percentage', $quarterly->quarterly_percentage) }}"
+                                            class="form-control me-2 quarterly-percentage"
+                                            placeholder="Quarterly Percentage">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="col-form-label flex-shrink-0">Target Value <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="quarterly_target_value[]"
+                                            value="₹{{ number_format($quarterly->quarterly_target_value, 0) }}"
+                                            class="input-as-text quarterly-target-value" placeholder="₹0" readonly>
+                                    </div>
+                                </div>
+                                @if ($loop->first)
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger quarter-btn add-quarter">Add New
+                                            Quarter</button>
+                                    </div>
+                                @else
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-dark quarter-btn remove-quarter">Remove
+                                            Quarter</button>
+                                    </div>
+                                @endif
                             </div>
-                            @if ($target->target_grade)
-                                @foreach ($target->target_grade as $t_g)
+
+                            <!-- Grade Section -->
+                            <div class="grade-section mt-3">
+                                @foreach ($quarterly->target_grade as $g => $tgrade)
+                                    @if ($loop->first)
+                                        <!-- Grade Heading -->
+                                        <div class="row fw-bold">
+                                            <div class="col-md-4">Grade <span class="text-danger">*</span></div>
+                                            <div class="col-md-3">Target Percentage <span class="text-danger">*</span>
+                                            </div>
+                                            <div class="col-md-3">Target Value <span class="text-danger">*</span></div>
+                                        </div>
+                                    @endif
+                                    <!-- Grade Row -->
                                     <div class="product-group d-flex align-items-center mb-2">
                                         <div class="col-md-4">
-                                            <select class="form-select me-2" name="grade_id[]">
+                                            <select class="form-select me-2 selectGrade"
+                                                name="grade_id[{{ $q }}][]">
                                                 <option value="">Select Grade</option>
                                                 @if ($grade)
-                                                    @foreach ($grade as $g)
-                                                        <option value="{{ $g->id }}"
-                                                            {{ old('grade_id', $t_g->grade_id) == $g->id ? 'selected' : '' }}>
-                                                            {{ $g->name }}
+                                                    @foreach ($grade as $gr)
+                                                        <option value="{{ $gr->id }}"
+                                                            {{ $tgrade->grade_id == $gr->id ? 'selected' : '' }}>
+                                                            {{ $gr->name }}
                                                         </option>
                                                     @endforeach
                                                 @else
@@ -133,37 +171,39 @@
                                                 @endif
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
-                                            <input type="number" name="percentage[]"
-                                                value="{{ old('percentage', $t_g->percentage) }}"
-                                                class="form-control me-2" placeholder="Target Percentage">
+                                        <div class="col-md-3">
+                                            <input type="number" name="grade_percentage[{{ $q }}][]"
+                                                value="{{ old('grade_percentage', $tgrade->grade_percentage) }}"
+                                                class="form-control me-2 grade-percentage"
+                                                placeholder="Target Percentage">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" name="grade_target_value[{{ $q }}][]"
+                                                value="₹{{ number_format($tgrade->grade_target_value, 0) }}"
+                                                class="input-as-text grade-target-value" placeholder="₹0" readonly>
                                         </div>
                                         <div class="col-md-2">
-                                            <strong></strong>
-                                            <input type="text" name="percentage_value[]"
-                                                value="{{ old('percentage_value', $t_g->percentage_value) }}"
-                                                class="input-as-text" readonly hidden>
-
-                                            <input type="text" name="textpercentage_value[]"
-                                                value="{{ old('textpercentage_value', IndianNumberFormat($t_g->percentage_value)) }}"
-                                                class="input-as-text" placeholder="₹0" readonly>
+                                            <button type="button" class="btn btn-danger remove-grade">Remove
+                                                Grade</button>
                                         </div>
-
-                                        <button type="button"
-                                            class="btn btn-danger  remove-btn">Remove</button>
                                     </div>
+                                    @if ($loop->last)
+                                        <!-- Add Grade Button -->
+                                        <button type="button" class="btn btn-primary add-grade">Add New
+                                            Grade</button>
+                                    @endif
                                 @endforeach
-                            @endif
+                            </div>
+
                         </div>
-                        <div id="productError" class="text-danger mb-3" style="display:none;">
-                            Please fill all fields in each product row.
-                        </div>
-                        <button type="button" class="btn btn-primary  mt-2" id="add-new">Add New</button>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
+
+                <div id="quarterlyError" class="text-danger mb-2" style="display:none;"></div>
+
             </div>
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="submit" class="btn btn-primary">Update</button>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Update Target</button>
             </div>
         </form>
     </div>
@@ -173,277 +213,366 @@
 @endsection
 @section('script')
 <script>
-    function calculateAndValidatePercentage() {
-        let targetValue = parseFloat($('input[name="target_value"]').val());
-        let totalPercentage = 0;
-        let isValid = true;
-
-        $('#product-container .product-group').each(function() {
-            let $percentage = $(this).find('input[name="percentage[]"]');
-            let $valueField = $(this).find('input[name="percentage_value[]"]');
-            let $valueFieldText = $(this).find('input[name="textpercentage_value[]"]');
-            let percentage = parseFloat($percentage.val());
-
-            if (!isNaN(percentage)) {
-                totalPercentage += percentage;
-            }
-
-            // Calculate percentage_value if both values are valid
-            if (!isNaN(targetValue) && !isNaN(percentage)) {
-                let result = (targetValue * percentage) / 100;
-                $valueField.val(result.toFixed(0));
-                $valueFieldText.val(IndianNumberFormatscript(result.toFixed(0)));
-            } else {
-                $valueField.val('');
-                $valueFieldText.val('');
-            }
-        });
-
-        // Show/hide error if total exceeds 100
-        if (totalPercentage != 100) {
-            $('#percentageLimitError').text('Total percentage should be 100%.').show();
-            isValid = false;
-        } else {
-            $('#percentageLimitError').hide();
-        }
-
-        return isValid;
-    }
-
-    // Trigger calculation and validation on target value change
-    $('input[name="target_value"]').on('input', function() {
-        calculateAndValidatePercentage();
-    });
-
-    // Trigger calculation and validation on percentage input change
-    $('#product-container').on('input', 'input[name="percentage[]"]', function() {
-        calculateAndValidatePercentage();
-    });
-
-    // When adding a new row, also re-validate
-    $('#add-new').on('click', function() {
-        setTimeout(() => calculateAndValidatePercentage(), 100); // slight delay to let DOM update
-    });
-    /*************************** END *********************/
-
-    /*** select option search functionality ***/
     $(document).ready(function() {
-        $('.search-dropdown').select2({
-            placeholder: "Select",
-            // allowClear: true
-        });
-    });
+        updateQuarterOptions();
 
-    /*** datepicker ***/
-    $(document).ready(function() {
-        const startPicker = flatpickr("#startDate", {
-            dateFormat: "d-m-Y",
-            disableMobile: true,
-            // maxDate: "today",
-            defaultDate: "{{ old('start_date', isset($target) ? \Carbon\Carbon::parse($target->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
-            onChange: function(selectedDates, dateStr, instance) {
-                // Set selected start date as minDate for end date
-                endPicker.set('minDate', dateStr);
-                removeTodayHighlight(selectedDates, dateStr, instance);
-            },
-            onReady: removeTodayHighlight,
-            onMonthChange: removeTodayHighlight,
-            onYearChange: removeTodayHighlight,
-            onOpen: removeTodayHighlight
-        });
+        /* === Quarterly Calculation === */
+        function recalcQuarterlyValues() {
+            let mainTarget = parseFloat($('#mainTargetValue').val()) || 0;
+            let totalQuarterPercent = 0;
 
-        const endPicker = flatpickr("#endDate", {
-            dateFormat: "d-m-Y",
-            disableMobile: true,
-            // maxDate: "today",
-            defaultDate: "{{ old('end_date', isset($target) ? \Carbon\Carbon::parse($target->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
-            onReady: removeTodayHighlight,
-            onMonthChange: removeTodayHighlight,
-            onYearChange: removeTodayHighlight,
-            onOpen: removeTodayHighlight
-        });
+            $('.quarterly-block').each(function() {
+                let percentInput = $(this).find('input[name="quarterly_percentage[]"]');
+                let percent = parseFloat(percentInput.val()) || 0;
+                totalQuarterPercent += percent;
 
-        function removeTodayHighlight(selectedDates, dateStr, instance) {
-            const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");
-            if (todayElem && !todayElem.classList.contains("selected")) {
-                todayElem.classList.remove("today");
-            }
-        }
-    });
-    /*** END ***/
+                let targetField = $(this).find('input[name="quarterly_target_value[]"]');
+                let quarterlyTarget = 0;
 
-
-    /*** Validation ***/
-    function check_total_percentage() {
-        let totalPercentage = 0;
-        $('input[name="percentage[]"]').each(function() {
-            let val = parseFloat($(this).val()) || 0;
-            totalPercentage += val;
-        });
-        console.log(totalPercentage);
-        if (totalPercentage != 100) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function check_atleast_one() {
-        let totalPercentage = $('input[name="percentage[]"]').length;
-        if (totalPercentage) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    $.validator.addMethod("validateGrades", function(value, element) {
-        let isValid = true;
-
-        $("#product-container .product-group").each(function() {
-            let grade = $(this).find('select[name="grade_id[]"]').val();
-            let percentage = $(this).find('input[name="percentage[]"]').val();
-            let value = $(this).find('input[name="percentage_value[]"]').val();
-            console.log(grade)
-            console.log(percentage)
-            console.log(value)
-            if (grade === "" || percentage.trim() === "" || value.trim() === "") {
-                isValid = false;
-                return false; // Break the loop on first invalid group
-            }
-        });
-
-        return isValid;
-    }, "Please fill all grade fields properly.");
-
-    // Hide error message when user changes any input field
-    $('input[name="percentage[]"]').on('input', function() {
-        $("#productError").hide(); // Hide the error message when the input changes
-    });
-
-    $("#target_form").validate({
-        ignore: [],
-        rules: {
-            subject: {
-                required: true
-            },
-            salesman_id: {
-                required: true
-            },
-            city_id: {
-                required: true
-            },
-            target_value: {
-                required: true,
-                number: true
-            },
-            start_date: {
-                required: true
-            },
-            end_date: {
-                required: true
-            },
-            dummy_grade: {
-                validateGrades: true
-            }
-        },
-        messages: {
-            subject: "Please enter subject",
-            salesman_id: "Please select a salesperson",
-            city_id: "Please select a region",
-            target_value: {
-                required: "Please enter target value",
-                number: "Please enter a valid number"
-            },
-            start_date: "Please select a start date",
-            end_date: "Please select an end date"
-        },
-        submitHandler: function(form) {
-            if (check_total_percentage()) {
-                if (check_atleast_one()) {
-                    form.submit(); //Submit only if check passes
+                if (mainTarget > 0 && percent > 0) {
+                    quarterlyTarget = (mainTarget * percent) / 100;
+                    targetField.val("₹" + quarterlyTarget.toLocaleString());
                 } else {
-                    $("#productError").text(
-                        'Please add atleast one target').show();
+                    targetField.val("₹0");
                 }
+
+                // === Grade Calculation per Quarter ===
+                recalcGradeValues($(this), quarterlyTarget);
+            });
+
+            // === Quarterly Validation ===
+            if (totalQuarterPercent > 100) {
+                $("#out_of_percentage").show().text("Total Quarterly Percentage cannot exceed 100%.");
             } else {
-                // alert('ddd');
-                $("#productError").text(
-                    'Please enter a valid percentage. The total percentage should be 100%.').show();
+                $("#out_of_percentage").hide();
             }
-        },
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            if (element.attr("name") === "dummy_grade") {
-                $("#productError").text(error.text()).show();
-            } else if (element.hasClass('select2-hidden-accessible')) {
-                error.addClass('text-danger');
-                error.insertAfter(element.next('.select2'));
+
+            updateQuarterOptions();
+        }
+
+        /* === Grade Calculation per Quarter === */
+        function recalcGradeValues(quarterBlock, quarterlyTarget) {
+            let totalGradePercent = 0;
+
+            quarterBlock.find('.product-group').each(function() {
+                let gradePercentInput = $(this).find('.grade-percentage');
+                let gradePercent = parseFloat(gradePercentInput.val()) || 0;
+                totalGradePercent += gradePercent;
+
+                let gradeTargetField = $(this).find('.grade-target-value');
+                if (quarterlyTarget > 0 && gradePercent > 0) {
+                    let gradeTarget = (quarterlyTarget * gradePercent) / 100;
+                    gradeTargetField.val("₹" + gradeTarget.toLocaleString());
+                } else {
+                    gradeTargetField.val("₹0");
+                }
+            });
+
+            // === Grade Validation per Quarter ===
+            let gradeErrorContainer = quarterBlock.find('.grade-error');
+            if (!gradeErrorContainer.length) {
+                gradeErrorContainer = $('<div class="text-danger grade-error mb-2"></div>');
+                quarterBlock.find('.grade-section').prepend(gradeErrorContainer);
+            }
+
+            if (totalGradePercent > 100) {
+                gradeErrorContainer.show().text("Total Grade Percentage cannot exceed 100%.");
             } else {
-                error.addClass('text-danger');
-                error.insertAfter(element);
+                gradeErrorContainer.hide();
             }
-        },
-        success: function(label, element) {
-            if ($(element).attr("name") === "dummy_grade") {
-                $("#productError").hide();
+
+            // === Apply unique grade option restriction ===
+            updateGradeOptions(quarterBlock);
+        }
+
+        // === Ensure unique grade selections in a quarter ===
+        function updateGradeOptions(quarterBlock) {
+            let selectedGrades = [];
+
+            // Collect all selected grade IDs in this quarter
+            quarterBlock.find('.selectGrade').each(function() {
+                let val = $(this).val();
+                if (val) selectedGrades.push(val);
+            });
+
+            // Loop through each select and hide already selected options in others
+            quarterBlock.find('.selectGrade').each(function() {
+                let currentSelect = $(this);
+                let currentValue = currentSelect.val();
+
+                currentSelect.find('option').each(function() {
+                    let optionVal = $(this).val();
+
+                    if (optionVal && optionVal !== currentValue && selectedGrades.includes(
+                            optionVal)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        }
+
+        /* === Ensure unique quarter selections overall === */
+        function updateQuarterOptions() {
+            let selectedQuarter = [];
+
+            // Collect all selected grade IDs in this quarter
+            $(document).find('.selectQuarter').each(function() {
+                let val = $(this).val();
+                if (val) selectedQuarter.push(val);
+            });
+            console.log(selectedQuarter);
+            // Loop through each select and hide already selected options in others
+            $(document).find('.selectQuarter').each(function() {
+                let currentSelect = $(this);
+                let currentValue = currentSelect.val();
+
+                currentSelect.find('option').each(function() {
+                    let optionVal = $(this).val();
+
+                    if (optionVal && optionVal !== currentValue && selectedQuarter.includes(
+                            optionVal)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        }
+
+        // === Triggers ===
+        $(document).on('input',
+            '#mainTargetValue, .quarterly-percentage, .grade-percentage',
+            function() {
+                recalcQuarterlyValues();
+            });
+
+        $(document).on('change', '.selectGrade', function() {
+            let quarterBlock = $(this).closest('.quarterly-block');
+            updateGradeOptions(quarterBlock);
+        });
+
+        /* === On Quarter Change === */
+        $(document).on('change', '.selectQuarter', function() {
+            updateQuarterOptions();
+        });
+
+        /* === Add New Quarter === */
+        var quarterCount = '{{ $quarterly->count() - 1 ?? 0 }}';
+        $(document).on('click', '.add-quarter', function() {
+            quarterCount++;
+            var qater = `<div class="quarterly-block mb-4 p-3 border rounded">
+                    <div class="row align-items-center gap-0 quarterly-row">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Quarterly<span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select me-2 selectQuarter" name="quarterly[]">
+                                    <option value="">Select Quarter</option>
+                                    <option value="1">Quarterly 1</option>
+                                    <option value="2">Quarterly 2</option>
+                                    <option value="3">Quarterly 3</option>
+                                    <option value="4">Quarterly 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Quarterly Percentage <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="quarterly_percentage[]" 
+                                    class="form-control me-2 quarterly-percentage" placeholder="Quarterly Percentage">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Target Value <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="quarterly_target_value[]" 
+                                    class="input-as-text quarterly-target-value" placeholder="₹0" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-dark quarter-btn remove-quarter">Remove Quarter</button>
+                        </div>
+                    </div>
+
+                    <div class="grade-section mt-3">
+                        <div class="row fw-bold">
+                            <div class="col-md-4">Grade <span class="text-danger">*</span></div>
+                            <div class="col-md-3">Target Percentage <span class="text-danger">*</span></div>
+                            <div class="col-md-3">Target Value <span class="text-danger">*</span></div>
+                        </div>
+
+                        <div class="product-group d-flex align-items-center mb-2">
+                            <div class="col-md-4">
+                                <select class="form-select me-2 selectGrade" name="grade_id[` + quarterCount + `][]">
+                                    <option value="">Select Grade</option>
+                                    @if ($grade)
+                                        @foreach ($grade as $g)
+                                            <option value="{{ $g->id }}"
+                                                {{ old('grade_id') == $g->id ? 'selected' : '' }}>
+                                                {{ $g->name }}
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        <option value="">No record</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="grade_percentage[` + quarterCount + `][]"
+                                    class="form-control me-2 grade-percentage" placeholder="Target Percentage">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="grade_target_value[` + quarterCount + `][]" 
+                                    class="input-as-text grade-target-value" placeholder="₹0" readonly>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-grade">Remove Grade</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary add-grade">Add New Grade</button>
+                    </div>
+                </div>`;
+            $(qater).insertAfter('.quarterly-block:last');
+            //scroll to new quarter
+            $('html, body').animate({
+                scrollTop: $(".quarterly-block:last").offset().top
+            }, 500);
+            //   qater.find('.quarter-btn')
+            //     .removeClass('add-quarter btn-danger')
+            //     .addClass('remove-quarter btn-dark')
+            //     .text('Remove Quarter');
+            recalcQuarterlyValues();
+            // updateQuarterOptions();
+
+        })
+
+        /* === Remove Quarter === */
+        $(document).on('click', '.remove-quarter', function() {
+            $(this).closest('.quarterly-block').remove();
+            recalcQuarterlyValues();
+            // updateQuarterOptions();
+        });
+
+        // === Grade Add/Remove ===
+        $(document).on('click', '.add-grade', function() {
+            let gradeRow = $(this).siblings('.product-group').first().clone();
+            gradeRow.find('input, select').val('');
+            $(this).before(gradeRow);
+
+            let quarterBlock = $(this).closest('.quarterly-block');
+            updateGradeOptions(quarterBlock);
+        });
+
+        /* === Remove Grade === */
+        $(document).on('click', '.remove-grade', function() {
+            let gradeSection = $(this).closest('.grade-section');
+            let quarterBlock = $(this).closest('.quarterly-block');
+            console.log(gradeSection.find('.product-group').length);
+            if (gradeSection.find('.product-group').length > 1) {
+                $(this).closest('.product-group').remove();
+                recalcQuarterlyValues();
+                updateGradeOptions(quarterBlock);
+            } else {
+                alert("At least one grade is required.");
             }
-        },
-        highlight: function(element) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
-        },
-        unhighlight: function(element) {
-            $(element).removeClass('is-invalid');
-        },
+        });
+
     });
-    /*** END ***/
 
 
-    /*** Add new Grade ***/
-    document.getElementById('add-new').addEventListener('click', function() {
-        let productContainer = document.getElementById('product-container');
-        let newProductGroup = document.createElement('div');
-        newProductGroup.classList.add('product-group', 'd-flex', 'align-items-center', 'mb-2');
-        newProductGroup.innerHTML = `
-        <div class="col-md-4">
-            <select class="form-select me-2" name="grade_id[]">
-                <option value="">Select Grade</option>
-                @if ($grade)
-                    @foreach ($grade as $g)
-                        <option value="{{ $g->id }}"
-                            {{ old('grade_id') == $g->id ? 'selected' : '' }}>
-                            {{ $g->name }}
-                        </option>
-                    @endforeach
-                @else
-                    <option value="">No record</option>
-                @endif
-            </select>
-        </div>
-        <div class="col-md-4">
-                <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                    class="form-control me-2" placeholder="Target Percentage"></div>
-        
-            <input type="hidden" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                class="input-as-text" readonly ></div>
+    // === Form Submit Validation (Main + Quarterly) ===
+    $("form").on("submit", function(e) {
+        let valid = true;
+        let totalQuarterPercent = 0;
+        $("#quarterlyError").hide().text("");
 
-            <input type="text" name="textpercentage_value[]"
-                value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
-                readonly>
-        </div>
+        // ---- Remove old errors ----
+        $(".field-error").remove();
+        $(".quarterly-error").remove();
 
-            <button type="button" class="btn btn-danger  remove-btn">Remove</button>
-        `;
-        productContainer.appendChild(newProductGroup);
-        $("#productError").hide();
-        // $("#dummyValidationField").valid();
-    });
-    document.getElementById('product-container').addEventListener('click', function(event) {
-        if (event.target.classList.contains('remove-btn')) {
-            event.target.parentElement.remove();
+        // ---- Validate Main Fields ----
+        let subject = $('input[name="subject"]');
+        let salesman = $('select[name="salesman_id"], input[name="salesman_id"][type="hidden"]');
+        let city = $('select[name="city_id"]');
+        let targetValue = $('input[name="target_value"]');
+
+        if (!subject.val().trim()) {
+            valid = false;
+            subject.after('<div class="text-danger field-error">Target Name is required.</div>');
+        }
+
+        if (!salesman.val().trim()) {
+            valid = false;
+            salesman.closest('.mb-3').append(
+                '<div class="text-danger field-error">Sales Person is required.</div>');
+        }
+
+        if (!city.val().trim()) {
+            valid = false;
+            city.closest('.mb-3').append('<div class="text-danger field-error">Region is required.</div>');
+        }
+
+        if (!targetValue.val().trim()) {
+            valid = false;
+            targetValue.after('<div class="text-danger field-error">Target Value is required.</div>');
+        }
+
+        // ---- Validate Quarterly Blocks ----
+        $(".quarterly-block").each(function(index) {
+            let quarterBlock = $(this);
+            let blockValid = true;
+            let totalGradePercent = 0;
+            let quarterSelect = quarterBlock.find('select[name="quarterly[]"]');
+            let quarterPercent = quarterBlock.find('input[name="quarterly_percentage[]"]');
+
+            if (!quarterSelect.val() || !quarterPercent.val()) {
+                blockValid = false;
+            }
+
+            let percent = parseFloat(quarterPercent.val()) || 0;
+            totalQuarterPercent += percent;
+            if (totalQuarterPercent > 100) {
+                blockValid = false;
+                valid = false;
+                return false; // break
+            }
+
+
+            quarterBlock.find(".product-group").each(function() {
+                let gradeSelect = $(this).find('.selectGrade');
+                let gradePercent = $(this).find('.grade-percentage');
+                if (!gradeSelect.val() || !gradePercent.val()) {
+                    blockValid = false;
+                    return false; // break
+                }
+                totalGradePercent += parseFloat(gradePercent.val()) || 0;
+
+            });
+
+            if (totalGradePercent > 100) {
+                blockValid = false;
+                valid = false;
+                return false; // break
+            }
+
+            if (!blockValid) {
+                valid = false;
+                quarterBlock.prepend(
+                    '<div class="text-danger quarterly-error mb-2">⚠ All fields are required in this Quarterly section (Quarter ' +
+                    (index + 1) + ').</div>'
+                );
+            }
+        });
+
+        if (!valid) {
+            e.preventDefault();
+            $("#quarterlyError").show().text("Some required fields are missing. Please check.");
         }
     });
-    /*** END ***/
 </script>
 @endsection

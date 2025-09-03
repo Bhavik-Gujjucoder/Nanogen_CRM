@@ -6,12 +6,15 @@ use App\Models\Target;
 use App\Models\TargetGrade;
 use Illuminate\Http\Request;
 use App\Models\CityManagement;
+use App\Models\TargetQuarterly;
 use App\Models\GradeManagement;
 use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class TargetController extends Controller
 {
@@ -39,12 +42,10 @@ class TargetController extends Controller
                 // ->orWhereBetween('end_date', [$startDate, $endDate]); 
             });
 
-           
-
 
 
             return DataTables::of($records)
-            // return DataTables::of(collect($records)) // ✅ wrap in collect()
+                // return DataTables::of(collect($records)) // ✅ wrap in collect()
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
                     return '<label class="checkboxs">
@@ -55,8 +56,6 @@ class TargetController extends Controller
                 ->addColumn('action', function ($row) {
                     $show_btn = '<a href="' . route('target.show', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i> Show Target</a>';
-
-
 
                     $edit_btn = '<a href="' . route('target.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
@@ -92,18 +91,25 @@ class TargetController extends Controller
                         return '<span class="badge bg-danger">Lost</span>';
                     }
                 })
-                ->editColumn('start_date', function ($row) {
-                    return $row->start_date->format('d M Y');
+                 ->addColumn('quarterly', function ($row) { // 🟨 Add this new column
+                   return  $row->target_quarterly->map(function($q) {
+                        return '<span class="badge bg-gray me-1 mb-1">
+                                    Quarterly ' . e($q->quarterly) . ' ⮚ ' . e($q->quarterly_percentage) . '% 
+                                </span>';
+                    })->implode('<br>') ;
                 })
+                // ->editColumn('start_date', function ($row) {
+                //     return $row->start_date->format('d M Y');
+                // })
                 ->editColumn('target_value', function ($row) {
                     if ($row->target_value) {
                         return IndianNumberFormat($row->target_value);
                     }
                     return '-';
                 })
-                ->editColumn('end_date', function ($row) {
-                    return $row->end_date->format('d M Y');
-                })
+                // ->editColumn('end_date', function ($row) {
+                //     return $row->end_date->format('d M Y');
+                // })
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
@@ -126,7 +132,7 @@ class TargetController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result']) //'value',
+                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result','quarterly']) //'value',
                 ->make(true);
         }
         return view('admin.target.index', $data);
@@ -135,6 +141,9 @@ class TargetController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
+
+
     public function create()
     {
         $data['page_title'] = 'Create Target';
@@ -144,77 +153,111 @@ class TargetController extends Controller
         return view('admin.target.create', $data);
     }
 
-
-     public function demo_create()
-    {
-        $data['page_title'] = 'Create Target';
-        $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
-        $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
-        $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
-        return view('admin.target.demo_create', $data);
-    }
-
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //     $target = Target::create($request->only([
+    //         'subject',
+    //         'salesman_id',
+    //         'city_id',
+    //         'target_value',
+    //         'start_date',
+    //         'end_date'
+    //     ]));
+    //     $target->save();
+
+    //     if ($request->has(['grade_id', 'percentage', 'percentage_value'])) {
+    //         $grade_id = $request->input('grade_id');
+    //         $percentage = $request->input('percentage');
+    //         $percentage_value = $request->input('percentage_value');
+
+    //         foreach ($grade_id as $key => $g) {
+    //             if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
+    //                 TargetGrade::create([
+    //                     'target_id'  => $target->id,
+    //                     'grade_id'   => $grade_id[$key],
+    //                     'percentage' => $percentage[$key],
+    //                     'percentage_value' => $percentage_value[$key],
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+    //     try {
+    //         if($request->salesman_id)
+    //         {
+    //             $admin_email = getSetting('company_email');
+    //             if($admin_email)
+    //             {
+    //                 $id = $target->id;
+    //                 $target = [];
+    //                 $target = Target::with(['sales_person_detail'])->findOrFail($id);
+    //                 $target->admin_email = 'for_admin_email';
+    //                 Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($admin_email)->subject('Target has been set'));
+    //             }
+
+    //             $sales_person_email = $target->sales_person_detail->user->email;
+    //             if($sales_person_email) {
+    //                 $id = $target->id;
+    //                 $target = [];
+    //                 $target = Target::with(['sales_person_detail'])->findOrFail($id);
+    //                 Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($sales_person_email)->subject('Target has been set'));
+    //             }
+    //         }
+    //     }
+    //     catch (\Throwable $th) {
+    //         dd($th);
+    //     }
+
+    //     return redirect()->route('target.index')->with('success', 'Target created successfully.');
+    // }
+
     public function store(Request $request)
     {
-        $target = Target::create($request->only([
-            'subject',
-            'salesman_id',
-            'city_id',
-            'target_value',
-            'start_date',
-            'end_date'
-        ]));
-        $target->save();
-
-
-        if ($request->has(['grade_id', 'percentage', 'percentage_value'])) {
-            $grade_id = $request->input('grade_id');
-            $percentage = $request->input('percentage');
-            $percentage_value = $request->input('percentage_value');
-
-            foreach ($grade_id as $key => $g) {
-                if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
-                    TargetGrade::create([
-                        'target_id'  => $target->id,
-                        'grade_id'   => $grade_id[$key],
-                        'percentage' => $percentage[$key],
-                        'percentage_value' => $percentage_value[$key],
-                    ]);
-                }
-            }
-        }
-
+        // dd($request->all());
+        DB::beginTransaction();
         try {
-            if($request->salesman_id)
-            {
-                $admin_email = getSetting('company_email');
-                if($admin_email)
-                {
-                    $id = $target->id;
-                    $target = [];
-                    $target = Target::with(['sales_person_detail'])->findOrFail($id);
-                    $target->admin_email = 'for_admin_email';
-                    Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($admin_email)->subject('Target has been set'));
-                }
+            // 1. Create Target
+            $target = Target::create($request->only([
+                'subject',
+                'salesman_id',
+                'city_id',
+                'target_value',
+            ]));
 
-                $sales_person_email = $target->sales_person_detail->user->email;
-                if($sales_person_email) {
-                    $id = $target->id;
-                    $target = [];
-                    $target = Target::with(['sales_person_detail'])->findOrFail($id);
-                    Mail::send('email.target_email.target_create', compact('target'), fn($message) => $message->to($sales_person_email)->subject('Target has been set'));
+            // 2. Loop Quarterly Data
+            foreach ($request->quarterly as $qIndex => $quarterVal) {
+                $quarter = TargetQuarterly::create([
+                    'target_id' => $target->id,
+                    'quarterly' => $quarterVal,
+                    'quarterly_percentage' => $request->quarterly_percentage[$qIndex],
+                    'quarterly_target_value' => preg_replace('/[^\d.]/', '', $request->quarterly_target_value[$qIndex]),
+                ]);
+
+                // 3. Loop Grade Data for this Quarter
+                if (isset($request->grade_id[$qIndex])) {
+                    foreach ($request->grade_id[$qIndex] as $gIndex => $gradeVal) {
+                        TargetGrade::create([
+                            'target_id' => $target->id,
+                            'target_quarterly_id' => $quarter->id,
+                            'grade_id' => $gradeVal,
+                            'grade_percentage' => $request->grade_percentage[$qIndex][$gIndex],
+                            'grade_target_value' => preg_replace('/[^\d.]/', '', $request->grade_target_value[$qIndex][$gIndex]),
+                        ]);
+                    }
                 }
             }
-        }
-        catch (\Throwable $th) {
-            dd($th);
-        }
 
-        return redirect()->route('target.index')->with('success', 'Target created successfully.');
+            DB::commit();
+            return redirect()->route('target.index')->with('success', 'Target created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
     }
+
 
     public function Show(string $id)
     {
@@ -238,45 +281,90 @@ class TargetController extends Controller
         return view('admin.target.edit', $data);
     }
 
+
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    // public function update(Request $request, string $id)
+    // {
+    //     $target = Target::findOrFail($id);
+    //     $target->update($request->only([
+    //         'subject',
+    //         'salesman_id',
+    //         'city_id',
+    //         'target_value',
+    //         'start_date',
+    //         'end_date'
+    //     ]));
+
+    //     if ($request->only(['grade_id', 'percentage', 'percentage_value'])) {
+
+    //         TargetGrade::where('target_id', $id)->delete();
+
+    //         $grade_id         = $request->input('grade_id');
+    //         $percentage       = $request->input('percentage');
+    //         $percentage_value = $request->input('percentage_value');
+
+    //         if ($grade_id) {
+
+    //             foreach ($grade_id as $key => $g) {
+    //                 if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
+    //                     TargetGrade::create([
+    //                         'target_id' => $target->id,
+    //                         'grade_id' => $g,
+    //                         'percentage' => $percentage[$key],
+    //                         'percentage_value' => $percentage_value[$key],
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return redirect()->route('target.index')->with('success', 'Target updated successfully.');
+    // }
+    public function update(Request $request, $id)
     {
-        $target = Target::findOrFail($id);
-        $target->update($request->only([
-            'subject',
-            'salesman_id',
-            'city_id',
-            'target_value',
-            'start_date',
-            'end_date'
-        ]));
+        DB::beginTransaction();
+        try {
+            $target = Target::findOrFail($id);
 
-        if ($request->only(['grade_id', 'percentage', 'percentage_value'])) {
+            // update target
+            $target->update($request->only(['subject', 'salesman_id', 'city_id', 'target_value']));
 
-            TargetGrade::where('target_id', $id)->delete();
+            // delete old quarters & grades
+            TargetQuarterly::where('target_id', $target->id)->delete();
+            TargetGrade::where('target_id', $target->id)->delete();
 
-            $grade_id         = $request->input('grade_id');
-            $percentage       = $request->input('percentage');
-            $percentage_value = $request->input('percentage_value');
+            // insert new quarters & grades
+            foreach ($request->quarterly as $q => $quarterVal) {
+                $quarter = TargetQuarterly::create([
+                    'target_id' => $target->id,
+                    'quarterly' => $quarterVal,
+                    'quarterly_percentage' => $request->quarterly_percentage[$q],
+                    'quarterly_target_value' => preg_replace('/[^\d.]/', '', $request->quarterly_target_value[$q]),
+                ]);
 
-            if ($grade_id) {
-
-                foreach ($grade_id as $key => $g) {
-                    if (isset($grade_id[$key]) && isset($percentage[$key]) && isset($percentage_value[$key])) {
+                if (isset($request->grade_id[$q])) {
+                    foreach ($request->grade_id[$q] as $g => $gradeVal) {
                         TargetGrade::create([
                             'target_id' => $target->id,
-                            'grade_id' => $g,
-                            'percentage' => $percentage[$key],
-                            'percentage_value' => $percentage_value[$key],
+                            'target_quarterly_id' => $quarter->id,
+                            'grade_id' => $gradeVal,
+                            'grade_percentage' => $request->grade_percentage[$q][$g],
+                            'grade_target_value' => preg_replace('/[^\d.]/', '', $request->grade_target_value[$q][$g]),
                         ]);
                     }
                 }
             }
+
+            DB::commit();
+            return redirect()->route('target.index')->with('success', 'Target updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error: ' . $e->getMessage())->withInput();
         }
-        return redirect()->route('target.index')->with('success', 'Target updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.

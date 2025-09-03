@@ -61,8 +61,8 @@
                         <th scope="col">Sales Person Name</th>
                         <th scope="col">Traget Value</th>
                         <th scope="col">Region</th>
-                        <th scope="col">Start Date</th>
-                        <th scope="col">End Date</th>
+                        {{-- <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th> --}}
                         {{-- <th scope="col">Target Result</th> --}}
                         <th class="{{-- text-end --}}" scope="col">Action</th>
                     </tr>
@@ -129,16 +129,16 @@
                 searchable: true,
                 orderable: true
             },
-            {
-                data: 'start_date',
-                name: 'start_date',
-                searchable: true
-            },
-            {
-                data: 'end_date',
-                name: 'end_date',
-                searchable: true
-            },
+            // {
+            //     data: 'start_date',
+            //     name: 'start_date',
+            //     searchable: true
+            // },
+            // {
+            //     data: 'end_date',
+            //     name: 'end_date',
+            //     searchable: true
+            // },
             // { data: 'target_result', name: 'target_result' },
             {
                 data: 'action',
@@ -147,67 +147,67 @@
                 searchable: false
             },
         ],
-        columnDefs: [{
-                targets: 0, // Checkbox
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Select');
-                }
-            },
-            {
-                targets: 1, // ID (hidden)
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'ID');
-                }
-            },
-            {
-                targets: 2, // Sr no
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Sr. No.');
-                }
-            },
-            {
-                targets: 3, // Target Name
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Target Name');
-                }
-            },
-            {
-                targets: 4, // Sales Person Name
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Sales Person Name');
-                }
-            },
-            {
-                targets: 5, // Target Value
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Target Value');
-                }
-            },
-            {
-                targets: 6, // Region
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Region');
-                }
-            },
-            {
-                targets: 7, // Start Date
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Start Date');
-                }
-            },
-            {
-                targets: 8, // End Date
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'End Date');
-                }
-            },
-            {
-                targets: 9, // Action
-                createdCell: function(td) {
-                    $(td).attr('data-label', 'Action');
-                }
-            }
-        ]
+        // columnDefs: [{
+        //         targets: 0, // Checkbox
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Select');
+        //         }
+        //     },
+        //     {
+        //         targets: 1, // ID (hidden)
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'ID');
+        //         }
+        //     },
+        //     {
+        //         targets: 2, // Sr no
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Sr. No.');
+        //         }
+        //     },
+        //     {
+        //         targets: 3, // Target Name
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Target Name');
+        //         }
+        //     },
+        //     {
+        //         targets: 4, // Sales Person Name
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Sales Person Name');
+        //         }
+        //     },
+        //     {
+        //         targets: 5, // Target Value
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Target Value');
+        //         }
+        //     },
+        //     {
+        //         targets: 6, // Region
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Region');
+        //         }
+        //     },
+        //     {
+        //         targets: 7, // Start Date
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Start Date');
+        //         }
+        //     },
+        //     {
+        //         targets: 8, // End Date
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'End Date');
+        //         }
+        //     },
+        //     {
+        //         targets: 9, // Action
+        //         createdCell: function(td) {
+        //             $(td).attr('data-label', 'Action');
+        //         }
+        //     }
+        // ]
 
     });
 

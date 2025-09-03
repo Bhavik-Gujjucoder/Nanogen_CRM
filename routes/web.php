@@ -208,7 +208,6 @@ Route::middleware(['auth', 'role:admin,staff,sales,reporting manager'])->group(f
     /* Targets */
     Route::middleware(['permission:Targets'])->group(function () {
         Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
-        Route::get('/target/demo_create', [TargetController::class, 'demo_create'])->name('target.demo_create');
         Route::resource('target', TargetController::class);
     });
 

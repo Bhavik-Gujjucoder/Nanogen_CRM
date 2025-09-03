@@ -29,6 +29,8 @@
 
     <!-- include summernote css/js -->
     <link rel="stylesheet" href="{{ asset('css/summernote-bs4.min.css') }}">
+
+    
 </head>
 
 <body>
@@ -507,6 +509,7 @@
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-tagsinput.min.js') }}"></script>
     <script src="{{ asset('js/apexcharts.min.js') }}"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script src="{{ asset('js/select2.min.js') }}"></script>
     <!-- only use dashboard Custom Json Js -->
     <!-- <script src="js/jsonscript.js"></script> -->
@@ -588,6 +591,7 @@
             return '₹' + formatted;
         }
     </script>
+
     @yield('script')
 </body>
 

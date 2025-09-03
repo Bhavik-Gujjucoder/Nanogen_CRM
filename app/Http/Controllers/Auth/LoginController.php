@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
@@ -73,5 +74,26 @@ class LoginController extends Controller
             return redirect('/reporting_manager'); // Redirect to sales dashboard
         }
         return redirect('/'); // Default fallback
+    }
+
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        // ✅ Custom Remember Me lifetime (30 days)
+        if ($request->filled('remember')) {
+            $rememberTokenName = $this->guard()->getRecallerName(); // cookie name
+            $rememberTokenValue = $request->cookies->get($rememberTokenName);
+
+            if ($rememberTokenValue) {
+                // Reset cookie lifetime to 30 days (43200 minutes)
+                Cookie::queue($rememberTokenName, $rememberTokenValue, 43200);
+            }
+        }
+
+        return $this->authenticated($request, $this->guard()->user())
+            ?: redirect()->intended($this->redirectPath());
     }
 }

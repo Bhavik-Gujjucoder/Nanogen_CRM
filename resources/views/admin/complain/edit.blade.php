@@ -154,7 +154,7 @@
             @if (!$complain_status_history->isEmpty())
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <h5>Complain Status History</h5>
+                        <h5 class="complain_status_history">Complain Status History</h5>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>

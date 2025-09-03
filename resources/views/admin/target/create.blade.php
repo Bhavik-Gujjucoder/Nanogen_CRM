@@ -9,6 +9,22 @@
             margin: 0;
             outline: none;
         }
+
+        .quarterly-block {
+            margin-bottom: 20px;
+            /* space between blocks */
+            padding: 15px;
+            /* inner spacing */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .grade-section .row.fw-bold {
+            /* border-bottom: 2px solid #ddd; */
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
     </style>
 @section('title')
     {{ $page_title }}
@@ -73,86 +89,96 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label class="col-form-label">Target Value <span class="text-danger">*</span></label>
-                        <input type="number" name="target_value" value="{{ old('target_value') }}"
-                            class="form-control" placeholder="Target Value">
+                        <input type="number" name="target_value" id="mainTargetValue"
+                            value="{{ old('target_value') }}" class="form-control" placeholder="Target Value">
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="col-form-label">Start Date <span class="text-danger">*</span></label>
-                        <div class="icon-form">
-                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
-                                class="form-control" placeholder="DD/MM/YY">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="col-form-label">End Date <span class="text-danger">*</span></label>
-                        <div class="icon-form">
-                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                            <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"
-                                class="form-control" placeholder="DD/MM/YY">
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-7">
-                    <div class="mb-3">
-                        <div id="product-container" class="gc-target-grades">
-                            <div class="d-flex align-items-center mb-2 gc-grade-labal">
-                                <label class="col-md-4 col-form-label ">Grade <span class="text-danger">*</span></label>
-                                <label class="col-md-4 col-form-label ">Target Percentage <span
+                <!-- Wrap a full quarterly + grade block -->
+                <div id="out_of_percentage" class="text-danger mb-2" style="display:block;"></div>
+                <div class="quarterly-block mb-4 p-3 border rounded">
+                    <div class="row align-items-center gap-0 quarterly-row">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Quarterly <span
                                         class="text-danger">*</span></label>
-                                <label class="col-md-3 col-form-label ">Target Value <span
-                                        class="text-danger">*</span></label>
-                            </div>
-                            <div class="product-group d-flex align-items-center mb-2">
-                                <input type="hidden" name="dummy_grade" id="dummyValidationField" />
-                                <div class="col-md-4">
-                                    <select class="form-select me-2" name="grade_id[]">
-                                        <option value="">Select Grade</option>
-                                        @if ($grade)
-                                            @foreach ($grade as $g)
-                                                <option value="{{ $g->id }}"
-                                                    {{ old('grade_id') == $g->id ? 'selected' : '' }}>
-                                                    {{ $g->name }}
-                                                </option>
-                                            @endforeach
-                                        @else
-                                            <option value="">No record</option>
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                                        class="form-control me-2" placeholder="Target Percentage">
-                                </div>
-                                <div class="col-md-4">
-                                    <strong></strong>
-                                    <input type="text" name="percentage_value[]"
-                                        value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
-                                        readonly hidden>
-
-                                       <input type="text" name="textpercentage_value[]"
-                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
-                                        readonly>
-                                </div>
-                                {{-- /<div id="percentage_value"></div>  --}}
-
-                                <button type="button" class="btn btn-danger remove-btn">Remove</button>
+                                <select class="form-select me-2 selectQuarter" name="quarterly[]">
+                                    <option value="">Select Quarter</option>
+                                    <option value="1">Quarterly 1</option>
+                                    <option value="2">Quarterly 2</option>
+                                    <option value="3">Quarterly 3</option>
+                                    <option value="4">Quarterly 4</option>
+                                </select>
                             </div>
                         </div>
-                        <div id="productError" class="text-danger mb-3" style="display:none;">
-                            Please fill all fields in each product row.
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Quarterly Percentage <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="quarterly_percentage[]"
+                                    class="form-control me-2 quarterly-percentage" placeholder="Quarterly Percentage">
+                            </div>
                         </div>
-                        <button type="button" class="btn btn-primary mt-2" id="add-new">Add New</button>
+                        <div class="col-md-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Target Value <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="quarterly_target_value[]"
+                                    class="input-as-text quarterly-target-value" placeholder="₹0" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger quarter-btn add-quarter">Add New
+                                Quarter</button>
+                        </div>
+                    </div>
+
+                    <!-- Grade Section -->
+                    <div class="grade-section mt-3">
+                        <!-- Grade Heading -->
+                        <div class="row fw-bold">
+                            <div class="col-md-4">Grade <span class="text-danger">*</span></div>
+                            <div class="col-md-3">Target Percentage <span class="text-danger">*</span></div>
+                            <div class="col-md-3">Target Value <span class="text-danger">*</span></div>
+                        </div>
+
+                        <!-- Grade Row -->
+                        <div class="product-group d-flex align-items-center mb-2">
+                            <div class="col-md-4">
+                                <select class="form-select me-2 selectGrade" name="grade_id[0][]">
+                                    <option value="">Select Grade</option>
+                                    @if ($grade)
+                                        @foreach ($grade as $g)
+                                            <option value="{{ $g->id }}"
+                                                {{ old('grade_id') == $g->id ? 'selected' : '' }}>
+                                                {{ $g->name }}
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        <option value="">No record</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="grade_percentage[0][]"
+                                    value="{{ old('grade_percentage') }}" class="form-control me-2 grade-percentage"
+                                    placeholder="Target Percentage">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="grade_target_value[0][]"
+                                    class="input-as-text grade-target-value" placeholder="₹0" readonly>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-grade">Remove Grade</button>
+                            </div>
+                        </div>
+
+                        <!-- Add Grade Button -->
+                        <button type="button" class="btn btn-primary add-grade">Add New Grade</button>
                     </div>
                 </div>
+                <div id="quarterlyError" class="text-danger mb-2" style="display:none;"></div>
+
             </div>
             <div class="d-flex align-items-center justify-content-end">
                 <button type="submit" class="btn btn-primary">Create</button>
@@ -165,346 +191,588 @@
 @endsection
 @section('script')
 <script>
-    function calculateAndValidatePercentage() {
-        let targetValue = parseFloat($('input[name="target_value"]').val());
-        let totalPercentage = 0;
-        let isValid = true;
-
-        $('#product-container .product-group').each(function() {
-            let $percentage = $(this).find('input[name="percentage[]"]');
-            let $valueField = $(this).find('input[name="percentage_value[]"]');
-           let $valueFieldText = $(this).find('input[name="textpercentage_value[]"]');
-
-            // let $valueField = $(this).find('#percentage_value');
-            let percentage = parseFloat($percentage.val());
-
-            if (!isNaN(percentage)) {
-                totalPercentage += percentage;
-            }
-
-            // Calculate percentage_value if both values are valid
-            if (!isNaN(targetValue) && !isNaN(percentage)) {
-                let result = (targetValue * percentage) / 100;
-                $valueField.val(result.toFixed(0));
-                $valueFieldText.val(IndianNumberFormatscript(result.toFixed(0)));
-            } else {
-                $valueField.val('');
-                $valueFieldText.val('');
-            }
-        });
-
-        // Show/hide error if total exceeds 100
-        if (totalPercentage != 100) {
-            $('#percentageLimitError').text('Total percentage should be 100%.').show();
-            isValid = false;
-        } else {
-            $('#percentageLimitError').hide();
-        }
-
-        return isValid;
-    }
-
-    // Trigger calculation and validation on target value change
-    $('input[name="target_value"]').on('input', function() {
-        calculateAndValidatePercentage();
-    });
-
-    // Trigger calculation and validation on percentage input change
-    $('#product-container').on('input', 'input[name="percentage[]"]', function() {
-        calculateAndValidatePercentage();
-    });
-
-    // When adding a new row, also re-validate
-    $('#add-new').on('click', function() {
-        setTimeout(() => calculateAndValidatePercentage(), 100); // slight delay to let DOM update
-    });
-    /*************************** END *********************/
-
-    /*** select option search functionality ***/
     $(document).ready(function() {
-        $('.search-dropdown').select2({
-            placeholder: "Select",
-            // allowClear: true
-        });
-    });
+        /* === Quarterly Calculation === */
+        function recalcQuarterlyValues() {
+            let mainTarget = parseFloat($('#mainTargetValue').val()) || 0;
+            let totalQuarterPercent = 0;
 
-    /*** datepicker ***/
-    $(document).ready(function() {
-        const startPicker = flatpickr("#startDate", {
-            dateFormat: "d-m-Y",
-            disableMobile: true,
-            // maxDate: "today",
-            defaultDate: "{{ old('start_date', isset($detail) ? \Carbon\Carbon::parse($detail->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
-            onChange: function(selectedDates, dateStr, instance) {
-                // Set selected start date as minDate for end date
-                endPicker.set('minDate', dateStr);
-                removeTodayHighlight(selectedDates, dateStr, instance);
-            },
-            onReady: removeTodayHighlight,
-            onMonthChange: removeTodayHighlight,
-            onYearChange: removeTodayHighlight,
-            onOpen: removeTodayHighlight
-        });
+            $('.quarterly-block').each(function() {
+                let percentInput = $(this).find('input[name="quarterly_percentage[]"]');
+                let percent = parseFloat(percentInput.val()) || 0;
+                totalQuarterPercent += percent;
 
-        const endPicker = flatpickr("#endDate", {
-            dateFormat: "d-m-Y",
-            disableMobile: true,
-            // maxDate: "today",
-            defaultDate: "{{ old('end_date', isset($detail) ? \Carbon\Carbon::parse($detail->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
-            onReady: removeTodayHighlight,
-            onMonthChange: removeTodayHighlight,
-            onYearChange: removeTodayHighlight,
-            onOpen: removeTodayHighlight
-        });
+                let targetField = $(this).find('input[name="quarterly_target_value[]"]');
+                let quarterlyTarget = 0;
 
-        function removeTodayHighlight(selectedDates, dateStr, instance) {
-            const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");
-            if (todayElem && !todayElem.classList.contains("selected")) {
-                todayElem.classList.remove("today");
-            }
-        }
-    });
-
-    /*** END ***/
-
-
-    /*** Validation ***/
-
-
-
-    function check_total_percentage() {
-        let totalPercentage = 0;
-        $('input[name="percentage[]"]').each(function() {
-            let val = parseFloat($(this).val()) || 0;
-            totalPercentage += val;
-        });
-        console.log(totalPercentage);
-        if (totalPercentage != 100) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function check_atleast_one() {
-        let count_percetage_input = $('input[name="percentage[]"]').length;
-        if (count_percetage_input) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    $.validator.addMethod("validateGrades", function(value, element) {
-        let isValid = true;
-
-        $("#product-container .product-group").each(function() {
-            let grade = $(this).find('select[name="grade_id[]"]').val();
-            let percentage = $(this).find('input[name="percentage[]"]').val();
-            let value = $(this).find('input[name="percentage_value[]"]').val();
-            console.log(grade)
-            console.log(percentage)
-            console.log(value)
-            if (grade === "" || percentage.trim() === "" || value.trim() === "") {
-                isValid = false;
-                return false; // Break the loop on first invalid group
-            }
-        });
-
-        return isValid;
-    }, "Please fill all grade fields properly.");
-
-    // Hide error message when user changes any input field
-    $('input[name="percentage[]"]').on('input', function() {
-        $("#productError").hide(); // Hide the error message when the input changes
-    });
-
-    $("#target_form").validate({
-        ignore: [],
-        rules: {
-            subject: {
-                required: true
-            },
-            salesman_id: {
-                required: true
-            },
-            city_id: {
-                required: true
-            },
-            target_value: {
-                required: true,
-                number: true
-            },
-            start_date: {
-                required: true
-            },
-            end_date: {
-                required: true
-            },
-            dummy_grade: {
-                validateGrades: true
-            }
-        },
-        messages: {
-            subject: "Please enter subject",
-            salesman_id: "Please select a salesperson",
-            city_id: "Please select a region",
-            target_value: {
-                required: "Please enter target value",
-                number: "Please enter a valid number"
-            },
-            start_date: "Please select a start date",
-            end_date: "Please select an end date"
-        },
-        submitHandler: function(form) {
-            if (check_total_percentage()) {
-                if (check_atleast_one()) {
-                    form.submit(); //Submit only if check passes
+                if (mainTarget > 0 && percent > 0) {
+                    quarterlyTarget = (mainTarget * percent) / 100;
+                    targetField.val("₹" + quarterlyTarget.toLocaleString());
                 } else {
-                    $("#productError").text(
-                        'Please add atleast one target').show();
+                    targetField.val("₹0");
                 }
-            } else {
-                // alert('ddd');
-                $("#productError").text(
-                    'Please enter a valid percentage. The total percentage should be 100%.').show();
-            }
-        },
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            if (element.attr("name") === "dummy_grade") {
-                $("#productError").text(error.text()).show();
-            } else if (element.hasClass('select2-hidden-accessible')) {
-                error.addClass('text-danger');
-                error.insertAfter(element.next('.select2'));
-            } else {
-                error.addClass('text-danger');
-                error.insertAfter(element);
-            }
-        },
-        success: function(label, element) {
-            if ($(element).attr("name") === "dummy_grade") {
-                $("#productError").hide();
-            }
-        },
-        highlight: function(element) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
-        },
-        unhighlight: function(element) {
-            $(element).removeClass('is-invalid');
-        },
 
-        // // Add these to prevent real-time validation on dummy_grade
-        // onkeyup: function(element) {
-        //     if ($(element).attr("name") !== "dummy_grade") {
-        //         $(element).valid();
-        //     }
-        // },
-        // onfocusout: function(element) {
-        //     if ($(element).attr("name") !== "dummy_grade") {
-        //         $(element).valid();
-        //     }
-        // }
+                // === Grade Calculation per Quarter ===
+                recalcGradeValues($(this), quarterlyTarget);
+            });
+
+            // === Quarterly Validation ===
+            if (totalQuarterPercent > 100) {
+                $("#out_of_percentage").show().text("Total Quarterly Percentage cannot exceed 100%.");
+            } else {
+                $("#out_of_percentage").hide();
+            }
+            updateQuarterOptions();
+        }
+
+        /* === Grade Calculation per Quarter === */
+        function recalcGradeValues(quarterBlock, quarterlyTarget) {
+            let totalGradePercent = 0;
+
+            quarterBlock.find('.product-group').each(function() {
+                let gradePercentInput = $(this).find('.grade-percentage');
+                let gradePercent = parseFloat(gradePercentInput.val()) || 0;
+                totalGradePercent += gradePercent;
+
+                let gradeTargetField = $(this).find('.grade-target-value');
+                if (quarterlyTarget > 0 && gradePercent > 0) {
+                    let gradeTarget = (quarterlyTarget * gradePercent) / 100;
+                    gradeTargetField.val("₹" + gradeTarget.toLocaleString());
+                } else {
+                    gradeTargetField.val("₹0");
+                }
+            });
+
+            // === Grade Validation per Quarter ===
+            let gradeErrorContainer = quarterBlock.find('.grade-error');
+            if (!gradeErrorContainer.length) {
+                gradeErrorContainer = $('<div class="text-danger grade-error mb-2"></div>');
+                quarterBlock.find('.grade-section').prepend(gradeErrorContainer);
+            }
+
+            if (totalGradePercent > 100) {
+                gradeErrorContainer.show().text("Total Grade Percentage cannot exceed 100%.");
+            } else {
+                gradeErrorContainer.hide();
+            }
+
+            // === Apply unique grade option restriction ===
+            updateGradeOptions(quarterBlock);
+        }
+
+        // === Ensure unique grade selections in a quarter ===
+        function updateGradeOptions(quarterBlock) {
+            let selectedGrades = [];
+
+            // Collect all selected grade IDs in this quarter
+            quarterBlock.find('.selectGrade').each(function() {
+                let val = $(this).val();
+                if (val) selectedGrades.push(val);
+            });
+
+            // Loop through each select and hide already selected options in others
+            quarterBlock.find('.selectGrade').each(function() {
+                let currentSelect = $(this);
+                let currentValue = currentSelect.val();
+
+                currentSelect.find('option').each(function() {
+                    let optionVal = $(this).val();
+
+                    if (optionVal && optionVal !== currentValue && selectedGrades.includes(
+                            optionVal)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        }
+
+        /* === Ensure unique quarter selections overall === */
+        function updateQuarterOptions() {
+            let selectedQuarter = [];
+
+            // Collect all selected grade IDs in this quarter
+            $(document).find('.selectQuarter').each(function() {
+                let val = $(this).val();
+                if (val) selectedQuarter.push(val);
+            });
+            console.log(selectedQuarter);
+            // Loop through each select and hide already selected options in others
+            $(document).find('.selectQuarter').each(function() {
+                let currentSelect = $(this);
+                let currentValue = currentSelect.val();
+
+                currentSelect.find('option').each(function() {
+                    let optionVal = $(this).val();
+
+                    if (optionVal && optionVal !== currentValue && selectedQuarter.includes(
+                            optionVal)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        }
+
+        // === Triggers ===
+        $(document).on('input',
+            '#mainTargetValue, .quarterly-percentage, .grade-percentage',
+            function() {
+                recalcQuarterlyValues();
+            });
+
+        /* === On Grade Change === */
+        $(document).on('change', '.selectGrade', function() {
+            let quarterBlock = $(this).closest('.quarterly-block');
+            updateGradeOptions(quarterBlock);
+        });
+
+        /* === On Quarter Change === */
+        $(document).on('change', '.selectQuarter', function() {
+            updateQuarterOptions();
+        });
+        // === Quarter Add/Remove ===
+        // $(document).on('click', '.add-quarter', function() {
+        //     let currentQuarter = $(this).closest('.quarterly-block');
+        //     let clone = currentQuarter.clone(true);
+
+        //     // reset inputs in cloned block
+        //     clone.find('input, select').val('');
+        //     clone.find('.grade-error').remove();
+
+        //     // keep only the first grade row
+        //     let firstGrade = clone.find('.product-group').first().clone();
+        //     firstGrade.find('input, select').val('');
+        //     clone.find('.product-group').remove(); // remove all grade rows
+        //     clone.find('.add-grade').before(firstGrade); // add back only one row
+
+        //     // change current button to "remove"
+        //     currentQuarter.find('.quarter-btn')
+        //         .removeClass('add-quarter btn-danger')
+        //         .addClass('remove-quarter btn-dark')
+        //         .text('Remove Quarter');
+
+        //     // insert new block
+        //     $('.quarterly-block').first().before(clone);
+        //     recalcQuarterlyValues();
+        // });
+
+        /* === Add New Quarter === */
+        var quarterCount = 0;
+        $(document).on('click', '.add-quarter', function() {
+            quarterCount++;
+            var qater = `<div class="quarterly-block mb-4 p-3 border rounded">
+                    <div class="row align-items-center gap-0 quarterly-row">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Quarterly<span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select me-2 selectQuarter" name="quarterly[]">
+                                    <option value="">Select Quarter</option>
+                                    <option value="1">Quarterly 1</option>
+                                    <option value="2">Quarterly 2</option>
+                                    <option value="3">Quarterly 3</option>
+                                    <option value="4">Quarterly 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Quarterly Percentage <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="quarterly_percentage[]" 
+                                    class="form-control me-2 quarterly-percentage" placeholder="Quarterly Percentage">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="col-form-label flex-shrink-0">Target Value <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="quarterly_target_value[]" 
+                                    class="input-as-text quarterly-target-value" placeholder="₹0" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-dark quarter-btn remove-quarter">Remove Quarter</button>
+                        </div>
+                    </div>
+
+                    <div class="grade-section mt-3">
+                        <div class="row fw-bold">
+                            <div class="col-md-4">Grade <span class="text-danger">*</span></div>
+                            <div class="col-md-3">Target Percentage <span class="text-danger">*</span></div>
+                            <div class="col-md-3">Target Value <span class="text-danger">*</span></div>
+                        </div>
+
+                        <div class="product-group d-flex align-items-center mb-2">
+                            <div class="col-md-4">
+                                <select class="form-select me-2 selectGrade" name="grade_id[` + quarterCount + `][]">
+                                    <option value="">Select Grade</option>
+                                    @if ($grade)
+                                        @foreach ($grade as $g)
+                                            <option value="{{ $g->id }}"
+                                                {{ old('grade_id') == $g->id ? 'selected' : '' }}>
+                                                {{ $g->name }}
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        <option value="">No record</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="grade_percentage[` + quarterCount + `][]"
+                                    class="form-control me-2 grade-percentage" placeholder="Target Percentage">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="grade_target_value[` + quarterCount + `][]" 
+                                    class="input-as-text grade-target-value" placeholder="₹0" readonly>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-grade">Remove Grade</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary add-grade">Add New Grade</button>
+                    </div>
+                </div>`;
+            $(qater).insertAfter('.quarterly-block:last');
+            //scroll to new quarter
+            $('html, body').animate({
+                scrollTop: $(".quarterly-block:last").offset().top
+            }, 500);
+
+
+            //   qater.find('.quarter-btn')
+            //     .removeClass('add-quarter btn-danger')
+            //     .addClass('remove-quarter btn-dark')
+            //     .text('Remove Quarter');
+            recalcQuarterlyValues();
+
+        })
+
+        /* === Remove Quarter === */
+        $(document).on('click', '.remove-quarter', function() {
+            $(this).closest('.quarterly-block').remove();
+            recalcQuarterlyValues();
+        });
+
+        // === Grade Add/Remove ===
+        $(document).on('click', '.add-grade', function() {
+            let gradeRow = $(this).siblings('.product-group').first().clone();
+            gradeRow.find('input, select').val('');
+            $(this).before(gradeRow);
+
+            let quarterBlock = $(this).closest('.quarterly-block');
+            updateGradeOptions(quarterBlock);
+        });
+
+        /* === Remove Grade === */
+        $(document).on('click', '.remove-grade', function() {
+            let gradeSection = $(this).closest('.grade-section');
+            let quarterBlock = $(this).closest('.quarterly-block');
+
+            if (gradeSection.find('.product-group').length > 1) {
+                $(this).closest('.product-group').remove();
+                recalcQuarterlyValues();
+                updateGradeOptions(quarterBlock);
+            } else {
+                alert("At least one grade is required.");
+            }
+        });
     });
 
-    /*** END ***/
+    // === Form Submit Validation (Main + Quarterly) ===
+    $("form").on("submit", function(e) {
+        let valid = true;
+          let totalQuarterPercent = 0;
+        $("#quarterlyError").hide().text("");
 
+        // ---- Remove old errors ----
+        $(".field-error").remove();
+        $(".quarterly-error").remove();
 
+        // ---- Validate Main Fields ----
+        let subject = $('input[name="subject"]');
+        let salesman = $('select[name="salesman_id"], input[name="salesman_id"][type="hidden"]');
+        let city = $('select[name="city_id"]');
+        let targetValue = $('input[name="target_value"]');
 
+        if (!subject.val().trim()) {
+            valid = false;
+            subject.after('<div class="text-danger field-error">Target Name is required.</div>');
+        }
 
+        if (!salesman.val().trim()) {
+            valid = false;
+            salesman.closest('.mb-3').append(
+                '<div class="text-danger field-error">Sales Person is required.</div>');
+        }
 
-    const grades = @json($grade);
-    /*** Add new Grade ***/
-    function getSelectedGrades() {
-        let selected = [];
-        document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
-            if (select.value) {
-                selected.push(parseInt(select.value));
-            }
-        });
-        return selected;
-    }
+        if (!city.val().trim()) {
+            valid = false;
+            city.closest('.mb-3').append('<div class="text-danger field-error">Region is required.</div>');
+        }
 
-    function refreshDropdowns() {
-        const selectedGrades = getSelectedGrades();
-        document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
-            const currentValue = select.value;
-            const optionsHtml = buildGradeOptions(selectedGrades.filter(id => id !== parseInt(currentValue)));
-            select.innerHTML = optionsHtml;
-            select.value = currentValue; // reassign current value to avoid losing selection
-        });
-    }
+        if (!targetValue.val().trim()) {
+            valid = false;
+            targetValue.after('<div class="text-danger field-error">Target Value is required.</div>');
+        }
 
-    function buildGradeOptions(selectedGrades) {
-        let options = '<option value="">Select</option>';
-        grades.forEach(grade => {
-            if (!selectedGrades.includes(grade.id)) {
-                options += `<option value="${grade.id}">${grade.name}</option>`;
-            }
-        });
-        return options;
-    }
-
-    document.getElementById('add-new').addEventListener('click', function() {
-        const selectedGrades = getSelectedGrades();
-        // Collect already selected grade IDs
-        document.querySelectorAll('select[name="grade_id[]"]').forEach(select => {
-            if (select.value) {
-                selectedGrades.push(parseInt(select.value));
-            }
-        });
-
-        console.log(selectedGrades);
-        const availableGrades = grades.filter(g => !selectedGrades.includes(g.id));
-
-        let productContainer = document.getElementById('product-container');
-        let newProductGroup = document.createElement('div');
-        newProductGroup.classList.add('product-group', 'd-flex', 'align-items-center', 'mb-2');
-
-        const optionsHtml = buildGradeOptions(selectedGrades);
-
-        newProductGroup.innerHTML = `
-        <div class="col-md-4">
-            <select class="form-select me-2" name="grade_id[]">
-                    ${optionsHtml}
-                </select>
-        </div>
-        <div class="col-md-4">
-             <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                class="form-control me-2" placeholder="Target Percentage"></div><div class="col-md-4">
-
+        // ---- Validate Quarterly Blocks ----
+      
+        $(".quarterly-block").each(function(index) {
+            let quarterBlock = $(this);
+            let blockValid = true;
+            let totalGradePercent = 0;
             
-            <input type="hidden" name="percentage_value[]" value="{{ old('percentage_value') }}"
-                class="input-as-text" readonly>
+            let quarterSelect = quarterBlock.find('select[name="quarterly[]"]');
+            let quarterPercent = quarterBlock.find('input[name="quarterly_percentage[]"]');
 
-                <input type="text" name="textpercentage_value[]"
-                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
-                                        readonly>
-                
-                
-                </div>
+            if (!quarterSelect.val() || !quarterPercent.val()) {
+                blockValid = false;
+            }
 
+            let percent = parseFloat(quarterPercent.val()) || 0;
+            totalQuarterPercent += percent; 
+            if (totalQuarterPercent > 100) { 
+                blockValid = false;
+                valid = false;
+                return false; // break
+            }
 
+            quarterBlock.find(".product-group").each(function() {
+                let gradeSelect = $(this).find('.selectGrade');
+                let gradePercent = $(this).find('.grade-percentage');
+                if (!gradeSelect.val() || !gradePercent.val()) {
+                    blockValid = false;
+                    return false; // break
+                }
+                totalGradePercent += parseFloat(gradePercent.val()) || 0;
 
-            <button type="button" class="btn btn-danger  remove-btn">Remove</button>
-        `;
-        productContainer.appendChild(newProductGroup);
-        $("#productError").hide();
-        // $("#dummyValidationField").valid();
-    });
-    document.getElementById('product-container').addEventListener('click', function(event) {
-        if (event.target.classList.contains('remove-btn')) {
-            event.target.parentElement.remove();
-            refreshDropdowns();
+            });
+
+            if (totalGradePercent > 100) {
+                blockValid = false;
+                valid = false;
+                return false; // break
+            }
+
+            if (!blockValid) {
+                valid = false;
+                quarterBlock.prepend(
+                    '<div class="text-danger quarterly-error mb-2">⚠ All fields are required in this Quarterly section (Quarter ' +
+                    (index + 1) + ').</div>'
+                );
+            }
+        });
+
+        // alert(valid);
+
+        if (!valid) {
+            e.preventDefault();
+            $("#quarterlyError").show().text("Some required fields are missing. Please check.");
         }
     });
 
-    // Optional: Refresh when user changes dropdown selection
-    document.getElementById('product-container').addEventListener('change', function(e) {
-        if (e.target.name === 'grade_id[]') {
-            refreshDropdowns();
-        }
-    });
-    /*** END ***/
+    // === Auto Hide Error When Field Filled ===
+    // $(document).on("input change",
+    //     'input[name="subject"], select[name="salesman_id"], select[name="city_id"], input[name="target_value"], input[name="quarterly_percentage[]"], input[name="grade_percentage[]"], select[name="quarterly[]"], select[name="grade_id[]"]',
+    //     function() {
+    //         let input = $(this);
+
+    //         // Remove field-level error if filled
+    //         if (input.val().trim()) {
+    //             input.closest('.mb-3').find(".field-error").remove();
+    //             input.closest('.col-md-4').find(".field-error").remove();
+    //         }
+
+    //         // Re-check quarterly block validity
+    //         let quarterBlock = input.closest(".quarterly-block");
+    //         if (quarterBlock.length) {
+    //             let blockValid = true;
+    //             let quarterSelect = quarterBlock.find('select[name="quarterly[]"]');
+    //             let quarterPercent = quarterBlock.find('input[name="quarterly_percentage[]"]');
+
+    //             if (!quarterSelect.val() || !quarterPercent.val()) {
+    //                 blockValid = false;
+    //             }
+
+    //             quarterBlock.find(".product-group").each(function() {
+    //                 let gradeSelect = $(this).find('select[name="grade_id[]"]');
+    //                 let gradePercent = $(this).find('input[name="grade_percentage[]"]');
+    //                 if (!gradeSelect.val() || !gradePercent.val()) {
+    //                     blockValid = false;
+    //                     return false;
+    //                 }
+    //             });
+
+    //             if (blockValid) {
+    //                 quarterBlock.find(".quarterly-error").remove();
+    //             }
+    //         }
+    //     }
+    // );
 </script>
+
+
+{{-- <script>
+    $(document).ready(function() {
+        function recalcQuarterlyValues() {
+            let mainTarget = parseFloat($('#mainTargetValue').val()) || 0;
+            let totalQuarterPercent = 0;
+
+            $('.quarterly-block').each(function() {
+                let percentInput = $(this).find('input[name="quarterly_percentage[]"]');
+                let percent = parseFloat(percentInput.val()) || 0;
+                totalQuarterPercent += percent;
+
+                let targetField = $(this).find('input[name="quarterly_target_value[]"]');
+                let quarterlyTarget = 0;
+
+                if (mainTarget > 0 && percent > 0) {
+                    quarterlyTarget = (mainTarget * percent) / 100;
+                    targetField.val("₹" + quarterlyTarget.toLocaleString());
+                } else {
+                    targetField.val("₹0");
+                }
+
+                // === Grade Calculation per Quarter ===
+                recalcGradeValues($(this), quarterlyTarget);
+            });
+
+            // === Quarterly Validation ===
+            if (totalQuarterPercent > 100) {
+                $("#out_of_percentage").show().text("Total Quarterly Percentage cannot exceed 100%.");
+            } else {
+                $("#out_of_percentage").hide();
+            }
+        }
+
+        function recalcGradeValues(quarterBlock, quarterlyTarget) {
+            let totalGradePercent = 0;
+
+            quarterBlock.find('.product-group').each(function() {
+                let gradePercentInput = $(this).find('input[name="grade_percentage[]"]');
+                let gradePercent = parseFloat(gradePercentInput.val()) || 0;
+                totalGradePercent += gradePercent;
+
+                let gradeTargetField = $(this).find('input[name="grade_target_value[]"]');
+                if (quarterlyTarget > 0 && gradePercent > 0) {
+                    let gradeTarget = (quarterlyTarget * gradePercent) / 100;
+                    gradeTargetField.val("₹" + gradeTarget.toLocaleString());
+                } else {
+                    gradeTargetField.val("₹0");
+                }
+            });
+
+            // === Grade Validation per Quarter ===
+            let gradeErrorContainer = quarterBlock.find('.grade-error');
+            if (!gradeErrorContainer.length) {
+                gradeErrorContainer = $('<div class="text-danger grade-error mb-2"></div>');
+                quarterBlock.find('.grade-section').prepend(gradeErrorContainer);
+            }
+
+            if (totalGradePercent > 100) {
+                gradeErrorContainer.show().text("Total Grade Percentage cannot exceed 100%.");
+            } else {
+                gradeErrorContainer.hide();
+            }
+
+            // === Apply unique grade option restriction ===
+            updateGradeOptions(quarterBlock);
+        }
+
+        // === Ensure unique grade selections in a quarter ===
+        function updateGradeOptions(quarterBlock) {
+            let selectedGrades = [];
+
+            // Collect all selected grade IDs in this quarter
+            quarterBlock.find('select[name="grade_id[]"]').each(function() {
+                let val = $(this).val();
+                if (val) selectedGrades.push(val);
+            });
+
+            // Loop through each select and hide already selected options in others
+            quarterBlock.find('select[name="grade_id[]"]').each(function() {
+                let currentSelect = $(this);
+                let currentValue = currentSelect.val();
+
+                currentSelect.find('option').each(function() {
+                    let optionVal = $(this).val();
+
+                    if (optionVal && optionVal !== currentValue && selectedGrades.includes(
+                            optionVal)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        }
+
+        // === Triggers ===
+        $(document).on('input',
+            '#mainTargetValue, input[name="quarterly_percentage[]"], input[name="grade_percentage[]"]',
+            function() {
+                recalcQuarterlyValues();
+            });
+
+        $(document).on('change', 'select[name="grade_id[]"]', function() {
+            let quarterBlock = $(this).closest('.quarterly-block');
+            updateGradeOptions(quarterBlock);
+        });
+
+        // === Quarter Add/Remove ===
+        $(document).on('click', '.add-quarter', function() {
+            let currentQuarter = $(this).closest('.quarterly-block');
+            let clone = currentQuarter.clone(true);
+
+            // reset inputs in cloned block
+            clone.find('input, select').val('');
+            clone.find('.grade-error').remove();
+
+            // change current button to "remove"
+            currentQuarter.find('.quarter-btn')
+                .removeClass('add-quarter btn-danger')
+                .addClass('remove-quarter btn-dark')
+                .text('Remove Quarter');
+
+            // insert new block
+            $('.quarterly-block').first().before(clone);
+            recalcQuarterlyValues();
+        });
+
+        $(document).on('click', '.remove-quarter', function() {
+            $(this).closest('.quarterly-block').remove();
+            recalcQuarterlyValues();
+        });
+
+        // === Grade Add/Remove ===
+        $(document).on('click', '.add-grade', function() {
+            let gradeRow = $(this).siblings('.product-group').first().clone();
+            gradeRow.find('input, select').val('');
+            $(this).before(gradeRow);
+
+            let quarterBlock = $(this).closest('.quarterly-block');
+            updateGradeOptions(quarterBlock);
+        });
+
+        $(document).on('click', '.remove-grade', function() {
+            let gradeSection = $(this).closest('.grade-section');
+            let quarterBlock = $(this).closest('.quarterly-block');
+
+            if (gradeSection.find('.product-group').length > 1) {
+                $(this).closest('.product-group').remove();
+                recalcQuarterlyValues();
+                updateGradeOptions(quarterBlock);
+            } else {
+                alert("At least one grade is required.");
+            }
+        });
+
+    });
+</script> --}}
 @endsection

@@ -140,8 +140,10 @@
                                             {{ $order->distributors_dealers->firm_shop_name }}
                                         </a>
                                     </h6>
-                                    <p class="fs-13 d-inline-flex align-items-center"> <a href="{{ route('order_management.edit', $order->id) }}">
-                                        <spa class="text-info">{{ $order->unique_order_id }}</spa></a>
+                                    <p class="fs-13 d-inline-flex align-items-center"> <a
+                                            href="{{ route('order_management.edit', $order->id) }}">
+                                            <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                        </a>
                                         <i class="ti ti-circle-filled fs-4 text-primary mx-1">
                                         </i>{{ $order->order_date->format('d M Y') }}
                                     </p>
@@ -175,8 +177,9 @@
                                 <tr>
                                     <th>Target Name</th>
                                     <th>Target Value</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
+                                    <th>Quarter</th>
+                                    {{-- <th>Start Date</th>
+                                    <th>End Date</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -184,8 +187,16 @@
                                     <tr>
                                         <td>{{ $t->subject }}</td>
                                         <td>{{ IndianNumberFormat($t->target_value) }}</td>
-                                        <td>{{ $t->start_date->format('d M Y') }}</td>
-                                        <td>{{ $t->end_date->format('d M Y') }}</td>
+                                        <td>
+                                            @foreach ($t->target_quarterly as $quarter)
+                                                <span class="badge bg-gray me-1 mb-1">
+                                                    Quarterly {{ $quarter->quarterly }} ⮚ {{ $quarter->quarterly_percentage }}%
+                                                </span><br>
+                                            @endforeach
+                                            {{ $t->quarter }}
+                                        </td>
+                                        {{-- <td>{{ $t->start_date->format('d M Y') }}</td>
+                                        <td>{{ $t->end_date->format('d M Y') }}</td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -206,7 +217,7 @@
                         <h5 class="mb-2">Running Target #{{ $target['target_id'] }}</h5>
                         {{-- <strong>Start Date : {{ $target['start_date'] }}</strong>
                         <strong>End Date : {{ $target['end_date'] }}</strong> --}}
-                         <div>
+                        <div>
                             <strong>Start Date : </strong>{{ $target['start_date'] }}
                             &nbsp;&nbsp;&nbsp;<br>
                             <strong>End Date : </strong>{{ $target['end_date'] }}

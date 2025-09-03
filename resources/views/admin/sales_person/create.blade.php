@@ -35,8 +35,8 @@
                             <div class="upload-content">
                                 <div class="upload-btn">
                                     <input type="file" name="profile_picture" id="profile_picture"
-                                        onchange="previewProfilePicture(event)" accept=".jpg,.jpeg,.gif,.png" 
-                                        class="form-control @error('profile_picture') is-invalid @enderror" >
+                                        onchange="previewProfilePicture(event)" accept=".jpg,.jpeg,.gif,.png"
+                                        class="form-control @error('profile_picture') is-invalid @enderror">
                                     <span>
                                         <i class="ti ti-file-broken"></i>Upload Profile Image
                                     </span>
@@ -52,7 +52,8 @@
                         <div class="mb-3">
                             <label class="col-form-label">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="first_name" value="{{ old('first_name') }}"
-                                class="form-control @error('first_name') is-invalid @enderror" placeholder="First Name" maxlength="255">
+                                class="form-control @error('first_name') is-invalid @enderror" placeholder="First Name"
+                                maxlength="255">
                             @error('first_name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -62,7 +63,8 @@
                         <div class="mb-3">
                             <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="last_name" value="{{ old('last_name') }}"
-                                class="form-control @error('last_name') is-invalid @enderror" placeholder="Last Name" maxlength="255">
+                                class="form-control @error('last_name') is-invalid @enderror" placeholder="Last Name"
+                                maxlength="255">
                             @error('last_name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -127,8 +129,8 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="col-form-label">Employee ID</label>
-                            <input type="text" class="form-control " name="employee_id" value="{{ $employeeId }}"
-                                placeholder="Employee ID" readonly>
+                            <input type="text" class="form-control " name="employee_id"
+                                value="{{ $employeeId }}" placeholder="Employee ID" readonly>
                             {{-- @error('employee_id')  @error('employee_id') is-invalid @enderror
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror --}}
@@ -251,10 +253,25 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
+                            <label class="col-form-label">Area Of Operation <span class="text-danger">*</span></label>
+                            <select id="AreaOfOperation"
+                                class="form-select select2-element @error('city_ids') is-invalid @enderror"
+                                name="city_ids[]" multiple="multiple" data-old='@json(old('city_ids', []))'>
+                                <option value="">Select City</option>
+                            </select>
+                            @error('city_ids')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
                             <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
                             <input type="text" name="postal_code" value="{{ old('postal_code') }}"
                                 class="form-control @error('postal_code') is-invalid @enderror"
-                                placeholder="Postal Code" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);">
+                                placeholder="Postal Code"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);">
                             @error('postal_code')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -286,14 +303,25 @@
 </div>
 
 @endsection
+{{-- <!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 
 @section('script')
+<!-- jQuery (must be before Select2) -->
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
+<!-- Select2 JS -->
+{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+
 <script>
     $(document).ready(function() {
         $('#stateDropdown').on('change', function() {
             var stateID = $(this).val();
             var oldCityID = $('#cityDropdown').data('old'); // Get old city ID
+            var oldMultiCities = $('#AreaOfOperation').data('old') || []; // old selected multiple
+
             $('#cityDropdown').html('<option value="">Loading...</option>');
+            $('#AreaOfOperation').html('<option value="">Loading...</option>');
 
             if (stateID) {
                 $.ajax({
@@ -304,33 +332,51 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(data) {
+                        // --- Single dropdown ---
                         $('#cityDropdown').empty().append(
                             '<option value="">Select City</option>');
-                        // $.each(data, function(key, city) {
-                        //     $('#cityDropdown').append('<option value="' + city.id +
-                        //         '">' + city.city_name + '</option>');
-                        // });
                         $.each(data, function(key, city) {
                             let selected = oldCityID == city.id ? 'selected' : '';
                             $('#cityDropdown').append('<option value="' + city.id +
                                 '" ' + selected + '>' + city.city_name +
                                 '</option>');
                         });
-
-                        // Clear old city ID so it doesn't affect subsequent changes
                         $('#cityDropdown').removeAttr('data-old');
+
+                        $(".select2-element").select2({
+                            allowClear: true,
+                            width: '100%'
+                        });
+
+                        // --- Multi dropdown ---
+                        $('#AreaOfOperation').empty().append(
+                            '<option value="">Select City</option>');
+                        $.each(data, function(key, city) {
+                            let selected = oldMultiCities.includes(city.id
+                                .toString()) ? 'selected' : '';
+                            $('#AreaOfOperation').append('<option value="' + city
+                                .id + '" ' + selected + '>' + city.city_name +
+                                '</option>');
+                        });
+
+                        // ✅ Apply old selected values properly
+                        $('#AreaOfOperation').val(oldMultiCities).trigger('change');
+
+                        $('#AreaOfOperation').removeAttr('data-old');
                     }
                 });
             } else {
-                $('#cityDropdown').html('<option value="">-- Select City --</option>');
+                $('#cityDropdown').html('<option value=""> Select City </option>');
+                $('#AreaOfOperation').html('').trigger('change');
             }
         });
-        // Trigger change on page load if old state exists
-        @if (old('state_id'))
-            $('#stateDropdown').val("{{ old('state_id') }}").trigger('change');
-        @endif
+
+        // ✅ Trigger change for old state pre-fill
+        $('#stateDropdown').val("{{ old('state_id') }}").trigger('change');
     });
 </script>
+
+
 <script>
     flatpickr("#datePicker", {
         dateFormat: "d-m-Y",

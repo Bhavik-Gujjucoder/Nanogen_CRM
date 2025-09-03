@@ -43,8 +43,9 @@
                             </div>
                             <div class="upload-content">
                                 <div class="upload-btn">
-                                    <input type="file" name="profile_picture" accept=".jpg,.jpeg,.gif,.png" class="form-control @error('profile_picture') is-invalid @enderror"
-                                        onchange="previewProfilePicture(event)" >
+                                    <input type="file" name="profile_picture" accept=".jpg,.jpeg,.gif,.png"
+                                        class="form-control @error('profile_picture') is-invalid @enderror"
+                                        onchange="previewProfilePicture(event)">
                                     <span>
                                         <i class="ti ti-file-broken"></i> Upload Profile Image
                                     </span>
@@ -63,7 +64,8 @@
                         <div class="mb-3">
                             <label class="col-form-label">First Name <span class="text-danger">*</span></label>
                             <input type="text" name="first_name" value="{{ old('first_name', $detail->first_name) }}"
-                                class="form-control @error('first_name') is-invalid @enderror" placeholder="First Name" maxlength="255">
+                                class="form-control @error('first_name') is-invalid @enderror" placeholder="First Name"
+                                maxlength="255">
                             @error('first_name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -73,7 +75,8 @@
                         <div class="mb-3">
                             <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
                             <input type="text" name="last_name" value="{{ old('last_name', $detail->last_name) }}"
-                                class="form-control @error('last_name') is-invalid @enderror" placeholder="Last Name" maxlength="255">
+                                class="form-control @error('last_name') is-invalid @enderror" placeholder="Last Name"
+                                maxlength="255">
                             @error('last_name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -95,7 +98,8 @@
                             <label class="col-form-label">Phone Number <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('phone_number') is-invalid @enderror"
                                 name="phone_number" value="{{ old('phone_number', $detail->user->phone_no) }}"
-                                placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                                placeholder="Phone Number"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                             @error('phone_number')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -259,14 +263,22 @@
                             <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
                                 name="city_id">
                                 <option value="">Select City</option>
-                                {{-- @foreach ($cities as $city)
-                                    <option value="{{ $city->id }}"
-                                        {{ old('city_id', $detail->city_id) == $city->id ? 'selected' : '' }}>
-                                        {{ $city->city_name }}
-                                    </option>
-                                @endforeach --}}
                             </select>
                             @error('city_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="col-form-label">Area Of Operation <span class="text-danger">*</span></label>
+                            <select id="AreaOfOperation"
+                                class="form-select select2-element @error('city_ids') is-invalid @enderror"
+                                name="city_ids[]" multiple="multiple" data-old='@json(old('city_ids', []))'>
+                                <option value="">Select City</option>
+                            </select>
+                            @error('city_ids')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -278,7 +290,8 @@
                             <input type="text" name="postal_code"
                                 value="{{ old('postal_code', $detail->postal_code) }}"
                                 class="form-control @error('postal_code') is-invalid @enderror"
-                                placeholder="Postal Code" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);">
+                                placeholder="Postal Code"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);">
                             @error('postal_code')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -313,24 +326,26 @@
 @endsection
 
 @section('script')
-<script>
-    $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function() {
         const selectedStateId = '{{ $detail->state_id }}';
         const selectedCityId = '{{ $detail->city_id }}';
-
+        const selectedAreaOfOperation = @json($detail->city_ids ?? []);
+        console.log(selectedAreaOfOperation);
         // Load cities on page load
         if (selectedStateId) {
-            loadCities(selectedStateId, selectedCityId);
+            loadCities(selectedStateId, selectedCityId, selectedAreaOfOperation);
         }
 
         // When user changes state
-        $('#stateDropdown').on('change', function () {
+        $('#stateDropdown').on('change', function() {
             const stateId = $(this).val();
-            loadCities(stateId, null); // reset selected city
+            loadCities(stateId, null, []); // reset selected city
         });
 
-        function loadCities(stateId, selectedCityId) {
+        function loadCities(stateId, selectedCityId, selectedAreaOfOperation) {
             $('#cityDropdown').html('<option value="">Loading...</option>');
+            $('#AreaOfOperation').html('<option value="">Loading...</option>');
 
             $.ajax({
                 url: "{{ route('get.cities') }}",
@@ -339,12 +354,104 @@
                     state_id: stateId,
                     _token: "{{ csrf_token() }}"
                 },
-                success: function (data) {
+                success: function(data) {
+                    /* city dropdown */
                     $('#cityDropdown').empty().append('<option value="">Select City</option>');
-                    $.each(data, function (index, city) {
+                    $.each(data, function(index, city) {
                         const selected = city.id == selectedCityId ? 'selected' : '';
-                        $('#cityDropdown').append('<option value="' + city.id + '" ' + selected + '>' + city.city_name + '</option>');
+                        $('#cityDropdown').append('<option value="' + city.id + '" ' +
+                            selected + '>' + city.city_name + '</option>');
                     });
+
+                    $(".select2-element").select2({
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    /* Area Of Operation dropdown */
+                    // const normalized = (selectedAreaOfOperation || []).map(String);
+                    $('#AreaOfOperation').empty().append('<option value="">Select City</option>');
+                    $.each(data, function(index, city) {
+                        const selected = selectedAreaOfOperation.includes(city.id.toString()) ? 'selected' : '';
+                        console.log(selected);
+                        $('#AreaOfOperation').append('<option value="' + city.id + '" ' +
+                            selected + '>' + city.city_name + '</option>');
+                    });
+
+                    // Initialize Select2 after appending
+                    $('#AreaOfOperation').select2({
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    // Ensure values are selected
+                    $('#AreaOfOperation').val(selectedAreaOfOperation).trigger('change');
+
+
+                }
+            });
+        }
+    });
+</script> --}}
+
+
+<script>
+    $(document).ready(function() {
+        const selectedStateId = '{{ $detail->state_id }}';
+        const selectedCityId = '{{ $detail->city_id }}';
+        // const selectedAreaOfOperation = @json($detail->city_ids ? explode(',', $detail->city_ids) : []);
+        const selectedAreaOfOperation ='{{ $detail->city_ids }}'.split(',').map(Number); //@json($detail->city_ids ? explode(',', $detail->city_ids) : []);
+        console.log(selectedAreaOfOperation);
+
+        // Load cities on page load
+        if (selectedStateId) {
+            loadCities(selectedStateId, selectedCityId, selectedAreaOfOperation);
+        }
+
+        // When user changes state
+        $('#stateDropdown').on('change', function() {
+            const stateId = $(this).val();
+            loadCities(stateId, null, []); // reset both when changing state
+        });
+
+        function loadCities(stateId, selectedCityId, selectedAreaOfOperation) {
+            $('#cityDropdown').html('<option value="">Loading...</option>');
+            $('#AreaOfOperation').html('<option value="">Loading...</option>');
+
+            $.ajax({
+                url: "{{ route('get.cities') }}",
+                type: "POST",
+                data: {
+                    state_id: stateId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    /* ---------------- Single City Dropdown ---------------- */
+                    $('#cityDropdown').empty().append('<option value="">Select City</option>');
+                    $.each(data, function(index, city) {
+                        let isSelected = (String(city.id) === String(selectedCityId)) ?
+                            'selected="selected"' : '';
+                        $('#cityDropdown').append('<option value="' + city.id + '" ' +
+                            isSelected + '>' + city.city_name + '</option>');
+                    });
+
+                    /* ---------------- Area Of Operation Multi Dropdown ---------------- */
+                    $('#AreaOfOperation').empty();
+                    $.each(data, function(index, city) {
+                        let isSelected = selectedAreaOfOperation.includes(String(city.id)) ?
+                            'selected="selected"' : '';
+                        $('#AreaOfOperation').append('<option value="' + city.id + '" ' +
+                            isSelected + '>' + city.city_name + '</option>');
+                    });
+
+                    // Re-init Select2 after adding options
+                    $('#AreaOfOperation').select2({
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    // Ensure values are selected in case of async
+                    $('#AreaOfOperation').val(selectedAreaOfOperation).trigger('change');
                 }
             });
         }

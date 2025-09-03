@@ -49,7 +49,7 @@ class SalesPersonController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Sales Person';
-        
+
         if ($request->ajax()) {
             $data = SalesPersonDetail::with('user');
             return DataTables::of($data)
@@ -169,6 +169,7 @@ class SalesPersonController extends Controller
             'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
             'city_id'              => 'required|exists:city_management,id',
+            'city_ids'             => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
@@ -177,6 +178,7 @@ class SalesPersonController extends Controller
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',
             'city_id.required'              => 'The city field is required.',
+            'city_ids.required'             => 'The area of operation field is required.',
             'state_id.required'             => 'The state field is required.',
             'country_id.required'           => 'The country field is required.',
         ]);
@@ -202,6 +204,8 @@ class SalesPersonController extends Controller
             $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
             $employee_id        = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
+            $cityIds = implode(',', $request->city_ids);
+
             /* Store into sales_person_details table */
             $salesDetail = new SalesPersonDetail();
             $salesDetail->first_name           = $request->first_name;
@@ -215,6 +219,7 @@ class SalesPersonController extends Controller
             $salesDetail->street_address       = $request->street_address;
             $salesDetail->city_id              = $request->city_id;
             $salesDetail->state_id             = $request->state_id;
+            $salesDetail->city_ids             = $cityIds;
             $salesDetail->postal_code          = $request->postal_code;
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
@@ -224,7 +229,7 @@ class SalesPersonController extends Controller
                 'email' => $request->email,
                 'password' => $request->password,
             ];
-            if($request->email){
+            if ($request->email) {
                 Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
             }
             $user->assignRole('sales');
@@ -276,6 +281,7 @@ class SalesPersonController extends Controller
             'street_address'       => 'required|string|max:255',
             'city_id'              => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
+            'city_ids'             => 'required|exists:city_management,id',
             'postal_code'          => 'required|string|max:10',
             'country_id'           => 'required|exists:countries,id',
         ], [
@@ -283,6 +289,7 @@ class SalesPersonController extends Controller
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',
             'city_id.required'              => 'The city field is required.',
+            'city_ids.required'             => 'The area of operation field is required.',
             'state_id.required'             => 'The state field is required.',
             'country_id.required'           => 'The country field is required.',
         ]);
@@ -312,6 +319,8 @@ class SalesPersonController extends Controller
             }
 
             $user->save();
+
+            $cityIds = implode(',', $request->city_ids);
             $salesDetail->first_name           = $request->first_name;
             $salesDetail->last_name            = $request->last_name;
             $salesDetail->department_id        = $request->department_id;
@@ -321,6 +330,7 @@ class SalesPersonController extends Controller
             $salesDetail->street_address       = $request->street_address;
             $salesDetail->city_id              = $request->city_id;
             $salesDetail->state_id             = $request->state_id;
+            $salesDetail->city_ids             = $cityIds;
             $salesDetail->postal_code          = $request->postal_code;
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
@@ -345,15 +355,15 @@ class SalesPersonController extends Controller
         if (isset($user->profile_picture)) {
             Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
         }
-        if(!$user) {
+        if (!$user) {
             return redirect()->route('sales_person.index')->with('error', 'Sales person not found.');
-        }else{
+        } else {
             $user->delete();
         }
 
         if (!$detail) {
             return redirect()->route('sales_person.index')->with('error', 'Sales person detail not found.');
-        }else{
+        } else {
             $detail->delete();
         }
 
@@ -410,16 +420,12 @@ class SalesPersonController extends Controller
         $data['total_target']        = $targets->count();
         $data['total_target_amount'] = $targets->sum('target_value');
 
-
         // $data['total_order']       = $this->order_management->where('salesman_id', $sales_user)->count();
         // $data['order_grand_total'] = $this->order_management->where('salesman_id', $sales_user)->sum('grand_total');
         // $data['total_target']      = $this->target->where('salesman_id', $sales_user)->count();
 
-
-
-
         // if ($request->start_date && $request->end_date) {
-        //    $data['latest_orders']     = $this->order_management->where('salesman_id', $sales_user)
+        // $data['latest_orders'] = $this->order_management->where('salesman_id', $sales_user)
         //             ->where(function ($sub) use ($startDate, $endDate) {
         //                 $sub->whereBetween('order_date', [$startDate, $endDate]);
         //             })
@@ -435,11 +441,11 @@ class SalesPersonController extends Controller
         $data['current_target']    = $this->target->with('target_grade')
             ->where('salesman_id', $sales_user)
             ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get();
-        $data['past_targets']      = $this->target->with('target_grade')
+        $data['past_targets']      = $this->target->with('target_quarterly')
             ->where('salesman_id', $sales_user)
-            ->where('end_date', '<', Carbon::today())
+            // ->where('end_date', '<', Carbon::today())
             ->get();
-
+        // dd( $data['past_targets']  );
 
 
         /***** Last 12 months order performance *****/
@@ -573,23 +579,39 @@ class SalesPersonController extends Controller
             'not_achieved_targets' => [],
         ];
 
+        /* Define quarter date ranges */
+        $dates = [
+            1 => [date('Y-01-01'), date('Y-03-31')],
+            2 => [date('Y-04-01'), date('Y-06-30')],
+            3 => [date('Y-07-01'), date('Y-09-30')],
+            4 => [date('Y-10-01'), date('Y-12-31')],
+            // 2 => ['01-04-Y', '30-06-Y'],
+            // 3 => ['01-07-Y', '30-09-Y'],
+            // 4 => ['01-10-Y', '31-12-Y'],
+        ];
+
         // foreach ($data['current_target'] as $target) {
         foreach ($data['past_targets'] as $target) {
             $allGradesAchieved = true;
-            foreach ($target->target_grade as $target_grade) {
-                $gradeId = $target_grade->grade_id;
-                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target) {
-                    $q->where('salesman_id', $sales_user)
-                        ->whereBetween('order_date', [$target->start_date, $target->end_date]);
-                })
-                    ->whereHas('product', function ($q) use ($gradeId) {
-                        $q->where('grade_id', $gradeId);
-                    })
-                    ->sum('total');
+            foreach ($target->target_quarterly as $quarter) {
 
-                if ($totalAmount < $target_grade->percentage_value) {
-                    $allGradesAchieved = false;
-                    break;
+                // dump( $quarter, $dates[$quarter->quarterly]);
+                foreach ($quarter->target_grade as $target_grade) {
+                    $gradeId = $target_grade->grade_id;
+                    $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target, $dates, $quarter) {
+                        $q->where('salesman_id', $sales_user)
+                            ->whereBetween('order_date', $dates[$quarter->quarterly]);  //[$target->start_date, $target->end_date]);
+                    })
+                        ->whereHas('product', function ($q) use ($gradeId) {
+                            $q->where('grade_id', $gradeId);
+                        })
+                        ->sum('total');
+                    // dump($target_grade );
+                    // dump($totalAmount, $target_grade->grade_target_value);
+                    if ($totalAmount < $target_grade->grade_target_value) {
+                        $allGradesAchieved = false;
+                        break;
+                    }
                 }
             }
 
@@ -615,6 +637,7 @@ class SalesPersonController extends Controller
         }
 
         $data['achived_target'] = $targetSummary;
+        // dd( $data['achived_target']);
         /***** END *****/
 
         return view('admin.sales_person.sales_report', $data);

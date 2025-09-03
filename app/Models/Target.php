@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\TargetGrade;
 use App\Models\CityManagement;
+use App\Models\TargetQuarterly;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -36,4 +37,18 @@ class Target extends Model
     {
         return $this->hasMany(TargetGrade::class, 'target_id', 'id');
     }
+
+    /**
+     * Get all of the comments for the Target
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function target_quarterly(): HasMany
+    {
+        return $this->hasMany(TargetQuarterly::class, 'target_id', 'id');
+    }
+
+
+
 }
+

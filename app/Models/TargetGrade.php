@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class TargetGrade extends Model
 {
     protected $table = 'target_grades';
-    protected $guarded = [];
+    // protected $guarded = [];
+    protected $fillable = [
+        'target_id',
+        'target_quarterly_id',
+        'grade_id',
+        'grade_percentage',
+        'grade_target_value',
+    ];
 
 
     public function grade()

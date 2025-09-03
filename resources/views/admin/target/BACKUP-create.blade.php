@@ -99,69 +99,17 @@
                         </div>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="col-md-7">
                     <div class="mb-3">
                         <div id="product-container" class="gc-target-grades">
-                            <div class="d-flex align-items-center gc-grade-labal">
-                                <div class="col-md-4"><label for="" class="col-form-label">Grade <span class="text-danger">*</span></label></div>
-                                <div class="col-md-4"><label for="" class="col-form-label">Target Percentage <span
-                                        class="text-danger">*</span></label></div>
-                                <div class="col-md-4"><label for="" class="col-form-label">Target Value <span
-                                        class="text-danger">*</span></label></div>
-                            </div>
-                            <div class="product-group d-flex align-items-center mb-2">
-                                <input type="hidden" name="dummy_grade" id="dummyValidationField" />
-                                <div class="col-md-4">
-                                    <select class="form-select me-2" name="grade_id[]">
-                                        <option value="">Select Grade</option>
-                                        @if ($grade)
-                                            @foreach ($grade as $g)
-                                                <option value="{{ $g->id }}"
-                                                    {{ old('grade_id') == $g->id ? 'selected' : '' }}>
-                                                    {{ $g->name }}
-                                                </option>
-                                            @endforeach
-                                        @else
-                                            <option value="">No record</option>
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="number" name="percentage[]" value="{{ old('percentage') }}"
-                                        class="form-control me-2" placeholder="Target Percentage">
-                                </div>
-                                <div class="col-md-4">
-                                    <strong></strong>
-                                    <input type="text" name="percentage_value[]"
-                                        value="{{ old('percentage_value') }}" class="input-as-text" placeholder=""
-                                        readonly hidden>
-
-                                       <input type="text" name="textpercentage_value[]"
-                                        value="{{ old('textpercentage_value') }}" class="input-as-text" placeholder="₹0"
-                                        readonly>
-                                </div>
-                                {{-- /<div id="percentage_value"></div>  --}}
-
-                                <button type="button" class="btn btn-danger remove-btn">Remove</button>
-                            </div>
-                        </div>
-                        <div id="productError" class="text-danger mb-3" style="display:none;">
-                            Please fill all fields in each product row.
-                        </div>
-                        <button type="button" class="btn btn-primary mt-2" id="add-new">Add New</button>
-                    </div>
-                </div>
-                <div class="col-md-7">
-                    <div class="mb-3">
-                        <div id="product-container" class="gc-target-grades">
-                            <div class="d-flex align-items-center gc-grade-labal">
-                                <div class="col-md-4"><label for="" class="col-form-label">Grade <span class="text-danger">*</span></label></div>
-                                <div class="col-md-4"><label for="" class="col-form-label">Target Percentage <span
-                                        class="text-danger">*</span></label></div>
-                                <div class="col-md-4"><label for="" class="col-form-label">Target Value <span
-                                        class="text-danger">*</span></label></div>
+                            <div class="d-flex align-items-center mb-2 gc-grade-labal">
+                                <label class="col-md-4 col-form-label ">Grade <span class="text-danger">*</span></label>
+                                <label class="col-md-4 col-form-label ">Target Percentage <span
+                                        class="text-danger">*</span></label>
+                                <label class="col-md-3 col-form-label ">Target Value <span
+                                        class="text-danger">*</span></label>
                             </div>
                             <div class="product-group d-flex align-items-center mb-2">
                                 <input type="hidden" name="dummy_grade" id="dummyValidationField" />

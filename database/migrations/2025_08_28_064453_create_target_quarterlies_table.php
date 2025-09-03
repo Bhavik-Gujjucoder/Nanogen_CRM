@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('target_grades', function (Blueprint $table) {
+        Schema::create('target_quarterlies', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('target_id');
-            $table->bigInteger('target_quarterly_id');
-            $table->bigInteger('grade_id');
-            $table->text('grade_percentage');
-            $table->text('grade_target_value');
+            $table->BigInteger('target_id');
+            $table->string('quarterly');
+            $table->decimal('quarterly_percentage', 20, 2);
+            $table->decimal('quarterly_target_value', 20, 2);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('target_grades');
+        Schema::dropIfExists('target_quarterlies');
     }
 };

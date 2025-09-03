@@ -98,40 +98,48 @@ class HomeController extends Controller
         $data['order_grand_total'] = $this->order_management->where('salesman_id', $login_user)->sum('grand_total');
         $data['latest_orders']     = $this->order_management->where('salesman_id', $login_user)->latest()->take(5)->get();
         $data['total_target']      = $this->target->where('salesman_id', $login_user)->count();
-        $data['latest_target']     = $this->target->where('salesman_id', $login_user)->latest()->take(5)->get();
+        // $data['latest_target']  = $this->target->where('salesman_id', $login_user)->latest()->take(5)->get();
+        $data['latest_target'] = $this->target
+            ->with(['target_quarterly' => function ($q) {
+                $q->select('id', 'target_id', 'quarterly','quarterly_percentage'); // only needed cols
+            }])
+            ->where('salesman_id', $login_user)
+            ->latest()
+            ->take(5)
+            ->get();
+
 
         $data['current_target']    = $this->target->with('target_grade')->where('salesman_id', $login_user)
-            ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get(); 
+            ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get();
 
         $cTargets = [];
-        foreach ($data['current_target'] as $key => $target) { 
+        foreach ($data['current_target'] as $key => $target) {
             $grades = [];
-            foreach ($target->target_grade as $target_grade) { 
+            foreach ($target->target_grade as $target_grade) {
                 $gradeId = $target_grade->grade_id;
 
-                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($login_user,$target) {
+                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($login_user, $target) {
                     $q->where('salesman_id', $login_user)
-                    ->whereBetween('order_date', [$target->start_date, $target->end_date]);
-                })  
-                ->whereHas('product', function ($q) use ($gradeId) {
-                    $q->where('grade_id', $gradeId); 
-                })  
-                ->sum('total'); // Replace with calculation if needed: ->selectRaw('SUM(price * quantity)') if not a single 'amount'
+                        ->whereBetween('order_date', [$target->start_date, $target->end_date]);
+                })
+                    ->whereHas('product', function ($q) use ($gradeId) {
+                        $q->where('grade_id', $gradeId);
+                    })
+                    ->sum('total'); // Replace with calculation if needed: ->selectRaw('SUM(price * quantity)') if not a single 'amount'
                 $grades[] = [
                     'grade_id' => $target_grade->grade->name,
                     'percentage' => $totalAmount,
                     'percentage_value' => $target_grade->percentage_value,
                     'achieved_percentage' => round(($target_grade->percentage_value > 0 ? ($totalAmount / $target_grade->percentage_value) * 100 : 0), 2)
-                   
+
 
                 ];
-
             }
             $cTargets[] = [
-                'target_id' => $target->subject,//$target->id,
+                'target_id' => $target->subject, //$target->id,
                 'grades'    => $grades,
                 'start_date' => $target->start_date->format('d M Y'),
-                'end_date'=> $target->end_date->format('d M Y')
+                'end_date' => $target->end_date->format('d M Y')
             ];
         }
         $data['current_target_graph'] = $cTargets;
@@ -178,7 +186,8 @@ class HomeController extends Controller
         return view('sales.dashboard', $data);
     }
 
-    public function reporting_manager_index(){
+    public function reporting_manager_index()
+    {
         $login_user = Auth::user()->id;
         // dd($login_user);
         $data['page_title']         = 'Reporting Manager Dashboard';
@@ -211,15 +220,12 @@ class HomeController extends Controller
     {
         try {
             $today = Carbon::now();
-            if($today->day == 1)
-            {
+            if ($today->day == 1) {
                 $targetMonth = $today->copy()->subMonth();
-            }
-            else
-            {
+            } else {
                 $targetMonth = $today;
             }
-            
+
             $startOfMonth = $targetMonth->copy()->startOfMonth()->toDateString();
             $endOfMonth = $targetMonth->copy()->endOfMonth()->toDateString();
             $monthYear = $targetMonth->format('F Y');
@@ -231,7 +237,7 @@ class HomeController extends Controller
             $sales_man_ids = SalesPersonDetail::pluck('user_id');
             $top_sales_person = OrderManagement::whereIn('salesman_id', $sales_man_ids)->whereBetween('order_date', [$startOfMonth, $endOfMonth])->selectRaw('salesman_id, SUM(grand_total) as top_sales')->groupBy('salesman_id')->orderByDesc('top_sales')->first();
 
-            $dd_ids = DistributorsDealers::pluck('id'); 
+            $dd_ids = DistributorsDealers::pluck('id');
             $top_dd_id = OrderManagement::whereIn('dd_id', $dd_ids)->whereBetween('order_date', [$startOfMonth, $endOfMonth])->selectRaw('dd_id, SUM(grand_total) as top_sales')->groupBy('dd_id')->orderByDesc('top_sales')->first();
 
             $last_month = $targetMonth->copy()->subMonth();
@@ -243,19 +249,17 @@ class HomeController extends Controller
             $data['monthyear'] = $monthYear;
             $data['total_sales'] = $total_sales;
             $data['top_product'] = $top_product->product->product_name;
-            $data['top_sales_person'] = $top_sales_person->sales_person_detail->first_name .' '. $top_sales_person->sales_person_detail->last_name;
+            $data['top_sales_person'] = $top_sales_person->sales_person_detail->first_name . ' ' . $top_sales_person->sales_person_detail->last_name;
             $data['top_dd_id'] = $top_dd_id->distributors_dealers->city->city_name;
             $data['sales_growth'] = $sales_growth;
 
-            Mail::send('email.monthly_sales.monthly_sales', ['data' => $data], fn($message) => $message->to(getSetting('company_email'))->subject('📊 Monthly Sales Report – '. $monthYear));
-        }
-        catch (\Throwable $th) {
+            Mail::send('email.monthly_sales.monthly_sales', ['data' => $data], fn($message) => $message->to(getSetting('company_email'))->subject('📊 Monthly Sales Report – ' . $monthYear));
+        } catch (\Throwable $th) {
             dd($th);
-            return response()->json(['error' => 'Something went wrong!'], 500); 
+            return response()->json(['error' => 'Something went wrong!'], 500);
         }
 
-       //Debug
-       //    dd("Current Month: ". $startOfMonth . '  -  '. $endOfMonth, 'Total Sales: '. $total_sales, 'Top Product: '. $top_product->product->product_name, 'Top Sales Person: '. $top_sales_person->sales_person_detail->first_name . $top_sales_person->sales_person_detail->last_name, 'Top Sales Area: '. $top_dd_id->distributors_dealers->city->city_name, 'Sales Growth: '. $sales_growth.'%');
+        //Debug
+        //    dd("Current Month: ". $startOfMonth . '  -  '. $endOfMonth, 'Total Sales: '. $total_sales, 'Top Product: '. $top_product->product->product_name, 'Top Sales Person: '. $top_sales_person->sales_person_detail->first_name . $top_sales_person->sales_person_detail->last_name, 'Top Sales Area: '. $top_dd_id->distributors_dealers->city->city_name, 'Sales Growth: '. $sales_growth.'%');
     }
-   
 }
