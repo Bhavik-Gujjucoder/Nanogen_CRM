@@ -212,7 +212,7 @@ Route::middleware(['auth', 'role:admin,staff,sales,reporting manager'])->group(f
     });
 
     /* Payments */
-    // Route::resource('payment', PaymentsController::class);
+// Route::resource('payment', PaymentsController::class);
 
     Route::post('/send-whatsapp-pdf', [WhatsAppController::class, 'sendPdf'])->name('send-whatsapp-pdf.sendPdf');
 

@@ -168,7 +168,7 @@ class SalesPersonController extends Controller
             'reporting_manager_id' => 'required',
             'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
-            'city_id'              => 'required|exists:city_management,id',
+            // 'city_id'              => 'required|exists:city_management,id',
             'city_ids'             => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
             'postal_code'          => 'required|string|max:10',
@@ -177,7 +177,7 @@ class SalesPersonController extends Controller
             'department_id.required'        => 'The department field is required.',
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',
-            'city_id.required'              => 'The city field is required.',
+            // 'city_id.required'              => 'The city field is required.',
             'city_ids.required'             => 'The area of operation field is required.',
             'state_id.required'             => 'The state field is required.',
             'country_id.required'           => 'The country field is required.',
@@ -186,7 +186,6 @@ class SalesPersonController extends Controller
         DB::beginTransaction();
         try {
             $user = new User();
-
             if ($request->hasFile('profile_picture')) {
                 $file = $request->file('profile_picture');
                 $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -217,7 +216,7 @@ class SalesPersonController extends Controller
             $salesDetail->reporting_manager_id = $request->reporting_manager_id;
             $salesDetail->date                 = Carbon::createFromFormat('d-m-Y', $request->date)->format('Y-m-d');
             $salesDetail->street_address       = $request->street_address;
-            $salesDetail->city_id              = $request->city_id;
+            $salesDetail->city_id              = $request->city_id ?? null;
             $salesDetail->state_id             = $request->state_id;
             $salesDetail->city_ids             = $cityIds;
             $salesDetail->postal_code          = $request->postal_code;
@@ -279,7 +278,7 @@ class SalesPersonController extends Controller
             'reporting_manager_id' => 'required',
             'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
-            'city_id'              => 'required|exists:city_management,id',
+            // 'city_id'              => 'required|exists:city_management,id',
             'state_id'             => 'required|exists:state_management,id',
             'city_ids'             => 'required|exists:city_management,id',
             'postal_code'          => 'required|string|max:10',
@@ -288,7 +287,7 @@ class SalesPersonController extends Controller
             'department_id.required'        => 'The department field is required.',
             'position_id.required'          => 'The position field is required.',
             'reporting_manager_id.required' => 'The reporting manager field is required.',
-            'city_id.required'              => 'The city field is required.',
+            // 'city_id.required'              => 'The city field is required.',
             'city_ids.required'             => 'The area of operation field is required.',
             'state_id.required'             => 'The state field is required.',
             'country_id.required'           => 'The country field is required.',
@@ -328,7 +327,7 @@ class SalesPersonController extends Controller
             $salesDetail->reporting_manager_id = $request->reporting_manager_id;
             $salesDetail->date                 = Carbon::createFromFormat('d-m-Y', $request->date)->format('Y-m-d');
             $salesDetail->street_address       = $request->street_address;
-            $salesDetail->city_id              = $request->city_id;
+            $salesDetail->city_id              = $request->city_id ?? null;
             $salesDetail->state_id             = $request->state_id;
             $salesDetail->city_ids             = $cityIds;
             $salesDetail->postal_code          = $request->postal_code;

@@ -233,23 +233,23 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    {{-- <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">City <span class="text-danger">*</span></label>
                             <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
-                                name="city_id" data-old="{{ old('city_id') }}"> {{-- id="inputCity" --}}
-                                <option value="">Select City</option>
-                                {{-- @foreach ($cities as $city)
+                                name="city_id" data-old="{{ old('city_id') }}"> 
+                                <option value="">Select City</option> --}}
+                    {{-- @foreach ($cities as $city)
                                     <option value="{{ $city->id }}"
                                         {{ old('city_id') == $city->id ? 'selected' : '' }}>{{ $city->city_name }}
                                     </option>
                                 @endforeach --}}
-                            </select>
+                    {{-- </select>
                             @error('city_id')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-4">
                         <div class="mb-3">
@@ -314,6 +314,10 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 <script>
+    // $('#AreaOfOperation').select2({
+    //     placeholder: "Select City",
+    //     width: '100%'
+    // });
     $(document).ready(function() {
         $('#stateDropdown').on('change', function() {
             var stateID = $(this).val();
@@ -345,6 +349,7 @@
 
                         $(".select2-element").select2({
                             allowClear: true,
+                            placeholder: "Select City",
                             width: '100%'
                         });
 

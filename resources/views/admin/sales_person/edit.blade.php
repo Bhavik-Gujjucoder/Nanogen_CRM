@@ -257,7 +257,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    {{-- <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">City <span class="text-danger">*</span></label>
                             <select id="cityDropdown" class="form-select @error('city_id') is-invalid @enderror"
@@ -268,7 +268,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-4">
                         <div class="mb-3">
