@@ -566,25 +566,31 @@ class SalesPersonController extends Controller
 
         /***** Running Target *****/
         $cTargets = [];
+        // dd($data['current_target']->target_quarterly->where('quarterly', $current_quarter['quarter'])->first()->target_grade);
         foreach ($data['current_target'] as $key => $target) {
             $grades = [];
-            foreach ($target->target_grade as $target_grade) {
-                $gradeId = $target_grade->grade_id;
-                // dump( $gradeId );
-                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target, $current_quarter) {
-                    $q->where('salesman_id', $sales_user)
-                        ->whereBetween('order_date', [$current_quarter['start'], $current_quarter['end']]);
-                })
-                    ->whereHas('product', function ($q) use ($gradeId) {
-                        $q->where('grade_id', $gradeId);
+            $allgrades = $target->target_quarterly->where('quarterly', $current_quarter['quarter'])->first()?->target_grade;
+            // dd($target->target_quarterly->where('quarterly', $current_quarter['quarter'])->first()->target_grade);
+            if($allgrades){
+
+                foreach ($allgrades as $target_grade) {
+                    $gradeId = $target_grade->grade_id;
+                    // dump( $gradeId );
+                    $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target, $current_quarter) {
+                        $q->where('salesman_id', $sales_user)
+                            ->whereBetween('order_date', [$current_quarter['start'], $current_quarter['end']]);
                     })
-                    ->sum('total'); // Replace with calculation if needed: ->selectRaw('SUM(price * quantity)') if not a single 'amount'
-                    $grades[] = [
-                    'grade_id' => $target_grade->grade->name,
-                    'percentage' => $totalAmount,
-                    'percentage_value' => $target_grade->grade_target_value,
-                    'achieved_percentage' => round(($target_grade->grade_target_value > 0 ? ($totalAmount / $target_grade->grade_target_value) * 100 : 0), 2)
-                ];
+                        ->whereHas('product', function ($q) use ($gradeId) {
+                            $q->where('grade_id', $gradeId);
+                        })
+                        ->sum('total'); // Replace with calculation if needed: ->selectRaw('SUM(price * quantity)') if not a single 'amount'
+                        $grades[] = [
+                        'grade_id' => $target_grade->grade->name,
+                        'percentage' => $totalAmount,
+                        'percentage_value' => $target_grade->grade_target_value,
+                        'achieved_percentage' => round(($target_grade->grade_target_value > 0 ? ($totalAmount / $target_grade->grade_target_value) * 100 : 0), 2)
+                    ];
+                }
             }
             $cTargets[] = [
                 'target_id' => $target->subject, //$target->id,
