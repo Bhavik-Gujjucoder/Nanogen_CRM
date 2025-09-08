@@ -54,7 +54,7 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Number of Order</h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body pb-0">
                         <div id="company-chart"></div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
@@ -72,7 +72,7 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Revenue</h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body pb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
                                 <h5 class="mb-1">{{ IndianNumberFormat($order_grand_total) }}</h5>
@@ -94,7 +94,7 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Number of Target</h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body pb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
                                 <h5 class="mb-1">{{ $total_target }}</h5>
@@ -114,7 +114,7 @@
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                         <h5 class="mb-2">Total Target Amount </h5>
                     </div>
-                    <div class="card-body pb-4">
+                    <div class="card-body pb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div class="mb-1">
                                 <h5 class="mb-1">{{ IndianNumberFormat($total_target_amount) }}</h5>
@@ -126,9 +126,28 @@
                     </div>
                 </div>
             </div>
+
+             <div class="col-xxl-12 d-flex"> <!-- -->
+                <div class="card flex-fill">
+                    <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                        <h5 class="mb-2">Total Number of Target Quarter</h5>
+                    </div>
+                    <div class="card-body pb-0">
+                        <div id="company-chart"></div>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div class="mb-1">
+                                <h5 class="mb-1">{{ $sales_person_total_quarter }}</h5>
+                            </div>
+                            <p class="fs-13 text-gray-9 d-flex align-items-center mb-1"><i
+                                    class="ti ti-circle-filled me-1 fs-6 text-primary"></i>Quarter</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endcan
     </div>
 
+    <!-- All Target Performance -->
     <div class="col-md-6">
         <div class="card flex-fill">
             <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
@@ -165,13 +184,15 @@
     </div>
 </div>
 
+
+<!-- Recent Orders -->
 <div class="row">
     @can('Order Management')
         <div class="col-xxl-6 col-xl-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 class="mb-2"><i class="ti ti-grip-vertical me-1"></i>Recent Orders</h5>
-                    {{-- <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a> --}}
+                    <!-- <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a> -->
                 </div>
                 <div class="card-body pb-2">
                     <table class="table dataTable no-footer" id="order_management">
@@ -220,16 +241,34 @@
                                     <th><strong>End Date</strong></th> --}}
                                 </tr>
                             </thead>
-                            {{-- <tbody>
-                                @foreach ($latest_target as $t)
-                                    <tr>
-                                        <td>{{ $t->subject }}</td>
-                                        <td>{{ IndianNumberFormat($t->target_value) }}</td>
-                                        <td>{{ $t->start_date->format('d M Y') }}</td>
-                                        <td>{{ $t->end_date->format('d M Y') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody> --}}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="col-xxl-8 col-md-6 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header border-0 pb-0">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                        <h4><i class="ti ti-grip-vertical me-1"></i>Target Quarterly</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive custom-table">
+                        <table class="table dataTable" id="target_quarterly_table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th hidden>ID</th>
+                                    <th><strong>Quarter Name</strong></th>
+                                    <th scope="col"><strong>Quarterly Target Amount</strong></th>
+                                    <th><strong>Achieved Amount</strong></th>
+                                    <th><strong>Win/Loss</strong></th>
+                                    
+                                    {{-- <th><strong>Start Date</strong></th>
+                                    <th><strong>End Date</strong></th> --}}
+                                </tr>
+                            </thead>
                         </table>
                     </div>
                 </div>
@@ -352,6 +391,75 @@
         }
     });
 
+    /* DataTable Target quarterly */
+     var target_show = $('#target_quarterly_table').DataTable({
+        // "pageLength": 10,
+        "pageLength": ($('#startDate').val() && $('#endDate').val()) ? 10 : 5,
+        "paging": true,
+        deferRender: true, // Prevents unnecessary DOM rendering
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        // dom: 'lrtip',
+        "dom": 'rtip',
+        "bInfo": false,
+        order: [
+            [0, 'desc']
+        ],
+        ajax: {
+            url: "{{ route('target.quarterly') }}",
+            data: function(d) {
+                d.salemn_id = '{{ $sales_user }}'; // Pass selected group IDs as a parameter
+                d.start_date = $('#startDate').val();
+                d.end_date = $('#endDate').val();
+            }
+        },
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
+            {
+                data: 'quarter_name',
+                name: 'quarter_name',
+                searchable: true
+            },
+            {
+                data: 'quarterly_target_value',
+                name: 'quarterly_target_value',
+                searchable: true
+            },
+            // {
+            //     data: 'target_value',
+            //     name: 'target_value',
+            //     searchable: true,
+            //     orderable: true
+            // },
+             {
+                data: 'achived_quarter',
+                name: 'achived_quarter',
+                searchable: true,
+                orderable: true
+            },
+            {
+                data: 'win_loss',
+                name: 'win_loss',
+                searchable: true,
+                orderable: true
+            },
+         
+        ],
+        // drawCallback: function() {
+        //     const hasDateFilter = $('#startDate').val() && $('#endDate').val();
+        //     if (!hasDateFilter) {
+        //         $('#target_table_paginate').hide(); // hide pagination controls
+        //     } else {
+        //         $('#target_table_paginate').show(); // show pagination when filtered
+        //     }
+        // }
+    });
+
     /***** DataTable Target*****/
     var target_show = $('#target_table').DataTable({
         // "pageLength": 10,
@@ -430,6 +538,7 @@
             }
         }
     });
+
 
 
 

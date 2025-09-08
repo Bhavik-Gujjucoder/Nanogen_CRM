@@ -44383,3 +44383,8 @@ table.gc-manage-table tbody td {white-space: normal;}
 .pro-ann-report-card > .card-body {padding-bottom: 0px !important;}
 
 .add-new-button { white-space: nowrap; }
+
+#target_quarterly_table tbody tr td:last-child .btn:not(:last-child) { margin-bottom: 2px; }
+#target_quarterly_table tbody tr td:last-child .btn { display: block; color:#fff; border:none; padding: 3px 5px; border-radius: 4px; font-size: 13px; line-height: 1; }
+#target_quarterly_table tbody tr td:last-child .btn.win-btn { background-color:#28a745; }
+#target_quarterly_table tbody tr td:last-child .btn.loss-btn { background-color:#dc3545; }

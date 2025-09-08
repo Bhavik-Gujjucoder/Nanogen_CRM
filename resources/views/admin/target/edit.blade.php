@@ -359,7 +359,7 @@
         });
 
         /* === Add New Quarter === */
-        var quarterCount = '{{ $quarterly->count() - 1 ?? 0 }}';
+        var quarterCount = '{{ $target->target_quarterly()->count() - 1 ?? 0 }}';
         $(document).on('click', '.add-quarter', function() {
             quarterCount++;
             var qater = `<div class="quarterly-block mb-4 p-3 border rounded">

@@ -21,4 +21,9 @@ class TargetGrade extends Model
     {
         return $this->hasOne(GradeManagement::class, 'id','grade_id');
     }
+
+        public function quarter()
+    {
+        return $this->hasOne(TargetQuarterly::class, 'id','target_quarterly_id');
+    }
 }

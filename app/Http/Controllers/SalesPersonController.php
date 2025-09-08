@@ -19,6 +19,7 @@ use App\Models\SalesPersonDepartment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Models\OrderManagement;
+use App\Models\TargetQuarterly;
 use App\Models\Target;
 use App\Models\OrderManagementProduct;
 use Carbon\CarbonPeriod;
@@ -26,7 +27,7 @@ use Carbon\CarbonPeriod;
 
 class SalesPersonController extends Controller
 {
-    protected $order_management, $target, $sales_person_detail;
+    protected $order_management, $target, $sales_person_detail, $target_quarterly;
     /**
      * Create a new controller instance.
      *
@@ -36,11 +37,13 @@ class SalesPersonController extends Controller
         OrderManagement $order_management,
         Target $target,
         SalesPersonDetail $sales_person_detail,
+        TargetQuarterly $target_quarterly,
 
     ) {
         $this->order_management = $order_management;
         $this->target = $target;
         $this->sales_person_detail = $sales_person_detail;
+        $this->target_quarterly = $target_quarterly;
     }
 
     /**
@@ -405,6 +408,12 @@ class SalesPersonController extends Controller
         $data['total_order'] = $order->count();
         $data['order_grand_total'] = $order->sum('grand_total');
 
+        $data['sales_person_total_quarter'] = $this->target
+            ->where('salesman_id', $sales_user)
+            ->withCount('target_quarterly')
+            ->get()
+            ->sum('target_quarterly_count');
+
         $target = $this->target->where('salesman_id', $sales_user);
         if ($request->start_date && $request->end_date) {
             $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
@@ -437,9 +446,29 @@ class SalesPersonController extends Controller
         $data['latest_orders']     = $this->order_management->where('salesman_id', $sales_user)->latest()->take(5)->get();
         $data['latest_target']     = $this->target->where('salesman_id', $sales_user)->latest()->take(5)->get();
 
-        $data['current_target']    = $this->target->with('target_grade')
+        // $data['current_target']    = $this->target->with('target_grade')
+        //     ->where('salesman_id', $sales_user)
+        //     ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get();
+
+        $quarter = (int)ceil(date('n') / 3);
+
+        $start = date('Y-m-d', strtotime(date('Y') . '-' . (($quarter - 1) * 3 + 1) . '-01'));
+        $end   = date('Y-m-t', strtotime($start . ' +2 months'));
+
+        $current_quarter = [
+            'quarter' => $quarter,
+            'start'   => $start,
+            'end'     => $end,
+        ];
+
+
+        $data['current_target'] = $this->target->with('target_quarterly')
             ->where('salesman_id', $sales_user)
-            ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get();
+            ->whereHas('target_quarterly', function ($q) use ($sales_user, $target, $current_quarter) {
+                $q->where('quarterly', $current_quarter['quarter']);
+            })->get();
+
+
         $data['past_targets']      = $this->target->with('target_quarterly')
             ->where('salesman_id', $sales_user)
             // ->where('end_date', '<', Carbon::today())
@@ -541,28 +570,27 @@ class SalesPersonController extends Controller
             $grades = [];
             foreach ($target->target_grade as $target_grade) {
                 $gradeId = $target_grade->grade_id;
-
-                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target) {
+                // dump( $gradeId );
+                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($sales_user, $target, $current_quarter) {
                     $q->where('salesman_id', $sales_user)
-                        ->whereBetween('order_date', [$target->start_date, $target->end_date]);
+                        ->whereBetween('order_date', [$current_quarter['start'], $current_quarter['end']]);
                 })
                     ->whereHas('product', function ($q) use ($gradeId) {
                         $q->where('grade_id', $gradeId);
                     })
                     ->sum('total'); // Replace with calculation if needed: ->selectRaw('SUM(price * quantity)') if not a single 'amount'
-                $grades[] = [
+                    $grades[] = [
                     'grade_id' => $target_grade->grade->name,
                     'percentage' => $totalAmount,
-                    'percentage_value' => $target_grade->percentage_value,
-                    'achieved_percentage' => round(($target_grade->percentage_value > 0 ? ($totalAmount / $target_grade->percentage_value) * 100 : 0), 2)
+                    'percentage_value' => $target_grade->grade_target_value,
+                    'achieved_percentage' => round(($target_grade->grade_target_value > 0 ? ($totalAmount / $target_grade->grade_target_value) * 100 : 0), 2)
                 ];
             }
-
             $cTargets[] = [
                 'target_id' => $target->subject, //$target->id,
                 'grades'    => $grades,
-                'start_date' => $target->start_date->format('d M Y'),
-                'end_date' => $target->end_date->format('d M Y')
+                'start_date' => date('d M Y', strtotime($current_quarter['start'])),
+                'end_date' => date('d M Y', strtotime($current_quarter['end']))
             ];
         }
         $data['current_target_graph'] = $cTargets;
@@ -584,9 +612,6 @@ class SalesPersonController extends Controller
             2 => [date('Y-04-01'), date('Y-06-30')],
             3 => [date('Y-07-01'), date('Y-09-30')],
             4 => [date('Y-10-01'), date('Y-12-31')],
-            // 2 => ['01-04-Y', '30-06-Y'],
-            // 3 => ['01-07-Y', '30-09-Y'],
-            // 4 => ['01-10-Y', '31-12-Y'],
         ];
 
         // foreach ($data['current_target'] as $target) {

@@ -6,14 +6,16 @@ use App\Models\Target;
 use App\Models\TargetGrade;
 use Illuminate\Http\Request;
 use App\Models\CityManagement;
-use App\Models\TargetQuarterly;
+use Illuminate\Support\Carbon;
 use App\Models\GradeManagement;
+use App\Models\TargetQuarterly;
 use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Models\OrderManagementProduct;
 
 
 class TargetController extends Controller
@@ -91,12 +93,12 @@ class TargetController extends Controller
                         return '<span class="badge bg-danger">Lost</span>';
                     }
                 })
-                 ->addColumn('quarterly', function ($row) { // 🟨 Add this new column
-                   return  $row->target_quarterly->map(function($q) {
+                ->addColumn('quarterly', function ($row) { // 🟨 Add this new column
+                    return  $row->target_quarterly->map(function ($q) {
                         return '<span class="badge bg-gray me-1 mb-1">
                                     Quarterly ' . e($q->quarterly) . ' ⮚ ' . e($q->quarterly_percentage) . '% 
                                 </span>';
-                    })->implode('<br>') ;
+                    })->implode('<br>');
                 })
                 // ->editColumn('start_date', function ($row) {
                 //     return $row->start_date->format('d M Y');
@@ -132,7 +134,179 @@ class TargetController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result','quarterly']) //'value',
+                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result', 'quarterly']) //'value',
+                ->make(true);
+        }
+        return view('admin.target.index', $data);
+    }
+
+    /**
+     * Display listing of target wise all quarter
+     */
+    public function target_quarterly(Request $request)
+    {
+        $data['page_title'] = 'Target';
+        if ($request->ajax()) {
+            $records = Target::query();
+
+            // Apply salesman filter if user has sales role
+            if (auth()->user()->hasRole('sales')) {
+                $records->where('salesman_id', auth()->id());
+            }
+            // dd($request->salemn_id);
+            $records->when($request->salemn_id, function ($query) use ($request) {
+                $query->where('salesman_id', $request->salemn_id);
+            });
+
+            $dates = [
+                1 => [date('Y-01-01'), date('Y-03-31')],
+                2 => [date('Y-04-01'), date('Y-06-30')],
+                3 => [date('Y-07-01'), date('Y-09-30')],
+                4 => [date('Y-10-01'), date('Y-12-31')],
+                // 2 => ['01-04-Y', '30-06-Y'],
+                // 3 => ['01-07-Y', '30-09-Y'],
+                // 4 => ['01-10-Y', '31-12-Y'],
+            ];
+
+
+            return DataTables::of($records)
+                // return DataTables::of(collect($records)) // ✅ wrap in collect()
+                ->addIndexColumn()
+                ->addColumn('checkbox', function ($row) {
+                    return '<label class="checkboxs">
+                            <input type="checkbox" class="checkbox-item target_checkbox" data-id="' . $row->id . '">
+                            <span class="checkmarks"></span>
+                        </label>';
+                })
+                ->addColumn('action', function ($row) {
+                    $show_btn = '<a href="' . route('target.show', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i> Show Target</a>';
+
+                    $edit_btn = '<a href="' . route('target.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
+
+
+
+                    $action_btn = '<div class="dropdown table-action">
+                                             <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                             <div class="dropdown-menu dropdown-menu-right">';
+
+                    $action_btn .= Auth::user()->hasAnyRole(['sales']) ? $show_btn : $edit_btn;
+
+                    return $action_btn . ' </div></div>';
+                })
+                ->addColumn('quarter_name', function ($row) {
+                    if ($row->subject) {
+                        $target_name = $row->subject ?? '-';
+                        $url = route('target.edit', $row->id);
+                        if ($row->target_quarterly->count() > 0) {
+                            // Loop through quarters and attach target name
+                            $quarters = $row->target_quarterly->map(function ($q) use ($target_name, $url) {
+                                return '<a href="' . $url . '">' . e($target_name) . '</a><small> <span class="badge bg-gray me-1 mb-1">'
+                                    . ' ⮚ Quarterly ' . e($q->quarterly)
+                                    . ' (' . e($q->quarterly_percentage) . '%)</span></small>';
+                            })->implode('<br>');
+
+                            return $quarters;
+                        }
+
+                        return '<a href="' . $url . '"><b>' . e($target_name);
+                    }
+                    return '-';
+                })
+                ->addColumn('quarterly_target_value', function ($row) {
+                    if ($row->target_quarterly->count() > 0) {
+                        return $row->target_quarterly->map(function ($q) {
+                            return ' ₹' . number_format($q->quarterly_target_value, 0);
+                        })->implode('<br>');
+                    }
+                    return '-';
+                })
+                ->addColumn('achived_quarter', function ($row) use ($request, $dates) {
+                    if ($row->target_quarterly->count() > 0) {
+                        return $row->target_quarterly->map(function ($q) use ($request, $dates) {
+                            // dd($q);
+                            $gradeIds = $q->target_grade()->pluck('grade_id');
+                            $totalAmount = OrderManagementProduct::whereHas('order', function ($query) use ($dates, $q, $request) {
+                                $query->where('salesman_id', $request->salemn_id)
+                                    ->whereBetween('order_date', $dates[$q->quarterly]);
+                            })
+                                ->whereHas('product', function ($query) use ($gradeIds) {
+                                    $query->whereIn('grade_id', $gradeIds);
+                                })
+                                ->sum('total');
+                            return
+                                ' ₹' . number_format($totalAmount, 0);
+                        })->implode('<br>');
+                    }
+                    return '-';
+                })
+                ->addColumn('win_loss', function ($row) use ($request, $dates) {
+                    if ($row->target_quarterly->count() > 0) {
+                        return $row->target_quarterly->map(function ($q) use ($request, $dates) {
+                            // dd($q);
+                            $gradeIds = $q->target_grade()->pluck('grade_id');
+                            $totalAmount = OrderManagementProduct::whereHas('order', function ($query) use ($dates, $q, $request) {
+                                $query->where('salesman_id', $request->salemn_id)
+                                    ->whereBetween('order_date', $dates[$q->quarterly]);
+                            })
+                                ->whereHas('product', function ($query) use ($gradeIds) {
+                                    $query->whereIn('grade_id', $gradeIds);
+                                })
+                                ->sum('total');
+                            // return ($totalAmount >= $q->quarterly_target_value) ? 'Win' : 'Loss';
+
+                            if ($totalAmount >= $q->quarterly_target_value) {
+                                return '<button class="win-btn btn">Win</button>';
+                            } else {
+                                return '<button class="loss-btn btn">Loss</button>';
+                            }
+                        })->implode(''); //<br>
+                    }
+                    return '-';
+                })
+
+                ->addColumn('quarterly', function ($row) { // 🟨 Add this new column
+                    return  $row->target_quarterly->map(function ($q) {
+                        return '<span class="badge bg-gray me-1 mb-1">
+                                    Quarterly ' . e($q->quarterly) . ' ⮚ ' . e($q->quarterly_percentage) . '% 
+                                </span>';
+                    })->implode('<br>');
+                })
+
+
+                /* target value */
+                // ->editColumn('target_value', function ($row) {
+                //     if ($row->target_value) {
+                //         return IndianNumberFormat($row->target_value);
+                //     }
+                //     return '-';
+                // })
+
+
+                ->editColumn('salesman_id', function ($row) {
+                    if ($row->sales_person_detail) {
+                        return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
+                    }
+                    return '-';
+                })
+                ->editColumn('city_id', function ($row) {
+                    if ($row->city) {
+                        return $row->city->city_name;
+                    }
+                    return '-';
+                })
+                ->filterColumn('salesman_id', function ($query, $keyword) {
+                    $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
+                        $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$keyword}%"]);
+                    });
+                })
+                ->filterColumn('city_id', function ($query, $keyword) {
+                    $query->whereHas('city', function ($q) use ($keyword) {
+                        $q->where('city_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->rawColumns(['checkbox', 'action', 'quarter_name', 'quarterly_target_value', 'target_result', 'win_loss', 'achived_quarter', 'quarterly']) //'value',
                 ->make(true);
         }
         return view('admin.target.index', $data);
@@ -141,9 +315,6 @@ class TargetController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-
-
-
     public function create()
     {
         $data['page_title'] = 'Create Target';
@@ -327,7 +498,6 @@ class TargetController extends Controller
         DB::beginTransaction();
         try {
             $target = Target::findOrFail($id);
-
             // update target
             $target->update($request->only(['subject', 'salesman_id', 'city_id', 'target_value']));
 
