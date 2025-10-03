@@ -61,6 +61,7 @@
             <tr>
                 <th scope="col">S.No</th>
                 <th scope="col">Product Name</th>
+                <th scope="col">GST(%)</th>
                 <th scope="col">Packing Size</th>
                 <th scope="col">Price</th>
                 <th scope="col">QTY</th>
@@ -75,6 +76,9 @@
                     <p class="form-control-plaintext">
                         {{ $p->product->product_name ?? '-'}}
                     </p>
+                </td>
+                <td data-label="gst">
+                    <p class="form-control-plaintext">{{ $p->gst ?? '-'}}</p>
                 </td>
                 <td data-label="Packing Size">
                     <p class="form-control-plaintext">
@@ -98,7 +102,7 @@
 
 <div class="gstsec mt-4 mb-4">
     <div class="totalsec text-end">
-        <div class="row">
+       {{--  <div class="row">
             <div class="col-md-12">
                 <div class="price-cls-new">
                     <label class="col-form-label">Total :</label>
@@ -113,7 +117,7 @@
                     <p class="form-control-plaintext">{{ IndianNumberFormat($order->gst_amount) ?? '-'}}</p>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-md-12">
                 <div class="price-cls-new">
