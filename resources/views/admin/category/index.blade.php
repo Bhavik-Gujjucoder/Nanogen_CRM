@@ -329,8 +329,7 @@
     $(document).on('click', '.deleteCategory', function(event) {
         event.preventDefault();
         let categoryId = $(this).data('id');
-        let form = $('#delete-form-' + categoryId); // Select the correct form
-        console.log(form);
+        let form = $('#delete-category-form-' + categoryId); // Select the correct form
 
         confirmDeletion(function() {
             form.submit(); // Submit the form if confirmed
