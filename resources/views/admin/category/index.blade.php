@@ -70,11 +70,12 @@
                     <div class="mb-3">
                         <label class="col-form-label">Select Parent Category</label>
                         <select class="select parent_category_id" name="parent_category_id" style="height: 210px;">
-                            <option value="0">{{ __('Select Parent Category') }}</option>
+                            <option value="">{{ __('Select Parent Category') }}</option>
                             @foreach ($category as $c)
                                 <option value="{{ $c->id }}">{{ $c->category_name }}</option>
                             @endforeach
                         </select>
+                        <span class="parent_category_id_error"></span>
                     </div>
 
                     <div class="mb-3">
@@ -362,9 +363,14 @@
     function display_errors(errors) {
         $("#categoryForm .error-text").text('');
         $.each(errors, function(key, value) {
+            /** Handle input fields validation **/
             $('input[name=' + key + ']').addClass('is-invalid');
             console.log($('input[name=' + key + ']'));
             $('.' + key + '_error').text(value[0]).addClass('text-danger');
+
+            /** handle option dropdown validation **/
+            $('select[name=' + key + ']').addClass('is-invalid');
+            $('.' + key + '_error').text(value[0]).addClass('text-danger'); 
         });
     }
 

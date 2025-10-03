@@ -50,8 +50,8 @@ class CategoryController extends Controller
                 ->editColumn('parent_category_id', function ($category) {
                     return $category->parent->category_name ?? '-'; //Get user roles
                 })
-                ->filterColumn('parent_category_id', function($query, $keyword) {
-                    $query->whereHas('parent', function($query) use ($keyword) {
+                ->filterColumn('parent_category_id', function ($query, $keyword) {
+                    $query->whereHas('parent', function ($query) use ($keyword) {
                         $query->where('category_name', 'like', "%$keyword%");
                     });
                 })
@@ -66,7 +66,11 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['category_name' => 'required|unique:categories,category_name,NULL,id,deleted_at,NULL']);
+        // dd($request->all());
+        $request->validate([
+            'parent_category_id' => 'required',
+            'category_name' => 'required|unique:categories,category_name,NULL,id,deleted_at,NULL'
+        ]);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
             $is_parent = 0;
@@ -79,7 +83,7 @@ class CategoryController extends Controller
         ]);
 
         return response()->json(['success' => true, 'message' => 'Category created successfully']);
-      
+
         // return redirect()->route('category.index')->with('message', 'Product Category created successfully.');
     }
 
@@ -97,7 +101,10 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $request->validate(['category_name' => 'required|unique:categories,category_name,' . $category->id . ',id,deleted_at,NULL']);
+        $request->validate([
+            'parent_category_id' => 'required',
+            'category_name' => 'required|unique:categories,category_name,' . $category->id . ',id,deleted_at,NULL'
+        ]);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
             $is_parent = 0;
@@ -118,8 +125,8 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        if(request()->ajax()){
-              return response()->json(['success' => true, 'message' => 'Category deleted successfully']);
+        if (request()->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Category deleted successfully']);
         }
         return redirect()->route('category.index')->with('success', 'Category deleted successfully.');
     }
