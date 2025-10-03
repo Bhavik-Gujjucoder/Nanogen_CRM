@@ -70,6 +70,8 @@ class CategoryController extends Controller
         $request->validate([
             'parent_category_id' => 'required',
             'category_name' => 'required|unique:categories,category_name,NULL,id,deleted_at,NULL'
+        ],[
+            'parent_category_id.required' => 'The parent category field is required.',
         ]);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
@@ -104,6 +106,8 @@ class CategoryController extends Controller
         $request->validate([
             'parent_category_id' => 'required',
             'category_name' => 'required|unique:categories,category_name,' . $category->id . ',id,deleted_at,NULL'
+        ],[
+            'parent_category_id.required' => 'The parent category field is required.',
         ]);
         $is_parent = 1;
         if ($request->parent_category_id > 0) {
