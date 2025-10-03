@@ -160,6 +160,7 @@
                                         <label class="col-form-label">Category Name *</span></label>
                                         <input type="text" name="category_name" value=""
                                             class="form-control" placeholder="Enter category name" maxlength="250">
+                                            <input type="hidden" name="parent_category_id" value="0">
                                         <span class="category_name_error"></span>
                                     </div>
 

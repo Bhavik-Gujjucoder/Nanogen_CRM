@@ -148,9 +148,9 @@
                 searchable: false
             },
             // {
-            //     data: 'id',
-            //     name: 'id',
-            //     searchable: true
+                //     data: 'id',
+                //     name: 'id',
+                //     searchable: true
             // },
             {
                 data: 'category_name',
@@ -175,7 +175,6 @@
                 searchable: false
             },
         ],
-
         columnDefs: [{
                 targets: 0, // ID (hidden)
                 createdCell: function(td) {
@@ -219,8 +218,6 @@
                 }
             }
         ]
-
-
     });
 
     /***** Search Box *****/
@@ -245,7 +242,6 @@
         $('select[name="parent_category_id"]').parent().show();
         $("#categoryForm .text-danger").text('');
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
-
     });
     
 
@@ -262,10 +258,10 @@
             $('#submitBtn').text('Update');
             $('input[name="category_id"]').val(category_id);
             // if (category.parent_category_id) {
-            //     $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
-            //         'change');
-            // } else {
-            //     $('select[name="parent_category_id"]').parent().hide();
+                //     $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
+                //         'change');
+                // } else {
+                //     $('select[name="parent_category_id"]').parent().hide();
             // }
             if (category.parent_category_id !== null && category.parent_category_id !== undefined &&
                 category.parent_category_id != 0) {
@@ -324,7 +320,7 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                callback(); // Execute callback function if confirmed
+                callback(); /* Execute callback function if confirmed */
             }
         });
     }
@@ -340,35 +336,36 @@
             form.submit(); // Submit the form if confirmed
         });
         // Swal.fire({
-        //     title: "Are you sure?",
-        //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonText: 'Yes, delete it!',
-        //     cancelButtonText: 'Cancel',
-        //     customClass: {
-        //         popup: 'my-custom-popup', // Custom class for the popup
-        //         title: 'my-custom-title', // Custom class for the title
-        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
-        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
-        //         icon: 'my-custom-icon swal2-warning'
-        //     }
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         form.submit(); // Submit form if confirmed
-        //     }
+            //     title: "Are you sure?",
+            //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
+            //     icon: 'warning',
+            //     showCancelButton: true,
+            //     confirmButtonText: 'Yes, delete it!',
+            //     cancelButtonText: 'Cancel',
+            //     customClass: {
+            //         popup: 'my-custom-popup', // Custom class for the popup
+            //         title: 'my-custom-title', // Custom class for the title
+            //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+            //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+            //         icon: 'my-custom-icon swal2-warning'
+            //     }
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+            //         form.submit(); // Submit form if confirmed
+            //     }
         // });
     });
 
     function display_errors(errors) {
         $("#categoryForm .error-text").text('');
         $.each(errors, function(key, value) {
-            /** Handle input fields validation **/
+
+            /** Handle input fields validation using controller validated ***/
             $('input[name=' + key + ']').addClass('is-invalid');
             console.log($('input[name=' + key + ']'));
             $('.' + key + '_error').text(value[0]).addClass('text-danger');
 
-            /** handle option dropdown validation **/
+            /** handle option dropdown validation using controller validated **/
             $('select[name=' + key + ']').addClass('is-invalid');
             $('.' + key + '_error').text(value[0]).addClass('text-danger'); 
         });
@@ -377,7 +374,7 @@
 
     /***** Bulk Delete *****/
     $('#select-all').change(function() {
-        // Check/uncheck all checkboxes when the select-all checkbox is clicked
+        /* Check/uncheck all checkboxes when the select-all checkbox is clicked */
         $('.category_checkbox').prop('checked', this.checked);
 
     });
@@ -392,7 +389,7 @@
         }
     });
 
-    // Handle Bulk Delete button click
+    /* Handle Bulk Delete button click */
     $('#bulk_delete_button').click(function() {
         confirmDeletion(function() {
             var selectedIds = $('.category_checkbox:checked').map(function() {
@@ -400,7 +397,7 @@
             }).get();
 
             if (selectedIds.length > 0) {
-                // Make an AJAX request to delete the selected items
+                /* Make an AJAX request to delete the selected items */
                 $.ajax({
                     url: "{{ route('category.bulkDelete') }}",
                     method: 'POST',

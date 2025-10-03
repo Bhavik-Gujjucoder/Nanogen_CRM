@@ -38,19 +38,20 @@ class GeneralSettingController extends Controller
                 'copyright_msg'    => 'required',
             ]);
         } elseif ($request->form_type == 'parent-category') {
-            $request->validate([
-                // 'login_page_image' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                // 'copyright_msg'    => 'required',
-            ]);
+            // $request->validate([
+            //     // 'login_page_image' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            //     // 'copyright_msg'    => 'required',
+            // ]);
 
-            $is_parent = 1;
+            // $is_parent = 1;
             
-            Category::create([
-                'category_name' => $request->category_name,
-                'status'        => $request->status,
-                'is_parent'     => $is_parent,
-                'parent_category_id' => '0' 
-            ]);
+            // Category::create([
+            //     'parent_category_id' => $request->parent_category_id,
+            //     'category_name' => $request->category_name,
+            //     'status'        => $request->status,
+            //     'is_parent'     => $is_parent,
+            //     'parent_category_id' => '0' 
+            // ]);
 
             return response()->json(['success' => true, 'message' => 'Category created successfully']);
 

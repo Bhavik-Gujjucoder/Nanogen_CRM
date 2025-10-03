@@ -14,7 +14,6 @@ class CategoryController extends Controller
         $data['page_title'] = 'Product Category';
         // $data['category'] = Category::where('is_parent', 1)->orWhereHas('children')->get();
         $data['category'] = Category::where('is_parent', 1)->where('status', 1)->get()->all();
-        // dd($data['category']);
 
         if ($request->ajax()) {
             $data = Category::query();
@@ -38,7 +37,6 @@ class CategoryController extends Controller
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
-
 
                     // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
@@ -85,10 +83,8 @@ class CategoryController extends Controller
         ]);
 
         return response()->json(['success' => true, 'message' => 'Category created successfully']);
-
         // return redirect()->route('category.index')->with('message', 'Product Category created successfully.');
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -142,7 +138,6 @@ class CategoryController extends Controller
         $ids = $request->ids;
         if (!empty($ids)) {
             Category::whereIn('id', $ids)->delete();
-
             return response()->json(['message' => 'Selected categories deleted successfully!']);
         }
         return response()->json(['message' => 'No records selected!'], 400);
