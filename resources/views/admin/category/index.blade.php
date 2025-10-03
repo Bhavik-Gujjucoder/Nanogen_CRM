@@ -34,8 +34,8 @@
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">
                             <label class="checkboxs">
-                                <input type="checkbox" id="select-all" class="category_checkbox"><span
-                                    class="checkmarks"></span>
+                                <input type="checkbox" id="select-all" class="category_checkbox">
+                                <span class="checkmarks"></span>
                             </label>
                         </th>
                         <th class="no-sort" scope="col">Sr no</th>
@@ -286,8 +286,7 @@
     $('#categoryForm').submit(function(e) {
         e.preventDefault();
         let category_id = $('input[name="category_id"]').val();
-        let url = category_id ? '{{ route('category.update', ':id') }}'.replace(':id', category_id) :
-            "{{ route('category.store') }}";
+        let url = category_id ? '{{ route('category.update', ':id') }}'.replace(':id', category_id) : "{{ route('category.store') }}";
         let method = category_id ? "PUT" : "POST";
 
         $.ajax({

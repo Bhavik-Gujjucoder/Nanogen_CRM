@@ -470,28 +470,30 @@
                                 <th>WEIGHT</th>
                                 <th> {{ request()->dealer == 1 ? 'DEALER' : 'DISTRIBUTOR' }}<br> RATE <br> <span
                                         class="gst-cls">(without GST)</span></th>
-                                <th>GST {{ $gst }}%</th>
+                                {{-- <th>GST {{ $gst }}%</th> --}}
+                                 <th>GST %</th>
                                 <th>MRP</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ($c->products && count($c->products))
                                 @foreach ($c->products as $p)
-                                    @php $variations = $p->product_variations; @endphp
-                                    @if ($variations && count($variations))
-                                        @foreach ($variations as $index => $variation)
-                                            @php
+                                @php $variations = $p->product_variations; @endphp
+                                @if ($variations && count($variations))
+                                @foreach ($variations as $index => $variation)
+                                @php
+                                // dd($p->gst);
                                                 $price =
-                                                    request()->dealer == 1
-                                                        ? $variation->dealer_price
-                                                        : $variation->distributor_price;
-                                                $gst_amount = ($price * $gst) / 100;
+                                                    request()->dealer == 1 ? $variation->dealer_price : $variation->distributor_price;
+                                                // $gst_amount = ($price * $gst) / 100;
+                                                $product_gst = (float) ($p->gst ?? 0);
+                                                $gst_amount = ($price * $product_gst) / 100;
                                                 $mrp = $price + $gst_amount;
                                             @endphp
                                             <tr>
                                                 @if ($index === 0)
                                                     <td class="product-name" rowspan="{{ $variations->count() }}">
-                                                        <div class="count-name">{{ $p->product_name }}</div>
+                                                        <div class="count-name">{{ $p->product_name }}<br> @if ($p->gst)<small>{{'GST ('.$p->gst.'%)' }}</small>@endif</div>
                                                         {{-- PRODUCT NAME --}}
                                                     </td>
                                                 @else

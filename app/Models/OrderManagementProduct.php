@@ -16,6 +16,7 @@ class OrderManagementProduct extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'gst',
         'packing_size_id',
         'price',
         'qty',

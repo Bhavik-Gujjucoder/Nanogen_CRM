@@ -7,8 +7,8 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('order_management.update', $order->id) }}" id="orderForm" method="POST"
-            onsubmit="return validateProductRows();">
+        <form action="{{ route('order_management.update', $order->id) }}" id="orderForm" method="POST">
+           {{--   onsubmit="return validateProductRows();" --}}
             @csrf
             @method('PUT')
             <div class="row mb-4 order-form">
@@ -117,12 +117,13 @@
                         <tr>
                             <th scope="col">S.No</th>
                             <th scope="col">Product Name <span class="text-danger">*</span></th>
+                            <th scope="col">GST(%)</th>
                             <th scope="col">Packing Size <span class="text-danger">*</span></th>
                             <th scope="col">Price <span class="text-danger">*</span></th>
                             <th scope="col">QTY <span class="text-danger">*</span></th>
                             <th scope="col">Total <span class="text-danger">*</span></th>
                             {{-- <th scope="col">Action</th> --}}
-                            <th data-label="Add-Action" scope="col"> 
+                            <th data-label="Add-Action" scope="col">
                                 <button type="button" onclick="addpropRow()" class="btn btn-primary">Add New</button>
                             </th>
                         </tr>
@@ -136,25 +137,26 @@
                                     <select name="product_id[]"
                                         class="form-control product-field form-select product_id-field search-dropdown">
                                         @foreach ($products as $product)
-                                            <option value="{{ $product->id }}"
+                                            <option value="{{ $product->id }}" data-gst="{{ $product->gst }}"
                                                 {{ $p->product_id == $product->id ? 'selected' : '' }}>
                                                 {{ $product->product_name }}</option>
                                         @endforeach
                                     </select>
                                 </td>
+                                <td data-label="GST">
+                                    <input type="number" name="gst[]" value="{{ old('gst', $p->gst) }}"
+                                        class="form-control gst-field" readonly placeholder="GST">
+                                </td>
                                 <td data-label="Packing Size">
-                                    {{-- {{dd($p->variation_option->id)}} --}}
-
                                     <select name="packing_size_id[]"
                                         class="form-control form-select product-field packing_size_field search-dropdown">
                                         {{-- <option selected>Select</option> --}}
                                         @foreach (getProductVariationOptions($p->product_id) as $item)
                                             <option value="{{ $item->variation_option_value->id ?? '' }}"
                                                 {{ $p->variation_option ? ($p->variation_option->id == $item->variation_option_id ? 'selected' : '') : '' }}>
-                                                {{ $item->variation_option_value->value ?? '' }} {{ $item->variation_option_value->unit ?? '' }}</option>
+                                                {{ $item->variation_option_value->value ?? '' }}
+                                                {{ $item->variation_option_value->unit ?? '' }}</option>
                                         @endforeach
-
-                                        {{-- <option value="{{ $p->variation_option->id }}" selected>{{ $p->variation_option->value }}</option> --}}
                                     </select>
                                 </td>
                                 <td data-label="Price">
@@ -225,7 +227,7 @@
 
             <div class="gstsec mt-4 mb-4">
                 <div class="totalsec text-end">
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12">
                             <label class="col-form-label" id="all_total">Total :
                                 {{ $order->total_order_amount }}</label>
@@ -235,12 +237,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="col-form-label">GST {{ $order->gst }}% : {{-- $order->gst_amount --}} <span
+                            <label class="col-form-label">GST {{ $order->gst }}% : <!-- $order->gst_amount --> <span
                                     id="gstAmount">0</span></label>
                             <input type="hidden" name="gst" value="{{ $order->gst }}">
                             <input type="hidden" name="gst_amount" value="{{ $order->gst_amount }}">
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-md-12">
                             <label class="col-form-label" id="grand_total">Grand Total (Incl. GST) :
@@ -432,9 +434,13 @@
                                 <select name="product_id[]" class="form-control product-field form-select product_id-field search-dropdown">
                                     <option value="">Select</option>
                                     @foreach ($products as $product)
-                                     <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                     <option value="{{ $product->id }}" data-gst="{{ $product->gst }}">{{ $product->product_name }}</option>
                                     @endforeach
                                 </select>
+                            </td>
+                              <td data-label="GST">
+                                <input type="number" name="gst[]" value="" class="form-control gst-field"
+                                    readonly placeholder="GST">
                             </td>
                              <td data-label="Packing Size">
                                 <select name="packing_size_id[]" class="form-control form-select product-field packing_size_field search-dropdown">
@@ -486,6 +492,9 @@
 
     /*** product name wise get packing-size ***/
     $(document).on('change', 'select[name="product_id[]"]', function() {
+         var gst = $(this).find("option:selected").data("gst");
+        $(this).closest("tr").find('input[name="gst[]"]').val(gst);
+
         $(this).closest('.field-group').find('[name="price[]"]').val('');
         // $(this).closest('.field-group').find('[name="total[]"]').val('');
         let selectedProductID = $(this).val();
@@ -505,7 +514,7 @@
 
                         $.each(response.product_variation, function(index, product_variation) {
                             if (product_variation.variation_option_value) {
-                           let val = product_variation.variation_option_value;
+                                let val = product_variation.variation_option_value;
                                 sizeOptions +=
                                     `<option value="${val.id}">${val.value} ${val.unit}</option>`; //${val.unit}
                             }
@@ -580,10 +589,12 @@
     function calculateGrandTotal() {
         $('[name="price[]"]').each(function() {
             let price = parseFloat($(this).val()) || 0;
-            let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]')
-                .val()) || 0;
-            $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(
-                0));
+            let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]').val()) || 0;
+            let gst = parseFloat($(this).closest('.field-group').find('input[name="gst[]"]').val()) || 0;
+            let with_gst = price * (gst/100);
+            price = price + with_gst;
+
+            $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(2));
         });
 
         let all_total = 0;
@@ -594,17 +605,19 @@
             all_total += val;
         });
 
-        let gstAmount = (all_total * gst) / 100;
+        // let gstAmount = (all_total * gst) / 100;
+        let gstAmount = 0;
         let grandTotal = all_total + gstAmount;
 
-        $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
-        $('#gstAmount').text(IndianNumberFormatscript(gstAmount.toFixed(0)));
-        $('#grand_total').text('Grand Total (Incl. GST) : ' + IndianNumberFormatscript(grandTotal.toFixed(0)));
+        // $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
+        // $('#gstAmount').text(IndianNumberFormatscript(gstAmount.toFixed(0)));
+        
+        // $('#grand_total').text('Grand Total (Incl. GST) : ' + IndianNumberFormatscript(grandTotal.toFixed(0)));
+        $('#grand_total').text('Grand Total (Incl. GST) : ₹' + grandTotal.toFixed(2));
 
-        $('input[name="total_order_amount"]').val(all_total.toFixed(0));
+        $('input[name="total_order_amount"]').val(all_total.toFixed(2));
         $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
-        $('input[name="grand_total"]').val(grandTotal.toFixed(0));
+        $('input[name="grand_total"]').val(grandTotal.toFixed(2));
     }
-
 </script>
 @endsection

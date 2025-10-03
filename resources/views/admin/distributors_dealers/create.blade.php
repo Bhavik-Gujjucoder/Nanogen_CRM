@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Pan Card No <span class="text-danger">*</span></label>
+                                <label class="col-form-label">Pan Card No </label>
                                 <input type="text" name="pancard" value="{{ old('pancard') }}"
                                     class="form-control" placeholder="Pan Card No"
                                     oninput="this.value = this.value.toUpperCase()" maxlength="10">
@@ -117,9 +117,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">GSTIN <span class="text-danger">*</span></label>
+                                <label class="col-form-label">GSTIN </label>
                                 <input type="text" name="gstin" value="{{ old('gstin') }}"
-                                    class="form-control" placeholder="GSTIN" oninput="this.value = this.value.toUpperCase()" maxlength="15">
+                                    class="form-control" placeholder="GSTIN"
+                                    oninput="this.value = this.value.toUpperCase()" maxlength="15">
                                 <span id="gstin_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -187,7 +188,7 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
                                 <input type="text" name="postal_code" value="{{ old('postal_code') }}"
-                                    class="form-control " placeholder="Postal/Zip code"  maxlength="255">
+                                    class="form-control " placeholder="Postal/Zip code" maxlength="255">
                                 <span id="postal_code_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -267,7 +268,7 @@
                                 <div class="mb-3">
                                     <label class="col-form-label">Cheque No.3 </label>
                                     <input type="number" name="cheque_3" value="{{ old('cheque_3') }}"
-                                        class="form-control" placeholder="Cheque No.3"  maxlength="255">
+                                        class="form-control" placeholder="Cheque No.3" maxlength="255">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -319,7 +320,8 @@
                         </div>
 
                         <div class="mt-2 row">
-                            <div class="col-md-4 ">
+
+                            {{-- <div class="col-md-4 ">
                                 <div class="mb-3">
                                     <label class="col-form-label">Fertilizer License No <span
                                             class="text-danger">*</span></label>
@@ -328,8 +330,26 @@
                                         placeholder="Fertilizer License No" maxlength="255">
                                     <span id="fertilizer_license_error" class="text-danger"></span>
                                 </div>
-                            </div>
+                            </div> --}}
+
                             <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="col-form-label d-flex align-items-center">
+                                        <input type="checkbox" name="fertilizer_license_check" id="fertilizer_license_check" value="1" class="me-2">
+                                        Fertilizer License No 
+                                    </label>
+
+                                    <div id="fertilizer_input_wrapper" style="display: none;">
+                                        <input type="text" name="fertilizer_license"
+                                            value="{{ old('fertilizer_license') }}" class="form-control"
+                                            placeholder="Fertilizer License No *" maxlength="255">
+                                        <span id="fertilizer_license_error" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {{-- <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label">Pesticide License No <span
                                             class="text-danger">*</span></label>
@@ -338,9 +358,27 @@
                                         placeholder="Pesticide License No" maxlength="255">
                                     <span id="pesticide_license_error" class="text-danger"></span>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="col-form-label d-flex align-items-center">
+                                        <input type="checkbox" name="pesticide_license_check" id="pesticide_license_check" value="1"
+                                            class="me-2">
+                                        Pesticide License No 
+                                    </label>
+
+                                    <div id="pesticide_input_wrapper" style="display: none;">
+                                        <input type="text" name="pesticide_license"
+                                            value="{{ old('pesticide_license') }}" class="form-control"
+                                            placeholder="Pesticide License No *" maxlength="255">
+                                        <span id="pesticide_license_error" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {{-- <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label">Seed License No <span
                                             class="text-danger">*</span></label>
@@ -348,7 +386,7 @@
                                         class="form-control" placeholder="Seed License No" maxlength="255">
                                     <span id="seed_license_error" class="text-danger"></span>
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
 
@@ -378,7 +416,8 @@
                                                 <td data-label="S.No.">1</td>
                                                 <td data-label="Company Name">
                                                     <input type="text" name="company_name[]" value=""
-                                                        class="form-control" placeholder="Enter company name" maxlength="255">
+                                                        class="form-control" placeholder="Enter company name"
+                                                        maxlength="255">
                                                 </td>
                                                 <td data-label="Products">
                                                     <select name="product_id[]" class="form-control">
@@ -474,7 +513,8 @@
                                                 <td data-label="S.No.">1</td>
                                                 <td data-label="Name">
                                                     <input type="text" name="name[]" value="{{ old('name') }}"
-                                                        placeholder="Enter name" class="form-control" maxlength="255">
+                                                        placeholder="Enter name" class="form-control"
+                                                        maxlength="255">
                                                 </td>
                                                 <td data-label="Date of Birth" class="dateofbirth">
                                                     <div class="icon-form">
@@ -526,20 +566,23 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="turnover1" 
-                                            value="{{ old('turnover1') }}" placeholder="1st year turnover" maxlength="255">
+                                        <input type="text" class="form-control" name="turnover1"
+                                            value="{{ old('turnover1') }}" placeholder="1st year turnover"
+                                            maxlength="255">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <input type="text" class="form-control" name="turnover2"
-                                            value="{{ old('turnover2') }}" placeholder="2nd year turnover" maxlength="255">
+                                            value="{{ old('turnover2') }}" placeholder="2nd year turnover"
+                                            maxlength="255">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <input type="text" class="form-control" name="turnover3"
-                                            value="{{ old('turnover3') }}" placeholder="3rd year turnover" maxlength="255">
+                                            value="{{ old('turnover3') }}" placeholder="3rd year turnover"
+                                            maxlength="255">
                                     </div>
                                 </div>
 
@@ -572,7 +615,8 @@
                                                     <input type="text" name="godown_size_capacity"
                                                         value="{{ old('godown_size_capacity') }}"
                                                         class="form-control"
-                                                        placeholder="Indicate Size and Capacity of Godown" maxlength="255"> 
+                                                        placeholder="Indicate Size and Capacity of Godown"
+                                                        maxlength="255">
                                                     <span id="godown_size_capacity_error" class="text-danger"></span>
                                                 </div>
                                             </div>
@@ -643,7 +687,7 @@
                                         <label class="col-form-label">Location of business/premises</label>
                                         <input type="text" name="business_location"
                                             value="{{ old('business_location') }}" class="form-control"
-                                            placeholder="Name and Address of Bank"  maxlength="255">
+                                            placeholder="Name and Address of Bank" maxlength="255">
                                         <span id="business_premises_location_error" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -658,14 +702,14 @@
                                             <label class="col-form-label">Area in sq. fee</label>
                                             <input type="text" class="form-control" name="godown_capacity_area"
                                                 value="{{ old('godown_capacity_area') }}"
-                                                placeholder="Area in sq. fee"   maxlength="255"> 
+                                                placeholder="Area in sq. fee" maxlength="255">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="col-form-label">Capacity in bags</label>
                                             <input type="text" class="form-control" name="godown_capacity_inbags"
-                                                value="{{ old('godown_capacity_inbags') }}" 
+                                                value="{{ old('godown_capacity_inbags') }}"
                                                 placeholder="Capacity in bags" maxlength="255">
                                         </div>
                                     </div>
@@ -710,7 +754,8 @@
                                             </label>
                                             <input type="text" name="financial_capability" class="form-control"
                                                 value="{{ old('financial_capability') }}"
-                                                placeholder="Financial standing and capability to invest" maxlength="255">
+                                                placeholder="Financial standing and capability to invest"
+                                                maxlength="255">
                                             <span id="financial_capability_error" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -804,7 +849,8 @@
                                     <div class="mb-3">
                                         <label class="col-form-label">Credit limit </label>
                                         <input type="text" name="cr_limit" class="form-control"
-                                            placeholder="Credit limit" value="{{ old('cr_limit') }}" maxlength="255">
+                                            placeholder="Credit limit" value="{{ old('cr_limit') }}"
+                                            maxlength="255">
                                     </div>
                                 </div>
 
@@ -1126,6 +1172,31 @@
 </script> --}}
 
 <script>
+    /* Fertilizer License No check input show and hide */
+    $(document).ready(function() {
+        // Fertilizer license toggle
+        $('#fertilizer_license_check').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#fertilizer_input_wrapper').slideDown();
+            } else {
+                $('#fertilizer_input_wrapper').slideUp();
+                $('input[name="fertilizer_license"]').val(''); // clear value if unchecked
+            }
+        });
+
+        // Pesticide license toggle
+        $('#pesticide_license_check').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#pesticide_input_wrapper').slideDown();
+            } else {
+                $('#pesticide_input_wrapper').slideUp();
+                $('input[name="pesticide_license"]').val('');
+            }
+        });
+    });
+
+
+
     /**** date-picker ****/
     function initFlatpickr() {
         $('.datePicker').each(function() {
@@ -1201,8 +1272,8 @@
                     minlength: 10,
                     maxlength: 10
                 },
-                pancard: "required",
-                gstin: "required",
+                // pancard: "required",
+                // gstin: "required",
                 aadhar_card: {
                     required: true,
                     digits: true,
@@ -1219,9 +1290,19 @@
                 ifsc_code: "required",
                 security_cheque_detail: "required",
                 name_authorised_signatory: "required",
-                fertilizer_license: "required",
-                pesticide_license: "required",
-                seed_license: "required",
+                // fertilizer_license: "required",
+                fertilizer_license: {
+                    required: function() {
+                        return $("input[name='fertilizer_license_check']:checked");
+                    }
+                },
+                // pesticide_license: "required",
+                pesticide_license: {
+                    required: function() {
+                        return $("input[name='pesticide_license_check']:checked");
+                    }
+                },
+                // seed_license: "required",
                 other_ac_type: {
                     required: function() {
                         return $("input[name='ac_type']:checked").val() == "3";
@@ -1240,8 +1321,8 @@
                     minlength: "Mobile number must be 10 digits.",
                     maxlength: "Mobile number must be 10 digits."
                 },
-                pancard: "The pan card No field is required.",
-                gstin: "The gstin field is required.",
+                // pancard: "The pan card No field is required.",
+                // gstin: "The gstin field is required.",
                 aadhar_card: {
                     required: "The aadhar card no field is required.",
                     digits: "Aadhar card No must be numeric.",
@@ -1260,7 +1341,7 @@
                 name_authorised_signatory: "The name of authorised signatory field is required.",
                 fertilizer_license: "The fertilizer license no field is required.",
                 pesticide_license: "The pesticide license no field is required.",
-                seed_license: "The seed license no field is required.",
+                // seed_license: "The seed license no field is required.",
                 other_ac_type: "Please specify the other account type."
             },
             errorPlacement: function(error, element) {

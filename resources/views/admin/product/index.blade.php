@@ -46,6 +46,7 @@
                         <th scope="col">Product Name</th>
                         <th scope="col">Category</th>
                         <th scope="col">Grade</th>
+                        <th scope="col">GST(%)</th>
                         <th scope="col">Status</th>
                         {{-- <th scope="col">Available Packages</th>
                    <th scope="col">Price</th> --}}
@@ -107,6 +108,11 @@
                 name: 'grade_id',
                 searchable: true,
                 orderable: false
+            },
+            {
+                data: 'gst',
+                name: 'gst',
+                searchable: true
             },
             {
                 data: 'status',

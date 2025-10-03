@@ -60,6 +60,8 @@ class DistributorsDealersController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     $o_form_download_btn = '<a href="' . route('distributors_dealers.replaceInWord', ['id' => $row->id, 'dealer' => ($row->user_type == 2 ? 1 :  null)]) . '" class="dropdown-item"  data-id="' . $row->id . '" class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-download text-warning"></i> O-Form Download</a>';
+                    
+                    $principal_certificate_download_btn = '<a href="' . route('distributors_dealers.replaceInWord', ['id' => $row->id, 'dealer' => ($row->user_type == 2 ? 1 :  null)]) . '" class="dropdown-item"  data-id="' . $row->id . '" class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-download text-warning"></i> Principal Certificate Download</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item delete_d_d"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('distributors_dealers.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
@@ -73,9 +75,14 @@ class DistributorsDealersController extends Controller
                     // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $o_form_download_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    $o_form_licence_check = $row->fertilizer_license_check == 1 ? true : false;
+                    $pesticide_license_check = $row->pesticide_license_check == 1 ? true : false;
+                    $action_btn .= $o_form_licence_check ? $o_form_download_btn : '';
+                    $action_btn .= $pesticide_license_check ? $principal_certificate_download_btn : '';
 
                     $action_btn .= $edit_btn;
-                    $action_btn .= $o_form_download_btn;
+                    // $action_btn .= $o_form_download_btn;
+                    // $action_btn .= $principal_certificate_download_btn;
                     $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
@@ -123,6 +130,7 @@ class DistributorsDealersController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             $d_d = new DistributorsDealers();
             $d_d->fill($request->all());
@@ -211,12 +219,34 @@ class DistributorsDealersController extends Controller
 
     /**
      * Update the specified resource in storage.
-    */
+     */
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
         try {
             $d_d = DistributorsDealers::findOrFail($id);
-            $d_d->update($request->all());
+            $data = $request->all();
+
+            if ($request->has('fertilizer_license_check')) {
+                $data['fertilizer_license_check'] = 1;
+                $data['fertilizer_license'] = $request->fertilizer_license;
+            } else {
+                // Checkbox unchecked → reset both fields
+                $data['fertilizer_license_check'] = 0;
+                $data['fertilizer_license'] = null;
+            }
+
+            // If checkbox is checked
+            if ($request->has('pesticide_license_check')) {
+                $data['pesticide_license_check'] = 1;
+                $data['pesticide_license'] = $request->pesticide_license;
+            } else {
+                // Checkbox unchecked → reset both fields
+                $data['pesticide_license_check'] = 0;
+                $data['pesticide_license'] = null;
+            }
+
+            $d_d->update($data);
 
             if ($request->hasFile('profile_image')) {
                 if ($d_d->profile_image) {

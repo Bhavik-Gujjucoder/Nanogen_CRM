@@ -16,7 +16,7 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
+    */
     public function index(Request $request)
     {
         $data['page_title'] = 'Product Catalogue';
@@ -70,6 +70,9 @@ class ProductController extends Controller
                 ->editColumn('grade_id', function ($product) {
                     return $product->grade ? $product->grade->name : '-';
                 })
+                 ->editColumn('gst', function ($product) {
+                    return $product->gst ? $product->gst : '-';
+                })
                 ->editColumn('status', function ($product) {
                     return $product->statusBadge();
                 })
@@ -107,7 +110,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::create($request->only(['product_name', 'category_id', 'grade_id', 'status']));
+        $product = Product::create($request->only(['product_name', 'category_id', 'grade_id', 'status', 'gst']));
         if ($request->hasFile('product_image')) {
             $file     = $request->file('product_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -158,7 +161,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        $product->update($request->only(['product_name', 'category_id', 'grade_id', 'status']));
+        $product->update($request->only(['product_name', 'category_id', 'grade_id', 'status', 'gst']));
 
         if ($request->hasFile('product_image')) {
             if ($product->product_image) {

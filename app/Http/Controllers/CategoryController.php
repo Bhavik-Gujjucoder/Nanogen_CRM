@@ -32,7 +32,7 @@ class CategoryController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteCategory"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('category.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
+                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('category.destroy', $row->id) . '" method="post" class="delete-form" id="delete-category-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
                     $action_btn = '<div class="dropdown table-action">
@@ -118,6 +118,9 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+        if(request()->ajax()){
+              return response()->json(['success' => true, 'message' => 'Category deleted successfully']);
+        }
         return redirect()->route('category.index')->with('success', 'Category deleted successfully.');
     }
 

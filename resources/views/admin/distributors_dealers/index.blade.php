@@ -23,12 +23,14 @@
                         <div class="dropdown-menu dropdown-menu-end">
                             <ul>
                                 <li>
-                                    <a href="javascript:void(0);" class="dropdown-item"><i
-                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export as PDF</a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="ti ti-file-type-pdf text-danger me-1"></i>Export as PDF
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0);" class="dropdown-item"><i
-                                            class="ti ti-file-type-xls text-green me-1"></i>Export as Excel</a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="ti ti-file-type-xls text-green me-1"></i>Export as Excel
+                                    </a>
                                 </li>
                             </ul>
                         </div>

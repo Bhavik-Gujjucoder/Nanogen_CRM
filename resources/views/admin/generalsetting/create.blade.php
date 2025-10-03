@@ -14,7 +14,13 @@
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'general-setting' ? 'active' : '' }}" id="GeneralSetting"
                     data-bs-toggle="tab" href="#general-setting" role="tab" aria-controls="general-setting"
-                    aria-selected="true{{-- $activeTab == 'general-setting' ? 'true' : 'false' --}}">General Setting</a>
+                    aria-selected="true{{-- $activeTab == 'general-setting' ? 'true' : 'false' --}}"
+                    >General Setting</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ $activeTab == 'parent-category' ? 'active' : '' }}" id="ParentCategory"
+                    data-bs-toggle="tab" href="#parent-category" role="tab" aria-controls="parent-category"
+                    aria-selected="true{{-- $activeTab == 'parent-category' ? 'true' : 'false' --}}">Parent Category</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'company-detail' ? 'active' : '' }}" id="CompanyDetails"
@@ -37,13 +43,17 @@
                 <a class="nav-link {{ $activeTab == 'o_form' ? 'active' : '' }}" id="o_form_tab" data-bs-toggle="tab"
                     href="#o_form" role="tab" aria-controls="o_form" aria-selected="false">O Form</a>
             </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ $activeTab == 'principal_certificate' ? 'active' : '' }}" id="principal_certificate_tab" data-bs-toggle="tab"
+                    href="#principal_certificate" role="tab" aria-controls="principal_certificate" aria-selected="false">Principal Certificate</a>
+            </li>
         </ul>
 
         <div class="tab-content mt-3" id="myTabContent">
 
             <!--G E N E R A L   S E T T I N G   T A B-->
-            <div class="tab-pane fade show active {{-- $activeTab == 'general-setting' ? 'show active' : '' --}}" id="general-setting"
-                role="tabpanel" aria-labelledby="GeneralSetting">
+            <div class="tab-pane fade show active {{-- $activeTab == 'general-setting' ? 'show active' : '' --}}" id="general-setting" role="tabpanel"
+                aria-labelledby="GeneralSetting">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="form_type" value="general-setting">
@@ -80,7 +90,8 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Copyright Message<span
                                         class="text-danger">*</span></label>
-                                <textarea class="form-control @error('copyright_msg') is-invalid @enderror" name="copyright_msg" placeholder="Copyright Message">{{ old('copyright_msg', getSetting('copyright_msg')) }}</textarea>
+                                <textarea class="form-control @error('copyright_msg') is-invalid @enderror" name="copyright_msg"
+                                    placeholder="Copyright Message">{{ old('copyright_msg', getSetting('copyright_msg')) }}</textarea>
                                 @error('copyright_msg')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -93,10 +104,103 @@
                 </form>
             </div>
 
+            <!--P A R E N T  C A T E G O R Y   T A B-->
+            <div class="tab-pane fade  {{-- $activeTab == 'parent-category' ? 'show active' : '' --}}" id="parent-category" role="tabpanel"
+                aria-labelledby="parent-category">
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-left">
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-left flex-wrap row-gap-2">
+                                    <a href="javascript:void(0)" id="openModal" class="btn btn-primary">
+                                        <i class="ti ti-square-rounded-plus me-2"></i>Add Parent Category
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive custom-table">
+                            <table class="table" id="category_table">
+                                <button class="btn btn-primary" id="bulk_delete_button" style="display: none;">Delete
+                                    Selected</button>
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th hidden>ID</th>
+                                        <th class="no-sort" scope="col">Sr no</th>
+                                        <th scope="col">Category Name</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal fade" id="adminModal" tabindex="-1" data-bs-backdrop="static"
+                    data-bs-keyboard="false">
+                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitle">Add Parent Category</h5>
+                                {{-- <button type="button" class="btn-close close_poup" data-bs-dismiss="modal"></button> --}}
+                                <button class="btn-close custom-btn-close border p-1 me-0 text-dark"
+                                    data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ti ti-x"></i>
+                            </div>
+                            <div class="modal-body">
+                                <form id="categoryForm">
+                                    @csrf
+                                    <input type="hidden" name="category_id">
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label">Category Name *</span></label>
+                                        <input type="text" name="category_name" value=""
+                                            class="form-control" placeholder="Enter category name" maxlength="250">
+                                        <span class="category_name_error"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label">Status</label>
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                <input type="radio" class="status-radio" id="active1"
+                                                    name="status" value="1"
+                                                    {{ old('status', '1') == '1' ? 'checked' : '' }}>
+                                                <label for="active1">Active</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" class="status-radio" id="inactive1"
+                                                    name="status" value="0"
+                                                    {{ old('status') == '0' ? 'checked' : '' }}>
+                                                <label for="inactive1">Inactive</label>
+                                            </div>
+                                        </div>
+                                        @error('status')
+                                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="float-end">
+                                        <button type="button" class="btn btn-light me-2 close_poup"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--C O M P A N Y   D E T A I L S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'company-detail' ? 'show active' : '' }}" id="company-details"
                 role="tabpanel" aria-labelledby="CompanyDetails">
-                <form action="{{ route('admin.generalsetting.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.generalsetting.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="form_type" value="company-detail">
                     <div class="row">
@@ -187,7 +291,9 @@
                                 @enderror
                             </div>
                         </div> --}}
-                        <div class="col-md-6">
+
+
+                        {{-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="col-form-label">GST(%) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control @error('gst') is-invalid @enderror"
@@ -196,7 +302,8 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
+
                         <div class="d-flex align-items-center justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
@@ -328,7 +435,48 @@
                         {{-- Download Docx File Code --}}
                         {{-- {{dd(  storage_path().'/O-Form/' .getSetting('o_form_docx_file'))}} --}}
                         @if (getSetting('o_form_docx_file') && !empty(getSetting('o_form_docx_file')))
-                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}?v={{ time() }}" 
+                            <a href="{{ asset('storage/O-Form/' . getSetting('o_form_docx_file')) }}?v={{ time() }}"
+                                class="btn btn-outline-primary">
+                                <i class="ti ti-download"></i> Download Docx File
+                            </a>
+                        @endif
+
+
+                    </div>
+                    {{-- <button type="submit" class="btn btn-primary">Replace Name</button> --}}
+                    <div class="d-flex align-items-center justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+
+                </form>
+            </div>
+
+
+            <!-- P R I N C I P A L   C E R T I F I C A T E   F O R M-->
+            <div class="tab-pane fade {{ $activeTab == 'principal_certificate' ? 'show active' : '' }}" id="principal_certificate"
+                role="tabpanel" aria-labelledby="principal_certificate">
+                <form action="{{ route('admin.generalsetting.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="form_type" value="principal_certificate">
+                    <div class="upload-content">
+                        <div class="mb-3 col-md-6">
+                            <label for="docx_file" class="form-label">Upload Docx File</label>
+                            <input type="file" name="principal_certificate_docx_file" id="docx_file"
+                                class="form-control @error('principal_certificate_docx_file') is-invalid @enderror" accept=".docx">
+
+                            @error('principal_certificate_docx_file')
+                                <div class="invalid-feedback">
+                                    <strong>{{ $message }}</strong>
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="">
+                        {{-- Download Docx File Code --}}
+                        {{-- {{dd(  storage_path().'/PRINCIPAL-CERTIFICATE/' .getSetting('principal_certificate_docx_file'))}} --}}
+                        @if (getSetting('principal_certificate_docx_file') && !empty(getSetting('principal_certificate_docx_file')))
+                            <a href="{{ asset('storage/PRINCIPAL-CERTIFICATE/' . getSetting('principal_certificate_docx_file')) }}?v={{ time() }}"
                                 class="btn btn-outline-primary">
                                 <i class="ti ti-download"></i> Download Docx File
                             </a>
@@ -349,6 +497,7 @@
 
 @endsection
 @section('script')
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('.summernote').summernote({
@@ -356,8 +505,6 @@
             height: 350
         });
     });
-
-
 
     // function previewProfilePicture(event) {
     //     const file = event.target.files[0]; // Get the selected file
@@ -370,7 +517,7 @@
     //         reader.readAsDataURL(file); // Read the file as a Data URL
     //     }
     // }
-     function previewProfilePicture(event, targetId) {
+    function previewProfilePicture(event, targetId) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -383,5 +530,193 @@
             reader.readAsDataURL(file);
         }
     }
+
+    // 
+
+    /***** Open Modal for Add a New product category *****/
+    $('#openModal').click(function() {
+        $('#categoryForm')[0].reset();
+        $('#adminModal').modal('show');
+        $('#modalTitle').text('Add Parent Category');
+        $('#submitBtn').text('Create');
+        $('input[name="category_id"]').val('');
+        $('select[name="parent_category_id"]').parent().show();
+        $("#categoryForm .text-danger").text('');
+        $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
+    });
+
+    /***** Open Modal for Editing an Admin *****/
+    $(document).on('click', '.edit-btn', function() {
+        let category_id = $(this).data('id');
+        // alert(category_id);
+        $("#categoryForm .text-danger").text('');
+        $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
+
+        $.get('{{ route('category.edit', ':id') }}'.replace(':id', category_id), function(category) {
+            console.log(category);
+            $('#modalTitle').text('Edit Parent Category');
+            $('#submitBtn').text('Update');
+            $('input[name="category_id"]').val(category_id);
+
+            if (category.parent_category_id !== null && category.parent_category_id !== undefined &&
+                category.parent_category_id != 0) {
+                $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
+                    'change');
+                $('select[name="parent_category_id"]').parent().show();
+            } else {
+                $('select[name="parent_category_id"]').val(0).trigger('change');
+                $('select[name="parent_category_id"]').parent().hide();
+            }
+
+            $('input[name="category_name"]').val(category.category_name);
+            $('input[name="status"][value="' + category.status + '"]').prop('checked', true);
+            $('#adminModal').modal('show');
+        });
+    });
+
+    /***** Add & Edit Form Submission *****/
+    $('#categoryForm').submit(function(e) {
+        e.preventDefault();
+        let category_id = $('input[name="category_id"]').val();
+        let url = category_id ? '{{ route('category.update', ':id') }}'.replace(':id', category_id) :
+            "{{ route('category.store') }}";
+        let method = category_id ? "PUT" : "POST";
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: $(this).serialize() + "&_method=" + method,
+            success: function(response) {
+                $('#adminModal').modal('hide');
+                category_table_show.ajax.reload();
+                show_success(response.message);
+            },
+            error: function(response) {
+                display_errors(response.responseJSON.errors);
+            }
+        });
+    });
+
+    function display_errors(errors) {
+        $("#categoryForm .error-text").text('');
+        $.each(errors, function(key, value) {
+            $('input[name=' + key + ']').addClass('is-invalid');
+            console.log($('input[name=' + key + ']'));
+            $('.' + key + '_error').text(value[0]).addClass('text-danger');
+        });
+    }
+
+    var category_table_show = $('#category_table').DataTable({
+        "pageLength": 10,
+        deferRender: true, // Prevents unnecessary DOM rendering
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        dom: 'lrtip',
+        ajax: "{{ route('category.index') }}",
+        order: [
+            [0, 'desc']
+        ],
+        columns: [{
+                data: 'id',
+                name: 'id',
+                visible: false,
+                searchable: false
+            },
+
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'category_name',
+                name: 'category_name',
+                searchable: true
+            },
+            {
+                data: 'status',
+                name: 'status',
+                searchable: true
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ],
+
+    });
+
+    function confirmDeletion(callback) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to remove this category? Once deleted, it cannot be recovered.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'my-custom-popup',
+                title: 'my-custom-title',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+                icon: 'my-custom-icon swal2-warning'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                callback(); // Execute callback function if confirmed
+            }
+        });
+    }
+
+    /***** Delete *****/
+    $(document).on('click', '.deleteCategory', function(event) {
+        event.preventDefault();
+        let categoryId = $(this).data('id');
+        let form = $('#delete-form-' + categoryId); // Select the correct form
+        console.log(form);
+       let actionUrl = "{{ route('category.destroy', ':id') }}".replace(':id', categoryId);
+        // Submit ajax if confirmed
+        confirmDeletion(function() {
+            $.ajax({
+                url: actionUrl,
+                type: "POST", // because it's destroy
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    _method: 'DELETE'
+                }, // Laravel requires CSRF token
+                success: function(response) {
+                    // ✅ Remove deleted row from table (example)
+                    category_table_show.ajax.reload();
+                    show_success(response.message);
+                },
+                error: function(xhr) {
+                    Swal.fire('Error!', 'Something went wrong.', 'error');
+                }
+            });
+        });
+        // Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes, delete it!',
+        //     cancelButtonText: 'Cancel',
+        //     customClass: {
+        //         popup: 'my-custom-popup', // Custom class for the popup
+        //         title: 'my-custom-title', // Custom class for the title
+        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+        //         icon: 'my-custom-icon swal2-warning'
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         form.submit(); // Submit form if confirmed
+        //     }
+        // });
+    });
 </script>
 @endsection

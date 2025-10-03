@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('grade_id');
             $table->boolean('status')->default(true);
+            $table->string('gst');
             $table->timestamps();
             $table->softDeletes();
         });

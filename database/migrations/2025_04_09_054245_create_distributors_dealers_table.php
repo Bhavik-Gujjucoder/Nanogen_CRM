@@ -43,7 +43,9 @@ return new class extends Migration
             $table->string('ac_type')->nullable();
             $table->string('other_ac_type')->nullable();
             $table->text('fertilizer_license')->nullable();
+            $table->integer('fertilizer_license_check')->nullable();
             $table->text('pesticide_license')->nullable();
+            $table->integer('pesticide_license_check')->nullable();
             $table->text('seed_license')->nullable();
             $table->string('product_id')->nullable();
             $table->string('firm_status')->nullable();

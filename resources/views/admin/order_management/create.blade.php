@@ -22,8 +22,8 @@
                         <option value="">Select</option>
                         @if ($distributor_dealers)
                             @foreach ($distributor_dealers as $dd)
-                                <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }} data-user_type="{{ $dd->user_type }}"
-                                    data-mobile_no="{{ $dd->mobile_no }}">
+                                <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }}
+                                    data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}">
                                     {{ $dd->applicant_name }}
                                     {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
                                 </option>
@@ -45,7 +45,8 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                     <input type="text" name="mobile_no" value="{{ old('mobile_no') }}" class="form-control"
-                        placeholder="Phone" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" readonly>
+                        placeholder="Phone" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);"
+                        readonly>
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -98,6 +99,7 @@
                         <tr>
                             <th scope="col">S.No </th>
                             <th scope="col">Product Name <span class="text-danger">*</span></th>
+                            <th scope="col">GST(%)</th>
                             <th scope="col">Packing Size <span class="text-danger">*</span></th>
                             <th scope="col">Price <span class="text-danger">*</span></th>
                             <th scope="col">QTY <span class="text-danger">*</span></th>
@@ -113,9 +115,14 @@
                                     class="form-control product-field form-select product_id-field search-dropdown">
                                     <option selected disabled>Select</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                        <option value="{{ $product->id }}" data-gst="{{ $product->gst }}">
+                                            {{ $product->product_name }}</option>
                                     @endforeach
                                 </select>
+                            </td>
+                            <td data-label="GST">
+                                <input type="number" name="gst[]" value="" class="form-control gst-field"
+                                    readonly placeholder="GST">
                             </td>
                             <td data-label="Packing Size">
                                 <select name="packing_size_id[]"
@@ -148,20 +155,20 @@
             </div>
             <div class="gstsec mt-4 mb-4">
                 <div class="totalsec text-end">
-                    <div class="row">
+                    <input type="hidden" name="total_order_amount" value="">
+                    {{-- <div class="row">
                         <div class="col-md-12">
                             <label class="col-form-label" id="all_total">Total : 0</label>
-                            <input type="hidden" name="total_order_amount" value="">
                         </div>
                     </div>
-                    <div class="row">
+                     <div class="row">
                         <div class="col-md-12">
                             <label class="col-form-label">GST {{ getSetting('gst') }}% : <span
                                     id="gstAmount">0</span></label>
                             <input type="hidden" name="gst" value="{{ getSetting('gst') }}">
                             <input type="hidden" name="gst_amount" value="">
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-md-12">
                             <label class="col-form-label" id="grand_total">Grand Total (Incl. GST) : 0</label>
@@ -181,8 +188,8 @@
 @section('script')
 <script>
     /*** party name select and phone number auto fillable ***/
-     $(function () {
-        $('[name="dd_id"]').change(function () {
+    $(function() {
+        $('[name="dd_id"]').change(function() {
             $('[name="mobile_no"]').val($(this).find('option:selected').data('mobile_no') || '');
         });
     });
@@ -334,9 +341,12 @@
                                 <select name="product_id[]" class="form-control product-field form-select product_id-field search-dropdown">
                                     <option selected>Select</option>
                                     @foreach ($products as $product)
-                                     <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                     <option value="{{ $product->id }}" data-gst="{{ $product->gst }}">{{ $product->product_name }}</option>
                                     @endforeach
                                 </select>
+                            </td>
+                            <td data-label="GST">
+                               <input type="number" name="gst[]" value="" class="form-control gst-field" readonly placeholder="GST">
                             </td>
                              <td data-label="Packing Size">
                                 <select name="packing_size_id[]" class="form-control form-select product-field packing_size_field search-dropdown">
@@ -385,10 +395,13 @@
 
     /*** product name wise get packing-size ***/
     $(document).on('change', 'select[name="product_id[]"]', function() {
+
+        var gst = $(this).find("option:selected").data("gst");
+        $(this).closest("tr").find('input[name="gst[]"]').val(gst);
+
         $(this).closest('.field-group').find('[name="price[]"]').val('');
         let selectedProductID = $(this).val();
-        let sizeDropdown = $(this).closest('.field-group').find(
-            'select[name="packing_size_id[]"]');
+        let sizeDropdown = $(this).closest('.field-group').find('select[name="packing_size_id[]"]');
 
         if (selectedProductID) {
             $.ajax({
@@ -403,10 +416,10 @@
                         console.log('yes');
                         console.log(response);
                         let sizeOptions = '<option value="">Select</option>';
-                        
+
                         $.each(response.product_variation, function(index, product_variation) {
                             if (product_variation.variation_option_value) {
-                           let val = product_variation.variation_option_value;
+                                let val = product_variation.variation_option_value;
                                 sizeOptions +=
                                     `<option value="${val.id}">${val.value} ${val.unit}</option>`; //${val.unit}
                             }
@@ -480,94 +493,94 @@
     function calculateGrandTotal() {
         $('[name="price[]"]').each(function() {
             let price = parseFloat($(this).val()) || 0;
-            let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]')
-                .val()) || 0;
-            $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(
-                0));
+            let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]').val()) || 0;
+            let gst = parseFloat($(this).closest('.field-group').find('input[name="gst[]"]').val()) || 0;
+            let with_gst = price * (gst/100);
+            price = price + with_gst;
+            $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(2));
         });
 
         let all_total = 0;
-        let gst = parseFloat('{{ getSetting('gst') }}') || 0;
+        // let gst = parseFloat('{{ getSetting('gst') }}') || 0;
 
         $('[name="total[]"]').each(function() {
             let val = parseFloat($(this).val()) || 0;
             all_total += val;
         });
 
-        let gstAmount = (all_total * gst) / 100;
-        let grandTotal = all_total + gstAmount;
+        let gstAmount = 0;
+        let grandTotal = all_total;
 
-        $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
-        $('#gstAmount').text( IndianNumberFormatscript(gstAmount.toFixed(0)));
-        $('#grand_total').text('Grand Total (Incl. GST) : ' + IndianNumberFormatscript(grandTotal.toFixed(0)));
+        // $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
+        // $('#gstAmount').text(IndianNumberFormatscript(gstAmount.toFixed(0)));
 
-        $('input[name="total_order_amount"]').val(all_total.toFixed(0));
+        $('#grand_total').text('Grand Total (Incl. GST) : ₹' + grandTotal.toFixed(2));
+
+        $('input[name="total_order_amount"]').val(all_total.toFixed(2));
         $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
-        $('input[name="grand_total"]').val(grandTotal.toFixed(0));
+        $('input[name="grand_total"]').val(grandTotal.toFixed(2));
     }
-
-   
 </script>
 
 {{-- old validation --}}
 <script>
-    // $(document).on('change', 'select[name="packing_size_id[]"]', function() {
-    //     let product_id = $(this).closest('.field-group').find('select[name="product_id[]"]').val();
-    //     let selectedVariationOptionID = $(this).val();
-    //     let priceField = $(this).closest('.field-group').find('[name="price[]"]');
-    //     let user_type = $('select[name="dd_id"] option:selected').data('user_type'); //attr('data-user_type') 
+    // $(document).on('change', 'selcet[name="packing_size_id[]"]', function() {
+        //     let product_id = $(this).closest('.field-group').find('select[name="product_id[]"]').val();
+        //     let selectedVariationOptionID = $(this).val();
+        //     let priceField = $(this).closest('.field-group').find('[name="price[]"]');
+        //     let user_type = $('select[name="dd_id"] option:selected').data('user_type'); //attr('data-user_type') 
 
-    //     if (selectedVariationOptionID) {
-    //         $.ajax({
-    //             url: "{{ route('product.variation.price.get') }}",
-    //             type: "POST",
-    //             data: {
-    //                 variation_option_id: selectedVariationOptionID,
-    //                 product_id: product_id,
-    //                 _token: '{{ csrf_token() }}'
-    //             },
-    //             success: function(response) {
-    //                 if (response.success) {
-    //                     if (user_type == 1) { //distibutor price
-    //                         priceField.val(response.product.distributor_price);
-    //                     } else { //dealer price
-    //                         priceField.val(response.product.dealer_price);
-    //                     }
-    //                 }
-    //             },
-    //             error: function(xhr) {
-    //                 console.log(xhr.responseText);
-    //             }
-    //         });
-    //     }
-    // });
-    // $('body').on('input', '.qty-field', function() {
-    //     let group = $(this).closest('.field-group');
-    //     let price = +group.find('.price-field').val() || 0;
-    //     let qty = +group.find('.qty-field').val() || 0;
-    //     group.find('[name="total[]"]').val((price * qty).toFixed(0));
-    //     calculateGrandTotal(); // Call to update grand total
-    // });
-    // function calculateGrandTotal() {
-    //     let all_total = 0;
-    //     let gst = parseFloat('{{ getSetting('gst') }}') || 0;
-    //     $('[name="total[]"]').each(function() {
-    //         let val = parseFloat($(this).val()) || 0;
-    //         all_total += val;
-    //     });
+        //     if (selectedVariationOptionID) {
+        //         $.ajax({
+        //             url: "{{ route('product.variation.price.get') }}",
+        //             type: "POST",
+        //             data: {
+        //                 variation_option_id: selectedVariationOptionID,
+        //                 product_id: product_id,
+        //                 _token: '{{ csrf_token() }}'
+        //             },
+        //             success: function(response) {
+        //                 if (response.success) {
+        //                     if (user_type == 1) { //distibutor price
+        //                         priceField.val(response.product.distributor_price);
+        //                     } else { //dealer price
+        //                         priceField.val(response.product.dealer_price);
+        //                     }
+        //                 }
+        //             },
+        //             error: function(xhr) {
+        //                 console.log(xhr.responseText);
+        //             }
+        //         });
+        //     }
+        // });
+        // $('body').on('input', '.qty-field', function() {
+        //     let group = $(this).closest('.field-group');
+        //     let price = +group.find('.price-field').val() || 0;
+        //     let qty = +group.find('.qty-field').val() || 0;
+        //     group.find('[name="total[]"]').val((price * qty).toFixed(0));
+        //     calculateGrandTotal(); // Call to update grand total
+        // });
+        // function calculateGrandTotal() {
+        //     let all_total = 0;
+        //     let gst = parseFloat('{{ getSetting('gst') }}') || 0;
+        //     $('[name="total[]"]').each(function() {
+        //         let val = parseFloat($(this).val()) || 0;
+        //         all_total += val;
+        //     });
 
 
-    //     // Example: show total in an element with id="grandTotal"
-    //     $('#all_total').text('Total : ' + all_total.toFixed(2));
+        //     // Example: show total in an element with id="grandTotal"
+        //     $('#all_total').text('Total : ' + all_total.toFixed(2));
 
-    //     let gstAmount = (all_total * gst) / 100;
-    //     let grandTotal = all_total + gstAmount;
-    //     $('#gstAmount').text(gstAmount.toFixed(2));
-    //     $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
+        //     let gstAmount = (all_total * gst) / 100;
+        //     let grandTotal = all_total + gstAmount;
+        //     $('#gstAmount').text(gstAmount.toFixed(2));
+        //     $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
 
-    //     $('input[name="total_order_amount"]').val(all_total.toFixed(0));
-    //     $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
-    //     $('input[name="grand_total"]').val(grandTotal.toFixed(0));
+        //     $('input[name="total_order_amount"]').val(all_total.toFixed(0));
+        //     $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
+        //     $('input[name="grand_total"]').val(grandTotal.toFixed(0));
     // }
 </script>
 @endsection

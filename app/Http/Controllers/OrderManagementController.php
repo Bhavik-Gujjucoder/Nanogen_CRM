@@ -99,15 +99,12 @@ class OrderManagementController extends Controller
                     $url = route('order_management.edit', $row->id);
                     return '<a href="' . $url . '">' . e($row->unique_order_id) . '</a>';
                 })
-
-
                 ->editColumn('city', function ($row) {
                     if ($row->distributors_dealers) {
                         return $row->distributors_dealers->city->city_name ?? '-';
                     }
                     return '-';
                 })
-
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
@@ -120,7 +117,6 @@ class OrderManagementController extends Controller
                     }
                     return '-';
                 })
-
                 ->addColumn('order_status', function ($row) {
                     $order_status = '';
 
@@ -282,10 +278,11 @@ class OrderManagementController extends Controller
             'gst_no',
             'address',
             'total_order_amount',
-            'gst',
-            'gst_amount',
+            // 'gst',
+            // 'gst_amount',
             'grand_total'
         ]));
+
 
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
@@ -294,8 +291,9 @@ class OrderManagementController extends Controller
 
 
 
-        if ($request->has(['product_id', 'price', 'qty', 'packing_size_id', 'total'])) {
+        if ($request->has(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
             $product_id = $request->input('product_id');
+            $gst   = $request->input('gst');
             $price = $request->input('price');
             $qty = $request->input('qty');
             $packing_size_id = $request->input('packing_size_id');
@@ -304,11 +302,12 @@ class OrderManagementController extends Controller
 
             foreach ($product_id as $key => $p) {
 
-                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
+                if (isset($gst[$key]) && isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key];
                     OrderManagementProduct::create([
                         'order_id'   => $order->id,
                         'product_id' => $p,
+                        'gst'        => $gst[$key],
                         'price'      => $price[$key],
                         'qty'        => $qty[$key],
                         'packing_size_id' => $packing_size_id[$key],
@@ -377,26 +376,28 @@ class OrderManagementController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        //    dd($request->all());
         $order = OrderManagement::findOrFail($id);
 
-        $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address', 'total_order_amount', 'gst', 'gst_amount', 'grand_total']));
+        $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address', 'total_order_amount', 'grand_total']));// 'gst', 'gst_amount',
 
-        if ($request->only(['product_id', 'price', 'qty', 'packing_size_id', 'total'])) {
+        if ($request->only(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
 
             OrderManagementProduct::where('order_id', $id)->delete();
 
             $product_id = $request->input('product_id');
+             $gst = $request->input('gst');
             $price = $request->input('price');
             $qty = $request->input('qty');
             $packing_size_id = $request->input('packing_size_id');
             $total = $request->input('total');
             foreach ($product_id as $key => $p) {
-
-                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
+                if (isset($gst[$key]) && isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key]; 
                     OrderManagementProduct::create([
                         'order_id' => $order->id,
                         'product_id' => $p,
+                          'gst' => $gst[$key],
                         'packing_size_id' => $packing_size_id[$key],
                         'price' => $price[$key],
                         'qty' => $qty[$key],

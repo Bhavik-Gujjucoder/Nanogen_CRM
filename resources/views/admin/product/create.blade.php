@@ -21,7 +21,7 @@
                             <div class="upload-content">
                                 <div class="upload-btn">
                                     <input type="file" name="product_image" accept=".jpg,.jpeg,.gif,.png"
-                                        onchange="previewProfilePicture(event)" >
+                                        onchange="previewProfilePicture(event)">
                                     <span>
                                         <i class="ti ti-file-broken"></i> Upload Product Image
                                     </span>
@@ -76,7 +76,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">Status</label>
                             <div class="d-flex align-items-center">
@@ -91,6 +91,15 @@
                                     <label for="inactive1">Inactive</label>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="col-form-label">GST(%) <span class="text-danger">*</span></label>
+                            <input type="number" name="gst" class="form-control @error('gst') is-invalid @enderror"
+                                value="{{ old('gst') }}">
+                            <div id="gst_error" class="error-message text-danger"></div>
                         </div>
                     </div>
 
@@ -114,17 +123,18 @@
                                     <div>
                                         <label class="col-form-label">Distributor Price <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" name="distributor_price[]" placeholder="Distributor Price"
-                                            class="form-control">
+                                        <input type="number" name="distributor_price[]"
+                                            placeholder="Distributor Price" class="form-control">
                                     </div>
                                     <div class="gc-variation-name">
                                         <label class="col-form-label">Variation Name <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select form-control addfileddrop load_variation_value" name="variation_id[]">
+                                        <select class="select form-control addfileddrop load_variation_value"
+                                            name="variation_id[]">
                                             <option value="">Select Variation</option>
-                                                @foreach ($variations as $v)
-                                                    <option value="{{ $v->id }}">{{ $v->name }}</option>
-                                                @endforeach
+                                            @foreach ($variations as $v)
+                                                <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div>
@@ -146,9 +156,7 @@
                         <div id="fields-container"></div>
                         <div id="not_count_match" class="text-danger"></div>
                     </div>
-
                 </div>
-
                 <div class="d-flex align-items-center justify-content-end">
                     <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
                     <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
@@ -158,11 +166,10 @@
         </div>
     </div>
 </div>
-
 @endsection
 @section('script')
 <script>
-    /***** Add validation functionality  *****/
+    /***** Add validation functionality *****/
     $(document).ready(function() {
         $("form").on("submit", function(e) {
             var valid = true;
@@ -174,6 +181,7 @@
             $("#product_name_error").html("");
             $("#category_id_error").html("");
             $("#grade_id_error").html("");
+            $("#gst_error").html("");
             $("#variation_error").html("");
 
             /* Validate Product Image */
@@ -181,25 +189,25 @@
             let file = product_image_field[0].files[0]; // Get the selected file
 
             // if (!product_image_field.val().trim()) {
-                // if (!file) {
-                //     $("#product_image_error").html("The product image is required.");
-                //     valid = false;
-                // } else {
-                //     // Check file type (JPG, GIF, PNG)
-                //     let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
-                //     let fileExtension = file.name.split('.').pop().toLowerCase();
+            // if (!file) {
+            //     $("#product_image_error").html("The product image is required.");
+            //     valid = false;
+            // } else {
+            //     // Check file type (JPG, GIF, PNG)
+            //     let validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+            //     let fileExtension = file.name.split('.').pop().toLowerCase();
 
-                //     if (!validExtensions.includes(fileExtension)) {
-                //         $("#product_image_error").html(
-                //             "Invalid file type. Only JPG, GIF, and PNG are allowed.");
-                //         valid = false;
-                //     }
+            //     if (!validExtensions.includes(fileExtension)) {
+            //         $("#product_image_error").html(
+            //             "Invalid file type. Only JPG, GIF, and PNG are allowed.");
+            //         valid = false;
+            //     }
 
-                //     // Check file size (max 800KB)
-                //     if (file.size > 2097152) { // 2MB = 2,097,152 bytes || 800KB = 800000 bytes  ||  8KB = 8,192 bytes.
-                //         $("#product_image_error").html("File size must be less than 2MB.");
-                //         valid = false;
-                //     }
+            //     // Check file size (max 800KB)
+            //     if (file.size > 2097152) { // 2MB = 2,097,152 bytes || 800KB = 800000 bytes  ||  8KB = 8,192 bytes.
+            //         $("#product_image_error").html("File size must be less than 2MB.");
+            //         valid = false;
+            //     }
             // }
 
             // Only validate if file is selected
@@ -240,6 +248,18 @@
             if (!grade_id_field.val()) {
                 $("#grade_id_error").html("Please select a grade.");
                 valid = false;
+            }
+            
+            /* Validate GST */
+            let gst_field = $("input[name='gst']");
+            if (!gst_field.val() || gst_field.val().trim() === "") {
+                $("#gst_error").html("The GST field is required.");
+                valid = false;
+            } else if (isNaN(gst_field.val()) || parseFloat(gst_field.val()) < 0) {
+                $("#gst_error").html("Please enter a valid GST number.");
+                valid = false;
+            } else {
+                $("#gst_error").html(""); // clear error if valid
             }
 
             /*** Get selected variation type ****/
@@ -335,7 +355,8 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            let sizeOptions = '<option value="">Select Variation Value</option>';
+                            let sizeOptions =
+                                '<option value="">Select Variation Value</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
                                     `<option value="${size.id}">${size.value} ${size.unit}</option>`;

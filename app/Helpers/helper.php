@@ -27,27 +27,47 @@ if (!function_exists('getProductVariationOptions')) {
     }
 }
 
+// if (!function_exists('IndianNumberFormat')) {
+//     function IndianNumberFormat($number) {
+//         $number = (string)$number;
+//         $lastThree = substr($number, -3);
+//         $restUnits = substr($number, 0, -3);
+//         if ($restUnits != '') {
+//             $restUnits = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $restUnits);
+//             return '₹' . $restUnits . "," . $lastThree;
+//         } else {
+//             return '₹' . $lastThree;
+//         }
+//     }
+// }
 if (!function_exists('IndianNumberFormat')) {
     function IndianNumberFormat($number) {
-        $number = (string)$number;
-        $lastThree = substr($number, -3);
-        $restUnits = substr($number, 0, -3);
+        // Ensure it's numeric
+        if (!is_numeric($number)) {
+            return $number;
+        }
+
+        // Split integer and decimal
+        $parts = explode('.', (string)$number);
+        $integerPart = $parts[0];
+        $decimalPart = isset($parts[1]) ? $parts[1] : '';
+
+        // Format integer part in Indian numbering style
+        $lastThree = substr($integerPart, -3);
+        $restUnits = substr($integerPart, 0, -3);
         if ($restUnits != '') {
             $restUnits = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $restUnits);
-            return '₹' . $restUnits . "," . $lastThree;
+            $formatted = $restUnits . "," . $lastThree;
         } else {
-            return '₹' . $lastThree;
+            $formatted = $lastThree;
+        }
+
+        // Add decimal part if exists
+        if ($decimalPart !== '') {
+            return '₹' . $formatted . '.' . $decimalPart;
+        } else {
+            return '₹' . $formatted;
         }
     }
-
-//     function IndianNumberFormat(number) {
-//     number = number.toString();
-//     let lastThree = number.substring(number.length - 3);
-//     let otherNumbers = number.substring(0, number.length - 3);
-//     if (otherNumbers !== '') {
-//         lastThree = ',' + lastThree;
-//     }
-//     let formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-//     return '₹' + formatted;
-// }
 }
+

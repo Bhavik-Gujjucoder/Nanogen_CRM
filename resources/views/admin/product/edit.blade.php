@@ -81,7 +81,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">Status <span class="text-danger">*</span></label>
                             <div class="d-flex align-items-center">
@@ -98,6 +98,16 @@
                             </div>
                         </div>
                     </div>
+
+                     <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="col-form-label">GST(%) <span class="text-danger">*</span></label>
+                            <input type="number" name="gst" class="form-control @error('gst') is-invalid @enderror"
+                                value="{{ old('gst',$product->gst) }}">
+                            <div id="gst_error" class="error-message text-danger"></div>
+                        </div>
+                    </div>
+
                     <div class="col-md-12">
                         <div class="mb-1">
                             <label class="col-form-label">Select Variation</label>
@@ -267,6 +277,7 @@
             $("#product_name_error").html("");
             $("#category_id_error").html("");
             $("#grade_id_error").html("");
+            $("#gst_error").html("");
             $("#variation_error").html("");
 
             /* Validate Product Image */
@@ -314,6 +325,18 @@
                 valid = false;
             }
 
+             /* Validate GST */
+            let gst_field = $("input[name='gst']");
+            if (!gst_field.val() || gst_field.val().trim() === "") {
+                $("#gst_error").html("The GST field is required.");
+                valid = false;
+            } else if (isNaN(gst_field.val()) || parseFloat(gst_field.val()) < 0) {
+                $("#gst_error").html("Please enter a valid GST number.");
+                valid = false;
+            } else {
+                $("#gst_error").html(""); // clear error if valid
+            }
+            
             /*** Get selected variation type ****/
             let variationType = $("input[name='variation']:checked").val();
 

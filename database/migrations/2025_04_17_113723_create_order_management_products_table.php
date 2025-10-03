@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('order_id');
             $table->bigInteger('product_id');
+            $table->integer('gst')->default(0);
             $table->decimal('price')->default(0);
             $table->integer('qty')->default(1);
             $table->bigInteger('packing_size_id')->nullable();
             $table->decimal('total')->default(0);
-
             $table->timestamps();
         });
     }

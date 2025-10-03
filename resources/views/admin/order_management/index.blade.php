@@ -60,7 +60,6 @@
                 <div class="datatable-paginate"></div>
             </div>
         </div>
-
     </div>
 </div>
 

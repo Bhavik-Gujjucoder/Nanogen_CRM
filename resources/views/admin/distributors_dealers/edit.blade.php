@@ -118,7 +118,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Pan Card No <span class="text-danger">*</span></label>
+                                <label class="col-form-label">Pan Card No </label>
                                 <input type="text" name="pancard"
                                     value="{{ old('pancard', $distributor_dealers->pancard) }}" class="form-control"
                                     placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()"
@@ -128,7 +128,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">GSTIN <span class="text-danger">*</span></label>
+                                <label class="col-form-label">GSTIN </label>
                                 <input type="text" name="gstin"
                                     value="{{ old('gstin', $distributor_dealers->gstin) }}" class="form-control"
                                     placeholder="GSTIN" oninput="this.value = this.value.toUpperCase()"
@@ -334,7 +334,7 @@
                     </div>
 
                     <div class="mt-2 row">
-                        <div class="col-md-4 ">
+                        {{-- <div class="col-md-4 ">
                             <div class="mb-3">
                                 <label class="col-form-label">Fertilizer License No <span
                                         class="text-danger">*</span></label>
@@ -343,8 +343,28 @@
                                     class="form-control" placeholder="Fertilizer License No" maxlength="255">
                                 <span id="fertilizer_license_error" class="text-danger"></span>
                             </div>
-                        </div>
+                        </div> --}}
+
                         <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label d-flex align-items-center">
+                                    <input type="checkbox" name="fertilizer_license_check"
+                                        id="fertilizer_license_check" value="1" class="me-2"
+                                        {{ old('fertilizer_license_check', $distributor_dealers->fertilizer_license_check == 1 ? 'checked' : '') }}>
+                                    Fertilizer License No
+                                </label>
+
+                                <div id="fertilizer_input_wrapper" style="display: none;">
+                                    <input type="text" name="fertilizer_license"
+                                        value="{{ old('fertilizer_license', $distributor_dealers->fertilizer_license ?? '') }}"
+                                        class="form-control" placeholder="Fertilizer License No *" maxlength="255">
+                                    <span id="fertilizer_license_error" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {{-- <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Pesticide License No <span
                                         class="text-danger">*</span></label>
@@ -353,9 +373,29 @@
                                     class="form-control" placeholder="Pesticide License No" maxlength="255">
                                 <span id="pesticide_license_error" class="text-danger"></span>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label d-flex align-items-center">
+                                    <input type="checkbox" name="pesticide_license_check" class="me-2"
+                                        id="pesticide_license_check" value="1"
+                                        {{ old('pesticide_license_check', $distributor_dealers->pesticide_license_check == 1 ? 'checked' : '') }}>
+                                    Pesticide License No
+                                </label>
+
+                                <div id="pesticide_input_wrapper" style="display: none;">
+                                    <input type="text" name="pesticide_license"
+                                        value="{{ old('pesticide_license', $distributor_dealers->pesticide_license ?? '') }}"
+                                        class="form-control" placeholder="Pesticide License No *" maxlength="255">
+                                    <span id="pesticide_license_error" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        {{-- <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Seed License No <span
                                         class="text-danger">*</span></label>
@@ -364,7 +404,7 @@
                                     class="form-control" placeholder="Seed License No" maxlength="255">
                                 <span id="seed_license_error" class="text-danger"></span>
                             </div>
-                        </div>
+                        </div> --}}
 
                     </div>
 
@@ -422,8 +462,8 @@
                                                     {{-- <button type="button" id="addNewFirmRow"
                                                         class="btn btn-primary">Add
                                                         New</button> --}}
-                                                        <button type="button"
-                                                            class="btn btn-danger deleteFirmRow">Delete</button>
+                                                    <button type="button"
+                                                        class="btn btn-danger deleteFirmRow">Delete</button>
                                                 </td>
                                             </tr>
                                         @else
@@ -532,7 +572,8 @@
                                             <th scope="col">Marital Status</th> --}}
                                             {{-- <th scope="col">Action</th> --}}
                                             <th scope="col">
-                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add New</button>
+                                                <button type="button" id="addNewPropRow" class="btn btn-primary">Add
+                                                    New</button>
                                             </th>
                                         </tr>
                                     </thead>
@@ -557,7 +598,8 @@
                                                     <textarea name="address[]" placeholder="Enter address" class="form-control">{{ old('address') }}</textarea>
                                                 </td>
                                                 <td>
-                                                    <button type="button" id="addNewPropRow" class="btn btn-primary">Add
+                                                    <button type="button" id="addNewPropRow"
+                                                        class="btn btn-primary">Add
                                                         New</button>
                                                 </td>
                                             </tr>
@@ -567,14 +609,16 @@
                                                     <td data-label="S.No.">{{ $loop->iteration }}</td>
                                                     <td data-label="Name">
                                                         <input type="text" name="name[]"
-                                                            value="{{ old('name', $p->name) }}" placeholder="Enter name"
-                                                            class="form-control" maxlength="255">
+                                                            value="{{ old('name', $p->name) }}"
+                                                            placeholder="Enter name" class="form-control"
+                                                            maxlength="255">
                                                     </td>
                                                     <td data-label="Date of Birth" class="dateofbirth">
                                                         <div class="icon-form">
                                                             <span class="form-icon"><i
                                                                     class="ti ti-calendar-check"></i></span>
-                                                            <input type="text" name="birthdate[]" {{-- value="{{ old('birthdate',$p->birthdate) }}" --}}
+                                                            <input type="text" name="birthdate[]"
+                                                                {{-- value="{{ old('birthdate',$p->birthdate) }}" --}}
                                                                 value="{{ old('birthdate', \Carbon\Carbon::parse($p->birthdate)->format('d-m-Y')) }}"
                                                                 class="form-control datePicker" placeholder="">
                                                         </div>
@@ -736,10 +780,6 @@
                 </div>
 
                 <div class="applicationdtl delerbox-border-b">
-
-
-
-
                     <div class="applicationdtl mb-3">
                         <h5 class="mb-2">FOR OFFICE USE ONLY</h5>
                         <div class="row">
@@ -1149,6 +1189,46 @@
 @endsection
 @section('script')
 <script>
+    /* Fertilizer License No check input show and hide */
+    $(document).ready(function() {
+        // On page load (for edit case) -> check if checkbox is already checked
+        if ($('#fertilizer_license_check').is(':checked')) {
+            $('#fertilizer_input_wrapper').slideDown();
+        } else {
+            $('#fertilizer_input_wrapper').slideUp();
+        }
+
+        // Fertilizer license toggle
+        $('#fertilizer_license_check').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#fertilizer_input_wrapper').slideDown();
+            } else {
+                $('#fertilizer_input_wrapper').slideUp();
+                $('input[name="fertilizer_license"]').val(''); // clear value if unchecked
+            }
+        });
+
+
+        // On page load (for edit case) -> check if checkbox is already checked
+        if ($('#pesticide_license_check').is(':checked')) {
+            $('#pesticide_input_wrapper').slideDown();
+        } else {
+            $('#pesticide_input_wrapper').slideUp();
+        }
+
+        // Pesticide license toggle
+        $('#pesticide_license_check').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#pesticide_input_wrapper').slideDown();
+            } else {
+                $('#pesticide_input_wrapper').slideUp();
+                $('input[name="pesticide_license"]').val('');
+            }
+        });
+
+    });
+
+
     /**** State wise city dropdown ****/
     $(document).ready(function() {
         const selectedStateId = '{{ $distributor_dealers->state_id }}';
@@ -1229,8 +1309,8 @@
                     minlength: 10,
                     maxlength: 10
                 },
-                pancard: "required",
-                gstin: "required",
+                // pancard: "required",
+                // gstin: "required",
                 aadhar_card: {
                     required: true,
                     digits: true,
@@ -1247,9 +1327,19 @@
                 ifsc_code: "required",
                 security_cheque_detail: "required",
                 name_authorised_signatory: "required",
-                fertilizer_license: "required",
-                pesticide_license: "required",
-                seed_license: "required",
+                // fertilizer_license: "required",
+                fertilizer_license: {
+                    required: function() {
+                        return $("input[name='fertilizer_license_check']:checked");
+                    }
+                },
+                // pesticide_license: "required",
+                pesticide_license: {
+                    required: function() {
+                        return $("input[name='pesticide_license_check']:checked");
+                    }
+                },
+                // seed_license: "required",
                 other_ac_type: {
                     required: function() {
                         return $("input[name='ac_type']:checked").val() == "3";
@@ -1268,8 +1358,8 @@
                     minlength: "Mobile number must be 10 digits.",
                     maxlength: "Mobile number must be 10 digits."
                 },
-                pancard: "The pan card No field is required.",
-                gstin: "The gstin field is required.",
+                // pancard: "The pan card No field is required.",
+                // gstin: "The gstin field is required.",
                 aadhar_card: {
                     required: "The aadhar card no field is required.",
                     digits: "Aadhar card No must be numeric.",
@@ -1288,7 +1378,7 @@
                 name_authorised_signatory: "The name of authorised signatory field is required.",
                 fertilizer_license: "The fertilizer license no field is required.",
                 pesticide_license: "The pesticide license no field is required.",
-                seed_license: "The seed license no field is required.",
+                // seed_license: "The seed license no field is required.",
                 other_ac_type: "Please specify the other account type."
             },
             errorPlacement: function(error, element) {
