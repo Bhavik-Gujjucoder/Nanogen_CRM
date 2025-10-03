@@ -52,7 +52,7 @@
         <div class="tab-content mt-3" id="myTabContent">
 
             <!--G E N E R A L   S E T T I N G   T A B-->
-            <div class="tab-pane fade show active {{-- $activeTab == 'general-setting' ? 'show active' : '' --}}" id="general-setting" role="tabpanel"
+            <div class="tab-pane {{ $activeTab == 'general-setting' ? 'show active' : ''}}" id="general-setting" role="tabpanel"
                 aria-labelledby="GeneralSetting">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
