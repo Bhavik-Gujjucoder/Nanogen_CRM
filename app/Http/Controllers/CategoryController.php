@@ -16,7 +16,13 @@ class CategoryController extends Controller
         $data['category'] = Category::where('is_parent', 1)->where('status', 1)->get()->all();
 
         if ($request->ajax()) {
-            $data = Category::query();
+            // dd($request->show_parent);
+            $data = Category::when($request->show_parent == 'true',function($query){ 
+                $query->where('is_parent', 1); 
+            })
+            ->when($request->show_parent == 'false',function($query){ 
+                $query->where('is_parent','!=', 1); 
+            });
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {

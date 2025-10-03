@@ -614,7 +614,12 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        ajax: "{{ route('category.index') }}",
+        ajax: {
+            url: '{{ route('category.index') }}',
+            data: function(d) {
+                d.show_parent = true; // Unique identifier for this table
+            },
+        },
         order: [
             [0, 'desc']
         ],

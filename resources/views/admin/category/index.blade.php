@@ -126,7 +126,13 @@
         serverSide: true,
         responsive: true,
         dom: 'lrtip',
-        ajax: "{{ route('category.index') }}",
+        ajax: {
+            url: '{{ route('category.index') }}',
+            data: function(d) {
+                d.show_parent = false; // Unique identifier for this table
+            },
+        },
+
         order: [
             [0, 'desc']
         ],
@@ -148,9 +154,9 @@
                 searchable: false
             },
             // {
-                //     data: 'id',
-                //     name: 'id',
-                //     searchable: true
+            //     data: 'id',
+            //     name: 'id',
+            //     searchable: true
             // },
             {
                 data: 'category_name',
@@ -226,12 +232,12 @@
     });
 
 
-    $(document).ready(function () {
-    $('.parent_category_id').select2({
-        dropdownParent: $('#adminModal'),
+    $(document).ready(function() {
+        $('.parent_category_id').select2({
+            dropdownParent: $('#adminModal'),
+        });
     });
-});
-   
+
     /***** Open Modal for Add a New product category *****/
     $('#openModal').click(function() {
         $('#categoryForm')[0].reset();
@@ -243,7 +249,7 @@
         $("#categoryForm .text-danger").text('');
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
     });
-    
+
 
     /***** Open Modal for Editing an Admin *****/
     $(document).on('click', '.edit-btn', function() {
@@ -251,17 +257,17 @@
         // alert(category_id);
         $("#categoryForm .text-danger").text('');
         $('#categoryForm').find('.is-invalid').removeClass('is-invalid');
-      
+
         $.get('{{ route('category.edit', ':id') }}'.replace(':id', category_id), function(category) {
             console.log(category);
             $('#modalTitle').text('Edit Product Category');
             $('#submitBtn').text('Update');
             $('input[name="category_id"]').val(category_id);
             // if (category.parent_category_id) {
-                //     $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
-                //         'change');
-                // } else {
-                //     $('select[name="parent_category_id"]').parent().hide();
+            //     $('select[name="parent_category_id"]').val(category.parent_category_id).trigger(
+            //         'change');
+            // } else {
+            //     $('select[name="parent_category_id"]').parent().hide();
             // }
             if (category.parent_category_id !== null && category.parent_category_id !== undefined &&
                 category.parent_category_id != 0) {
@@ -283,7 +289,8 @@
     $('#categoryForm').submit(function(e) {
         e.preventDefault();
         let category_id = $('input[name="category_id"]').val();
-        let url = category_id ? '{{ route('category.update', ':id') }}'.replace(':id', category_id) : "{{ route('category.store') }}";
+        let url = category_id ? '{{ route('category.update', ':id') }}'.replace(':id', category_id) :
+            "{{ route('category.store') }}";
         let method = category_id ? "PUT" : "POST";
 
         $.ajax({
@@ -335,23 +342,23 @@
             form.submit(); // Submit the form if confirmed
         });
         // Swal.fire({
-            //     title: "Are you sure?",
-            //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
-            //     icon: 'warning',
-            //     showCancelButton: true,
-            //     confirmButtonText: 'Yes, delete it!',
-            //     cancelButtonText: 'Cancel',
-            //     customClass: {
-            //         popup: 'my-custom-popup', // Custom class for the popup
-            //         title: 'my-custom-title', // Custom class for the title
-            //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
-            //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
-            //         icon: 'my-custom-icon swal2-warning'
-            //     }
-            // }).then((result) => {
-            //     if (result.isConfirmed) {
-            //         form.submit(); // Submit form if confirmed
-            //     }
+        //     title: "Are you sure?",
+        //     text: "You want to remove this category? Once deleted, it cannot be recovered.",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes, delete it!',
+        //     cancelButtonText: 'Cancel',
+        //     customClass: {
+        //         popup: 'my-custom-popup', // Custom class for the popup
+        //         title: 'my-custom-title', // Custom class for the title
+        //         confirmButton: 'btn btn-primary', // Custom class for the confirm button
+        //         cancelButton: 'btn btn-secondary', // Custom class for the cancel button
+        //         icon: 'my-custom-icon swal2-warning'
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         form.submit(); // Submit form if confirmed
+        //     }
         // });
     });
 
@@ -366,7 +373,7 @@
 
             /** handle option dropdown validation using controller validated **/
             $('select[name=' + key + ']').addClass('is-invalid');
-            $('.' + key + '_error').text(value[0]).addClass('text-danger'); 
+            $('.' + key + '_error').text(value[0]).addClass('text-danger');
         });
     }
 
