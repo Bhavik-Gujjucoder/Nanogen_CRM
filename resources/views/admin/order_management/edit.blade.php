@@ -151,7 +151,7 @@
                                 View Invoice
                             </a>
                         </small>
-                        <input type="hidden" name="existing_invoice_upload" value="{{ $order->lr_upload }}">
+                        <input type="hidden" name="existing_invoice_upload" value="{{ $order->invoice_upload }}">
                     @endif
                 </div>
 
