@@ -522,8 +522,6 @@
             },
             errorElement: 'span',
             errorPlacement: function(error, element) {
-
-
                 if (element.attr("name") === "dummy") {
                     $("#productError").text(error.text()).show();
                 } else if (element.attr("name") === "has_products") {
@@ -533,7 +531,7 @@
                     error.insertAfter(element.next(
                         '.select2')); // This targets the Select2 container
                 } else if (element.attr("name") == "transport_type") {
-                    error.addClass('text-danger');
+                    error.addClass('text-danger d-block mt-1');
                     error.insertAfter(element.closest('.col-md-4').find('div.form-check-inline')
                         .last());
                 } else {
