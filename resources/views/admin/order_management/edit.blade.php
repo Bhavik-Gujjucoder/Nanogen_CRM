@@ -139,7 +139,8 @@
                     @endif
                 </div>
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-12 mb-3">
+                     <div class="col-md-4 mb-3">
                     <label class="col-form-label">Invoice Upload <span class="text-danger">*</span></label>
                     <input type="file" class="form-control" name="invoice_upload">
 
@@ -153,6 +154,7 @@
                         </small>
                         <input type="hidden" name="existing_invoice_upload" value="{{ $order->invoice_upload }}">
                     @endif
+                     </div>
                 </div>
 
                 {{-- {{dd(asset('lr_uploads'))}} --}}
