@@ -518,7 +518,7 @@
                 address: "Please enter address",
                 transport_type: "Please select transport type",
                 vehicle_number: "Please enter vehicle number",
-                name: "Please enter driver name",
+                name: "Please enter name",
                 lr_upload: "Please upload LR file",
                 invoice_upload: "Please upload invoice file"
             },
