@@ -242,9 +242,16 @@
                 status: status
             },
             success: function(res) {
-                $('#order_management').DataTable().ajax.reload(null, false);
-                show_success('Order status updated successfully!');
-            }
+                if (res.success == true) {
+                    $('#order_management').DataTable().ajax.reload(null, false);
+                    show_success('Order status updated successfully!');
+                }else {
+                    show_error(res.error);
+                }
+            },
+            // error: function(response) {
+            //     show_error(response.error);
+            // }
         });
     });
     /*** End ***/

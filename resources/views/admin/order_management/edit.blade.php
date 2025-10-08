@@ -7,8 +7,9 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('order_management.update', $order->id) }}" id="orderForm" method="POST">
-           {{--   onsubmit="return validateProductRows();" --}}
+        <form action="{{ route('order_management.update', $order->id) }}" id="orderForm" method="POST"
+            enctype="multipart/form-data">
+            {{--   onsubmit="return validateProductRows();" --}}
             @csrf
             @method('PUT')
             <div class="row mb-4 order-form">
@@ -98,6 +99,64 @@
                     <textarea class="form-control" name="address" placeholder="Address">{{ old('address', $order->address) }}</textarea>
                 </div>
 
+                <div class="col-md-4 mb-3">
+                    <label class="col-form-label d-block">Transport <span class="text-danger">*</span></label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input transport-option" type="radio" name="transport_type"
+                            id="company_transport" value="company"
+                            {{ old('transport_type', $order->transport_type ?? '') == 'company' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="company_transport">Company Transport</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input transport-option" type="radio" name="transport_type"
+                            id="outside_transport" value="outside"
+                            {{ old('transport_type', $order->transport_type ?? '') == 'outside' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="outside_transport">Outside Company Transport</label>
+                    </div>
+                </div>
+
+                <!-- Company Transport Fields -->
+                <div class="col-md-4 mb-3 company-fields" style="display: none;">
+                    <label class="col-form-label">Vehicle Number <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="vehicle_number" placeholder="Vehicle Number"
+                        value="{{ old('vehicle_number', $order->vehicle_number ?? '') }}">
+                </div>
+
+                <div class="col-md-4 mb-3 company-fields" style="display: none;">
+                    <label class="col-form-label">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="name" placeholder="Name"
+                        value="{{ old('name', $order->name ?? '') }}">
+                </div>
+
+                <!-- Outside Transport Field -->
+                <div class="col-md-4 mb-3 outside-fields" style="display: none;">
+                    <label class="col-form-label">LR Upload <span class="text-danger">*</span></label>
+                    <input type="file" class="form-control" name="lr_upload" accept="image/*">
+                    @if (!empty($order->lr_upload))
+                        <small class="text-muted">Current: <a
+                                href="{{ asset('storage/lr_uploads/' . $order->lr_upload) }}" target="_blank">View LR</a></small>
+                        <input type="hidden" name="existing_lr_upload" value="{{ $order->lr_upload }}">
+                    @endif
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="col-form-label">Invoice Upload <span class="text-danger">*</span></label>
+                    <input type="file" class="form-control" name="invoice_upload">
+
+                    @if (!empty($order->invoice_upload))
+                        <small class="text-muted">
+                            Current:
+                            <a href="{{ asset('storage/invoice_uploads/' . $order->invoice_upload) }}"
+                                target="_blank">
+                                View Invoice
+                            </a>
+                        </small>
+                        <input type="hidden" name="existing_invoice_upload" value="{{ $order->lr_upload }}">
+                    @endif
+                </div>
+
+                {{-- {{dd(asset('lr_uploads'))}} --}}
+
                 {{-- <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order Status <span class="text-danger">*</span></label>
                     <select name="order_status" class="form-control form-select search-dropdown">
@@ -124,7 +183,8 @@
                             <th scope="col">Total <span class="text-danger">*</span></th>
                             {{-- <th scope="col">Action</th> --}}
                             <th data-label="Add-Action" scope="col">
-                                <button type="button" onclick="addpropRow()" class="btn btn-primary">Add New</button>
+                                <button type="button" onclick="addpropRow()" class="btn btn-primary">Add
+                                    New</button>
                             </th>
                         </tr>
                     </thead>
@@ -265,6 +325,35 @@
 @endsection
 @section('script')
 <script>
+    $(document).ready(function() {
+        function toggleTransportFields() {
+            const transportType = $('input[name="transport_type"]:checked').val();
+            if (transportType === 'company') {
+                $('.company-fields').show();
+                $('.outside-fields').hide();
+                // Clear all inputs inside outside transport fields
+                $('.outside-fields').find('input, textarea, select').val('');
+            } else if (transportType === 'outside') {
+                $('.outside-fields').show();
+                $('.company-fields').hide();
+                // Clear all inputs inside company transport fields
+                $('.company-fields').find('input, textarea, select').val('');
+            } else {
+                $('.company-fields, .outside-fields').hide();
+                // Clear all hidden fields when nothing selected
+                $('.company-fields, .outside-fields').find('input, textarea, select').val('');
+            }
+        }
+
+        // On page load (keep values when editing)
+        toggleTransportFields();
+
+        // On radio button change
+        $(document).on('change', '.transport-option', function() {
+            toggleTransportFields();
+        });
+    });
+
     /*** party name select and phone number auto fillable ***/
     $(function() {
         $('[name="dd_id"]').change(function() {
@@ -281,7 +370,6 @@
 
         updateSerialNumbers();
     });
-
 
     /*** datepicker ***/
     flatpickr("#datePicker", {
@@ -373,6 +461,44 @@
                 has_products: {
                     hasProductRows: true
                 },
+
+                transport_type: {
+                    required: true,
+                },
+                vehicle_number: {
+                    required: function() {
+                        return $('input[name="transport_type"]:checked').val() === 'company';
+                    },
+                },
+                name: {
+                    required: function() {
+                        return $('input[name="transport_type"]:checked').val() === 'company';
+                    },
+                },
+                lr_upload: {
+                    required: function() {
+                        // Check if "Outside Company Transport" selected
+                        const isOutside = $('input[name="transport_type"]:checked').val() ===
+                            'outside';
+
+                        // Check if an existing LR file is present (we’ll store it in a hidden input)
+                        const existingLR = $('input[name="existing_lr_upload"]').val();
+
+                        // Require only if "outside" AND no existing file
+                        return isOutside && !existingLR;
+
+                        // return $('input[name="transport_type"]:checked').val() === 'outside';
+                    },
+                },
+                invoice_upload: {
+                    required: function() {
+                        // Check if an existing LR file is present (we’ll store it in a hidden input)
+                        const existingLR = $('input[name="existing_invoice_upload"]').val();
+
+                        // Require only if no existing file
+                        return !existingLR;
+                    }
+                }
             },
             messages: {
                 dd_id: "Please select party name",
@@ -387,10 +513,17 @@
                 transport: "Please enter transport details",
                 freight: "Please enter freight value",
                 gst_no: "Please enter GST number",
-                address: "Please enter address"
+                address: "Please enter address",
+                transport_type: "Please select transport type",
+                vehicle_number: "Please enter vehicle number",
+                name: "Please enter driver name",
+                lr_upload: "Please upload LR file",
+                invoice_upload: "Please upload invoice file"
             },
             errorElement: 'span',
             errorPlacement: function(error, element) {
+
+
                 if (element.attr("name") === "dummy") {
                     $("#productError").text(error.text()).show();
                 } else if (element.attr("name") === "has_products") {
@@ -399,6 +532,10 @@
                     error.addClass('text-danger');
                     error.insertAfter(element.next(
                         '.select2')); // This targets the Select2 container
+                } else if (element.attr("name") == "transport_type") {
+                    error.addClass('text-danger');
+                    error.insertAfter(element.closest('.col-md-4').find('div.form-check-inline')
+                        .last());
                 } else {
                     error.addClass('text-danger');
                     error.insertAfter(element);
@@ -416,9 +553,7 @@
 
     });
     /*** END ***/
-</script>
 
-<script>
     /*** Add product ***/
     function addpropRow() {
         let tableBody = $("#table-body");
@@ -492,7 +627,7 @@
 
     /*** product name wise get packing-size ***/
     $(document).on('change', 'select[name="product_id[]"]', function() {
-         var gst = $(this).find("option:selected").data("gst");
+        var gst = $(this).find("option:selected").data("gst");
         $(this).closest("tr").find('input[name="gst[]"]').val(gst);
 
         $(this).closest('.field-group').find('[name="price[]"]').val('');
@@ -531,12 +666,8 @@
         }
     });
     /*** END ***/
-</script>
 
-
-<script>
     /*** Calculate Fully update ***/
-
     $(document).ready(function() {
         calculateGrandTotal(); // Initial total on load for edit
 
@@ -591,7 +722,7 @@
             let price = parseFloat($(this).val()) || 0;
             let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]').val()) || 0;
             let gst = parseFloat($(this).closest('.field-group').find('input[name="gst[]"]').val()) || 0;
-            let with_gst = price * (gst/100);
+            let with_gst = price * (gst / 100);
             price = price + with_gst;
 
             $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(2));
@@ -611,7 +742,7 @@
 
         // $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
         // $('#gstAmount').text(IndianNumberFormatscript(gstAmount.toFixed(0)));
-        
+
         // $('#grand_total').text('Grand Total (Incl. GST) : ' + IndianNumberFormatscript(grandTotal.toFixed(0)));
         $('#grand_total').text('Grand Total (Incl. GST) : ₹' + grandTotal.toFixed(2));
 

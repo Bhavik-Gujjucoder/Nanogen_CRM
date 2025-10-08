@@ -18,22 +18,34 @@ class OrderManagement extends Model
     protected $casts = [
         'order_date' => 'date'
     ];
-    
-    public function statusBadge()
+
+     public function statusBadge()
     {
         switch ($this->status) {
             case 1:
                 return '<span class="badge badge-pill badge-status bg-secondary">Pending</span>';
             case 2:
-                return '<span class="badge badge-pill badge-status bg-warning">Processing</span>';
-            case 3:
-                return '<span class="badge badge-pill badge-status bg-info">Shipping</span>';
-            case 4:
-                return '<span class="badge badge-pill badge-status bg-success">Delivered</span>';
+                return '<span class="badge badge-pill badge-status bg-success">Complete</span>';
             default:
                 return '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
         }
     }
+    
+    // public function statusBadge()
+        // {
+        //     switch ($this->status) {
+        //         case 1:
+        //             return '<span class="badge badge-pill badge-status bg-secondary">Pending</span>';
+        //         case 2:
+        //             return '<span class="badge badge-pill badge-status bg-warning">Processing</span>';
+        //         case 3:
+        //             return '<span class="badge badge-pill badge-status bg-info">Shipping</span>';
+        //         case 4:
+        //             return '<span class="badge badge-pill badge-status bg-success">Delivered</span>';
+        //         default:
+        //             return '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
+        //     }
+    // }
     
     /**
      * Get the user that owns the OrderManagement

@@ -22,6 +22,13 @@ return new class extends Migration
             $table->string('freight'); 
             $table->string('gst_no');
             $table->text('address');
+
+            $table->string('transport_type')->nullable(); 
+            $table->string('vehicle_number')->nullable();
+            $table->string('name')->nullable();
+            $table->string('lr_upload')->nullable();
+            $table->string('invoice_upload');
+
             $table->double('total_order_amount');
             $table->integer('gst');
             $table->double('gst_amount');
