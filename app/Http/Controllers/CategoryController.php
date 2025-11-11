@@ -17,12 +17,12 @@ class CategoryController extends Controller
 
         if ($request->ajax()) {
             // dd($request->show_parent);
-            $data = Category::when($request->show_parent == 'true',function($query){ 
-                $query->where('is_parent', 1); 
+            $data = Category::when($request->show_parent == 'true', function ($query) {
+                $query->where('is_parent', 1);
             })
-            ->when($request->show_parent == 'false',function($query){ 
-                $query->where('is_parent','!=', 1); 
-            });
+                ->when($request->show_parent == 'false', function ($query) {
+                    $query->where('is_parent', '!=', 1);
+                });
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -70,11 +70,20 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $categoriesCount = Category::whereNotNull('parent_category_id')->count(); // or however you get category count
         // dd($request->all());
         $request->validate([
-            'parent_category_id' => 'required',
+
+            'parent_category_id' => [
+                function ($attribute, $value, $fail) use ($categoriesCount) {
+                    if ($categoriesCount > 1 && empty($value)) {
+                        $fail('The ' . $attribute . ' field is required when more than one category exists.');
+                    }
+                },
+            ],
+            // 'parent_category_id' => 'required',
             'category_name' => 'required|unique:categories,category_name,NULL,id,deleted_at,NULL'
-        ],[
+        ], [
             'parent_category_id.required' => 'The parent category field is required.',
         ]);
         $is_parent = 1;
@@ -108,7 +117,7 @@ class CategoryController extends Controller
         $request->validate([
             'parent_category_id' => 'required',
             'category_name' => 'required|unique:categories,category_name,' . $category->id . ',id,deleted_at,NULL'
-        ],[
+        ], [
             'parent_category_id.required' => 'The parent category field is required.',
         ]);
         $is_parent = 1;

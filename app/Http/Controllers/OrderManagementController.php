@@ -356,12 +356,12 @@ class OrderManagementController extends Controller
 
 
         // try {
-        //     $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
+            //     $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
 
-        // } catch (\Throwable $th) {
-        //     dd($th);
-        //     return response()->json(['error' => 'Something went wrong!'], 500); 
-        //     // return redirect()->back()->with('error', 'Something is wrong!!');
+            // } catch (\Throwable $th) {
+            //     dd($th);
+            //     return response()->json(['error' => 'Something went wrong!'], 500); 
+            //     // return redirect()->back()->with('error', 'Something is wrong!!');
         // }
 
 

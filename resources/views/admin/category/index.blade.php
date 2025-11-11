@@ -66,17 +66,18 @@
                 <form id="categoryForm">
                     @csrf
                     <input type="hidden" name="category_id">
-
-                    <div class="mb-3">
-                        <label class="col-form-label">Select Parent Category</label>
-                        <select class="select parent_category_id" name="parent_category_id" style="height: 210px;">
-                            <option value="">{{ __('Select Parent Category') }}</option>
-                            @foreach ($category as $c)
-                                <option value="{{ $c->id }}">{{ $c->category_name }}</option>
-                            @endforeach
-                        </select>
-                        <span class="parent_category_id_error"></span>
-                    </div>
+                    @if (count($category) >= 1)
+                        <div class="mb-3">
+                            <label class="col-form-label">Select Parent Category</label>
+                            <select class="select parent_category_id" name="parent_category_id" style="height: 210px;">
+                                <option value="">{{ __('Select Parent Category') }}</option>
+                                @foreach ($category as $c)
+                                    <option value="{{ $c->id }}">{{ $c->category_name }}</option>
+                                @endforeach
+                            </select>
+                            <span class="parent_category_id_error"></span>
+                        </div>
+                    @endif
 
                     <div class="mb-3">
                         <label class="col-form-label">Category Name *</span></label>
