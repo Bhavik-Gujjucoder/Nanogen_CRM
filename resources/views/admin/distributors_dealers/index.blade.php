@@ -81,7 +81,7 @@
                         {{-- Export Excel --}}
                     </button>
                     <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}" class="btn btn-primary">
-                        <i class="ti ti-square-rounded-plus me-2"></i>
+                        <i class="ti ti-file-type-xls me-2"></i>
                         Export Price List
                     </a>
                     <a href="{{ route('distributors_dealers.create', request('dealer')) }}" class="btn btn-primary"><i
