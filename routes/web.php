@@ -126,7 +126,7 @@ Route::middleware(['auth', 'role:reporting manager'])->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/common', [HomeController::class, 'common_index'])->name('common.dashboard');
+    Route::get('/dashboard', [HomeController::class, 'common_index'])->name('common.dashboard');
     Route::get('/my-profile', [HomeController::class, 'my_profile'])->name('my_profile');
 });
 
