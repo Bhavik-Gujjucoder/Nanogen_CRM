@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Models\OrderManagement;
 use App\Models\TargetQuarterly;
+use App\Models\SalesPosition;
+use App\Models\SalesDepartment;
 use App\Models\Target;
 use App\Models\OrderManagementProduct;
 use Carbon\CarbonPeriod;
@@ -131,8 +133,10 @@ class SalesPersonController extends Controller
     {
         $data['page_title']         = 'Basic Information';
         $data['reporting_managers'] = User::role(['reporting manager'])->where('status', 1)->get();
-        $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
-        $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
+        // $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
+        $data['departments']        = SalesDepartment::where('status', 1)->get()->all();
+        // $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
+        $data['positions']          = SalesPosition::where('status', 1)->get()->all();
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();
@@ -166,8 +170,8 @@ class SalesPersonController extends Controller
             'phone_number'         => 'required|numeric|digits_between:10,15|unique:users,phone_no,NULL,id,deleted_at,NULL',
             'password'             => 'required|string|min:6|confirmed',     /*use password_confirmation field too*/
             // 'employee_id'          => 'required|string|max:255|unique:sales_person_details,employee_id,NULL,id,deleted_at,NULL',
-            'department_id'        => 'required|exists:sales_person_department,id',
-            'position_id'          => 'required|exists:sales_person_position,id',
+            'department_id'        => 'required|exists:sales_departments,id',
+            'position_id'          => 'required|exists:sales_positions,id',
             'reporting_manager_id' => 'required',
             'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
@@ -252,8 +256,10 @@ class SalesPersonController extends Controller
         $data['page_title']         = 'Edit Basic Information';
         $data['detail']             = SalesPersonDetail::findOrFail($id);
         $data['reporting_managers'] = User::role(['reporting manager'])->where('status', 1)->get();
-        $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
-        $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
+        // $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
+        // $data['positions']          = SalesPersonPosition::where('status', 1)->get()->all();
+        $data['departments']        = SalesDepartment::where('status', 1)->get()->all();
+        $data['positions']          = SalesPosition::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
@@ -276,8 +282,8 @@ class SalesPersonController extends Controller
             'email'                => 'required|email|max:255|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
             'phone_number'         => 'required|numeric|digits_between:10,15|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
             'password'             => 'nullable|string|min:6|confirmed',   /* use password_confirmation field too */
-            'department_id'        => 'required|exists:sales_person_department,id',
-            'position_id'          => 'required|exists:sales_person_position,id',
+            'department_id'        => 'required|exists:sales_departments,id',
+            'position_id'          => 'required|exists:sales_positions,id',
             'reporting_manager_id' => 'required',
             'date'                 => 'required|date_format:d-m-Y',
             'street_address'       => 'required|string|max:255',
@@ -380,8 +386,11 @@ class SalesPersonController extends Controller
             $details = SalesPersonDetail::whereIn('id', $ids)->get()->all();
             foreach ($details as $key => $detail) {
                 $user = User::where('id', $detail->user_id)->first();
-                if ($user->profile_picture) {
+                if ($user && $user->profile_picture !== null) {
                     Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
+                } else {
+                    // Handle the case where there is no profile picture
+                    return redirect()->route('user.profile')->with('error', 'Profile picture not found');
                 }
                 $user->delete();
                 $detail->delete();
@@ -571,7 +580,7 @@ class SalesPersonController extends Controller
             $grades = [];
             $allgrades = $target->target_quarterly->where('quarterly', $current_quarter['quarter'])->first()?->target_grade;
             // dd($target->target_quarterly->where('quarterly', $current_quarter['quarter'])->first()->target_grade);
-            if($allgrades){
+            if ($allgrades) {
 
                 foreach ($allgrades as $target_grade) {
                     $gradeId = $target_grade->grade_id;
@@ -584,7 +593,7 @@ class SalesPersonController extends Controller
                             $q->where('grade_id', $gradeId);
                         })
                         ->sum('total'); // Replace with calculation if needed: ->selectRaw('SUM(price * quantity)') if not a single 'amount'
-                        $grades[] = [
+                    $grades[] = [
                         'grade_id' => $target_grade->grade->name,
                         'percentage' => $totalAmount,
                         'percentage_value' => $target_grade->grade_target_value,

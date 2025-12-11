@@ -34,7 +34,7 @@
                         </li>
                     </ul>
                 </li>
-                @canany(['Order Management', 'Sales Persons', 'Targets', 'Area Wise Sales'])
+                @canany(['Order Management', 'Sales Persons', 'Targets', 'Area Wise Sales','Sales Position', 'Sales Department'])
                     <li>
                         <h6 class="submenu-hdr">Sales Management</h6>
                         <ul>
@@ -56,24 +56,31 @@
                                     @can('Area Wise Sales')
                                         <li><a href="{{ route('area_wise_sales.index') }}">Area Wise Sales</a></li>
                                     @endcan
+                                    @can('Sales Position')
+                                        <li><a href="{{ route('sales_position.index') }}">Sales Position</a></li>
+                                    @endcan
+                                    @can('Sales Department')
+                                        <li><a href="{{ route('sales_department.index') }}">Sales Department</a></li>
+                                    @endcan
                                 </ul>
                             </li>
                         </ul>
                     </li>
                 @endcanany
-                @canany(['Distributors', 'Dealers'])
+                @canany(['Distributors & Dealers'])
                     <li>
                         <h6 class="submenu-hdr">Customer Type Management</h6>
                         <ul>
                             <li class="submenu">
                                 <a href="javascript:void(0);">
-                                    <i class="ti ti-layout-2"></i><span>Customer Management</span><span class="menu-arrow"></span>
+                                    <i class="ti ti-layout-2"></i><span>Customer Management</span><span
+                                        class="menu-arrow"></span>
                                 </a>
                                 <ul>
-                                    @can('Distributors')
+                                    @can('Distributors & Dealers')
                                         <li><a href="{{ route('distributors_dealers.index') }}">Distributors</a></li>
-                                    @endcan
-                                    @can('Dealers')
+                                    {{-- @endcan
+                                    @can('Dealers') --}}
                                         <li><a href="{{ route('distributors_dealers.index', 1) }}">Dealers</a></li>
                                     @endcan
                                 </ul>
@@ -87,8 +94,8 @@
                         <ul>
                             <li class="submenu">
                                 <a href="javascript:void(0);">
-                                <i class="ti ti-apps"></i><span>Products</span><span class="menu-arrow"></span>
-                            </a>
+                                    <i class="ti ti-apps"></i><span>Products</span><span class="menu-arrow"></span>
+                                </a>
                                 <ul>
                                     @can('Products and Catalogue')
                                         <li><a href="{{ route('product.index') }}">Products and Catalogue</a></li>
@@ -109,29 +116,34 @@
                     <ul>
                         {{-- <li><a href="{{ route('payment.index') }}"><i class="ti ti-message-exclamation"></i><span>Received Payment</span></a></li> --}}
                         @can('Complain')
-                            <li><a href="{{ route('complain.index') }}"><i class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
+                            <li><a href="{{ route('complain.index') }}"><i
+                                        class="ti ti-message-exclamation"></i><span>Complain</span></a></li>
                         @endcan
 
                         @can('Grade Management')
-                            <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade Management</span></a></li>
+                            <li><a href="{{ route('grade.index') }}"><i class="ti ti-list-check"></i><span>Grade
+                                        Management</span></a></li>
                         @endcan
 
                         @can('State Management')
-                            <li><a href="{{ route('state.index') }}"><i class="ti ti-map-pin-pin"></i><span>State Management</span></a></li>
+                            <li><a href="{{ route('state.index') }}"><i class="ti ti-map-pin-pin"></i><span>State
+                                        Management</span></a></li>
                         @endcan
 
                         @can('City Management')
-                            <li><a href="{{ route('city.index') }}"><i class="ti ti-map-pin-pin"></i><span>City Management</span></a></li>
+                            <li><a href="{{ route('city.index') }}"><i class="ti ti-map-pin-pin"></i><span>City
+                                        Management</span></a></li>
                         @endcan
 
                         {{-- @can('Sales Reports')
                             <li><a href="javascript:void(0);"><i class="ti ti-file-invoice"></i><span>Sales Reports</span></a></li>
                         @endcan --}}
 
-                        @can('Products and Catalogue')
-                            <li><a href="{{ route('trend_analysis.product_report') }}"><i class="ti ti-chart-bar"></i><span>Trend Analysis</span></a></li>
+                        @can('Trend Analysis')
+                            <li><a href="{{ route('trend_analysis.product_report') }}"><i
+                                        class="ti ti-chart-bar"></i><span>Trend Analysis</span></a></li>
                         @endcan
-                        
+
 
                         {{-- @can('Roles Permissions')
                         <li>
@@ -154,14 +166,16 @@
                         @endauth
 
                         @can('Manage Users')
-                            <li><a href="{{ route('users.index') }}" class="{{ request()->is('users*') ? 'active' : '' }}">
+                            <li><a href="{{ route('users.index') }}"
+                                    class="{{ request()->is('users*') ? 'active' : '' }}">
                                     <i class="ti ti-users"></i><span>Manage Users</span>
                                 </a>
                             </li>
                         @endcan
 
                         @can('General Setting')
-                            <li><a href="{{ route('admin.generalsetting.create') }}" class="{{ request()->is('general-setting*') ? 'active' : '' }}">
+                            <li><a href="{{ route('admin.generalsetting.create') }}"
+                                    class="{{ request()->is('general-setting*') ? 'active' : '' }}">
                                     <i class="ti ti-users"></i><span>General Setting</span>
                                 </a>
                             </li>

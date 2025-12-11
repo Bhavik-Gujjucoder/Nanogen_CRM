@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="mb-3">
-                        <label class="col-form-label">Start Date </label>
+                        <label class="col-form-label">Start Date <span class="text-danger">*</span></label>
                         <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
                             <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
@@ -24,7 +24,7 @@
 
                 <div class="col-md-3">
                     <div class="mb-3">
-                        <label class="col-form-label">End Date </label>
+                        <label class="col-form-label">End Date <span class="text-danger">*</span></label>
                         <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
                             <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"

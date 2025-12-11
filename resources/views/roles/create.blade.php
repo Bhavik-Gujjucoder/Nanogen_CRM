@@ -32,6 +32,20 @@
                                     </div>
                                 </div>
                             @endforeach
+                             <div class="mb-2 mt-2"><h4> Dashboard Permissions</h4></div>
+                            @foreach ($dashboard_permissions as $dpermission)
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-check form-check-md d-flex align-items-center">
+                                        <input class="form-check-input" id="{{ $dpermission->id }}" type="checkbox"
+                                            name="permissions[]" style="border : 1px solid #0303038a"
+                                            value="{{ $dpermission->name }}">
+
+                                        <label class="form-check-label"
+                                            for="{{ $dpermission->id }}">{{ $dpermission->name }} </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                            
                         </div>
                         <div class="mt-2">
                             <button type="submit" class="btn btn-success">Save</button>

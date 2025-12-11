@@ -47,7 +47,9 @@ class ProductController extends Controller
 
                     // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
-                    $action_btn .= $trend_analysis_btn;
+                    
+                    Auth::user()->can('Trend Analysis') ? $action_btn .= $trend_analysis_btn : '';
+                    // $action_btn .= $trend_analysis_btn; 
                     $action_btn .= $edit_btn;
                     $action_btn .= $delete_btn;
 

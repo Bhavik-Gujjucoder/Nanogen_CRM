@@ -39,7 +39,6 @@ class OrderManagementController extends Controller
                 $records->where('salesman_id', auth()->id());
             }
 
-
             $records->when($request->salemn_id, function ($query) use ($request) {
                 $query->where('salesman_id', $request->salemn_id);
             });
@@ -142,38 +141,38 @@ class OrderManagementController extends Controller
                     return $row->statusBadge();
                 })
                 // ->addColumn('order_status', function ($row) {
-                //     $order_status = '';
+                    //     $order_status = '';
 
-                //     if ($row->status < 1) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
-                //                             <span class="badge bg-warning">Pending</span>
-                //                           </a>';
-                //     }
-                //     if ($row->status < 2) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
-                //                             <span class="badge bg-warning">Processing</span>
-                //                           </a>';
-                //     }
-                //     if ($row->status < 3) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
-                //                             <span class="badge bg-info">Shipping</span>
-                //                           </a>';
-                //     }
-                //     if ($row->status < 4) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
-                //                             <span class="badge bg-success">Delivered</span>
-                //                           </a>';
-                //     }
+                    //     if ($row->status < 1) {
+                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
+                    //                             <span class="badge bg-warning">Pending</span>
+                    //                           </a>';
+                    //     }
+                    //     if ($row->status < 2) {
+                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
+                    //                             <span class="badge bg-warning">Processing</span>
+                    //                           </a>';
+                    //     }
+                    //     if ($row->status < 3) {
+                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
+                    //                             <span class="badge bg-info">Shipping</span>
+                    //                           </a>';
+                    //     }
+                    //     if ($row->status < 4) {
+                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
+                    //                             <span class="badge bg-success">Delivered</span>
+                    //                           </a>';
+                    //     }
 
-                //     if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
-                //         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
-                //                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
-                //                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
-                //                       </div>';
-                //         return $action_btn;
-                //     }
+                    //     if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
+                    //         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
+                    //                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                    //                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
+                    //                       </div>';
+                    //         return $action_btn;
+                    //     }
 
-                //     return $row->statusBadge();
+                    //     return $row->statusBadge();
                 // })
                 ->filterColumn('order_status', function ($query, $keyword) {
                     // $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
@@ -356,12 +355,12 @@ class OrderManagementController extends Controller
 
 
         // try {
-            //     $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
+        //     $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail', 'products'])->findOrFail($order->id);
 
-            // } catch (\Throwable $th) {
-            //     dd($th);
-            //     return response()->json(['error' => 'Something went wrong!'], 500); 
-            //     // return redirect()->back()->with('error', 'Something is wrong!!');
+        // } catch (\Throwable $th) {
+        //     dd($th);
+        //     return response()->json(['error' => 'Something went wrong!'], 500); 
+        //     // return redirect()->back()->with('error', 'Something is wrong!!');
         // }
 
 

@@ -130,7 +130,7 @@
                                                         </li>
                                                     @endcan
 
-                                                    @can('Sales Reports')
+                                                    @can('Sales Persons')
                                                         <li>
                                                             <a href="{{ route('sales_person.index') }}">
                                                                 <div class="menu-details">
@@ -181,7 +181,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <ul class="menu-list">
-                                                    @can('Distributors')
+                                                    @can('Distributors & Dealers')
                                                         <li>
                                                             <a href="{{ route('distributors_dealers.index') }}">
                                                                 <div class="menu-details">
@@ -195,8 +195,8 @@
                                                                 </div>
                                                             </a>
                                                         </li>
-                                                    @endcan
-                                                    @can('Dealers')
+                                                    {{-- @endcan
+                                                    @can('Dealers') --}}
                                                         <li>
                                                             <a href="{{ route('distributors_dealers.index', 1) }}">
                                                                 <div class="menu-details">

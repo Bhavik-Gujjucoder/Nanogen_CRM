@@ -12,6 +12,7 @@ class DistributorsDealers extends Model
     protected $table = 'distributors_dealers';
     // protected $guarded = [];
     protected $fillable = [
+        'sales_person_id',
         'profile_image',
         'user_type',
         'app_form_no',
@@ -96,5 +97,10 @@ class DistributorsDealers extends Model
     public function city()
     {
         return $this->hasOne(CityManagement::class, 'id','city_id');
+    }
+
+    public function sales_person()
+    {
+        return $this->hasOne(SalesPersonDetail::class, 'id','sales_person_id');
     }
 }

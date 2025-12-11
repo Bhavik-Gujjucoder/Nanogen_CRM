@@ -23,7 +23,11 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\ProprietorPartnerDirector;
+use App\Models\SalesPersonDetail;
 use App\Models\DistributorsDealersDocuments;
+use App\Exports\DistributorDealerExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class DistributorsDealersController extends Controller
 {
@@ -32,17 +36,31 @@ class DistributorsDealersController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('Distributors & Dealers');
+        // if ($request->dealer == 1) {
+        //     $this->authorize('Dealers'); // or use: Gate::authorize('Dealer Access');
+        // } else {
+        //     $this->authorize('Distributors');
+        // }
 
-        if ($request->dealer == 1) {
-            $this->authorize('Dealers'); // or use: Gate::authorize('Dealer Access');
-        } else {
-            $this->authorize('Distributors');
-        }
-
+        $data['sales_persons'] = SalesPersonDetail::get();
         $data['page_title'] = $request->dealer == 1 ? 'Dealers' : 'Distributors';
+
         if ($request->ajax()) {
 
-            $data = DistributorsDealers::where('user_type', $request->dealer ? 2 : 1);
+            $data = DistributorsDealers::where('user_type', $request->dealer ? 2 : 1)
+                ->when($request->sales_person_id, function ($query, $sales_person_id) {
+                    return $query->where('sales_person_id', $sales_person_id);
+                })
+
+                /* Filter by start_date & end_date */
+                ->when($request->start_date, function ($query) use ($request) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+                })
+                ->when($request->end_date, function ($query) use ($request) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+                });
+
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -60,7 +78,7 @@ class DistributorsDealersController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
                     $o_form_download_btn = '<a href="' . route('distributors_dealers.replaceInWord', ['id' => $row->id, 'dealer' => ($row->user_type == 2 ? 1 :  null)]) . '" class="dropdown-item"  data-id="' . $row->id . '" class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-download text-warning"></i> O-Form Download</a>';
-                    
+
                     $principal_certificate_download_btn = '<a href="' . route('distributors_dealers.replaceInWord', ['id' => $row->id, 'dealer' => ($row->user_type == 2 ? 1 :  null)]) . '" class="dropdown-item"  data-id="' . $row->id . '" class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-download text-warning"></i> Principal Certificate Download</a>';
 
                     $delete_btn = '<a href="javascript:void(0)" class="dropdown-item delete_d_d"  data-id="' . $row->id . '"
@@ -97,9 +115,14 @@ class DistributorsDealersController extends Controller
                             <img src="' . $profilePic . '" alt="User Image">
                         </a>' . $row->applicant_name;
                 })
-
+                ->editColumn('sales_person_id', function ($row) {
+                    return $row->sales_person ? $row->sales_person->first_name . ' ' . $row->sales_person->last_name : '-';
+                })
                 ->editColumn('city_id', function ($row) {
                     return $row->city ? $row->city->city_name : '-';
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at ? $row->created_at->format('d M Y') : '-';
                 })
                 ->filterColumn('city_id', function ($query, $keyword) {
                     $query->whereHas('city', function ($q) use ($keyword) {
@@ -122,6 +145,7 @@ class DistributorsDealersController extends Controller
         $data['products']   = Product::where('status', 1)->get()->all();
         $data['states']     = StateManagement::where('status', 1)->get()->all();
         $data['countries']  = Country::where('status', 1)->get()->all();
+        $data['sales_persons'] = SalesPersonDetail::get();
         return view('admin.distributors_dealers.create', $data);
     }
 
@@ -213,6 +237,7 @@ class DistributorsDealersController extends Controller
             'products'            => Product::where('status', 1)->get()->all(),
             'states'              => StateManagement::where('status', 1)->get()->all(),
             'countries'           => Country::where('status', 1)->get()->all(),
+            'sales_persons'       => SalesPersonDetail::get(),
         ];
         return view('admin.distributors_dealers.edit', $data);
     }
@@ -410,5 +435,23 @@ class DistributorsDealersController extends Controller
         $templateProcessor->saveAs($savePath);
 
         return response()->download($savePath);
+    }
+
+    public function export(Request $request, $dealer = null)
+    {
+        // dd($dealer); dealer no type su che 1 k 2
+        $query = DistributorsDealers::with('sales_person')
+            ->where('user_type', $dealer ? 2 : 1)
+            ->when($request->sales_person_id, function ($q, $sales_person_id) {
+                return $q->where('sales_person_id', $sales_person_id);
+            })
+            ->when($request->start_date, function ($query) use ($request) {
+                $query->whereDate('created_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+            })
+            ->when($request->end_date, function ($query) use ($request) {
+                $query->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+            });
+        $data = $query->get();
+        return Excel::download(new DistributorDealerExport($data), 'distributors_dealers.xlsx');
     }
 }

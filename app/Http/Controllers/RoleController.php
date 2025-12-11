@@ -17,11 +17,9 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         // $roles = Role::all();
-
         $data['page_title'] = 'Role & Permissions';
-
         if ($request->ajax()) {
-            $data = Role::with('permissions');
+            $data = Role::where('name', '!=', 'super admin')->with('permissions');
             return DataTables::of($data)
                 ->addIndexColumn()
                 // Add permission_name column
@@ -31,20 +29,21 @@ class RoleController extends Controller
                     })->implode(' ');
                 })
                 ->addColumn('action', function ($row) {
-
                     $edit_btn = '<a href="' . route('roles.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
-                    $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteRole"  data-id="' . $row->id . '"
-                    class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('roles.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
-                        . csrf_field() . method_field('DELETE') . '</form>';
+                    // $delete_btn = '<a href="javascript:void(0)" class="dropdown-item deleteRole"  data-id="' . $row->id . '"
+                    // class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('roles.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
+                    //     . csrf_field() . method_field('DELETE') . '</form>';
 
                     $action_btn = '<div class="dropdown table-action">
                                     <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">';
 
-                    Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
-                    Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
+                    // Auth::user()->can('Manage Users') ? $action_btn .= $edit_btn : '';
+                    // Auth::user()->can('Manage Users') ? $action_btn .= $delete_btn : '';
+                    $action_btn .= $edit_btn ?? '';
+                    // $action_btn .= $delete_btn ?? '';
 
                     return $action_btn . ' </div></div>';
                 })
@@ -68,7 +67,9 @@ class RoleController extends Controller
     public function create()
     {
         $data['page_title']  = 'Add Role & Permission';
-        $data['permissions'] = Permission::all();
+        $data['permissions'] = Permission::where('deleted_at', null)->where('is_dashboard',0)->get()->all();
+                        $data['dashboard_permissions']  = Permission::where('deleted_at', null)->where('is_dashboard',1)->get()->all();
+
         return view('roles.create', $data);
     }
 
@@ -93,7 +94,9 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $data['page_title']   = 'Edit Role & Permission';
-        $data['permissions']  = Permission::where('deleted_at', null)->get()->all();
+        $data['permissions']  = Permission::where('deleted_at', null)->where('is_dashboard',0)->get()->all();
+        $data['dashboard_permissions']  = Permission::where('deleted_at', null)->where('is_dashboard',1)->get()->all();
+
         $data['role']  = $role;
         return view('roles.edit', $data);
     }

@@ -35,14 +35,14 @@
 
                         <div class="radio-group-bg">
                             <div class="radio-group-flex">
-                                @can('Distributors')
+                                @can('Distributors & Dealers')
                                     <div class="radio-group-tab">
                                         <input type="radio" name="user_type" value="1" id="distributor-radio"
                                             class="create-deitr" {{ request('dealer') == 1 ? '' : 'checked' }} />
                                         <label for="distributor-radio">Distributor</label>
                                     </div>
-                                @endcan
-                                @can('Dealers')
+                                {{-- @endcan
+                                @can('Dealers') --}}
                                     <div class="radio-group-tab">
                                         <input type="radio" name="user_type" value="2" id="dealers-radio"
                                             class="create-deitr" {{ request('dealer') == 1 ? 'checked' : '' }} />
@@ -52,7 +52,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label"> Application Form No <span
                                         class="text-danger">*</span></label>
@@ -60,7 +60,25 @@
                                     class="form-control" placeholder="Application Form No" maxlength="255">
                                 <span id="app_form_no_error" class="text-danger"></span>
                             </div>
+                        </div> --}}
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label">Sales Person <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" name="sales_person_id">
+                                    <option value="">Select sales person</option>
+                                    @foreach ($sales_persons as $s)
+                                        <option value="{{ $s->id }}"
+                                            {{ old('sales_person_id') == $s->id ? 'selected' : '' }}>
+                                            {{ $s->first_name . ' ' . $s->last_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span id="sales_person_id_error" class="text-danger"></span>
+                            </div>
                         </div>
+
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Code No <span class="text-danger">*</span></label>
@@ -108,7 +126,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Pan Card No </label>
+                                <label class="col-form-label">Pan Card No <span
+                                        class="text-danger">*</span></label>
                                 <input type="text" name="pancard" value="{{ old('pancard') }}"
                                     class="form-control" placeholder="Pan Card No"
                                     oninput="this.value = this.value.toUpperCase()" maxlength="10">
@@ -126,8 +145,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Aadhar Card No <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Aadhar Card No </label>
                                 <input type="number" name="aadhar_card" value="{{ old('aadhar_card') }}"
                                     class="form-control" placeholder="Aadhar Card No"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
@@ -948,229 +966,6 @@
 
 @endsection
 @section('script')
-{{-- <script>
-    $(document).ready(function() {
-        $("#userForm").on("submit", function(e) {
-            e.preventDefault(); // Prevent actual form submission
-            let valid = true;
-            /***** S T A R T *****/
-            // Clear previous errors
-            $("#app_form_no_error").html("");
-            $("#code_no_error").html("");
-            $("#applicant_name_error").html("");
-            $("#firm_shop_name_error").html("");
-            $("#firm_shop_address_error").html("");
-            $("#mobile_no_error").html("");
-            $("#pancard_error").html("");
-            $("#gstin_error").html("");
-            $("#aadhar_card_error").html("");
-            $("#bank_name_address_error").html("");
-            $("#account_no_error").html("");
-            $("#ifsc_code_error").html("");
-            $("#security_cheque_detail_error").html("");
-            $("#name_authorised_signatory_error").html("");
-            $("#other_ac_type_error").html("");
-            $("#fertilizer_license_error").html("");
-            $("#pesticide_license_error").html("");
-            $("#seed_license_error").html("");
-            // $("#associate_name_address_error").html("");
-            // $("#indicate_number_error").html("");
-            // $("#godown_size_capacity_error").html("");
-            // $("#godown_address_error").html("");
-            // $("#expected_minimum_sales_error").html("");
-            // $("#place_error").html("");
-            // $("#date_error").html("");
-
-
-            /* Validate Application Form No */
-            let appFormNo = $("input[name='app_form_no']").val().trim();
-            if (!appFormNo) {
-                $("#app_form_no_error").html("The application form No field is required.");
-                valid = false;
-            }
-
-            /* Validate Code No */
-            let codeNo = $("input[name='code_no']").val().trim();
-            if (!codeNo) {
-                $("#code_no_error").html("The code no field is required.");
-                valid = false;
-            }
-
-            /* Validate Applicant Name */
-            let applicantName = $("input[name='applicant_name']").val().trim();
-            if (!applicantName) {
-                $("#applicant_name_error").html("The applicant name field is required.");
-                valid = false;
-            }
-
-            /* Validate Firm/Shop Name */
-            let firmShopName = $("input[name='firm_shop_name']").val().trim();
-            if (!firmShopName) {
-                $("#firm_shop_name_error").html("The firm/shop name field is required.");
-                valid = false;
-            }
-
-            /* Validate Firm/Shop Address */
-            let firmShopAddress = $("textarea[name='firm_shop_address']").val().trim();
-            if (!firmShopAddress) {
-                $("#firm_shop_address_error").html("The firm/shop address field is required.");
-                valid = false;
-            }
-
-            /* Validate Mobile No */
-            let mobile = $("input[name='mobile_no']").val().trim();
-            if (!mobile) {
-                $("#mobile_no_error").html("The mobile no field is required.");
-                valid = false;
-            } else if (mobile.length !== 10) {
-                $("#mobile_no_error").html("mobile no must be 10 digits.");
-                valid = false;
-            }
-
-            /* Validate Pancard */
-            let pancard = $("input[name='pancard']").val().trim();
-            if (!pancard) {
-                $("#pancard_error").html("The pan card No field is required.");
-                valid = false;
-            }
-
-            /* Validate GSTIN */
-            let gstin = $("input[name='gstin']").val().trim();
-            if (!gstin) {
-                $("#gstin_error").html("The gstin field is required.");
-                valid = false;
-            }
-
-            /* Validate Aadhar Card */
-            let aadhar = $("input[name='aadhar_card']").val().trim();
-            if (!aadhar) {
-                $("#aadhar_card_error").html("The aadhar card no field is required.");
-                valid = false;
-            } else if (aadhar.length !== 12) {
-                $("#aadhar_card_error").html("aadhar card No must be 12 digits.");
-                valid = false;
-            }
-
-            /* Validate Name and address of Bank */
-            if (!$("input[name='bank_name_address']").val().trim()) {
-                $("#bank_name_address_error").html("The bank name and address field is required.");
-                valid = false;
-            }
-
-            /* Validate Account No */
-            if (!$("input[name='account_no']").val().trim()) {
-                $("#account_no_error").html("The account no field is required.");
-                valid = false;
-            }
-
-            /* Validate IFSC Code */
-            if (!$("input[name='ifsc_code']").val().trim()) {
-                $("#ifsc_code_error").html("The ifsc code field is required.");
-                valid = false;
-            }
-
-            /* Validate Security Cheque Detail */
-            if (!$("input[name='security_cheque_detail']").val().trim()) {
-                $("#security_cheque_detail_error").html(
-                    "The security cheque details field is required.");
-                valid = false;
-            }
-
-            /* Validate Name of Authorised Signatory */
-            if (!$("input[name='name_authorised_signatory']").val().trim()) {
-                $("#name_authorised_signatory_error").html(
-                    "The name of authorised signatory field is required.");
-                valid = false;
-            }
-
-            /* Validate if account type is "Other" */
-            let selectedAcType = $("input[name='ac_type']:checked").val();
-            if (selectedAcType == "3") {
-                let otherAcValue = $("input[name='other_ac_type']").val().trim();
-                if (!otherAcValue) {
-                    $("#other_ac_type_error").html("Please specify the other account type.");
-                    valid = false;
-                }
-            }
-
-            /* Validate Fertilizer License No */
-            if (!$("input[name='fertilizer_license']").val().trim()) {
-                $("#fertilizer_license_error").html("The fertilizer license no field is required.");
-                valid = false;
-            }
-
-            /* Validate Pesticide License No */
-            if (!$("input[name='pesticide_license']").val().trim()) {
-                $("#pesticide_license_error").html("The pesticide license no field is required.");
-                valid = false;
-            }
-
-            /* Validate Seed License No */
-            if (!$("input[name='seed_license']").val().trim()) {
-                $("#seed_license_error").html("The seed license no field is required.");
-                valid = false;
-            }
-
-           /***************** E N D *********************/
-
-            /* Validate associate name and address */
-            // if (!$("input[name='associate_name_address']").val().trim()) {
-            //     $("#associate_name_address_error").html("This name and address field is required.");
-            //     valid = false;
-            // }
-
-            // /* Validate number of people employed */
-            // let indicateNumber = $("input[name='indicate_number']").val().trim();
-            // if (!indicateNumber) {
-            //     $("#indicate_number_error").html("This indicate number field is required.");
-            //     valid = false;
-            // }
-
-            // /* godown facility validation */
-            // if ($("input[name='godown_facility']:checked").val() === "yes") {
-            //     let godownSize = $("input[name='godown_size_capacity']").val().trim();
-            //     if (!godownSize) {
-            //         $("#godown_size_capacity_error").html(
-            //             "Please specify the size and capacity of godown.");
-            //         valid = false;
-            //     }
-            // }
-
-            // /* Validate Godown Address */
-            // if (!$("textarea[name='godown_address']").val().trim()) {
-            //     $("#godown_address_error").html("This godown address field is required.");
-            //     valid = false;
-            // }
-
-            // /* Validate Expected Minimum Sales */
-            // if (!$("input[name='expected_minimum_sales']").val().trim()) {
-            //     $("#expected_minimum_sales_error").html(
-            //         "The expected minimum sales field is required.");
-            //     valid = false;
-            // }
-
-            // /* Validate Place */
-            // if (!$("input[name='place']").val().trim()) {
-            //     $("#place_error").html("This place field is required.");
-            //     valid = false;
-            // }
-
-            // /* Validate Date */
-            // if (!$("input[name='date']").val().trim()) {
-            //     $("#date_error").html("Please select a date.");
-            //     valid = false;
-            // }
-
-
-
-            if (valid) {
-                // Submit the form if all validations pass
-                this.submit();
-            }
-        });
-    });
-</script> --}}
-
 <script>
     /* Fertilizer License No check input show and hide */
     $(document).ready(function() {
@@ -1195,8 +990,6 @@
         });
     });
 
-
-
     /**** date-picker ****/
     function initFlatpickr() {
         $('.datePicker').each(function() {
@@ -1215,8 +1008,6 @@
             }
         });
     }
-
-
 
     /**** State wise city dropdown ****/
     $(document).ready(function() {
@@ -1261,7 +1052,8 @@
     $(document).ready(function() {
         $("#userForm").validate({
             rules: {
-                app_form_no: "required",
+                // app_form_no: "required",
+                sales_person_id: "required",
                 code_no: "required",
                 applicant_name: "required",
                 firm_shop_name: "required",
@@ -1272,14 +1064,14 @@
                     minlength: 10,
                     maxlength: 10
                 },
-                // pancard: "required",
+                pancard: "required",
                 // gstin: "required",
-                aadhar_card: {
-                    required: true,
-                    digits: true,
-                    minlength: 12,
-                    maxlength: 12
-                },
+                // aadhar_card: {
+                //     required: true,
+                //     digits: true,
+                //     minlength: 12,
+                //     maxlength: 12
+                // },
                 state_id: "required",
                 city_id: "required",
                 postal_code: "required",
@@ -1310,7 +1102,8 @@
                 }
             },
             messages: {
-                app_form_no: "The application form No field is required.",
+                // app_form_no: "The application form No field is required.",
+                sales_person_id: "Please select a sales person.",
                 code_no: "The code no field is required.",
                 applicant_name: "The applicant name field is required.",
                 firm_shop_name: "The firm/shop name field is required.",
@@ -1321,14 +1114,14 @@
                     minlength: "Mobile number must be 10 digits.",
                     maxlength: "Mobile number must be 10 digits."
                 },
-                // pancard: "The pan card No field is required.",
+                pancard: "The pan card No field is required.",
                 // gstin: "The gstin field is required.",
-                aadhar_card: {
-                    required: "The aadhar card no field is required.",
-                    digits: "Aadhar card No must be numeric.",
-                    minlength: "Aadhar card No must be 12 digits.",
-                    maxlength: "Aadhar card No must be 12 digits."
-                },
+                // aadhar_card: {
+                //     required: "The aadhar card no field is required.",
+                //     digits: "Aadhar card No must be numeric.",
+                //     minlength: "Aadhar card No must be 12 digits.",
+                //     maxlength: "Aadhar card No must be 12 digits."
+                // },
                 state_id: "Please select a state.",
                 city_id: "Please select a city.",
                 postal_code: "Postal code is required.",

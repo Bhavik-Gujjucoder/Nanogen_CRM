@@ -23,7 +23,9 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Users';
         if ($request->ajax()) {
-            $data = User::role(['admin', 'staff', 'reporting manager']);
+            $data = User::query();
+            //role(['admin', 'staff', 'reporting manager']);
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -98,7 +100,7 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Add Users';
         // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
-        $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id');
+        $data['roles']      = Role::whereNotIn('name', ['super admin'])->pluck('name', 'id'); //, 'sales'
 
         return view('users.create', $data);
     }
@@ -164,7 +166,7 @@ class UserController extends Controller
         $data['page_title'] = 'Edit User';
         $data['user']       = $user;
         // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
-        $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id');
+        $data['roles']      = Role::whereNotIn('name', ['super admin'])->pluck('name', 'id'); //, 'sales'
         return view('users.edit', $data);
     }
 
@@ -210,7 +212,9 @@ class UserController extends Controller
             $user->profile_picture = $filename;
         }
         $user->save();
-        $user->syncRoles([$request->role]); // Update role
+        if(!$user->hasRole('super admin')){
+            $user->syncRoles([$request->role]); // Update role
+        }
         // **** EMAIL ****  
         if ($user->status === "0") {
             $data = [];

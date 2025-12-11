@@ -38,15 +38,15 @@
 
                         <div class="radio-group-bg">
                             <div class="radio-group-flex">
-                                @can('Distributors')
+                                @can('Distributors & Dealers')
                                     <div class="radio-group-tab">
                                         <input type="radio" name="user_type" value="1"
                                             {{ old('user_type', $distributor_dealers->user_type) == '1' ? 'checked' : '' }}
                                             id="distributor-radio" class="create-deitr" />
                                         <label for="distributor-radio">Distributor</label>
                                     </div>
-                                @endcan
-                                @can('Dealers')
+                                {{-- @endcan
+                                @can('Dealers') --}}
                                     <div class="radio-group-tab">
                                         <input type="radio" name="user_type" value="2"
                                             {{ old('user_type', $distributor_dealers->user_type) == '2' ? 'checked' : '' }}
@@ -57,7 +57,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label"> Application Form No <span
                                         class="text-danger">*</span></label>
@@ -66,7 +66,26 @@
                                     class="form-control" placeholder="Application Form No" maxlength="255">
                                 <span id="app_form_no_error" class="text-danger"></span>
                             </div>
+                        </div> --}}
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="col-form-label">Sales Person <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" name="sales_person_id">
+                                    <option value="">Select sales person</option>
+                                    @foreach ($sales_persons as $s)
+                                        <option value="{{ $s->id }}"
+                                            {{ old('sales_person_id', $distributor_dealers->sales_person_id) == $s->id ? 'selected' : '' }}>
+                                            {{ $s->first_name . ' ' . $s->last_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span id="sales_person_id_error" class="text-danger"></span>
+                            </div>
                         </div>
+
+                       
+
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Code No <span class="text-danger">*</span></label>
@@ -118,7 +137,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Pan Card No </label>
+                                <label class="col-form-label">Pan Card No <span
+                                        class="text-danger">*</span></label>
                                 <input type="text" name="pancard"
                                     value="{{ old('pancard', $distributor_dealers->pancard) }}" class="form-control"
                                     placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()"
@@ -138,8 +158,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Aadhar Card No <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Aadhar Card No </label>
                                 <input type="number" name="aadhar_card"
                                     value="{{ old('aadhar_card', $distributor_dealers->aadhar_card) }}"
                                     class="form-control" placeholder="Aadhar Card No"
@@ -1298,7 +1317,8 @@
     $(document).ready(function() {
         $("#userForm").validate({
             rules: {
-                app_form_no: "required",
+                // app_form_no: "required",
+                sales_person_id: "required",
                 code_no: "required",
                 applicant_name: "required",
                 firm_shop_name: "required",
@@ -1309,14 +1329,14 @@
                     minlength: 10,
                     maxlength: 10
                 },
-                // pancard: "required",
+                pancard: "required",
                 // gstin: "required",
-                aadhar_card: {
-                    required: true,
-                    digits: true,
-                    minlength: 12,
-                    maxlength: 12
-                },
+                // aadhar_card: {
+                //     required: true,
+                //     digits: true,
+                //     minlength: 12,
+                //     maxlength: 12
+                // },
                 state_id: "required",
                 city_id: "required",
                 postal_code: "required",
@@ -1347,7 +1367,8 @@
                 }
             },
             messages: {
-                app_form_no: "The application form No field is required.",
+                // app_form_no: "The application form No field is required.",
+                sales_person_id: "Please select a sales person.",
                 code_no: "The code no field is required.",
                 applicant_name: "The applicant name field is required.",
                 firm_shop_name: "The firm/shop name field is required.",
@@ -1358,14 +1379,14 @@
                     minlength: "Mobile number must be 10 digits.",
                     maxlength: "Mobile number must be 10 digits."
                 },
-                // pancard: "The pan card No field is required.",
+                pancard: "The pan card No field is required.",
                 // gstin: "The gstin field is required.",
-                aadhar_card: {
-                    required: "The aadhar card no field is required.",
-                    digits: "Aadhar card No must be numeric.",
-                    minlength: "Aadhar card No must be 12 digits.",
-                    maxlength: "Aadhar card No must be 12 digits."
-                },
+                // aadhar_card: {
+                //     required: "The aadhar card no field is required.",
+                //     digits: "Aadhar card No must be numeric.",
+                //     minlength: "Aadhar card No must be 12 digits.",
+                //     maxlength: "Aadhar card No must be 12 digits."
+                // },
                 state_id: "Please select a state.",
                 city_id: "Please select a city.",
                 postal_code: "Postal code is required.",

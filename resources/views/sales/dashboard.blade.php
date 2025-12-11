@@ -13,32 +13,9 @@
         </div>
     </div>
 </div>
-<!-- /Welcome Wrap -->
 <div class="row detials-gc-user">
 
-    <!-- Total Earnings -->
-    {{-- <div class="col-xl-3 col-sm-6 d-flex">
-            <div class="card flex-fill">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="avatar avatar-md rounded bg-dark mb-3">
-                            <i class="ti ti-businessplan fs-16"></i>
-                        </span>
-                        <span class="badge bg-danger fw-normal mb-3">
-                            -16%
-                        </span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h2 class="mb-1">$89,878,58</h2>
-                            <p class="fs-13">Total Products</p>
-                        </div>
-                        <div class="company-bar4">5,10,7,5,10,7,5</div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-    <!-- /Total Earnings -->
+   
 </div>
 <div class="row">
     @can('Order Management')

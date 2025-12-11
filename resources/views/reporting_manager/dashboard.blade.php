@@ -16,7 +16,7 @@
 <!-- /Welcome Wrap -->
 <div class="row detials-gc-user">
     <!-- Total Companies -->
-    @can('Dealers')
+    @can('Dashboard Total Dealers')
         <div class="col-xl-3 col-sm-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-body">
@@ -41,7 +41,7 @@
     @endcan
     <!-- /Total Companies -->
     <!-- Active Companies -->
-    @can('Distributors')
+    @can('Dashboard Total Distributors')
         <div class="col-xl-3 col-sm-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-body">
@@ -66,7 +66,7 @@
     @endcan
     <!-- /Active Companies -->
     <!-- Total Subscribers -->
-    @can('Sales Persons')
+    @can('Dashboard Total Sales Persons')
         <div class="col-xl-3 col-sm-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-body">
@@ -91,7 +91,7 @@
     @endcan
     <!-- /Total Subscribers -->
     <!-- Total Earnings -->
-    @can('Products and Catalogue')
+    @can('Dashboard Total Products')
         <div class="col-xl-3 col-sm-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-body">
@@ -116,39 +116,17 @@
     @endcan
     <!-- /Total Earnings -->
 </div>
-@can('Order Management')
-    <div class="row">
+<div class="row">
+    @can('Dashboard Total Orders')
         <!--  Total Orders -->
         <div class="col-lg-6 d-flex"> <!--col-xxl-3 -->
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 class="mb-2">Total Orders</h5>
-                    {{-- <div class="dropdown mb-2">
-                        <a href="javascript:void(0);"
-                            class="btn btn-white border btn-sm d-inline-flex align-items-center"
-                            data-bs-toggle="dropdown">
-                            <i class="ti ti-calendar me-1"></i>This Week
-                        </a>
-                        <ul class="dropdown-menu  dropdown-menu-end p-3">
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">This Month</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">This Week</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">Today</a>
-                            </li>
-                        </ul>
-                    </div> --}}
                 </div>
                 <div class="card-body pb-0">
                     <div id="company-chart">
-
                     </div>
-                    {{-- <p class="f-13 d-inline-flex align-items-center"><span class="badge badge-success me-1">+6%</span> 5
-                        Companies from last month
-                    </p> --}}
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div class="mb-1">
                             <h2 class="mb-1">{{ $total_order }}</h2>
@@ -159,36 +137,17 @@
                 </div>
             </div>
         </div>
-        <!-- /Companies -->
-        <!-- Revenue -->
+    @endcan
+    @can('Dashboard Revenue')
         <div class="col-lg-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 class="mb-2">Revenue</h5>
-                    {{-- <div class="dropdown mb-2">
-                        <a href="javascript:void(0);"
-                            class="btn btn-white border btn-sm d-inline-flex align-items-center"
-                            data-bs-toggle="dropdown">
-                            <i class="ti ti-calendar me-1"></i>2025
-                        </a>
-                        <ul class="dropdown-menu  dropdown-menu-end p-3">
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">2024</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">2025</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item rounded-1">2023</a>
-                            </li>
-                        </ul>
-                    </div> --}}
                 </div>
                 <div class="card-body pb-0">
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div class="mb-1">
                             <h2 class="mb-1">{{ IndianNumberFormat($order_grand_total) }}</h2>
-                            {{-- <p><span class="text-success fw-bold">+40%</span> increased from last year</p> --}}
                         </div>
                         <p class="fs-13 text-gray-9 d-flex align-items-center mb-1"><i
                                 class="ti ti-circle-filled me-1 fs-6 text-primary"></i>Revenue</p>
@@ -197,13 +156,11 @@
                 </div>
             </div>
         </div>
-        <!-- /Revenue -->
-
-    </div>
-@endcan
+    @endcan
+</div>
 <div class="row">
     <!-- Recent Orders -->
-    @can('Order Management')
+    @can('Dashboard Recent Orders')
         <div class="col-xxl-4 col-xl-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
@@ -234,8 +191,10 @@
                                             {{ $order->distributors_dealers->firm_shop_name }}
                                         </a>
                                     </h6>
-                                    <p class="fs-13 d-inline-flex align-items-center"><a href="{{ route('order_management.edit', $order->id) }}">
-                                        <spa class="text-info">{{ $order->unique_order_id }}</spa></a>
+                                    <p class="fs-13 d-inline-flex align-items-center"><a
+                                            href="{{ route('order_management.edit', $order->id) }}">
+                                            <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                        </a>
                                         <i class="ti ti-circle-filled fs-4 text-primary mx-1">
                                         </i>{{ $order->order_date->format('d M Y') }}
                                     </p>
@@ -251,7 +210,7 @@
             </div>
         </div>
     @endcan
-    @can('Dealers')
+    @can('Dashboard Recent Dealers')
         <div class="col-xxl-4 col-xl-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
@@ -293,9 +252,7 @@
             </div>
         </div>
     @endcan
-    <!-- /Recent Dealers-->
-    <!-- Recent Distributors -->
-    @can('Distributors')
+    @can('Dashboard Recent Distributors')
         <div class="col-xxl-4 col-xl-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
@@ -336,16 +293,12 @@
                                 </div> --}}
                                 </div>
                             @endforeach
-
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     @endcan
-    <!-- /Recent Distributors -->
 </div>
 </div>
 @endsection

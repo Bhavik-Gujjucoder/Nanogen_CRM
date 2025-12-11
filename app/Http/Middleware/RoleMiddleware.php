@@ -38,7 +38,8 @@ class RoleMiddleware
                 return redirect()->route('reportingmanager.dashboard');
             }
              else {
-                abort(403, 'Unauthorized Access');
+                return redirect()->route('common.dashboard');
+                // abort(403, 'Unauthorized Access');
             }
         }
         return $next($request);

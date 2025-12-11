@@ -8,12 +8,51 @@
     <div class="card-header">
         <!-- Search -->
         <div class="row align-items-center">
-            <div class="col-sm-4">
-                <div class="icon-form mb-3 mb-sm-0">
+            <div class="col-sm-3">
+                <div class="icon-form mb-4 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
                     <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
             </div>
+
+            <div class="col-sm-3">
+                <div class="mb-3">
+                    <label class="col-form-label">Sales Person </label>
+                    <select class="form-select" name="sales_person_id" id="sales_person_id">
+                        <option value="">Select sales person</option>
+                        @foreach ($sales_persons as $s)
+                            <option value="{{ $s->id }}"
+                                {{ old('sales_person_id') == $s->id ? 'selected' : '' }}>
+                                {{ $s->first_name . ' ' . $s->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <span id="sales_person_id_error" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="mb-3">
+                    <label class="col-form-label">Start Date</label>
+                    <div class="icon-form">
+                        <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                        <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
+                            class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="mb-3">
+                    <label class="col-form-label">End Date</label>
+                    <div class="icon-form">
+                        <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                        <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"
+                            class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                    </div>
+                </div>
+            </div>
+
             <div class="col-sm-8">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end">
                     <div class="dropdown me-2 gc-export-menu">
@@ -21,7 +60,7 @@
                       data-bs-toggle="dropdown"><i
                       class="ti ti-package-export me-2"></i>Export</a> -->
                         <div class="dropdown-menu dropdown-menu-end">
-                            <ul>
+                            <ul class="list-unstyled mb-0">
                                 <li>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="ti ti-file-type-pdf text-danger me-1"></i>Export as PDF
@@ -35,24 +74,14 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- <a href="javascript:void(0);" class="btn btn-primary"
-                   data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i
-                   class="ti ti-square-rounded-plus me-2"></i>Add Dealers</a> -->
 
-                    {{-- <a href="#" class="btn btn-primary"><i class="ti ti-square-rounded-plus me-2"></i>Export Price List</a> --}}
-
-                    <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}"
-                        class="btn btn-primary">
+                    <button type="button" id="exportExcel" class="btn btn-primary">
+                        <i class="ti ti-file-type-xls text-success me-1"></i>
+                        Export Excel
+                    </button>
+                    <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}" class="btn btn-primary">
                         <i class="ti ti-square-rounded-plus me-2"></i>Export Price List
                     </a>
-
-                    {{-- <form method="POST" action="{{ route('send-whatsapp-pdf.sendPdf') }}">
-                        @csrf
-                        <input type="text" name="phone" placeholder="Enter phone number" value="+919099909076" />
-                        <button type="submit">Send WhatsApp PDF</button>
-                    </form> --}}
-
-
                     <a href="{{ route('distributors_dealers.create', request('dealer')) }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>
                         {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
@@ -75,11 +104,13 @@
                         </th> --}}
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">Sr no</th>
-
+                        <th scope="col">Firm name</th>
                         <th scope="col"> {{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}</th>
+                        <th scope="col">Sales Person</th>
                         <th scope="col">Phone</th>
                         <th scope="col">City</th>
                         <th scope="col">Code</th>
+                        <th scope="col">Date</th>
                         <th class="" scope="col">Action</th> {{-- class="text-end" --}}
                     </tr>
                 </thead>
@@ -93,6 +124,16 @@
 @endsection
 @section('script')
 <script>
+    $('#sales_person_id').on('change', function() {
+        distributors_dealers_table.draw();
+    });
+    $('#startDate').on('change', function() {
+        distributors_dealers_table.draw();
+    });
+    $('#endDate').on('change', function() {
+        distributors_dealers_table.draw();
+    });
+
     var distributors_dealers_table = $('#distributerTable').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
@@ -103,7 +144,15 @@
         order: [
             [0, 'desc']
         ],
-        ajax: "{{ route('distributors_dealers.index', request('dealer')) }}",
+        // ajax: "{{ route('distributors_dealers.index', request('dealer')) }}",
+        ajax: {
+            url: "{{ route('distributors_dealers.index', request('dealer')) }}",
+            data: function(d) {
+                d.sales_person_id = $('#sales_person_id').val();
+                d.start_date = $('#startDate').val();
+                d.end_date = $('#endDate').val();
+            }
+        },
         columns: [{
                 data: 'id',
                 name: 'id',
@@ -118,8 +167,18 @@
                 searchable: false
             },
             {
+                data: 'firm_shop_name',
+                name: 'firm_shop_name',
+                searchable: true
+            },
+            {
                 data: 'applicant_name',
                 name: 'applicant_name',
+                searchable: true
+            },
+            {
+                data: 'sales_person_id',
+                name: 'sales_person_id',
                 searchable: true
             },
             {
@@ -138,13 +197,17 @@
                 searchable: true
             },
             {
+                data: 'created_at',
+                name: 'created_at',
+                searchable: true
+            },
+            {
                 data: 'action',
                 name: 'action',
                 orderable: false,
                 searchable: false
             },
         ],
-
         columnDefs: [{
                 targets: 0, // ID (hidden)
                 createdCell: function(td) {
@@ -183,15 +246,20 @@
                 }
             },
             {
-                targets: 6, // Action
+                targets: 6, // Date
+                createdCell: function(td) {
+                    $(td).attr('data-label', 'Date');
+                }
+            },
+            {
+                targets: 7, // Action
                 createdCell: function(td) {
                     $(td).attr('data-label', 'Action');
                 }
             }
-        ]
-
-
+        ],
     });
+
     /*** Custom Search Box ***/
     $('#customSearch').on('keyup', function() {
         distributors_dealers_table.search(this.value).draw();
@@ -229,5 +297,58 @@
             }
         });
     }
+
+    /*** Export Excel ****/
+    $('#exportExcel').on('click', function() {
+        var sales_person_id = $('#sales_person_id').val();
+        var start_date = $('#startDate').val();
+        var end_date = $('#endDate').val();
+
+        /* window.location = "{{ route('distributors_dealers.export') }}?sales_person_id=" + sales_person_id; */
+        var url = "{{ route('distributors_dealers.export', request('dealer')) }}?sales_person_id=" + sales_person_id +
+            "&start_date=" + start_date +
+            "&end_date=" + end_date;
+
+        window.location = url;
+
+    });
+
+    /*** datepicker ***/
+    $(document).ready(function() {
+        const startPicker = flatpickr("#startDate", {
+            dateFormat: "d-m-Y",
+            disableMobile: true,
+            // maxDate: "today",
+            // defaultDate: "{{ old('start_date', isset($detail) ? \Carbon\Carbon::parse($detail->start_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+            onChange: function(selectedDates, dateStr, instance) {
+                // Set selected start date as minDate for end date
+                endPicker.set('minDate', dateStr);
+                removeTodayHighlight(selectedDates, dateStr, instance);
+            },
+            onReady: removeTodayHighlight,
+            onMonthChange: removeTodayHighlight,
+            onYearChange: removeTodayHighlight,
+            onOpen: removeTodayHighlight
+        });
+
+        const endPicker = flatpickr("#endDate", {
+            dateFormat: "d-m-Y",
+            disableMobile: true,
+            // maxDate: "today",
+            // defaultDate: "{{ old('end_date', isset($detail) ? \Carbon\Carbon::parse($detail->end_date)->format('d-m-Y') : now()->format('d-m-Y')) }}",
+            onReady: removeTodayHighlight,
+            onMonthChange: removeTodayHighlight,
+            onYearChange: removeTodayHighlight,
+            onOpen: removeTodayHighlight
+        });
+
+        function removeTodayHighlight(selectedDates, dateStr, instance) {
+            const todayElem = instance.calendarContainer.querySelector(".flatpickr-day.today");
+            if (todayElem && !todayElem.classList.contains("selected")) {
+                todayElem.classList.remove("today");
+            }
+        }
+    });
+    /*** END ***/
 </script>
 @endsection
