@@ -53,7 +53,7 @@ class DistributorDealerExport implements FromCollection, WithHeadings, WithMappi
     public function map($row): array
     {
         return [
-            $row->sales_person->first_name ?? '' . ' ' . $row->sales_person->last_name ?? '',
+            $row->sales_person?->first_name ?? '' . ' ' . $row->sales_person?->last_name ?? '',
             $row->code_no,
             $row->applicant_name,
             $row->firm_shop_name,
