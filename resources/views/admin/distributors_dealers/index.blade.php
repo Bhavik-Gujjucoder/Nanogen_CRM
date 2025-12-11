@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-8">
+            <div class="col-sm-12">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end">
                     <div class="dropdown me-2 gc-export-menu">
                         <!-- <a href="javascript:void(0);" class="dropdown-toggle"
@@ -104,7 +104,7 @@
                         </th> --}}
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">Sr no</th>
-                        <th scope="col">Firm name</th>
+                        <th scope="col">Firm Name</th>
                         <th scope="col"> {{ request('dealer') == 1 ? 'Dealer Name' : 'Distributor Name' }}</th>
                         <th scope="col">Sales Person</th>
                         <th scope="col">Phone</th>
