@@ -78,6 +78,9 @@ class UserController extends Controller
                 ->editColumn('status', function ($user) {
                     return $user->statusBadge();
                 })
+                 ->editColumn('email', function ($user) {
+                    return $user->email ? $user->email : '-';
+                })
                 // ->editColumn('updated_at', function ($user) {
                 //     return  Carbon::parse($user->updated_at)->diffForHumans();
                 // })
@@ -113,7 +116,7 @@ class UserController extends Controller
         $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
             'name'     => 'required|string|max:255|unique:users,name,NULL,id,deleted_at,NULL',
-            'email'    => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
+            'email'    => 'nullable|email|unique:users,email,NULL,id,deleted_at,NULL',
             'role'     => [
                 'required',
                 Rule::exists('roles', 'id')->whereNot('name', 'super admin') // Exclude super admin
@@ -131,7 +134,7 @@ class UserController extends Controller
 
         $user = User::create([
             'name'     => $request->name,
-            'email'    => $request->email,
+            'email'    => $request->email ?? null,
             'phone_no' => $request->phone_no,
             'password' => Hash::make($request->password),
             'status'   => $request->status,
@@ -151,9 +154,12 @@ class UserController extends Controller
 
         // **** EMAIL ****  
         $data['name'] = $request->name;
-        $data['email'] = $request->email;
+        $data['email'] = $request->email ?? null;
         $data['password'] = $request->password;
-        Mail::send('email.user_email.create', ['data' => $data], fn($message) => $message->to($user->email)->subject('User Account Created'));
+
+        if($request->email){
+            Mail::send('email.user_email.create', ['data' => $data], fn($message) => $message->to($user->email)->subject('User Account Created'));
+        }
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -178,7 +184,7 @@ class UserController extends Controller
         $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
             'name'            => 'required|string|max:255|unique:users,name,' . $user->id . ',id,deleted_at,NULL',
-            'email'           => 'required|email|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
+            'email'           => 'nullable|email|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
             'phone_no'        => 'required|numeric|digits_between:10,11|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
             'role'            => 'required|exists:roles,name',
             'password'        => ['nullable', 'string', 'min:6', 'confirmed'],
@@ -189,7 +195,7 @@ class UserController extends Controller
 
         $user->update([
             'name'     => $request->name,
-            'email'    => $request->email,
+            'email'    => $request->email ?? null,
             'phone_no' => $request->phone_no,
             'status'   => $request->status,
         ]);
@@ -216,14 +222,16 @@ class UserController extends Controller
             $user->syncRoles([$request->role]); // Update role
         }
         // **** EMAIL ****  
-        if ($user->status === "0") {
-            $data = [];
-            $data['name'] = $user->name;
-            Mail::send('email.user_email.deactive_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Deactivated'));
-        } else {
-            $data = [];
-            $data['name'] = $request->name;
-            Mail::send('email.user_email.active_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Activated'));
+        if($user->email){
+            if ($user->status === "0") {
+                $data = [];
+                $data['name'] = $user->name;
+                Mail::send('email.user_email.deactive_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Deactivated'));
+            } else {
+                $data = [];
+                $data['name'] = $request->name;
+                Mail::send('email.user_email.active_email', ['data' => $data], fn($message) => $message->to($user->email)->subject('Account Activated'));
+            }
         }
 
         return redirect()->route('users.index')->with('success', 'User updated successfully!');

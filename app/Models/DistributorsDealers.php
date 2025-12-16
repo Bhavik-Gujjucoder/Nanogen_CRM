@@ -96,11 +96,15 @@ class DistributorsDealers extends Model
 
     public function city()
     {
-        return $this->hasOne(CityManagement::class, 'id','city_id');
+        return $this->hasOne(CityManagement::class, 'id', 'city_id');
     }
 
     public function sales_person()
     {
-        return $this->hasOne(SalesPersonDetail::class, 'id','sales_person_id');
+        return $this->belongsTo(
+            SalesPersonDetail::class,
+            'sales_person_id', // FK in distributor table
+            'user_id'          // referenced column in sales_person table
+        );
     }
 }

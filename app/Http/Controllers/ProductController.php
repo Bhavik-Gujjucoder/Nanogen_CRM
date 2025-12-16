@@ -16,12 +16,16 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-    */
+     */
     public function index(Request $request)
     {
         $data['page_title'] = 'Product Catalogue';
+        $data['category']   = Category::where('status', 1)->get()->all();
         if ($request->ajax()) {
-            $data = Product::query();
+            $data = Product::query()
+                ->when($request->category_id, function ($q) use ($request) {
+                    $q->where('category_id', $request->category_id);
+                });
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -31,7 +35,7 @@ class ProductController extends Controller
                         </label>';
                 })
                 ->addColumn('action', function ($row) {
-                    $trend_analysis_btn = '<a href="' . route('trend_analysis.product_report',['product_id' => $row->id]) . '" class="dropdown-item" data-id="' . $row->id . '"
+                    $trend_analysis_btn = '<a href="' . route('trend_analysis.product_report', ['product_id' => $row->id]) . '" class="dropdown-item" data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-chart-bar text-cool"></i>Trend Analysis</a>';
 
                     $edit_btn = '<a href="' . route('product.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
@@ -47,7 +51,7 @@ class ProductController extends Controller
 
                     // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
-                    
+
                     Auth::user()->can('Trend Analysis') ? $action_btn .= $trend_analysis_btn : '';
                     // $action_btn .= $trend_analysis_btn; 
                     $action_btn .= $edit_btn;
@@ -72,7 +76,7 @@ class ProductController extends Controller
                 ->editColumn('grade_id', function ($product) {
                     return $product->grade ? $product->grade->name : '-';
                 })
-                 ->editColumn('gst', function ($product) {
+                ->editColumn('gst', function ($product) {
                     return $product->gst ? $product->gst : '-';
                 })
                 ->editColumn('status', function ($product) {

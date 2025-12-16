@@ -8,17 +8,30 @@
     <div class="card-header">
         <!-- Search -->
         <div class="row align-items-center">
-            <div class="col-sm-4">
+            <div class="col-sm-3 mb-2">
                 <div class="icon-form mb-3 mb-sm-0">
+                    {{-- <label class="col-form-label"> </label> --}}
                     <span class="form-icon"><i class="ti ti-search"></i></span>
-                    <input type="text" class="form-control" id="customSearch" placeholder="Search Leads">
+                    <input type="text" class="form-control mt-4" id="customSearch" placeholder="Search Leads">
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-3">
+                <div class="icon-form mb-3 mb-sm-0">
+                    <label class="col-form-label">Category </label>
+                    <select class="select" name="category_id" id="category_id" value="{{ old('category_id') }}">
+                        <option value="">Select category</option>
+                        @if ($category)
+                            @foreach ($category as $c)
+                                <option value="{{ $c->id }}">{{ $c->category_name }}</option>
+                            @endforeach
+                        @else
+                            <option value="">No record</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-6">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-
-
-
                     <a href="{{ route('product.create') }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add Product</a>
                 </div>
@@ -27,8 +40,6 @@
         <!-- /Search -->
     </div>
     <div class="card-body">
-
-
         <!-- List -->
         <div class="table-responsive custom-table">
             <table class="table" id="product_table">
@@ -55,13 +66,15 @@
                 </thead>
             </table>
         </div>
-
     </div>
 </div>
-
 @endsection
 @section('script')
 <script>
+    $('#category_id').on('change', function() {
+        product_table_show.draw();
+    });
+
     /***** DataTable *****/
     var product_table_show = $('#product_table').DataTable({
         "pageLength": 10,
@@ -73,7 +86,13 @@
         order: [
             [0, 'desc']
         ],
-        ajax: "{{ route('product.index') }}",
+        // ajax: "{{ route('product.index') }}",
+        ajax: {
+            url: "{{ route('product.index') }}",
+            data: function(d) {
+                d.category_id = $('#category_id').val();
+            }
+        },
         columns: [{
                 data: 'id',
                 name: 'id',
@@ -175,15 +194,12 @@
                 }
             }
         ]
-
-
     });
 
     /***** Search Box *****/
     $('#customSearch').on('keyup', function() {
         product_table_show.search(this.value).draw();
     });
-
 
     /***** Alert Delete-MSG *****/
     $(document).on('click', '.deleteVariation', function(event) {
@@ -241,7 +257,6 @@
             var selectedIds = $('.product_checkbox:checked').map(function() {
                 return $(this).data('id');
             }).get();
-
             if (selectedIds.length > 0) {
                 // Make an AJAX request to delete the selected items
                 $.ajax({

@@ -68,7 +68,7 @@
                     <input type="hidden" name="category_id">
                     @if (count($category) >= 1)
                         <div class="mb-3">
-                            <label class="col-form-label">Select Parent Category</label>
+                            <label class="col-form-label">Select Parent Category *</label>
                             <select class="select parent_category_id" name="parent_category_id" style="height: 210px;">
                                 <option value="">{{ __('Select Parent Category') }}</option>
                                 @foreach ($category as $c)
@@ -80,7 +80,7 @@
                     @endif
 
                     <div class="mb-3">
-                        <label class="col-form-label">Category Name *</span></label>
+                        <label class="col-form-label">Category Name *</label>
                         <input type="text" name="category_name" value="" class="form-control"
                             placeholder="Enter category name" maxlength="250">
                         <span class="category_name_error"></span>

@@ -439,7 +439,7 @@ class DistributorsDealersController extends Controller
 
     public function export(Request $request, $dealer = null)
     {
-        // dd($dealer); dealer no type su che 1 k 2
+        // dd($dealer); 
         $query = DistributorsDealers::with('sales_person')
             ->where('user_type', $dealer ? 2 : 1)
             ->when($request->sales_person_id, function ($q, $sales_person_id) {

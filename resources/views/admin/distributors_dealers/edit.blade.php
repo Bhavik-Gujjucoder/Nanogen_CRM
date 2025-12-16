@@ -45,7 +45,7 @@
                                             id="distributor-radio" class="create-deitr" />
                                         <label for="distributor-radio">Distributor</label>
                                     </div>
-                                {{-- @endcan
+                                    {{-- @endcan
                                 @can('Dealers') --}}
                                     <div class="radio-group-tab">
                                         <input type="radio" name="user_type" value="2"
@@ -69,13 +69,12 @@
                         </div> --}}
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Sales Person <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Sales Person <span class="text-danger">*</span></label>
                                 <select class="form-select" name="sales_person_id">
                                     <option value="">Select sales person</option>
                                     @foreach ($sales_persons as $s)
-                                        <option value="{{ $s->id }}"
-                                            {{ old('sales_person_id', $distributor_dealers->sales_person_id) == $s->id ? 'selected' : '' }}>
+                                        <option value="{{ $s->user_id }}"
+                                            {{ old('sales_person_id', $distributor_dealers->sales_person_id) == $s->user_id ? 'selected' : '' }}>
                                             {{ $s->first_name . ' ' . $s->last_name }}
                                         </option>
                                     @endforeach
@@ -84,7 +83,7 @@
                             </div>
                         </div>
 
-                       
+
 
                         <div class="col-md-4">
                             <div class="mb-3">
@@ -137,8 +136,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Pan Card No <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Pan Card No <span class="text-danger">*</span></label>
                                 <input type="text" name="pancard"
                                     value="{{ old('pancard', $distributor_dealers->pancard) }}" class="form-control"
                                     placeholder="Pan Card No" oninput="this.value = this.value.toUpperCase()"

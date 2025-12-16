@@ -19,7 +19,7 @@ class OrderManagement extends Model
         'order_date' => 'date'
     ];
 
-     public function statusBadge()
+    public function statusBadge()
     {
         switch ($this->status) {
             case 1:
@@ -30,6 +30,19 @@ class OrderManagement extends Model
                 return '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
         }
     }
+
+    public function statusName()
+    {
+        switch ($this->status) {
+            case 1:
+                return 'Pending';
+            case 2:
+                return 'Complete';
+            default:
+                return 'Inactive';
+        }
+    }
+    
     
     // public function statusBadge()
         // {
@@ -46,7 +59,7 @@ class OrderManagement extends Model
         //             return '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
         //     }
     // }
-    
+
     /**
      * Get the user that owns the OrderManagement
      *
@@ -67,16 +80,13 @@ class OrderManagement extends Model
         return $this->hasOne(SalesPersonDetail::class, 'user_id', 'salesman_id');
     }
 
-        /**
-         * Get all of the comments for the OrderManagement
-         *
-         * @return \Illuminate\Database\Eloquent\Relations\HasMany
-         */
-        public function products(): HasMany
-        {
-            return $this->hasMany(OrderManagementProduct::class, 'order_id', 'id'); 
-        }
-
-       
-
+    /**
+     * Get all of the comments for the OrderManagement
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(OrderManagementProduct::class, 'order_id', 'id');
+    }
 }

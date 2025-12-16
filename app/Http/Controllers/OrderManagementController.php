@@ -76,14 +76,21 @@ class OrderManagementController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
+                ->editColumn('unique_order_id', function ($row) {
+                    $order_id = $row->unique_order_id;
+                    return '<a href="' . route('area_wise_sales.order_show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
+                                <i class="ti ti-eye #1ecbe2"></i>  ' . $order_id . '</a>';
+                    /* '. route('order_management.edit', $row->id) .' */
+                })
                 ->editColumn('order_date', function ($row) {
                     // return $row->order_date->format('d-m-Y');
                     return Carbon::parse($row->order_date)->format('d M Y');
                 })
+
                 ->editColumn('dd_id', function ($row) {
                     if ($row->distributors_dealers) {
                         $type = $row->distributors_dealers->user_type == 1 ? '(Distributor)' : ($row->distributors_dealers->user_type == 2 ? '(Dealer)' : '');
-                        return $row->distributors_dealers->applicant_name . ' ' . $type;
+                        return $row->distributors_dealers->firm_shop_name . ' ' . $type;
                     }
                     return '-';
                 })
@@ -117,7 +124,7 @@ class OrderManagementController extends Controller
                     }
                     return '-';
                 })
-                 ->addColumn('order_status', function ($row) {
+                ->addColumn('order_status', function ($row) {
                     $order_status = '';
 
                     if ($row->status < 1) {
@@ -130,7 +137,7 @@ class OrderManagementController extends Controller
                                             <span class="badge bg-success">Complete</span>
                                           </a>';
                     }
-                    if ($row->status < 2 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
+                    if ($row->status < 2 && Auth::user()->hasAnyRole(['admin', 'staff'])) {
                         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
                                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
@@ -141,38 +148,38 @@ class OrderManagementController extends Controller
                     return $row->statusBadge();
                 })
                 // ->addColumn('order_status', function ($row) {
-                    //     $order_status = '';
+                //     $order_status = '';
 
-                    //     if ($row->status < 1) {
-                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
-                    //                             <span class="badge bg-warning">Pending</span>
-                    //                           </a>';
-                    //     }
-                    //     if ($row->status < 2) {
-                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
-                    //                             <span class="badge bg-warning">Processing</span>
-                    //                           </a>';
-                    //     }
-                    //     if ($row->status < 3) {
-                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
-                    //                             <span class="badge bg-info">Shipping</span>
-                    //                           </a>';
-                    //     }
-                    //     if ($row->status < 4) {
-                    //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
-                    //                             <span class="badge bg-success">Delivered</span>
-                    //                           </a>';
-                    //     }
+                //     if ($row->status < 1) {
+                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
+                //                             <span class="badge bg-warning">Pending</span>
+                //                           </a>';
+                //     }
+                //     if ($row->status < 2) {
+                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
+                //                             <span class="badge bg-warning">Processing</span>
+                //                           </a>';
+                //     }
+                //     if ($row->status < 3) {
+                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
+                //                             <span class="badge bg-info">Shipping</span>
+                //                           </a>';
+                //     }
+                //     if ($row->status < 4) {
+                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
+                //                             <span class="badge bg-success">Delivered</span>
+                //                           </a>';
+                //     }
 
-                    //     if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
-                    //         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
-                    //                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
-                    //                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
-                    //                       </div>';
-                    //         return $action_btn;
-                    //     }
+                //     if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
+                //         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
+                //                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                //                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
+                //                       </div>';
+                //         return $action_btn;
+                //     }
 
-                    //     return $row->statusBadge();
+                //     return $row->statusBadge();
                 // })
                 ->filterColumn('order_status', function ($query, $keyword) {
                     // $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
@@ -188,7 +195,7 @@ class OrderManagementController extends Controller
                 })
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributors_dealers', function ($q) use ($keyword) {
-                        $q->where('applicant_name', 'like', "%{$keyword}%")
+                        $q->where('firm_shop_name', 'like', "%{$keyword}%")
                             ->orWhereRaw("CASE 
                               WHEN user_type = 1 THEN 'Distributor'
                               WHEN user_type = 2 THEN 'Dealer'
@@ -210,7 +217,7 @@ class OrderManagementController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['checkbox', 'action', 'order_status', 'firm_shop_name', 'unique_ord_id']) //'value',
+                ->rawColumns(['checkbox', 'unique_order_id', 'action', 'order_status', 'firm_shop_name', 'unique_ord_id']) //'value',
                 ->make(true);
         }
 
@@ -228,34 +235,34 @@ class OrderManagementController extends Controller
             $order->shipping_date = Carbon::now();  /*---- shipping_date consider complete_date ----*/
             $order->save();
             return response()->json(['success' => true]);
-        }else{
-            return response()->json(['error' => 'Please add Transport and Invoice details before completing the order!']); 
+        } else {
+            return response()->json(['error' => 'Please add Transport and Invoice details before completing the order!']);
         }
         // if ($request->status == 3) {
-            //     $order->shipping_date = Carbon::now();
+        //     $order->shipping_date = Carbon::now();
         // }
         // $order->save();
         // try {
-            //     if ($request->status == 3) {
-            //         $admin_email = getSetting('company_email');
-            //         if ($admin_email) {
-            //             $order = [];
-            //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
-            //             $order->admin_email = 'for_admin_email';
-            //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
-            //         }
+        //     if ($request->status == 3) {
+        //         $admin_email = getSetting('company_email');
+        //         if ($admin_email) {
+        //             $order = [];
+        //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
+        //             $order->admin_email = 'for_admin_email';
+        //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($admin_email)->subject('Order Shipped'));
+        //         }
 
 
-            //         $sales_person_email = $order->sales_person_detail->user->email;
-            //         if ($sales_person_email) {
-            //             $order = [];
-            //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
-            //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
-            //         }
-            //     }
-            // } catch (\Throwable $th) {
-            //     dd($th);
-            //     return response()->json(['error' => 'Something went wrong!'], 500);
+        //         $sales_person_email = $order->sales_person_detail->user->email;
+        //         if ($sales_person_email) {
+        //             $order = [];
+        //             $order = OrderManagement::with(['distributors_dealers', 'sales_person_detail'])->findOrFail($id);
+        //             Mail::send('email.order_email.order_shipping_status', compact('order'), fn($message) => $message->to($sales_person_email)->subject('Order Shipped'));
+        //         }
+        //     }
+        // } catch (\Throwable $th) {
+        //     dd($th);
+        //     return response()->json(['error' => 'Something went wrong!'], 500);
         // }
 
         // return response()->json(['success' => true]);
@@ -285,6 +292,7 @@ class OrderManagementController extends Controller
         } else {
             $data['distributor_dealers'] = DistributorsDealers::get();
         }
+        // dd($data['distributor_dealers']);
 
         $latest_order_id = OrderManagement::withTrashed()->max('id');
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
@@ -315,15 +323,26 @@ class OrderManagementController extends Controller
             'grand_total'
         ]));
 
-
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
         $order->unique_order_id = $data['unique_order_id'];
-        $order->save();
-
-
-
-        if ($request->has(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
+        // $order->save();
+        // dump('1');
+        // dump($request->all());
+        // dd(isset($request->product_id[0]) &&
+        //     isset($request->price[0]) &&
+        //     isset($request->qty[0]) &&
+        //     isset($request->packing_size_id[0]) &&
+        //     isset($request->total[0]));
+        // if ($request->has(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
+        if (
+            isset($request->product_id[0]) &&
+            isset($request->price[0]) &&
+            isset($request->qty[0]) &&
+            isset($request->packing_size_id[0]) &&
+            isset($request->total[0])
+        ) {
+            // dump('2');
             $product_id = $request->input('product_id');
             $gst   = $request->input('gst');
             $price = $request->input('price');
@@ -333,13 +352,12 @@ class OrderManagementController extends Controller
             // $grand_total     = 0;
 
             foreach ($product_id as $key => $p) {
-
-                if (isset($gst[$key]) && isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
+                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key];
                     OrderManagementProduct::create([
                         'order_id'   => $order->id,
                         'product_id' => $p,
-                        'gst'        => $gst[$key],
+                        'gst'        => $gst[$key] ?? 0,
                         'price'      => $price[$key],
                         'qty'        => $qty[$key],
                         'packing_size_id' => $packing_size_id[$key],
@@ -362,7 +380,6 @@ class OrderManagementController extends Controller
         //     return response()->json(['error' => 'Something went wrong!'], 500); 
         //     // return redirect()->back()->with('error', 'Something is wrong!!');
         // }
-
 
         if (getSetting('company_email')) {
             Mail::send('email.order_email.order_create', compact('order'), fn($message) => $message->to(getSetting('company_email'))->subject('Order Created'));
@@ -451,8 +468,14 @@ class OrderManagementController extends Controller
 
 
 
-        if ($request->only(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
-
+        // if ($request->only(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
+        if (
+            isset($request->product_id[0]) &&
+            isset($request->price[0]) &&
+            isset($request->qty[0]) &&
+            isset($request->packing_size_id[0]) &&
+            isset($request->total[0])
+        ) {
             OrderManagementProduct::where('order_id', $id)->delete();
             $product_id = $request->input('product_id');
             $gst = $request->input('gst');
@@ -461,12 +484,12 @@ class OrderManagementController extends Controller
             $packing_size_id = $request->input('packing_size_id');
             $total = $request->input('total');
             foreach ($product_id as $key => $p) {
-                if (isset($gst[$key]) && isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
+                if (isset($price[$key]) && isset($qty[$key]) && isset($packing_size_id[$key]) && isset($total[$key])) {
                     // $grand_total = $grand_total + $total[$key]; 
                     OrderManagementProduct::create([
                         'order_id' => $order->id,
                         'product_id' => $p,
-                        'gst' => $gst[$key],
+                        'gst' => $gst[$key] ?? 0,
                         'packing_size_id' => $packing_size_id[$key],
                         'price' => $price[$key],
                         'qty' => $qty[$key],

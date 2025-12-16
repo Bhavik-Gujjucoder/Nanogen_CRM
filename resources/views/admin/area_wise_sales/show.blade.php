@@ -4,25 +4,35 @@
 @endsection
 <div class="page-header">
     <div class="row align-items-center">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <h4 class="page-title mb-2">{{ $page_title }}</h4>
             <h5>{{ __('Region Name : ') }} {{ $city_name }}</h5>
             <strong>{{ __('Total Sales Amount : ') }} {{ IndianNumberFormat($city_wise_total_sales) }}</strong>
         </div>
-        <div class="areawise col-md-8">
+        <div class="areawise col-md-10">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label class="col-form-label"> </label>
+                        <div class="icon-form">
+                            <button type="button" id="exportExcel" class="btn btn-primary">
+                                <i class="ti ti-file-type-xls text-success me-1"></i>Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <div class="mb-3">
                         <label class="col-form-label">Start Date </label>
                         <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                            <input hidden type="text" name="city_id" value="{{ $city_id }}" id="city_id">
                             <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
                                 class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="mb-3">
                         <label class="col-form-label">End Date </label>
                         <div class="icon-form">
@@ -32,7 +42,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-3">
                     <div class="main-catgeory">
                         <label class="col-form-label"> Main Category </label>
@@ -44,7 +53,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="col-md-3">
                     <div class="individual-product">
                         <label class="col-form-label"> Individual Product </label>
@@ -68,7 +76,7 @@
                     <tr>
                         <th scope="col">Sr no</th>
                         <th scope="col">Order No</th>
-                        <th scope="col">Distributor Name</th>
+                        <th scope="col">Firm Name</th>
                         <th scope="col">Sales Person</th>
                         <th scope="col">Product & Quantity</th>
                         <th scope="col">Date</th>
@@ -101,6 +109,24 @@
 @endsection
 @section('script')
 <script>
+    /*** Export Excel ****/
+    $('#exportExcel').on('click', function() {
+        var city_id = $('#city_id').val();
+
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        var product_id = $('select[name="product_id"]').val();
+        var category_id = $('select[name="category_id"]').val();
+
+        var url = "{{ route('area_wise_sales.export') }}?city_id=" + city_id +
+            "&startDate=" + startDate +
+            "&endDate=" + endDate +
+            "&product_id=" + product_id +
+            "&category_id=" + category_id;
+        window.location = url;
+    });
+
+
     var area_wise_show = $('#area_wise_show').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering

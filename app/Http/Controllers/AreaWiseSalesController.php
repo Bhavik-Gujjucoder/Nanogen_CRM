@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AreaWiseSalesExport;
 
 class AreaWiseSalesController extends Controller
 {
@@ -57,11 +59,11 @@ class AreaWiseSalesController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-                  ->editColumn('amount', function ($row) {
-                     if ($row->amount) {
+                ->editColumn('amount', function ($row) {
+                    if ($row->amount) {
                         return IndianNumberFormat($row->amount);
                     }
-                    return '-'; 
+                    return '-';
                 })
                 ->filterColumn('city_name', function ($query, $keyword) {
                     $query->where('city_name', 'like', "%$keyword%");
@@ -88,7 +90,7 @@ class AreaWiseSalesController extends Controller
             $q->where('city_id', $city_id);
         });
         $data['city_wise_total_sales'] = (clone $city_wise_total_sales)->sum('grand_total');
-        
+
         if ($request->ajax()) {
             /* $data = OrderManagement::with('sales_person_detail')
                 ->whereHas('sales_person_detail', function($q) use ($city_id) {
@@ -131,7 +133,7 @@ class AreaWiseSalesController extends Controller
                 ->editColumn('dd_id', function ($row) {
                     if ($row->distributors_dealers) {
                         $type = $row->distributors_dealers->user_type == 1 ? '(Distributor)' : ($row->distributors_dealers->user_type == 2 ? '(Dealer)' : '');
-                        return $row->distributors_dealers->applicant_name . ' ' . $type;
+                        return $row->distributors_dealers->firm_shop_name . ' ' . $type;
                     }
                     return '-';
                 })
@@ -143,7 +145,7 @@ class AreaWiseSalesController extends Controller
                 })
                 ->addColumn('product_qty', function ($row) {
                     return $row->products->map(function ($orderProduct) {
-                        return '⮞ '. $orderProduct->product->product_name . ' (' . $orderProduct->qty . ')';
+                        return '⮞ ' . $orderProduct->product->product_name . ' (' . $orderProduct->qty . ') Unit-' . $orderProduct->variation_option->unit;
                     })->implode('<br> ');
                 })
                 ->editColumn('order_date', function ($row) {
@@ -153,10 +155,10 @@ class AreaWiseSalesController extends Controller
                     return $row->statusBadge();
                 })
                 ->editColumn('grand_total', function ($row) {
-                     if ($row->grand_total) {
+                    if ($row->grand_total) {
                         return IndianNumberFormat($row->grand_total);
                     }
-                    return '-'; 
+                    return '-';
                 })
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributors_dealers', function ($q) use ($keyword) {
@@ -189,16 +191,43 @@ class AreaWiseSalesController extends Controller
     {
         try {
             $data['order'] = OrderManagement::findOrFail($id);
-           
+
             $html = view('admin.area_wise_sales.order_show', $data)->render(); // Assuming your modal HTML is in order.modal view.
-    
+
             return response()->json([
                 'html' => $html,  // Return the modal HTML as a string
             ]);
         } catch (\Throwable $th) {
             dd($th);
-            return response()->json(['error' => 'Something went wrong!'], 500); 
+            return response()->json(['error' => 'Something went wrong!'], 500);
             // return redirect()->back()->with('error', 'Something is wrong!!');
         }
+    }
+
+
+    public function export(Request $request)
+    {
+        $query =  OrderManagement::with(['distributors_dealers', 'products.product.category'])
+            ->whereHas('distributors_dealers', function ($q) use ($request) {
+                $q->where('city_id', $request->city_id);
+            })
+            ->when($request->product_id, function ($query) use ($request) {
+                $query->whereHas('products.product', function ($q) use ($request) {
+                    $q->where('id', $request->product_id);
+                });
+            })
+            ->when($request->category_id, function ($query) use ($request) {
+                $query->whereHas('products.product.category', function ($q) use ($request) {
+                    $q->where('id', $request->category_id);
+                });
+            })
+            ->when($request->start_date, function ($query) use ($request) {
+                $query->whereDate('order_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+            })
+            ->when($request->end_date, function ($query) use ($request) {
+                $query->whereDate('order_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+            });
+        $data = $query->get();
+        return Excel::download(new AreaWiseSalesExport($data), 'area_wise_sales.xlsx');
     }
 }

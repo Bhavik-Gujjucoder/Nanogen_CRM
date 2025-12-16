@@ -9,22 +9,22 @@
         <form action="{{ route('order_management.store') }}" id="orderForm" method="POST">
             @csrf
             <div class="row mb-4 order-form">
-
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order ID</label>
                     <input type="text" name="unique_order_id" value="{{ $unique_order_id }}" class="form-control"
                         readonly>
                 </div>
-
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
+                    <label class="col-form-label">Firm Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">
                         <option value="">Select</option>
                         @if ($distributor_dealers)
                             @foreach ($distributor_dealers as $dd)
                                 <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }}
-                                    data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}">
-                                    {{ $dd->applicant_name }}
+                                    data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}"
+                                    data-gst_no="{{ $dd->gstin }}" data-address="{{ $dd->firm_shop_address }}"
+                                    data-salesperson_id="{{ $dd->sales_person_id }}">
+                                    {{ $dd->firm_shop_name }}
                                     {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
                                 </option>
                             @endforeach
@@ -41,21 +41,19 @@
                             class="form-control" placeholder="Order Date">
                     </div>
                 </div>
-
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Phone <span class="text-danger">*</span></label>
                     <input type="text" name="mobile_no" value="{{ old('mobile_no') }}" class="form-control"
                         placeholder="Phone" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);"
                         readonly>
                 </div>
-
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
                     @if (auth()->user()->hasRole('sales'))
                         <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
                         <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
                     @else
-                        <select name="salesman_id" class="form-control form-select search-dropdown">
+                        <select name="salesman_id" class="form-control form-select search-dropdown" id="salesmanId">
                             <option value="">Select</option>
                             @if ($salesmans)
                                 @foreach ($salesmans as $s)
@@ -84,11 +82,11 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">GST No. <span class="text-danger">*</span></label>
                     <input type="text" name="gst_no" value="{{ old('gst_no') }}" class="form-control"
-                        placeholder="GST No" maxlength="255">
+                        placeholder="GST No" maxlength="255" readonly>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Address <span class="text-danger">*</span></label>
-                    <textarea class="form-control" name="address" placeholder="Address">{{ old('address') }}</textarea>
+                    <textarea class="form-control" name="address" placeholder="Address" readonly>{{ old('address') }}</textarea>
                 </div>
             </div>
             <input type="hidden" name="dummy" id="dummyValidationField" />
@@ -190,9 +188,19 @@
     /*** party name select and phone number auto fillable ***/
     $(function() {
         $('[name="dd_id"]').change(function() {
-            $('[name="mobile_no"]').val($(this).find('option:selected').data('mobile_no') || '');
+            let selected = $(this).find('option:selected');
+            // let salesPersonId = selected.data('salesPersonId');
+
+            $('[name="mobile_no"]').val(selected.data('mobile_no') || '');
+            $('[name="gst_no"]').val(selected.data('gst_no') || '');
+            $('[name="address"]').val(selected.data('address') || '');
+            console.log(selected.data('salesperson_id'));
+            var salsmen_id = selected.data('salesperson_id');
+            $('#salesmanId').val(salsmen_id).trigger('change');
+            // $('#salesmanId').val(selected.data('salesperson_id')).select2().trigger('change');
         });
     });
+
 
     /*** select option search functionality ***/
     $(document).ready(function() {
@@ -287,7 +295,7 @@
                 }
             },
             messages: {
-                dd_id: "Please select party name",
+                dd_id: "Please select firm name",
                 order_date: "Please enter a valid order date",
                 mobile_no: {
                     required: "Please enter mobile number",
@@ -320,11 +328,9 @@
                 }
             }
         });
-
     });
     /*** END ***/
 </script>
-
 <script>
     /*** Add product ***/
     function addpropRow() {
@@ -495,7 +501,7 @@
             let price = parseFloat($(this).val()) || 0;
             let qty = parseFloat($(this).closest('.field-group').find('input[name="qty[]"]').val()) || 0;
             let gst = parseFloat($(this).closest('.field-group').find('input[name="gst[]"]').val()) || 0;
-            let with_gst = price * (gst/100);
+            let with_gst = price * (gst / 100);
             price = price + with_gst;
             $(this).closest('.field-group').find('input[name="total[]"]').val((price * qty).toFixed(2));
         });
@@ -525,62 +531,62 @@
 {{-- old validation --}}
 <script>
     // $(document).on('change', 'selcet[name="packing_size_id[]"]', function() {
-        //     let product_id = $(this).closest('.field-group').find('select[name="product_id[]"]').val();
-        //     let selectedVariationOptionID = $(this).val();
-        //     let priceField = $(this).closest('.field-group').find('[name="price[]"]');
-        //     let user_type = $('select[name="dd_id"] option:selected').data('user_type'); //attr('data-user_type') 
+    //     let product_id = $(this).closest('.field-group').find('select[name="product_id[]"]').val();
+    //     let selectedVariationOptionID = $(this).val();
+    //     let priceField = $(this).closest('.field-group').find('[name="price[]"]');
+    //     let user_type = $('select[name="dd_id"] option:selected').data('user_type'); //attr('data-user_type') 
 
-        //     if (selectedVariationOptionID) {
-        //         $.ajax({
-        //             url: "{{ route('product.variation.price.get') }}",
-        //             type: "POST",
-        //             data: {
-        //                 variation_option_id: selectedVariationOptionID,
-        //                 product_id: product_id,
-        //                 _token: '{{ csrf_token() }}'
-        //             },
-        //             success: function(response) {
-        //                 if (response.success) {
-        //                     if (user_type == 1) { //distibutor price
-        //                         priceField.val(response.product.distributor_price);
-        //                     } else { //dealer price
-        //                         priceField.val(response.product.dealer_price);
-        //                     }
-        //                 }
-        //             },
-        //             error: function(xhr) {
-        //                 console.log(xhr.responseText);
-        //             }
-        //         });
-        //     }
-        // });
-        // $('body').on('input', '.qty-field', function() {
-        //     let group = $(this).closest('.field-group');
-        //     let price = +group.find('.price-field').val() || 0;
-        //     let qty = +group.find('.qty-field').val() || 0;
-        //     group.find('[name="total[]"]').val((price * qty).toFixed(0));
-        //     calculateGrandTotal(); // Call to update grand total
-        // });
-        // function calculateGrandTotal() {
-        //     let all_total = 0;
-        //     let gst = parseFloat('{{ getSetting('gst') }}') || 0;
-        //     $('[name="total[]"]').each(function() {
-        //         let val = parseFloat($(this).val()) || 0;
-        //         all_total += val;
-        //     });
+    //     if (selectedVariationOptionID) {
+    //         $.ajax({
+    //             url: "{{ route('product.variation.price.get') }}",
+    //             type: "POST",
+    //             data: {
+    //                 variation_option_id: selectedVariationOptionID,
+    //                 product_id: product_id,
+    //                 _token: '{{ csrf_token() }}'
+    //             },
+    //             success: function(response) {
+    //                 if (response.success) {
+    //                     if (user_type == 1) { //distibutor price
+    //                         priceField.val(response.product.distributor_price);
+    //                     } else { //dealer price
+    //                         priceField.val(response.product.dealer_price);
+    //                     }
+    //                 }
+    //             },
+    //             error: function(xhr) {
+    //                 console.log(xhr.responseText);
+    //             }
+    //         });
+    //     }
+    // });
+    // $('body').on('input', '.qty-field', function() {
+    //     let group = $(this).closest('.field-group');
+    //     let price = +group.find('.price-field').val() || 0;
+    //     let qty = +group.find('.qty-field').val() || 0;
+    //     group.find('[name="total[]"]').val((price * qty).toFixed(0));
+    //     calculateGrandTotal(); // Call to update grand total
+    // });
+    // function calculateGrandTotal() {
+    //     let all_total = 0;
+    //     let gst = parseFloat('{{ getSetting('gst') }}') || 0;
+    //     $('[name="total[]"]').each(function() {
+    //         let val = parseFloat($(this).val()) || 0;
+    //         all_total += val;
+    //     });
 
 
-        //     // Example: show total in an element with id="grandTotal"
-        //     $('#all_total').text('Total : ' + all_total.toFixed(2));
+    //     // Example: show total in an element with id="grandTotal"
+    //     $('#all_total').text('Total : ' + all_total.toFixed(2));
 
-        //     let gstAmount = (all_total * gst) / 100;
-        //     let grandTotal = all_total + gstAmount;
-        //     $('#gstAmount').text(gstAmount.toFixed(2));
-        //     $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
+    //     let gstAmount = (all_total * gst) / 100;
+    //     let grandTotal = all_total + gstAmount;
+    //     $('#gstAmount').text(gstAmount.toFixed(2));
+    //     $('#grand_total').text('Grand Total (Incl. GST) : ' + grandTotal.toFixed(2));
 
-        //     $('input[name="total_order_amount"]').val(all_total.toFixed(0));
-        //     $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
-        //     $('input[name="grand_total"]').val(grandTotal.toFixed(0));
+    //     $('input[name="total_order_amount"]').val(all_total.toFixed(0));
+    //     $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
+    //     $('input[name="grand_total"]').val(grandTotal.toFixed(0));
     // }
 </script>
 @endsection

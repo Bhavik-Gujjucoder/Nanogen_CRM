@@ -38,15 +38,15 @@ use App\Services\SendGridService;
 // →→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
 Auth::routes();
 // Route::get('/test-mail', function () {
-    //     try {
-    //         Mail::raw('This is a test email', function ($message) {
-    //             $message->to('dharaj.gc@gmail.com')
-    //                 ->subject('Test Email');
-    //         });
-    //         return 'Test email sent!';
-    //     } catch (\Throwable $th) {
-    //         dd($th);
-    //     }
+//     try {
+//         Mail::raw('This is a test email', function ($message) {
+//             $message->to('dharaj.gc@gmail.com')
+//                 ->subject('Test Email');
+//         });
+//         return 'Test email sent!';
+//     } catch (\Throwable $th) {
+//         dd($th);
+//     }
 // });
 
 
@@ -206,6 +206,7 @@ Route::middleware(['permission:Area Wise Sales'])->group(function () {
     Route::resource('area_wise_sales', AreaWiseSalesController::class)->except(['show']);
     Route::get('area_wise_sales/order_show/{id}', [AreaWiseSalesController::class, 'order_show'])->name('area_wise_sales.order_show');
     Route::get('area_wise_sales/show/{city_id}', [AreaWiseSalesController::class, 'show'])->name('area_wise_sales.show');
+    Route::get('/area_wise_sales/export/{city_id?}', [AreaWiseSalesController::class, 'export'])->name('area_wise_sales.export');
 });
 
 /* Distributors & Dealers */
@@ -230,6 +231,7 @@ Route::middleware(['permission:Order Management'])->group(function () {
 Route::middleware(['permission:Targets'])->group(function () {
     Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
     Route::get('target-quarterly', [TargetController::class, 'target_quarterly'])->name('target.quarterly');
+    Route::get('/target/export/{quarterly?}', [TargetController::class, 'export'])->name('target.export');
     Route::resource('target', TargetController::class);
 });
 

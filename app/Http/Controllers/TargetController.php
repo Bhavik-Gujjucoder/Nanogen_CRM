@@ -16,6 +16,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\OrderManagementProduct;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TargetExport;
 
 
 class TargetController extends Controller
@@ -28,6 +30,26 @@ class TargetController extends Controller
         $data['page_title'] = 'Target';
         if ($request->ajax()) {
             $records = Target::query();
+
+            $quarterly = [
+                1 => [Carbon::create(date('Y'), 1, 1), Carbon::create(date('Y'), 3, 31)],
+                2 => [Carbon::create(date('Y'), 4, 1), Carbon::create(date('Y'), 6, 30)],
+                3 => [Carbon::create(date('Y'), 7, 1), Carbon::create(date('Y'), 9, 30)],
+                4 => [Carbon::create(date('Y'), 10, 1), Carbon::create(date('Y'), 12, 31)],
+            ];
+
+            /* Filter by Quarter */
+            $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
+
+                if (isset($quarterly[$request->quarterly])) {
+                    [$startDate, $endDate] = $quarterly[$request->quarterly];
+
+                    $query->whereBetween('created_at', [
+                        $startDate->startOfDay(),
+                        $endDate->endOfDay()
+                    ]);
+                }
+            });
 
             // Apply salesman filter if user has sales role
             if (auth()->user()->hasRole('sales')) {
@@ -43,8 +65,6 @@ class TargetController extends Controller
                 $sub->whereBetween('start_date', [$startDate, $endDate]);
                 // ->orWhereBetween('end_date', [$startDate, $endDate]); 
             });
-
-
 
             return DataTables::of($records)
                 // return DataTables::of(collect($records)) // ✅ wrap in collect()
@@ -112,6 +132,9 @@ class TargetController extends Controller
                 // ->editColumn('end_date', function ($row) {
                 //     return $row->end_date->format('d M Y');
                 // })
+                ->editColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d M Y');
+                })
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {
                         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
@@ -265,16 +288,13 @@ class TargetController extends Controller
                     }
                     return '-';
                 })
-
-                ->addColumn('quarterly', function ($row) { // 🟨 Add this new column
+                ->addColumn('quarterly', function ($row) { // Add this new column
                     return  $row->target_quarterly->map(function ($q) {
                         return '<span class="badge bg-gray me-1 mb-1">
                                     Quarterly ' . e($q->quarterly) . ' ⮚ ' . e($q->quarterly_percentage) . '% 
                                 </span>';
                     })->implode('<br>');
                 })
-
-
                 /* target value */
                 // ->editColumn('target_value', function ($row) {
                 //     if ($row->target_value) {
@@ -452,8 +472,6 @@ class TargetController extends Controller
         return view('admin.target.edit', $data);
     }
 
-
-
     /**
      * Update the specified resource in storage.
      */
@@ -557,5 +575,31 @@ class TargetController extends Controller
             return response()->json(['message' => 'Selected Target deleted successfully!']);
         }
         return response()->json(['message' => 'No records selected!'], 400);
+    }
+
+    public function export(Request $request, $quarterly = null)
+    {
+        $records = Target::query();
+        //  dd($records->get());
+        $quarterly = [
+            1 => [Carbon::create(date('Y'), 1, 1), Carbon::create(date('Y'), 3, 31)],
+            2 => [Carbon::create(date('Y'), 4, 1), Carbon::create(date('Y'), 6, 30)],
+            3 => [Carbon::create(date('Y'), 7, 1), Carbon::create(date('Y'), 9, 30)],
+            4 => [Carbon::create(date('Y'), 10, 1), Carbon::create(date('Y'), 12, 31)],
+        ];
+
+        /* Filter by Quarter */
+        $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
+            if (isset($quarterly[$request->quarterly])) {
+                [$startDate, $endDate] = $quarterly[$request->quarterly];
+                $query->whereBetween('created_at', [
+                    $startDate->startOfDay(),
+                    $endDate->endOfDay()
+                ]);
+            }
+        });
+        $data = $records->get();
+
+        return Excel::download(new TargetExport($data), 'Target_quarter-' . $request->quarterly . '.xlsx');
     }
 }

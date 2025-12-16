@@ -28,8 +28,10 @@
                             @foreach ($distributor_dealers as $dd)
                                 <option value="{{ $dd->id }}"
                                     {{ old('dd_id', $order->dd_id) == $dd->id ? 'selected' : '' }}
-                                    data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}">
-                                    {{ $dd->applicant_name }}
+                                    data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}"
+                                    data-gst_no="{{ $dd->gstin }}" data-address="{{ $dd->firm_shop_address }}"
+                                    data-salesperson_id="{{ $dd->sales_person_id }}">
+                                    {{ $dd->firm_shop_name }}
                                     {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
                                 </option>
                             @endforeach
@@ -63,7 +65,7 @@
                             class="form-control" readonly>
                         <input type="hidden" name="salesman_id" value="{{ $order->salesman_id }}">
                     @else
-                        <select name="salesman_id" class="form-control form-select search-dropdown">
+                        <select name="salesman_id" class="form-control form-select search-dropdown" id="salesmanId">
                             <option value="">Select Salesman</option>
                             @if ($salesmans)
                                 @foreach ($salesmans as $s)
@@ -134,27 +136,29 @@
                     <input type="file" class="form-control" name="lr_upload" accept="image/*">
                     @if (!empty($order->lr_upload))
                         <small class="text-muted">Current: <a
-                                href="{{ asset('storage/lr_uploads/' . $order->lr_upload) }}" target="_blank">View LR</a></small>
+                                href="{{ asset('storage/lr_uploads/' . $order->lr_upload) }}" target="_blank">View
+                                LR</a></small>
                         <input type="hidden" name="existing_lr_upload" value="{{ $order->lr_upload }}">
                     @endif
                 </div>
 
                 <div class="col-md-12 mb-3">
-                     <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Invoice Upload <span class="text-danger">*</span></label>
-                    <input type="file" class="form-control" name="invoice_upload">
+                    <div class="col-md-4 mb-3">
+                        <label class="col-form-label">Invoice Upload <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" name="invoice_upload">
 
-                    @if (!empty($order->invoice_upload))
-                        <small class="text-muted">
-                            Current:
-                            <a href="{{ asset('storage/invoice_uploads/' . $order->invoice_upload) }}"
-                                target="_blank">
-                                View Invoice
-                            </a>
-                        </small>
-                        <input type="hidden" name="existing_invoice_upload" value="{{ $order->invoice_upload }}">
-                    @endif
-                     </div>
+                        @if (!empty($order->invoice_upload))
+                            <small class="text-muted">
+                                Current:
+                                <a href="{{ asset('storage/invoice_uploads/' . $order->invoice_upload) }}"
+                                    target="_blank">
+                                    View Invoice
+                                </a>
+                            </small>
+                            <input type="hidden" name="existing_invoice_upload"
+                                value="{{ $order->invoice_upload }}">
+                        @endif
+                    </div>
                 </div>
 
                 {{-- {{dd(asset('lr_uploads'))}} --}}
@@ -359,7 +363,14 @@
     /*** party name select and phone number auto fillable ***/
     $(function() {
         $('[name="dd_id"]').change(function() {
-            $('[name="mobile_no"]').val($(this).find('option:selected').data('mobile_no') || '');
+            // $('[name="mobile_no"]').val($(this).find('option:selected').data('mobile_no') || '');
+            let selected = $(this).find('option:selected');
+            $('[name="mobile_no"]').val(selected.data('mobile_no') || '');
+            $('[name="gst_no"]').val(selected.data('gst_no') || '');
+            $('[name="address"]').val(selected.data('address') || '');
+            console.log(selected.data('salesperson_id'));
+            var salsmen_id = selected.data('salesperson_id');
+            $('#salesmanId').val(salsmen_id).trigger('change');
         });
     });
 

@@ -40,7 +40,7 @@
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Order ID</th>
-                        <th scope="col">Party Name</th>
+                        <th scope="col">Firm Name</th>
                         <th scope="col">City</th>
                         <th scope="col">Order Date</th>
                         <th scope="col">Contact Number</th>
@@ -245,7 +245,7 @@
                 if (res.success == true) {
                     $('#order_management').DataTable().ajax.reload(null, false);
                     show_success('Order status updated successfully!');
-                }else {
+                } else {
                     show_error(res.error);
                 }
             },
@@ -351,5 +351,50 @@
             }
         });
     }
+
+
+    /*** Order Popup Model ***/
+    $(document).on('click', '.open-popup-model', function(e) {
+        e.preventDefault();
+        // var url = $(this).attr('href'); // URL of the order detail route
+
+        let order_id = $(this).data('id'); // Data ID passed from the anchor tag
+        let url = order_id ? '{{ route('area_wise_sales.order_show', ':id') }}'.replace(':id', order_id) : "";
+
+        // Show SweetAlert2 loading spinner while fetching the data
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we load the order details.',
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading(); // Show loading spinner
+            }
+        });
+
+        // Fetch the order data via AJAX
+        $.ajax({
+            url: url, // Use the URL from the 'href' attribute
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    Swal.fire({
+                        title: 'Order Details',
+                        html: response.html,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        width: '80%',
+                        heightAuto: true
+                    });
+                } else {
+                    console.error('No HTML returned:', response);
+                    Swal.fire('Error', 'No content received from server.', 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX error:', xhr.responseText);
+                Swal.fire('Error', 'Could not load order details.', 'error');
+            }
+        });
+    });
 </script>
 @endsection

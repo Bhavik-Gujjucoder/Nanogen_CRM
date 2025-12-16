@@ -41,7 +41,7 @@
                                             class="create-deitr" {{ request('dealer') == 1 ? '' : 'checked' }} />
                                         <label for="distributor-radio">Distributor</label>
                                     </div>
-                                {{-- @endcan
+                                    {{-- @endcan
                                 @can('Dealers') --}}
                                     <div class="radio-group-tab">
                                         <input type="radio" name="user_type" value="2" id="dealers-radio"
@@ -64,13 +64,12 @@
 
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Sales Person <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Sales Person <span class="text-danger">*</span></label>
                                 <select class="form-select" name="sales_person_id">
                                     <option value="">Select sales person</option>
                                     @foreach ($sales_persons as $s)
-                                        <option value="{{ $s->id }}"
-                                            {{ old('sales_person_id') == $s->id ? 'selected' : '' }}>
+                                        <option value="{{ $s->user_id }}"
+                                            {{ old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
                                             {{ $s->first_name . ' ' . $s->last_name }}
                                         </option>
                                     @endforeach
@@ -126,8 +125,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Pan Card No <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Pan Card No <span class="text-danger">*</span></label>
                                 <input type="text" name="pancard" value="{{ old('pancard') }}"
                                     class="form-control" placeholder="Pan Card No"
                                     oninput="this.value = this.value.toUpperCase()" maxlength="10">
@@ -353,8 +351,9 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label d-flex align-items-center">
-                                        <input type="checkbox" name="fertilizer_license_check" id="fertilizer_license_check" value="1" class="me-2">
-                                        Fertilizer License No 
+                                        <input type="checkbox" name="fertilizer_license_check"
+                                            id="fertilizer_license_check" value="1" class="me-2">
+                                        Fertilizer License No
                                     </label>
 
                                     <div id="fertilizer_input_wrapper" style="display: none;">
@@ -381,9 +380,9 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="col-form-label d-flex align-items-center">
-                                        <input type="checkbox" name="pesticide_license_check" id="pesticide_license_check" value="1"
-                                            class="me-2">
-                                        Pesticide License No 
+                                        <input type="checkbox" name="pesticide_license_check"
+                                            id="pesticide_license_check" value="1" class="me-2">
+                                        Pesticide License No
                                     </label>
 
                                     <div id="pesticide_input_wrapper" style="display: none;">

@@ -8,33 +8,32 @@
     <div class="card-header">
         <!-- Search -->
         <div class="row align-items-center">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="icon-form mb-3 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
                     <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-md-3">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="col-form-label flex-shrink-0">Quarterly</label>
+                    <select class="form-select me-2 selectQuarter" name="quarterly" id="quarterly">
+                        <option value="">Select Quarter</option>
+                        <option value="1">Quarterly 1</option>
+                        <option value="2">Quarterly 2</option>
+                        <option value="3">Quarterly 3</option>
+                        <option value="4">Quarterly 4</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-6">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-                    {{-- <div class="dropdown me-2">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown"><i
-                                class="ti ti-package-export me-2"></i>Export</a>
-                        <div class="dropdown-menu  dropdown-menu-end">
-                            <ul>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="ti ti-file-type-pdf text-danger me-1"></i>Export as PDF
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="ti ti-file-type-xls text-green me-1"></i>Export as Excel
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> --}}
-                    <a href="{{ route('target.create') }}" class="btn btn-primary"><i
+                    <div class="me-2">
+                        <button type="button" id="exportTargetExcel" class="btn btn-primary">
+                            <i class="ti ti-file-type-xls text-success me-1"></i>Export
+                        </button>
+                    </div>
+                    <a href="{{ route('target.create') }}" class="btn btn-primary me-2"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add New Target</a>
                 </div>
             </div>
@@ -61,6 +60,7 @@
                         <th scope="col">Sales Person Name</th>
                         <th scope="col">Traget Value</th>
                         <th scope="col">Region</th>
+                        <th scope="col">Created Date</th>
                         {{-- <th scope="col">Start Date</th>
                         <th scope="col">End Date</th> --}}
                         {{-- <th scope="col">Target Result</th> --}}
@@ -77,6 +77,17 @@
 @endsection
 @section('script')
 <script>
+    $('#quarterly').on('change', function() {
+        target_show.draw();
+    });
+
+     /*** Export Excel ****/
+    $('#exportTargetExcel').on('click', function() {
+        var quarterly = $('#quarterly').val();
+        var url = "{{ route('target.export') }}?quarterly=" + quarterly;
+        window.location = url;
+    });
+
     /***** DataTable *****/
     var target_show = $('#target_table').DataTable({
         "pageLength": 10,
@@ -88,7 +99,13 @@
         order: [
             [1, 'desc']
         ],
-        ajax: "{{ route('target.index') }}",
+        // ajax: "{{ route('target.index') }}",
+         ajax: {
+            url: "{{ route('target.index') }}",
+            data: function(d) {
+                d.quarterly = $('#quarterly').val();
+            }
+        },
         columns: [{
                 data: 'checkbox',
                 name: 'checkbox',
@@ -140,6 +157,11 @@
             //     searchable: true
             // },
             // { data: 'target_result', name: 'target_result' },
+            {
+                data: 'created_at',
+                name: 'created_at',
+                searchable: true
+            },
             {
                 data: 'action',
                 name: 'action',
