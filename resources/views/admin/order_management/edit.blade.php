@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">Party Name <span class="text-danger">*</span></label>
+                    <label class="col-form-label">Firm Name <span class="text-danger">*</span></label>
                     <select name="dd_id" class="form-control form-select search-dropdown">
                         <option value="">Select Party</option>
                         @if ($distributor_dealers)
