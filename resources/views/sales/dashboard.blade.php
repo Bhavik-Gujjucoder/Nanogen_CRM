@@ -141,7 +141,7 @@
             <div class="col-xxl-6 col-xl-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                        <h5 class="mb-2">Other Recent Orders</h5>
+                        <h5 class="mb-2">Team Recent Orders</h5>
                         <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a>
                     </div>
                     <div class="card-body pb-2">
