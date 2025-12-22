@@ -33,8 +33,23 @@
                     <div class="mb-3">
                         <label class="col-form-label">Sales Person Name <span class="text-danger">*</span></label>
                         @if (auth()->user()->hasRole('sales'))
-                            <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
-                            <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
+                            {{-- <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
+                            <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}"> --}}
+
+
+                            <select name="salesman_id" class="form-control form-select search-dropdown">
+                                <option value="">Select</option>
+                                @if ($reportingUserId->isNotEmpty())
+                                    @foreach ($reportingUserId as $s)
+                                        <option value="{{ $s->user_id }}"
+                                            {{ old('salesman_id', $target->salesman_id) == $s->user_id ? 'selected' : '' }}>
+                                            {{ $s->first_name . ' ' . $s->last_name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
+                            </select>
                         @else
                             <select name="salesman_id" class="form-control form-select search-dropdown">
                                 <option value="">Select</option>

@@ -31,16 +31,36 @@ class OrderManagementController extends Controller
         // $role->givePermissionTo('manage orders');
 
         $data['page_title'] = 'Order Management';
+        $sales_user_ids = getSalesUserIds();
+        $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+
+        if (auth()->user()->hasRole('sales')) {
+            $ids = $sales_user_ids;
+        } elseif (auth()->user()->hasRole('reporting manager')) {
+            $ids = $report_manager_sales_user_ids;
+        } else {
+            $ids = []; // admin / others
+        }
+
+        $data['sales_persons'] = !empty($ids)
+            ? SalesPersonDetail::whereIn('user_id', $ids)->get()
+            : SalesPersonDetail::get();
+
         if ($request->ajax()) {
             $records = OrderManagement::query();
 
-            // Apply salesman filter if user has sales role
-            if (auth()->user()->hasRole('sales')) {
-                $records->where('salesman_id', auth()->id());
+            /*** Apply salesman/reporting manager login filter ***/
+            if (!empty($ids)) {
+                $records->whereIn('salesman_id', $ids);
             }
+            /* END */
 
             $records->when($request->salemn_id, function ($query) use ($request) {
                 $query->where('salesman_id', $request->salemn_id);
+            });
+
+            $records->when($request->sales_person_id, function ($query) use ($request) {
+                $query->where('salesman_id', $request->sales_person_id);
             });
 
             $records->when($request->start_date && $request->end_date, function ($sub) use ($request) {
@@ -73,7 +93,6 @@ class OrderManagementController extends Controller
                     // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
                     $action_btn .= $edit_btn;
                     $action_btn .= $delete_btn;
-
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('unique_order_id', function ($row) {
@@ -86,7 +105,6 @@ class OrderManagementController extends Controller
                     // return $row->order_date->format('d-m-Y');
                     return Carbon::parse($row->order_date)->format('d M Y');
                 })
-
                 ->editColumn('dd_id', function ($row) {
                     if ($row->distributors_dealers) {
                         $type = $row->distributors_dealers->user_type == 1 ? '(Distributor)' : ($row->distributors_dealers->user_type == 2 ? '(Dealer)' : '');
@@ -147,40 +165,40 @@ class OrderManagementController extends Controller
 
                     return $row->statusBadge();
                 })
-                // ->addColumn('order_status', function ($row) {
-                //     $order_status = '';
+                /* ->addColumn('order_status', function ($row) {
+                    $order_status = '';
 
-                //     if ($row->status < 1) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
-                //                             <span class="badge bg-warning">Pending</span>
-                //                           </a>';
-                //     }
-                //     if ($row->status < 2) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
-                //                             <span class="badge bg-warning">Processing</span>
-                //                           </a>';
-                //     }
-                //     if ($row->status < 3) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
-                //                             <span class="badge bg-info">Shipping</span>
-                //                           </a>';
-                //     }
-                //     if ($row->status < 4) {
-                //         $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
-                //                             <span class="badge bg-success">Delivered</span>
-                //                           </a>';
-                //     }
+                    if ($row->status < 1) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
+                                            <span class="badge bg-warning">Pending</span>
+                                          </a>';
+                    }
+                    if ($row->status < 2) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
+                                            <span class="badge bg-warning">Processing</span>
+                                          </a>';
+                    }
+                    if ($row->status < 3) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="3">
+                                            <span class="badge bg-info">Shipping</span>
+                                          </a>';
+                    }
+                    if ($row->status < 4) {
+                        $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="4">
+                                            <span class="badge bg-success">Delivered</span>
+                                          </a>';
+                    }
 
-                //     if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
-                //         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
-                //                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
-                //                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
-                //                       </div>';
-                //         return $action_btn;
-                //     }
+                    if ($row->status < 4 && Auth::user()->hasAnyRole(['admin', 'staff'])) { 
+                        $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
+                                        <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
+                                      </div>';
+                        return $action_btn;
+                    }
 
-                //     return $row->statusBadge();
-                // })
+                    return $row->statusBadge();
+                }) */
                 ->filterColumn('order_status', function ($query, $keyword) {
                     // $statuses = ['pending' => 1, 'processing' => 2, 'shipping' => 3, 'delivered' => 4, 'inactive' => 0];
                     $statuses = ['pending' => 1, 'complete' => 2, 'inactive' => 0];
@@ -278,21 +296,29 @@ class OrderManagementController extends Controller
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
 
 
-        if (auth()->user()->hasRole('sales')) {
-            $data['salesmans'] = SalesPersonDetail::where('user_id', auth()->id())->where('deleted_at', NULL)->first();
+        $sales_user_ids = getSalesUserIds();
+        $report_manager_sales_user_ids = getReportManagerSalesPersonId();
 
-            // if ($data['salesmans'] && $data['salesmans']->city_ids) {
-            $city_ids = explode(',', $data['salesmans']->city_ids);
-            // dd($city_ids);
+        if (auth()->user()->hasRole('sales')) {
+            $ids = $sales_user_ids;
+        } elseif (auth()->user()->hasRole('reporting manager')) {
+            $ids = $report_manager_sales_user_ids;
+        } else {
+            $ids = []; // admin / others
+        }
+
+        if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
+
+            $data['salesmans'] = SalesPersonDetail::whereIn('user_id', $ids)->where('deleted_at', NULL)->get();
+            // $city_ids = explode(',', $data['salesmans']->city_ids);
+            $city_ids = explode(
+                ',',
+                $data['salesmans']->pluck('city_ids')->implode(',')
+            );
             $data['distributor_dealers'] = DistributorsDealers::whereIn('city_id', $city_ids)->get();
-            // } 
-            // else {
-            //     $data['distributor_dealers'] = DistributorsDealers::get();
-            // }
         } else {
             $data['distributor_dealers'] = DistributorsDealers::get();
         }
-        // dd($data['distributor_dealers']);
 
         $latest_order_id = OrderManagement::withTrashed()->max('id');
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
@@ -401,17 +427,23 @@ class OrderManagementController extends Controller
             'salesmans' => SalesPersonDetail::where('deleted_at', NULL)->get(),
         ];
 
-        if (auth()->user()->hasRole('sales')) {
-            $data['salesmans'] = SalesPersonDetail::where('user_id', auth()->id())->where('deleted_at', NULL)->first();
+        $sales_user_ids = getSalesUserIds();
+        $report_manager_sales_user_ids = getReportManagerSalesPersonId();
 
-            // if ($data['salesmans'] && $data['salesmans']->city_ids) {
-            $city_ids = explode(',', $data['salesmans']->city_ids);
-            // dd($city_ids);
+        if (auth()->user()->hasRole('sales')) {
+            $ids = $sales_user_ids;
+        } elseif (auth()->user()->hasRole('reporting manager')) {
+            $ids = $report_manager_sales_user_ids;
+        } else {
+            $ids = []; // admin / others
+        }
+
+        if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
+
+            $data['salesmans'] = SalesPersonDetail::whereIn('user_id', $ids)->where('deleted_at', NULL)->get();
+            // $city_ids = explode(',', $data['salesmans']->city_ids);
+            $city_ids = explode(',', $data['salesmans']->pluck('city_ids')->implode(','));
             $data['distributor_dealers'] = DistributorsDealers::whereIn('city_id', $city_ids)->get();
-            // } 
-            // else {
-            //     $data['distributor_dealers'] = DistributorsDealers::get();
-            // }
         } else {
             $data['distributor_dealers'] = DistributorsDealers::get();
         }

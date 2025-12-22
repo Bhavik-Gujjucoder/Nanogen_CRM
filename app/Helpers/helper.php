@@ -3,6 +3,8 @@
 use App\Models\GeneralSetting;
 use App\Models\VariationOption;
 use App\Models\ProductVariation;
+use App\Models\SalesPersonDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 if (!function_exists('getSetting')) {
@@ -41,7 +43,8 @@ if (!function_exists('getProductVariationOptions')) {
 //     }
 // }
 if (!function_exists('IndianNumberFormat')) {
-    function IndianNumberFormat($number) {
+    function IndianNumberFormat($number)
+    {
         // Ensure it's numeric
         if (!is_numeric($number)) {
             return $number;
@@ -71,3 +74,62 @@ if (!function_exists('IndianNumberFormat')) {
     }
 }
 
+if (!function_exists('getSalesUserIdsOld')) {
+    function getSalesUserIdsOld()
+    {
+        if (!auth()->user()->hasRole('sales')) {
+            return [];
+        }
+        $login_user_id = Auth::user()->id;
+        $login_user = Auth::user();
+
+        // $reportingUserId = SalesPersonDetail::where('reporting_sales_person_id', $login_user_id)->pluck('user_id')->toArray();
+        // dd($reportingUserId);
+        $reportingUserId = optional($login_user->salesPersonDetail)->reporting_sales_person_id;
+
+        return array_filter([
+            $login_user_id,
+            $reportingUserId
+        ]);
+    }
+}
+
+
+if (!function_exists('getReportManagerSalesPersonId')) {
+    function getReportManagerSalesPersonId()
+    {
+        if (!auth()->user()->hasRole('reporting manager')) {
+            return [];
+        }
+        $login_user_id = Auth::user()->id;
+
+        $reportingUserId = SalesPersonDetail::where('reporting_manager_id', $login_user_id)->pluck('user_id')->toArray();
+        return array_unique(
+            array_merge(
+                [$login_user_id],   // self
+                $reportingUserId   // reporting sales persons who are reporting to reporting manager
+            )
+        );
+    }
+}
+
+
+if (!function_exists('getSalesUserIds')) {
+    function getSalesUserIds()
+    {
+        if (!auth()->user()->hasRole('sales')) {
+            return [];
+        }
+        $login_user_id = Auth::user()->id;
+
+        // $reportingUserId = SalesPersonDetail::where('reporting_sales_person_id', $login_user_id)->pluck('user_id')->toArray();
+        $reportingUserId = SalesPersonDetail::where('user_id', $login_user_id)->pluck('reporting_sales_person_id')->toArray();
+
+        return array_unique(
+            array_merge(
+                [$login_user_id],   // self
+                $reportingUserId   // reporting sales persons who are reporting to their higher sales person
+            )
+        );
+    }
+}

@@ -177,7 +177,7 @@ Route::middleware(['permission:Products and Catalogue'])->group(function () {
 });
 
 /* Trend Analysis */
-Route::middleware(['permission:Products and Catalogue'])->group(function () {
+Route::middleware(['permission:Trend Analysis'])->group(function () {
     Route::get('/trend_analysis/report', [TrendAnalysisController::class, 'product_report'])->name('trend_analysis.product_report');
 }); //{product_id?}
 

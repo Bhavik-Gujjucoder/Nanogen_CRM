@@ -92,34 +92,65 @@ class HomeController extends Controller
 
     public function sales_index()
     {
-        $login_user = Auth::user()->id;
-        $data['page_title']        = 'Sales Dashboard';
-        $data['total_order']       = $this->order_management->where('salesman_id', $login_user)->count();
-        $data['order_grand_total'] = $this->order_management->where('salesman_id', $login_user)->sum('grand_total');
-        $data['latest_orders']     = $this->order_management->where('salesman_id', $login_user)->latest()->take(5)->get();
-        $data['total_target']      = $this->target->where('salesman_id', $login_user)->count();
+        $login_user_id = Auth::user()->id;
+        // $login_user = Auth::user();
+        // $reportingUserId = optional(
+        //     $login_user->salesPersonDetail
+        // )->reporting_sales_person_id;
+
+        // $userIds = array_filter([
+        //     $login_user_id,
+        //     $reportingUserId
+        // ]);
+
+        $userIds = getSalesUserIds();
+        // $where = function ($q) use ($login_user_id, $reportingUserId) {
+        //     $q->where('salesman_id', $login_user_id)
+        //         ->orWhere('salesman_id', $reportingUserId);
+        // };
+        // $reportingUserId = SalesPersonDetail::where('reporting_sales_person_id', $login_user_id)->pluck('user_id')->toArray();
+        $reportingUserId = SalesPersonDetail::where('user_id', $login_user_id)->pluck('reporting_sales_person_id')->toArray();
+        // dd($reportingUserId);
+        $data['page_title']             = 'Sales Dashboard';
+        $data['total_order']            = $this->order_management->whereIN('salesman_id', $userIds)->count();
+        $data['order_grand_total']      = $this->order_management->whereIN('salesman_id', $userIds)->sum('grand_total');
+        $data['self_recent_orders']     = $this->order_management->where('salesman_id', $login_user_id)->latest()->take(5)->get();
+        $data['other_recent_orders']    = $this->order_management->where('salesman_id', $reportingUserId)->latest()->take(5)->get();
+
+        $data['total_target']      = $this->target->whereIn('salesman_id', $userIds)->count();
+
         // $data['latest_target']  = $this->target->where('salesman_id', $login_user)->latest()->take(5)->get();
-        $data['latest_target'] = $this->target
+        $data['self_latest_target'] = $this->target
             ->with(['target_quarterly' => function ($q) {
                 $q->select('id', 'target_id', 'quarterly', 'quarterly_percentage'); // only needed cols
             }])
-            ->where('salesman_id', $login_user)
+            ->where('salesman_id', $login_user_id)
             ->latest()
             ->take(5)
             ->get();
 
+        $data['other_latest_target'] = $this->target
+            ->with(['target_quarterly' => function ($q) {
+                $q->select('id', 'target_id', 'quarterly', 'quarterly_percentage'); // only needed cols
+            }])
+            ->where('salesman_id', $reportingUserId)
+            ->latest()
+            ->take(5)
+            ->get();
+        // dd($data['other_latest_target']);
 
-        $data['current_target']    = $this->target->with('target_grade')->where('salesman_id', $login_user)
+        $data['current_target']    = $this->target->with('target_grade')->where('salesman_id', $login_user_id)
             ->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->get();
 
         $cTargets = [];
         foreach ($data['current_target'] as $key => $target) {
             $grades = [];
+            dd($target->target_grade);
             foreach ($target->target_grade as $target_grade) {
                 $gradeId = $target_grade->grade_id;
 
-                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($login_user, $target) {
-                    $q->where('salesman_id', $login_user)
+                $totalAmount = OrderManagementProduct::whereHas('order', function ($q) use ($login_user_id, $target) {
+                    $q->where('salesman_id', $login_user_id)
                         ->whereBetween('order_date', [$target->start_date, $target->end_date]);
                 })
                     ->whereHas('product', function ($q) use ($gradeId) {
@@ -204,15 +235,19 @@ class HomeController extends Controller
     public function reporting_manager_index()
     {
         $login_user = Auth::user()->id;
-        // dd($login_user);
+        $reporting_users_ids = getReportManagerSalesPersonId();
+        // dd($reporting_users_ids);
+
+        // dd($reporting_users_ids);
         $data['page_title']         = 'Reporting Manager Dashboard';
         $data['total_distributor']  = $this->dealer_distributor->where('user_type', 1)->count();
         $data['total_dealer']       = $this->dealer_distributor->where('user_type', 2)->count();
-        $data['total_sales_person'] = $this->sales_person_detail->whereNull('deleted_at')->count();
+        $data['total_sales_person'] = $this->sales_person_detail->whereIn('user_id', $reporting_users_ids)->whereNull('deleted_at')->count();
         $data['total_product']      = $this->product->where('status', 1)->count();
-        $data['total_order']        = $this->order_management->count();
-        $data['order_grand_total']  = $this->order_management->sum('grand_total');
-        $data['latest_orders']      = $this->order_management->latest()->take(5)->get();
+
+        $data['total_order']        = $this->order_management->whereIn('salesman_id', $reporting_users_ids)->count();
+        $data['order_grand_total']  = $this->order_management->whereIn('salesman_id', $reporting_users_ids)->sum('grand_total');
+        $data['latest_orders']      = $this->order_management->whereIn('salesman_id', $reporting_users_ids)->latest()->take(5)->get();
         $data['latest_dealers']     = $this->dealer_distributor->where('user_type', 2)->latest()->take(5)->get();
         $data['latest_distributor'] = $this->dealer_distributor->where('user_type', 1)->latest()->take(5)->get();
         return view('reporting_manager.dashboard', $data);
@@ -225,11 +260,11 @@ class HomeController extends Controller
         // if ($user->hasrole('admin') || $user->hasrole('super admin') || $user->hasrole('staff')) {
         //     return redirect()->route('users.edit', $user->id);
         // }
-        
+
         if ($user->hasrole('sales')) {
             $sale_person_id = SalesPersonDetail::where('user_id', $user->id)->first()->id;
             return redirect()->route('sales_person.edit', $sale_person_id);
-        }else{
+        } else {
             return redirect()->route('users.edit', $user->id);
         }
     }

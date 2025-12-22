@@ -38,7 +38,19 @@ class AreaWiseSalesController extends Controller
                     DB::raw('SUM(order_management.grand_total) as amount')
                 )
                 ->when(auth()->user()->hasRole('sales'), function ($sub) use ($request) {
-                    $sub->where('order_management.salesman_id', auth()->id());
+                    // $sub->where('order_management.salesman_id', auth()->id());
+                    /*** 'Reporting Salesperson' is displayed for Salesperson login ***/
+                    $sales_user_ids = getSalesUserIds();
+                    if (!empty($sales_user_ids)) {
+                        $sub->whereIn('order_management.salesman_id', $sales_user_ids);
+                    }
+                    /* END */
+                })
+                ->when(auth()->user()->hasRole('reporting manager'), function ($sub) use ($request) {
+                    $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+                    if (!empty($report_manager_sales_user_ids)) {
+                        $sub->whereIn('order_management.salesman_id', $report_manager_sales_user_ids);
+                    }
                 })
                 ->groupBy('city_management.city_name', 'city_management.id');
             // ->get();
@@ -86,8 +98,32 @@ class AreaWiseSalesController extends Controller
         $data['products']   = Product::where('status', 1)->get();
         $data['categories'] = Category::where('status', 1)->get();
 
+        $sales_user_ids = getSalesUserIds();
+        $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+
+        if (auth()->user()->hasRole('sales')) {
+            $ids = $sales_user_ids;
+        } elseif (auth()->user()->hasRole('reporting manager')) {
+            $ids = $report_manager_sales_user_ids;
+        } else {
+            $ids = []; // admin / others
+        }
+        // $data['sales_persons'] = auth()->user()->hasRole('sales')
+        //     ? SalesPersonDetail::whereIn('user_id', $sales_user_ids)->get()
+        //     : SalesPersonDetail::get();
+
+        $data['sales_persons'] = !empty($ids)
+            ? SalesPersonDetail::whereIn('user_id', $ids)->get()
+            : SalesPersonDetail::get();
+
+
+
         $city_wise_total_sales = OrderManagement::whereHas('distributors_dealers', function ($q) use ($city_id) {
             $q->where('city_id', $city_id);
+        })->when(auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager'), function ($sub) use ($ids) {
+            if (!empty($ids)) {
+                $sub->whereIn('salesman_id', $ids);
+            }
         });
         $data['city_wise_total_sales'] = (clone $city_wise_total_sales)->sum('grand_total');
 
@@ -100,6 +136,11 @@ class AreaWiseSalesController extends Controller
             $data = OrderManagement::with('distributors_dealers')->with('products.product.category')
                 ->whereHas('distributors_dealers', function ($q) use ($city_id) {
                     $q->where('city_id', $city_id);
+                })
+
+                /* Filter by salesman */
+                ->when($request->sales_person_id, function ($query) use ($request) {
+                    $query->where('salesman_id', $request->sales_person_id);
                 })
 
                 /* Filter by start_date & end_date */
@@ -120,6 +161,19 @@ class AreaWiseSalesController extends Controller
                     $query->whereHas('products.product.category', function ($q) use ($request) {
                         $q->where('categories.id', $request->category_id);
                     });
+                })
+
+                ->when(auth()->user()->hasRole('sales'), function ($sub) use ($request) {
+                    $sales_user_ids = getSalesUserIds();
+                    if (!empty($sales_user_ids)) {
+                        $sub->whereIn('salesman_id', $sales_user_ids);
+                    }
+                })
+                ->when(auth()->user()->hasRole('reporting manager'), function ($sub) use ($request) {
+                    $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+                    if (!empty($report_manager_sales_user_ids)) {
+                        $sub->whereIn('salesman_id', $report_manager_sales_user_ids);
+                    }
                 });
 
             return DataTables::of($data)
@@ -221,11 +275,27 @@ class AreaWiseSalesController extends Controller
                     $q->where('id', $request->category_id);
                 });
             })
+            /** sales person filter **/
+            ->when($request->sales_person_id, function ($query) use ($request) {
+                $query->where('salesman_id', $request->sales_person_id);
+            })
             ->when($request->start_date, function ($query) use ($request) {
                 $query->whereDate('order_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
             })
             ->when($request->end_date, function ($query) use ($request) {
                 $query->whereDate('order_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+            })
+            ->when(auth()->user()->hasRole('sales'), function ($sub) use ($request) {
+                $sales_user_ids = getSalesUserIds();
+                if (!empty($sales_user_ids)) {
+                    $sub->whereIn('salesman_id', $sales_user_ids);
+                }
+            })
+            ->when(auth()->user()->hasRole('reporting manager'), function ($sub) use ($request) {
+                $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+                if (!empty($report_manager_sales_user_ids)) {
+                    $sub->whereIn('salesman_id', $report_manager_sales_user_ids);
+                }
             });
         $data = $query->get();
         return Excel::download(new AreaWiseSalesExport($data), 'area_wise_sales.xlsx');

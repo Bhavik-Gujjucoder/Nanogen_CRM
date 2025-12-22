@@ -50,7 +50,8 @@
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Salesman <span class="text-danger">*</span></label>
                     @if (auth()->user()->hasRole('sales'))
-                        <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
+                        <input type="text" value="{{ auth()->user()->name }}" id="sales_person_name"
+                            class="form-control" readonly>
                         <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
                     @else
                         <select name="salesman_id" class="form-control form-select search-dropdown" id="salesmanId">
@@ -197,6 +198,8 @@
             console.log(selected.data('salesperson_id'));
             var salsmen_id = selected.data('salesperson_id');
             $('#salesmanId').val(salsmen_id).trigger('change');
+            // $('#sales_person_name').val(selected.data('salesmanId') || '');
+            // console.log($('#sales_person_name').val(selected.data('salesmanId') || ''));
             // $('#salesmanId').val(selected.data('salesperson_id')).select2().trigger('change');
         });
     });

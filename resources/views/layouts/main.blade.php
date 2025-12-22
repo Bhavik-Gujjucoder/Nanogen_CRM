@@ -30,7 +30,7 @@
     <!-- include summernote css/js -->
     <link rel="stylesheet" href="{{ asset('css/summernote-bs4.min.css') }}">
 
-    
+
 </head>
 
 <body>
@@ -195,7 +195,7 @@
                                                                 </div>
                                                             </a>
                                                         </li>
-                                                    {{-- @endcan
+                                                        {{-- @endcan
                                                     @can('Dealers') --}}
                                                         <li>
                                                             <a href="{{ route('distributors_dealers.index', 1) }}">
@@ -558,6 +558,13 @@
 
 
     <script>
+        $(document).ready(function() {
+            $('.search-dropdown').select2({
+                placeholder: "Select",
+                // allowClear: true
+            });
+        });
+
         function show_success(msg) {
             Toastify({
                 text: msg,

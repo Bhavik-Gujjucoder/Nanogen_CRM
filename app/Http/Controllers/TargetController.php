@@ -28,8 +28,20 @@ class TargetController extends Controller
     public function index(Request $request)
     {
         $data['page_title'] = 'Target';
+
+
+        $login_user_id = Auth::user()->id;
+        $userIds = SalesPersonDetail::where('user_id', $login_user_id)
+            ->pluck('reporting_sales_person_id');
+        // ->push($login_user_id);
+        $data['reporting_user_count'] = SalesPersonDetail::whereIn('user_id', $userIds)->count();
+
+        // dd($data['reporting_user_count']);
+
+
         if ($request->ajax()) {
             $records = Target::query();
+
 
             $quarterly = [
                 1 => [Carbon::create(date('Y'), 1, 1), Carbon::create(date('Y'), 3, 31)],
@@ -51,11 +63,20 @@ class TargetController extends Controller
                 }
             });
 
-            // Apply salesman filter if user has sales role
             if (auth()->user()->hasRole('sales')) {
-                $records->where('salesman_id', auth()->id());
+                $sales_user_ids = getSalesUserIds();
+                if (!empty($sales_user_ids)) {
+                    $records->whereIn('salesman_id', $sales_user_ids);
+                }
             }
-            // dd($request->salemn_id);
+
+            if (auth()->user()->hasRole('reporting manager')) {
+                $report_manager_sales_user_ids = getReportManagerSalesPersonId(); // 
+                if (!empty($report_manager_sales_user_ids)) {
+                    $records->whereIn('salesman_id', $report_manager_sales_user_ids);
+                }
+            }
+
             $records->when($request->salemn_id, function ($query) use ($request) {
                 $query->where('salesman_id', $request->salemn_id);
             });
@@ -94,6 +115,7 @@ class TargetController extends Controller
                     // Auth::user()->can('manage orders') ? $action_btn .= $delete_btn : '';
 
                     $action_btn .= Auth::user()->hasAnyRole(['sales']) ? $show_btn : $edit_btn;
+                    // $action_btn .= Auth::user()->hasAnyRole(['sales']) ? $edit_btn : $edit_btn;
                     $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
@@ -172,11 +194,20 @@ class TargetController extends Controller
         if ($request->ajax()) {
             $records = Target::query();
 
-            // Apply salesman filter if user has sales role
             if (auth()->user()->hasRole('sales')) {
-                $records->where('salesman_id', auth()->id());
+                $sales_user_ids = getSalesUserIds();
+                if (!empty($sales_user_ids)) {
+                    $records->whereIn('salesman_id', $sales_user_ids);
+                }
             }
-            // dd($request->salemn_id);
+
+            if (auth()->user()->hasRole('reporting manager')) {
+                $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+                if (!empty($report_manager_sales_user_ids)) {
+                    $records->whereIn('salesman_id', $report_manager_sales_user_ids);
+                }
+            }
+
             $records->when($request->salemn_id, function ($query) use ($request) {
                 $query->where('salesman_id', $request->salemn_id);
             });
@@ -341,6 +372,14 @@ class TargetController extends Controller
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
         $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
         $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
+
+        $login_user_id = Auth::user()->id;
+        $userIds = SalesPersonDetail::where('user_id', $login_user_id)
+            ->pluck('reporting_sales_person_id');
+        // ->push($login_user_id);
+
+        $data['reportingUserId'] = SalesPersonDetail::whereIn('user_id', $userIds)->get();
+        // dd($data['reportingUserId']->count());
         return view('admin.target.create', $data);
     }
 
@@ -469,6 +508,14 @@ class TargetController extends Controller
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
         $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
         $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
+
+        $login_user_id = Auth::user()->id;
+        $userIds = SalesPersonDetail::where('user_id', $login_user_id)
+            ->pluck('reporting_sales_person_id')
+            ->push($login_user_id);
+        // dd($userIds);
+        $data['reportingUserId'] = SalesPersonDetail::whereIn('user_id', $userIds)->get();
+
         return view('admin.target.edit', $data);
     }
 
@@ -598,8 +645,24 @@ class TargetController extends Controller
                 ]);
             }
         });
-        $data = $records->get();
 
+        /*** 'Reporting Salesperson' is displayed for Salesperson login ***/
+        if (auth()->user()->hasRole('sales')) {
+            $sales_user_ids = getSalesUserIds();
+            if (!empty($sales_user_ids)) {
+                $records->whereIn('salesman_id', $sales_user_ids);
+            }
+        }
+        /* END */
+
+        if (auth()->user()->hasRole('reporting manager')) {
+            $report_manager_sales_user_ids = getReportManagerSalesPersonId();
+            if (!empty($report_manager_sales_user_ids)) {
+                $records->whereIn('salesman_id', $report_manager_sales_user_ids);
+            }
+        }
+
+        $data = $records->get();
         return Excel::download(new TargetExport($data), 'Target_quarter-' . $request->quarterly . '.xlsx');
     }
 }

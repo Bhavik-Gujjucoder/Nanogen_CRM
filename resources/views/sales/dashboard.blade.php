@@ -15,7 +15,7 @@
 </div>
 <div class="row detials-gc-user">
 
-   
+
 </div>
 <div class="row">
     @can('Order Management')
@@ -88,100 +88,200 @@
 <div class="row">
     @can('Order Management')
         <!-- Recent Orders -->
-        <div class="col-xxl-4 col-xl-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                    <h5 class="mb-2">Recent Orders</h5>
-                    <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a>
-                </div>
-                <div class="card-body pb-2">
-                    @foreach ($latest_orders as $order)
-                        <div class="d-flex justify-content-between flex-wrap mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                {{-- <a href="javscript:void(0);" class="avatar avatar-sm border flex-shrink-0">
-                                    <img src="images/company-icon-01.svg" class="img-fluid w-auto h-auto" alt="img">
-                                </a> --}}
-                                <a href="{{ $order->distributors_dealers->profile_image
-                                    ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
-                                    : asset('images/default-user.png') }}"
-                                    class="avatar avatar-sm border flex-shrink-0" target="_blank">
-                                    <img id="profilePreview"
-                                        src="{{ $order->distributors_dealers->profile_image
-                                            ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
-                                            : asset('images/default-user.png') }}"
-                                        alt="Profile Image" class="img-thumbnail mb-2">
-                                </a>
-                                <div class="ms-2 flex-fill">
-                                    <h6 class="fs-medium text-truncate mb-1">
-                                        <a href="{{ route('order_management.edit', $order->id) }}">
-                                            {{ $order->distributors_dealers->firm_shop_name }}
-                                        </a>
-                                    </h6>
-                                    <p class="fs-13 d-inline-flex align-items-center"> <a
-                                            href="{{ route('order_management.edit', $order->id) }}">
-                                            <spa class="text-info">{{ $order->unique_order_id }}</spa>
-                                        </a>
-                                        <i class="ti ti-circle-filled fs-4 text-primary mx-1">
-                                        </i>{{ $order->order_date->format('d M Y') }}
-                                    </p>
+        @if ($self_recent_orders->count() > 0)
+            <div class="col-xxl-6 col-xl-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                        <h5 class="mb-2">Self Recent Orders</h5>
+                        <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+                    </div>
+                    <div class="card-body pb-2">
+                        @foreach ($self_recent_orders as $order)
+                            <div class="d-flex justify-content-between flex-wrap mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    {{-- <a href="javscript:void(0);" class="avatar avatar-sm border flex-shrink-0">
+                                        <img src="images/company-icon-01.svg" class="img-fluid w-auto h-auto" alt="img">
+                                    </a> --}}
+                                    <a href="{{ $order->distributors_dealers->profile_image
+                                        ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                        : asset('images/default-user.png') }}"
+                                        class="avatar avatar-sm border flex-shrink-0" target="_blank">
+                                        <img id="profilePreview"
+                                            src="{{ $order->distributors_dealers->profile_image
+                                                ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                                : asset('images/default-user.png') }}"
+                                            alt="Profile Image" class="img-thumbnail mb-2">
+                                    </a>
+                                    <div class="ms-2 flex-fill">
+                                        <h6 class="fs-medium text-truncate mb-1">
+                                            <a href="{{ route('order_management.edit', $order->id) }}">
+                                                {{ $order->distributors_dealers->firm_shop_name }}
+                                            </a>
+                                        </h6>
+                                        <p class="fs-13 d-inline-flex align-items-center"> <a
+                                                href="{{ route('order_management.edit', $order->id) }}">
+                                                <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                            </a>
+                                            <i class="ti ti-circle-filled fs-4 text-primary mx-1">
+                                            </i>{{ $order->order_date->format('d M Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-sm-end mb-2">
+                                    <h6 class="mb-1">{{ IndianNumberFormat($order->grand_total) }}</h6>
+                                    <!-- <p class="fs-13">Basic (Monthly)</p> -->
                                 </div>
                             </div>
-                            <div class="text-sm-end mb-2">
-                                <h6 class="mb-1">{{ IndianNumberFormat($order->grand_total) }}</h6>
-                                <!-- <p class="fs-13">Basic (Monthly)</p> -->
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
+        @if ($other_recent_orders->count() > 0)
+            <div class="col-xxl-6 col-xl-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+                        <h5 class="mb-2">Other Recent Orders</h5>
+                        <a href="{{ route('order_management.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+                    </div>
+                    <div class="card-body pb-2">
+                        @foreach ($other_recent_orders as $order)
+                            <div class="d-flex justify-content-between flex-wrap mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    {{-- <a href="javscript:void(0);" class="avatar avatar-sm border flex-shrink-0">
+                                        <img src="images/company-icon-01.svg" class="img-fluid w-auto h-auto" alt="img">
+                                    </a> --}}
+                                    <a href="{{ $order->distributors_dealers->profile_image
+                                        ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                        : asset('images/default-user.png') }}"
+                                        class="avatar avatar-sm border flex-shrink-0" target="_blank">
+                                        <img id="profilePreview"
+                                            src="{{ $order->distributors_dealers->profile_image
+                                                ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                                : asset('images/default-user.png') }}"
+                                            alt="Profile Image" class="img-thumbnail mb-2">
+                                    </a>
+                                    <div class="ms-2 flex-fill">
+                                        <h6 class="fs-medium text-truncate mb-1">
+                                            <a href="{{ route('order_management.edit', $order->id) }}">
+                                                {{ $order->distributors_dealers->firm_shop_name }}
+                                            </a>
+                                        </h6>
+                                        <p class="fs-13 d-inline-flex align-items-center"> <a
+                                                href="{{ route('order_management.edit', $order->id) }}">
+                                                <spa class="text-info">{{ $order->unique_order_id }}</spa>
+                                            </a>
+                                            <i class="ti ti-circle-filled fs-4 text-primary mx-1">
+                                            </i>{{ $order->order_date->format('d M Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-sm-end mb-2">
+                                    <h6 class="mb-1">{{ IndianNumberFormat($order->grand_total) }}</h6>
+                                    <!-- <p class="fs-13">Basic (Monthly)</p> -->
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
         <!-- /Recent Orders -->
     @endcan
 
     @can('Targets')
-        <div class="col-md-8 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header border-0 pb-0">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                        <h4><i class="ti ti-grip-vertical me-1"></i>Recent Target</h4>
-                        <a href="{{ route('target.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+        @if ($self_latest_target->count() > 0)
+            <div class="col-md-6 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header border-0 pb-0">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                            <h4><i class="ti ti-grip-vertical me-1"></i>Self Recent Target</h4>
+                            <a href="{{ route('target.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive custom-table">
-                        <table class="table dataTable" id="deals-project">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Target Name</th>
-                                    <th>Target Value</th>
-                                    <th>Quarter</th>
-                                    {{-- <th>Start Date</th>
-                                    <th>End Date</th> --}}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($latest_target as $t)
+                    <div class="card-body">
+                        <div class="table-responsive custom-table">
+                            <table class="table dataTable" id="deals-project">
+                                <thead class="thead-light">
                                     <tr>
-                                        <td>{{ $t->subject }}</td>
-                                        <td>{{ IndianNumberFormat($t->target_value) }}</td>
-                                        <td>
-                                            @foreach ($t->target_quarterly as $quarter)
-                                                <span class="badge bg-gray me-1 mb-1">
-                                                    Quarterly {{ $quarter->quarterly }} ⮚ {{ $quarter->quarterly_percentage }}%
-                                                </span><br>
-                                            @endforeach
-                                            {{ $t->quarter }}
-                                        </td>
-                                        {{-- <td>{{ $t->start_date->format('d M Y') }}</td>
-                                        <td>{{ $t->end_date->format('d M Y') }}</td> --}}
+                                        <th>Target Name</th>
+                                        <th>Target Value</th>
+                                        <th>Quarter</th>
+                                        {{-- <th>Start Date</th>
+                                    <th>End Date</th> --}}
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($self_latest_target as $t)
+                                        <tr>
+                                            <td>{{ $t->subject }}</td>
+                                            <td>{{ IndianNumberFormat($t->target_value) }}</td>
+                                            <td>
+                                                @foreach ($t->target_quarterly as $quarter)
+                                                    <span class="badge bg-gray me-1 mb-1">
+                                                        Quarterly {{ $quarter->quarterly }} ⮚
+                                                        {{ $quarter->quarterly_percentage }}%
+                                                    </span><br>
+                                                @endforeach
+                                                {{ $t->quarter }}
+                                            </td>
+                                            {{-- <td>{{ $t->start_date->format('d M Y') }}</td>
+                                        <td>{{ $t->end_date->format('d M Y') }}</td> --}}
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
+        @if ($other_latest_target->count() > 0)
+            <div class="col-md-6 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header border-0 pb-0">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                            <h4><i class="ti ti-grip-vertical me-1"></i>Other Recent Target</h4>
+                            <a href="{{ route('target.index') }}" class="btn btn-light btn-md mb-2">View All</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive custom-table">
+                            <table class="table dataTable" id="deals-project">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Target Name</th>
+                                        <th>Target Value</th>
+                                        <th>Quarter</th>
+                                        {{-- <th>Start Date</th>
+                                    <th>End Date</th> --}}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($other_latest_target as $t)
+                                        <tr>
+                                            <td>{{ $t->subject }}</td>
+                                            <td>{{ IndianNumberFormat($t->target_value) }}</td>
+                                            <td>
+                                                @foreach ($t->target_quarterly as $quarter)
+                                                    <span class="badge bg-gray me-1 mb-1">
+                                                        Quarterly {{ $quarter->quarterly }} ⮚
+                                                        {{ $quarter->quarterly_percentage }}%
+                                                    </span><br>
+                                                @endforeach
+                                                {{ $t->quarter }}
+                                            </td>
+                                            {{-- <td>{{ $t->start_date->format('d M Y') }}</td>
+                                        <td>{{ $t->end_date->format('d M Y') }}</td> --}}
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     @endcan
 </div>
 @can('Targets')

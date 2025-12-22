@@ -57,6 +57,16 @@ class SalesPersonController extends Controller
 
         if ($request->ajax()) {
             $data = SalesPersonDetail::with('user');
+
+            if (auth()->user()->hasRole('sales')) {
+                $reportingUserId = SalesPersonDetail::where('user_id',  auth()->user()->id)->pluck('reporting_sales_person_id')->first();
+                $data->where('user_id', $reportingUserId);
+            }
+            if (auth()->user()->hasRole('reporting manager')) {
+
+                $data->where('reporting_manager_id', auth()->user()->id);
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -88,6 +98,9 @@ class SalesPersonController extends Controller
                     $action_btn .= $delete_btn;
                     return $action_btn . ' </div></div>';
                 })
+                ->editColumn('head_quarter_city_id', function ($row) {
+                    return $row->head_quarter_city ? $row->head_quarter_city->city_name : '-';
+                })
                 ->editColumn('first_name', function ($row) {
                     $user = $row->user;
                     $profilePic = $user && !empty($user->profile_picture)
@@ -102,7 +115,12 @@ class SalesPersonController extends Controller
                     }
                     return $name;
                 })
-
+                ->editColumn('reporting_sales_person_id', function ($row) {
+                    return $row->reportingUser ? $row->reportingUser->name : '-';
+                })
+                ->editColumn('department_id', function ($row) {
+                    return $row->Department ? $row->Department->name : '-';
+                })
                 ->editColumn('user.phone_no', function ($row) {
                     return $row->user ? $row->user->phone_no : '-';
                 })
@@ -140,6 +158,7 @@ class SalesPersonController extends Controller
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();
+        $data['sales_person']       = SalesPersonDetail::get();
 
         $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
         $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
@@ -222,10 +241,12 @@ class SalesPersonController extends Controller
             $salesDetail->position_id          = $request->position_id;
             $salesDetail->reporting_manager_id = $request->reporting_manager_id;
             $salesDetail->date                 = Carbon::createFromFormat('d-m-Y', $request->date)->format('Y-m-d');
+            $salesDetail->reporting_sales_person_id = $request->reporting_sales_person_id;
             $salesDetail->street_address       = $request->street_address;
             $salesDetail->city_id              = $request->city_id ?? null;
             $salesDetail->state_id             = $request->state_id;
             $salesDetail->city_ids             = $cityIds;
+            $salesDetail->head_quarter_city_id     = $request->head_quarter_city_id;
             $salesDetail->postal_code          = $request->postal_code;
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();
@@ -263,6 +284,7 @@ class SalesPersonController extends Controller
         $data['countries']          = Country::where('status', 1)->get()->all();
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
+        $data['sales_person']       = SalesPersonDetail::where('id', '!=', $id)->get();
 
         return view('admin.sales_person.edit', $data);
     }
@@ -335,10 +357,12 @@ class SalesPersonController extends Controller
             $salesDetail->position_id          = $request->position_id;
             $salesDetail->reporting_manager_id = $request->reporting_manager_id;
             $salesDetail->date                 = Carbon::createFromFormat('d-m-Y', $request->date)->format('Y-m-d');
+            $salesDetail->reporting_sales_person_id = $request->reporting_sales_person_id;
             $salesDetail->street_address       = $request->street_address;
             $salesDetail->city_id              = $request->city_id ?? null;
             $salesDetail->state_id             = $request->state_id;
             $salesDetail->city_ids             = $cityIds;
+            $salesDetail->head_quarter_city_id             = $request->head_quarter_city_id;
             $salesDetail->postal_code          = $request->postal_code;
             $salesDetail->country_id           = $request->country_id;
             $salesDetail->save();

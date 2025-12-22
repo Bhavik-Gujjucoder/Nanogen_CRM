@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasRoles,SoftDeletes;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +44,7 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
-    
+
     /**
      * Get the attributes that should be cast.
      *
@@ -63,6 +63,8 @@ class User extends Authenticatable
         return $this->status == 1 ? '<span class="badge badge-pill badge-status bg-success">Active</span>' : '<span class="badge badge-pill badge-status bg-danger">Inactive</span>';
     }
 
-    
-    
+    public function salesPersonDetail()
+    {
+        return $this->hasOne(SalesPersonDetail::class, 'user_id', 'id');
+    }
 }

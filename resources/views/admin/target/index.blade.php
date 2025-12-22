@@ -33,8 +33,15 @@
                             <i class="ti ti-file-type-xls text-success me-1"></i>Export
                         </button>
                     </div>
-                    <a href="{{ route('target.create') }}" class="btn btn-primary me-2"><i
-                            class="ti ti-square-rounded-plus me-2"></i>Add New Target</a>
+                    @if (auth()->user()->hasRole('sales'))
+                        @if ($reporting_user_count > 0)
+                            <a href="{{ route('target.create') }}" class="btn btn-primary me-2"><i
+                                    class="ti ti-square-rounded-plus me-2"></i>Add New Target</a>
+                        @endif
+                    @else
+                        <a href="{{ route('target.create') }}" class="btn btn-primary me-2"><i
+                                class="ti ti-square-rounded-plus me-2"></i>Add New Target</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -81,7 +88,7 @@
         target_show.draw();
     });
 
-     /*** Export Excel ****/
+    /*** Export Excel ****/
     $('#exportTargetExcel').on('click', function() {
         var quarterly = $('#quarterly').val();
         var url = "{{ route('target.export') }}?quarterly=" + quarterly;
@@ -100,7 +107,7 @@
             [1, 'desc']
         ],
         // ajax: "{{ route('target.index') }}",
-         ajax: {
+        ajax: {
             url: "{{ route('target.index') }}",
             data: function(d) {
                 d.quarterly = $('#quarterly').val();

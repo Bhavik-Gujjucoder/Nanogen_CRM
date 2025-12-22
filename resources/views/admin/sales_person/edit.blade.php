@@ -58,8 +58,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="col-form-label">First Name <span class="text-danger">*</span></label>
@@ -149,7 +147,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Department <span class="text-danger">*</span></label>
                             <select class="select @error('department_id') is-invalid @enderror" name="department_id">
-                                <option value="">Select Option</option>
+                                <option value="">Select Department</option>
                                 @foreach ($departments as $d)
                                     <option value="{{ $d->id }}"
                                         {{ old('department_id', $detail->department_id) == $d->id ? 'selected' : '' }}>
@@ -165,7 +163,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Position <span class="text-danger">*</span></label>
                             <select class="select @error('position_id') is-invalid @enderror" name="position_id">
-                                <option value="">Select Option</option>
+                                <option value="">Select Position</option>
                                 @foreach ($positions as $p)
                                     <option value="{{ $p->id }}"
                                         {{ old('position_id', $detail->position_id) == $p->id ? 'selected' : '' }}>
@@ -182,7 +180,7 @@
                             <label class="col-form-label">Reporting Manager <span class="text-danger">*</span></label>
                             <select name="reporting_manager_id"
                                 class="select @error('reporting_manager_id') is-invalid @enderror">
-                                <option value="">Select Option</option>
+                                <option value="">Select Reporting Manager</option>
                                 @foreach ($reporting_managers as $manager)
                                     <option value="{{ $manager->id }}"
                                         {{ old('reporting_manager_id', $detail->reporting_manager_id) == $manager->id ? 'selected' : '' }}>
@@ -218,7 +216,19 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label">Reporting Sales Person</label>
+                            <select name="reporting_sales_person_id" class="select ">
+                                <option value="">Select Sales Person</option>
+                                @foreach ($sales_person as $person)
+                                    <option value="{{ $person->user_id }}"
+                                        {{ old('reporting_sales_person_id', $detail->reporting_sales_person_id) == $person->user_id ? 'selected' : '' }}>
+                                        {{ $person->first_name . ' ' . $person->last_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -279,6 +289,20 @@
                                 <option value="">Select City</option>
                             </select>
                             @error('city_ids')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="col-form-label">Head Quarter </label>
+                            <select id="head_quarter"
+                                class="form-select select search-dropdown @error('head_quarter_city_id') is-invalid @enderror"
+                                name="head_quarter_city_id">
+                                <option value="">Select Head Quarter</option>
+                            </select>
+                            @error('head_quarter_city_id')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -400,23 +424,27 @@
         const selectedStateId = '{{ $detail->state_id }}';
         const selectedCityId = '{{ $detail->city_id }}';
         // const selectedAreaOfOperation = @json($detail->city_ids ? explode(',', $detail->city_ids) : []);
-        const selectedAreaOfOperation ='{{ $detail->city_ids }}'.split(',').map(Number); //@json($detail->city_ids ? explode(',', $detail->city_ids) : []);
-        console.log(selectedAreaOfOperation);
+        const selectedAreaOfOperation = '{{ $detail->city_ids }}'.split(',').map(
+            Number); //@json($detail->city_ids ? explode(',', $detail->city_ids) : []);
+
+        const selectedhead_quarter = '{{ $detail->head_quarter_city_id }}';
 
         // Load cities on page load
         if (selectedStateId) {
-            loadCities(selectedStateId, selectedCityId, selectedAreaOfOperation);
+            loadCities(selectedStateId, selectedCityId, selectedAreaOfOperation, selectedhead_quarter);
+            // loadCities(selectedStateId, selectedCityId, selectedhead_quarter);
         }
 
         // When user changes state
         $('#stateDropdown').on('change', function() {
             const stateId = $(this).val();
-            loadCities(stateId, null, []); // reset both when changing state
+            loadCities(stateId, null, [], null); // reset both when changing state
         });
 
-        function loadCities(stateId, selectedCityId, selectedAreaOfOperation) {
+        function loadCities(stateId, selectedCityId, selectedAreaOfOperation, selectedhead_quarter) {
             $('#cityDropdown').html('<option value="">Loading...</option>');
             $('#AreaOfOperation').html('<option value="">Loading...</option>');
+            $('#head_quarter').html('<option value="">Loading...</option>');
 
             $.ajax({
                 url: "{{ route('get.cities') }}",
@@ -435,11 +463,17 @@
                             isSelected + '>' + city.city_name + '</option>');
                     });
 
-                    /* ---------------- Area Of Operation Multi Dropdown ---------------- */
+                    /* ------------------------------------------------ 
+                            Area Of Operation Multi Dropdown         
+                    ------------------------------------------------ */
                     $('#AreaOfOperation').empty();
                     $.each(data, function(index, city) {
-                        let isSelected = selectedAreaOfOperation.includes(String(city.id)) ?
+                        // let isSelected = selectedAreaOfOperation.includes(String(city.id)) ?
+                        //     'selected="selected"' : '';
+
+                        let isSelected = selectedAreaOfOperation.includes(Number(city.id)) ?
                             'selected="selected"' : '';
+
                         $('#AreaOfOperation').append('<option value="' + city.id + '" ' +
                             isSelected + '>' + city.city_name + '</option>');
                     });
@@ -452,6 +486,29 @@
 
                     // Ensure values are selected in case of async
                     $('#AreaOfOperation').val(selectedAreaOfOperation).trigger('change');
+
+                    /* -------------------------
+                            Head Quarter 
+                    ---------------------------- */
+                    $('#head_quarter').empty();
+                    $.each(data, function(index, city) {
+                        // let isSelected = selectedhead_quarter.includes(String(city.id)) ?
+                        //     'selected="selected"' : '';
+                        let isSelected = String(city.id) === String(selectedhead_quarter) ?
+                            'selected="selected"' : '';
+
+                        $('#head_quarter').append('<option value="' + city.id + '" ' +
+                            isSelected + '>' + city.city_name + '</option>');
+                    });
+
+                    /* Re-init Select2 after adding options */
+                    $('#head_quarter').select2({
+                        allowClear: false,
+                        width: '100%'
+                    });
+
+                    /* Ensure values are selected in case of async */
+                    $('#head_quarter').val(selectedhead_quarter).trigger('change');
                 }
             });
         }

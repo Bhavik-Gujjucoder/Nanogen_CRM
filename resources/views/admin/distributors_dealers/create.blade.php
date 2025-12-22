@@ -65,7 +65,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Sales Person <span class="text-danger">*</span></label>
-                                <select class="form-select" name="sales_person_id">
+                                <select class="form-select select search-dropdown" name="sales_person_id">
                                     <option value="">Select sales person</option>
                                     @foreach ($sales_persons as $s)
                                         <option value="{{ $s->user_id }}"

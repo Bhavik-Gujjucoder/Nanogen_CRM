@@ -18,11 +18,11 @@
             <div class="col-sm-3">
                 <div class="mb-3">
                     <label class="col-form-label">Sales Person </label>
-                    <select class="form-select" name="sales_person_id" id="sales_person_id">
+                    <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
                         <option value="">Select sales person</option>
                         @foreach ($sales_persons as $s)
-                            <option value="{{ $s->id }}"
-                                {{ old('sales_person_id') == $s->id ? 'selected' : '' }}>
+                            <option value="{{ $s->user_id }}"
+                                {{ old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
                                 {{ $s->first_name . ' ' . $s->last_name }}
                             </option>
                         @endforeach
@@ -80,7 +80,8 @@
                         {{ request('dealer') == 1 ? 'Export Dealers' : 'Export Distributors' }}
                         {{-- Export Excel --}}
                     </button>
-                    <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}" class="btn btn-primary">
+                    <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}"
+                        class="btn btn-primary">
                         <i class="ti ti-file-type-xls me-2"></i>
                         Export Price List
                     </a>
@@ -126,6 +127,12 @@
 @endsection
 @section('script')
 <script>
+    $(document).ready(function() {
+        $('.search-dropdown').select2({
+            placeholder: "Select",
+            // allowClear: true
+        });
+    });
     $('#sales_person_id').on('change', function() {
         distributors_dealers_table.draw();
     });
@@ -307,7 +314,8 @@
         var end_date = $('#endDate').val();
 
         /* window.location = "{{ route('distributors_dealers.export') }}?sales_person_id=" + sales_person_id; */
-        var url = "{{ route('distributors_dealers.export', request('dealer')) }}?sales_person_id=" + sales_person_id +
+        var url = "{{ route('distributors_dealers.export', request('dealer')) }}?sales_person_id=" +
+            sales_person_id +
             "&start_date=" + start_date +
             "&end_date=" + end_date;
 

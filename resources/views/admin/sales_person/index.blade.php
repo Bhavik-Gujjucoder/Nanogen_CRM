@@ -36,17 +36,17 @@
                                     class="checkmarks"></span></label>
                         </th>
                         <th hidden>ID</th>
-                        <th class="no-sort" scope="col">Sr no</th>
+                        {{-- <th class="no-sort" scope="col">Sr no</th> --}}
+                        <th scope="col">Employee Id</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Employee ID</th>
-                        {{-- <th scope="col">Reporting Manager</th> --}}
-
+                        <th scope="col">Mobile No</th>
+                        {{-- <th scope="col">Email</th> --}}
+                        <th scope="col">Department</th>
+                        <th scope="col">Reporting Staff</th>
+                        <th scope="col">Head Quarter</th>
                         <th class="" scope="col">Action</th>
                     </tr>
                 </thead>
-
             </table>
         </div>
     </div>
@@ -79,12 +79,18 @@
                 visible: false,
                 searchable: false
             },
+            // {
+            //     data: 'DT_RowIndex',
+            //     name: 'DT_RowIndex',
+            //     orderable: false,
+            //     searchable: false
+            // }, // Auto-increment number
             {
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
-                orderable: false,
-                searchable: false
-            }, // Auto-increment number
+                data: 'employee_id',
+                name: 'employee_id',
+                visible: true,
+                searchable: true
+            },
             {
                 data: 'first_name',
                 name: 'first_name',
@@ -96,22 +102,29 @@
                 searchable: true,
                 orderable: true
             },
+            // {
+            //     data: 'user.email',
+            //     name: 'user.email',
+            //     searchable: true,
+            //     orderable: true
+            // },
             {
-                data: 'user.email',
-                name: 'user.email',
+                data: 'department_id',
+                name: 'department_id',
                 searchable: true,
                 orderable: true
             },
             {
-                data: 'employee_id',
-                name: 'employee_id',
+                data: 'reporting_sales_person_id',
+                name: 'reporting_sales_person_id',
                 searchable: true
             },
-            // {
-            //     data: 'reporting_manager_id',
-            //     name: 'reporting_manager_id',
-            //     searchable: true
-            // },
+            {
+                data: 'head_quarter_city_id',
+                name: 'head_quarter_city_id',
+                searchable: true,
+                orderable: true
+            },
 
             {
                 data: 'action',

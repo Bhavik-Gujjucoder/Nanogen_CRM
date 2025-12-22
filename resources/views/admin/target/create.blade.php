@@ -47,8 +47,22 @@
                     <div class="mb-3">
                         <label class="col-form-label">Sales Person Name <span class="text-danger">*</span></label>
                         @if (auth()->user()->hasRole('sales'))
-                            <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
-                            <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}">
+                            {{-- <!--  <input type="text" value="{{ auth()->user()->name }}" class="form-control" readonly>
+                            <input type="hidden" name="salesman_id" value="{{ auth()->user()->id }}"> --> --}}
+
+                            <select name="salesman_id" class="form-control form-select search-dropdown">
+                                <option value="">Select</option>
+                                @if ($reportingUserId->isNotEmpty())
+                                    @foreach ($reportingUserId as $rs)
+                                        <option value="{{ $rs->user_id }}"
+                                            {{ old('salesman_id') == $rs->user_id ? 'selected' : '' }}>
+                                            {{ $rs->first_name }} {{ $rs->last_name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="">No record</option>
+                                @endif
+                            </select>
                         @else
                             <select name="salesman_id" class="form-control form-select search-dropdown">
                                 <option value="">Select</option>
@@ -487,7 +501,7 @@
     // === Form Submit Validation (Main + Quarterly) ===
     $("form").on("submit", function(e) {
         let valid = true;
-          let totalQuarterPercent = 0;
+        let totalQuarterPercent = 0;
         $("#quarterlyError").hide().text("");
 
         // ---- Remove old errors ----
@@ -522,12 +536,12 @@
         }
 
         // ---- Validate Quarterly Blocks ----
-      
+
         $(".quarterly-block").each(function(index) {
             let quarterBlock = $(this);
             let blockValid = true;
             let totalGradePercent = 0;
-            
+
             let quarterSelect = quarterBlock.find('select[name="quarterly[]"]');
             let quarterPercent = quarterBlock.find('input[name="quarterly_percentage[]"]');
 
@@ -536,8 +550,8 @@
             }
 
             let percent = parseFloat(quarterPercent.val()) || 0;
-            totalQuarterPercent += percent; 
-            if (totalQuarterPercent > 100) { 
+            totalQuarterPercent += percent;
+            if (totalQuarterPercent > 100) {
                 blockValid = false;
                 valid = false;
                 return false; // break

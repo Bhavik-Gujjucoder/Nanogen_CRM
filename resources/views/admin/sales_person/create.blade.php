@@ -140,7 +140,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Department <span class="text-danger">*</span></label>
                             <select class="select @error('department_id') is-invalid @enderror" name="department_id">
-                                <option value="">Select Option</option>
+                                <option value="">Select Department</option>
                                 @foreach ($departments as $d)
                                     <option value="{{ $d->id }}"
                                         {{ old('department_id') == $d->id ? 'selected' : '' }}>{{ $d->name }}
@@ -156,7 +156,7 @@
                         <div class="mb-3">
                             <label class="col-form-label">Position <span class="text-danger">*</span></label>
                             <select class="select @error('position_id') is-invalid @enderror" name="position_id">
-                                <option value="">Select Option</option>
+                                <option value="">Select Position</option>
                                 @foreach ($positions as $p)
                                     <option value="{{ $p->id }}"
                                         {{ old('position_id') == $p->id ? 'selected' : '' }}>{{ $p->name }}
@@ -173,7 +173,7 @@
                             <label class="col-form-label">Reporting Manager <span class="text-danger">*</span></label>
                             <select name="reporting_manager_id"
                                 class="select @error('reporting_manager_id') is-invalid @enderror">
-                                <option value="">Select Option</option>
+                                <option value="">Select Reporting Manager</option>
                                 @foreach ($reporting_managers as $manager)
                                     <option value="{{ $manager->id }}"
                                         {{ old('reporting_manager_id') == $manager->id ? 'selected' : '' }}>
@@ -196,6 +196,19 @@
                             @error('date')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label">Reporting Sales Person</label>
+                            <select name="reporting_sales_person_id" class="select">
+                                <option value="">Select Sales Person</option>
+                                @foreach ($sales_person as $person)
+                                    <option value="{{ $person->user_id }}"
+                                        {{ old('reporting_sales_person_id') == $person->user_id ? 'selected' : '' }}>
+                                        {{ $person->first_name . ' ' . $person->last_name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -267,6 +280,20 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
+                            <label class="col-form-label">Head Quarter </label>
+                            <select id="head_quarter"
+                                class="form-select select search-dropdown @error('head_quarter_city_id') is-invalid @enderror"
+                                name="head_quarter_city_id">
+                                <option value="">Select Head Quarter</option>
+                            </select>
+                            @error('head_quarter_city_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
                             <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
                             <input type="text" name="postal_code" value="{{ old('postal_code') }}"
                                 class="form-control @error('postal_code') is-invalid @enderror"
@@ -323,9 +350,11 @@
             var stateID = $(this).val();
             var oldCityID = $('#cityDropdown').data('old'); // Get old city ID
             var oldMultiCities = $('#AreaOfOperation').data('old') || []; // old selected multiple
+            var HeadQuarter = $('#head_quarter').data('old') || [];
 
             $('#cityDropdown').html('<option value="">Loading...</option>');
             $('#AreaOfOperation').html('<option value="">Loading...</option>');
+            $('#head_quarter').html('<option value="">Loading...</option>');
 
             if (stateID) {
                 $.ajax({
@@ -353,7 +382,9 @@
                             width: '100%'
                         });
 
-                        // --- Multi dropdown ---
+                        /* ---------------------
+                           Multi dropdown
+                        ------------------------ */
                         $('#AreaOfOperation').empty().append(
                             '<option value="">Select City</option>');
                         $.each(data, function(key, city) {
@@ -368,11 +399,30 @@
                         $('#AreaOfOperation').val(oldMultiCities).trigger('change');
 
                         $('#AreaOfOperation').removeAttr('data-old');
+
+                        /* --------------------- 
+                           head quarter dropdown 
+                        ------------------------ */
+                        $('#head_quarter').empty().append(
+                            '<option value="">Select City</option>');
+                        $.each(data, function(key, city) {
+                            let selected = oldMultiCities.includes(city.id
+                                .toString()) ? 'selected' : '';
+                            $('#head_quarter').append('<option value="' + city
+                                .id + '" ' + selected + '>' + city.city_name +
+                                '</option>');
+                        });
+
+                        // ✅ Apply old selected values properly
+                        $('#head_quarter').val(oldMultiCities).trigger('change');
+
+                        $('#head_quarter').removeAttr('data-old');
                     }
                 });
             } else {
                 $('#cityDropdown').html('<option value=""> Select City </option>');
                 $('#AreaOfOperation').html('').trigger('change');
+                $('#head_quarter').html('').trigger('change');
             }
         });
 

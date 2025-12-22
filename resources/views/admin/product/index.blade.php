@@ -18,7 +18,8 @@
             <div class="col-sm-3">
                 <div class="icon-form mb-3 mb-sm-0">
                     <label class="col-form-label">Category </label>
-                    <select class="select" name="category_id" id="category_id" value="{{ old('category_id') }}">
+                    <select class="select search-dropdown" name="category_id" id="category_id"
+                        value="{{ old('category_id') }}">
                         <option value="">Select category</option>
                         @if ($category)
                             @foreach ($category as $c)
@@ -71,6 +72,12 @@
 @endsection
 @section('script')
 <script>
+    $(document).ready(function() {
+        $('.search-dropdown').select2({
+            placeholder: "Select",
+            // allowClear: true
+        });
+    });
     $('#category_id').on('change', function() {
         product_table_show.draw();
     });

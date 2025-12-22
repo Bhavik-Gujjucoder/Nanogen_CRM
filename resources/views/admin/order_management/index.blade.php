@@ -8,13 +8,36 @@
     <div class="card-header">
         <!-- Search -->
         <div class="row align-items-center">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="icon-form mb-3 mb-sm-0">
                     <span class="form-icon"><i class="ti ti-search"></i></span>
                     <input type="text" class="form-control" id="customSearch" placeholder="Search Orders">
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-3">
+                <div class="mb-3">
+                    <label class="col-form-label">Sales Person </label>
+                    <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
+                        <option value="">Select sales person</option>
+                        <option value="0">All</option>
+                        @foreach ($sales_persons as $s)
+                            @php
+                                $isSelf = auth()->user()->hasRole('sales') && auth()->id() == $s->user_id;
+                            @endphp
+                            <option value="{{ $s->user_id }}"
+                                {{ $isSelf || old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
+                                {{ $isSelf ? 'Self' : $s->first_name . ' ' . $s->last_name }}
+                            </option>
+                            {{-- <option value="{{ $s->user_id }}"
+                                {{ old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
+                                {{ $s->first_name . ' ' . $s->last_name }}
+                            </option> --}}
+                        @endforeach
+                    </select>
+                    <span id="sales_person_id_error" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
 
                     <a href="{{ route('order_management.create') }}" class="btn btn-primary"><i
@@ -22,8 +45,8 @@
                 </div>
             </div>
         </div>
-        <!-- /Search -->
     </div>
+    <!-- /Search -->
     <div class="card-body">
         <!-- order management List -->
         <div class="table-responsive custom-table">
@@ -66,6 +89,15 @@
 @endsection
 @section('script')
 <script>
+    $(document).ready(function() {
+        $('.search-dropdown').select2({
+            placeholder: "Select",
+            // allowClear: true
+        });
+    });
+    $('#sales_person_id').on('change', function() {
+        order_management_show.draw();
+    });
     /***** DataTable *****/
     var order_management_show = $('#order_management').DataTable({
         "pageLength": 10,
@@ -77,7 +109,13 @@
         order: [
             [1, 'desc']
         ],
-        ajax: "{{ route('order_management.index') }}",
+        // ajax: "{{ route('order_management.index') }}",
+        ajax: {
+            url: "{{ route('order_management.index') }}",
+            data: function(d) {
+                d.sales_person_id = $('#sales_person_id').val();
+            }
+        },
         columns: [{
                 data: 'checkbox',
                 name: 'checkbox',

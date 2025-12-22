@@ -23,6 +23,21 @@
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
+                        <label class="col-form-label">Sales Person </label>
+                        <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
+                            <option value="">Select sales person</option>
+                            <option value="0">All</option>
+                            @foreach ($sales_persons as $s)
+                                <option value="{{ $s->user_id }}"
+                                    {{ old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
+                                    {{ $s->first_name . ' ' . $s->last_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
                         <label class="col-form-label">Start Date </label>
                         <div class="icon-form">
                             <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
@@ -42,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="main-catgeory">
                         <label class="col-form-label"> Main Category </label>
                         <select name="category_id" class="form-control select" onchange="applyFilter()">
@@ -53,7 +68,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="individual-product">
                         <label class="col-form-label"> Individual Product </label>
                         <select name="product_id" class="form-control select" onchange="applyFilter()">
@@ -117,13 +132,19 @@
         var endDate = $('#endDate').val();
         var product_id = $('select[name="product_id"]').val();
         var category_id = $('select[name="category_id"]').val();
+        var sales_person_id = $('#sales_person_id').val();
 
         var url = "{{ route('area_wise_sales.export') }}?city_id=" + city_id +
             "&startDate=" + startDate +
             "&endDate=" + endDate +
             "&product_id=" + product_id +
-            "&category_id=" + category_id;
+            "&category_id=" + category_id +
+            "&sales_person_id=" + sales_person_id;
         window.location = url;
+    });
+
+    $('#sales_person_id').on('change', function() {
+        area_wise_show.draw();
     });
 
 
@@ -147,6 +168,7 @@
 
                 d.start_date = $('#startDate').val(); // Pass start date
                 d.end_date = $('#endDate').val(); // Pass end date
+                d.sales_person_id = $('#sales_person_id').val();
             }
         },
         columns: [{
