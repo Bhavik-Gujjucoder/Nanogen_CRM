@@ -241,7 +241,7 @@
                 <div class="card flex-fill">
                     <div class="card-header border-0 pb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <h4><i class="ti ti-grip-vertical me-1"></i>Other Recent Target</h4>
+                            <h4><i class="ti ti-grip-vertical me-1"></i>Team Recent Target</h4>
                             <a href="{{ route('target.index') }}" class="btn btn-light btn-md mb-2">View All</a>
                         </div>
                     </div>
