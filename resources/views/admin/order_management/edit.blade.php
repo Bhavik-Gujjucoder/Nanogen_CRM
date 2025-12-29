@@ -292,7 +292,7 @@
             </div>
 
             <div class="gstsec mt-4 mb-4">
-                <div class="totalsec text-end">
+                <div class="totalsec text-end ">
                     {{-- <div class="row">
                         <div class="col-md-12">
                             <label class="col-form-label" id="all_total">Total :

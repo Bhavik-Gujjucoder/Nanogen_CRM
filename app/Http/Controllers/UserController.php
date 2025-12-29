@@ -23,7 +23,12 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Users';
         if ($request->ajax()) {
-            $data = User::query();
+            // $data = User::query();
+
+            $data = User::whereHas('roles', function ($q) {
+                $q->where('name', '!=', 'sales');
+            });
+
             //role(['admin', 'staff', 'reporting manager']);
 
             return DataTables::of($data)
@@ -67,8 +72,16 @@ class UserController extends Controller
                             <img src="' . $profilePic . '" alt="User Image">
                         </a>' . $row->name;
                 })
+                // ->addColumn('role', function ($user) {
+                //     return $user->roles->pluck('name')->implode(', ');
+                // })
                 ->addColumn('role', function ($user) {
-                    return $user->roles->pluck('name')->implode(', ');
+                    $roles = $user->roles
+                        ->where('name', '!=', 'sales')
+                        ->pluck('name')
+                        ->implode(', ');
+
+                    return $roles ?: '-';
                 })
                 ->filterColumn('role', function ($query, $keyword) {
                     $query->whereHas('roles', function ($q) use ($keyword) {
@@ -78,7 +91,7 @@ class UserController extends Controller
                 ->editColumn('status', function ($user) {
                     return $user->statusBadge();
                 })
-                 ->editColumn('email', function ($user) {
+                ->editColumn('email', function ($user) {
                     return $user->email ? $user->email : '-';
                 })
                 // ->editColumn('updated_at', function ($user) {
@@ -103,7 +116,7 @@ class UserController extends Controller
     {
         $data['page_title'] = 'Add Users';
         // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
-        $data['roles']      = Role::whereNotIn('name', ['super admin'])->pluck('name', 'id'); //, 'sales'
+        $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id'); //, 'sales'
 
         return view('users.create', $data);
     }
@@ -157,7 +170,7 @@ class UserController extends Controller
         $data['email'] = $request->email ?? null;
         $data['password'] = $request->password;
 
-        if($request->email){
+        if ($request->email) {
             Mail::send('email.user_email.create', ['data' => $data], fn($message) => $message->to($user->email)->subject('User Account Created'));
         }
 
@@ -172,7 +185,7 @@ class UserController extends Controller
         $data['page_title'] = 'Edit User';
         $data['user']       = $user;
         // $data['roles']   = Role::where('name', '!=', 'super admin')->pluck('name', 'id'); // Get all roles
-        $data['roles']      = Role::whereNotIn('name', ['super admin'])->pluck('name', 'id'); //, 'sales'
+        $data['roles']      = Role::whereNotIn('name', ['super admin', 'sales'])->pluck('name', 'id');
         return view('users.edit', $data);
     }
 
@@ -218,11 +231,11 @@ class UserController extends Controller
             $user->profile_picture = $filename;
         }
         $user->save();
-        if(!$user->hasRole('super admin')){
+        if (!$user->hasRole('super admin')) {
             $user->syncRoles([$request->role]); // Update role
         }
         // **** EMAIL ****  
-        if($user->email){
+        if ($user->email) {
             if ($user->status === "0") {
                 $data = [];
                 $data['name'] = $user->name;

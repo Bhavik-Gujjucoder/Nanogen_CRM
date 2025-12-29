@@ -44245,7 +44245,8 @@ table.table.table-bordered.payment-summary-table td {
 
 /* 02-05-25 */
 .order-form-cls {
-    text-align: center;padding: 0 15px;
+    text-align: center;
+    padding: 0 15px;
 }
 
 .order-form-cls label {
@@ -44292,7 +44293,7 @@ table.table.table-view.addnewfield {
 
 /* Style the totals section */
 .gstsec .totalsec {
-    max-width: 240px;
+    max-width: 490px;
     margin-left: auto;
     font-size: 14px;
     line-height: 1.6;
@@ -44329,7 +44330,8 @@ table.table.table-view.addnewfield {
 
 table.table.table-view.addnewfield th {
     background-color: #FAFAFA;
-    color: #171724; border-color: #e8e8e8
+    color: #171724;
+    border-color: #e8e8e8
 }
 
 table.table.table-view.addnewfield td {
@@ -44340,7 +44342,9 @@ table.table.table-view.addnewfield td {
 
 /* 07-05-20 */
 
-.checkboxs input~.checkmarks{border: 1px solid #0303038a;}
+.checkboxs input~.checkmarks {
+    border: 1px solid #0303038a;
+}
 
 
 span.list:after {
@@ -44370,21 +44374,52 @@ span.list:before {
     line-height: 1px !important;
 }
 
-span.list{width: fit-content;
+span.list {
+    width: fit-content;
     display: inline-block;
     position: relative;
-    padding-right: 30px;}
+    padding-right: 30px;
+}
 
 
-table.gc-manage-table tbody td {white-space: normal;}    
+table.gc-manage-table tbody td {
+    white-space: normal;
+}
 
-.round-chart-box {height:497px; max-width:490px; width: 100%; margin-left: auto; margin-right: auto;}
+.round-chart-box {
+    height: 497px;
+    max-width: 490px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-.pro-ann-report-card > .card-body {padding-bottom: 0px !important;}
+.pro-ann-report-card>.card-body {
+    padding-bottom: 0px !important;
+}
 
-.add-new-button { white-space: nowrap; }
+.add-new-button {
+    white-space: nowrap;
+}
 
-#target_quarterly_table tbody tr td:last-child .btn:not(:last-child) { margin-bottom: 2px; }
-#target_quarterly_table tbody tr td:last-child .btn { display: block; color:#fff; border:none; padding: 3px 5px; border-radius: 4px; font-size: 13px; line-height: 1; }
-#target_quarterly_table tbody tr td:last-child .btn.win-btn { background-color:#28a745; }
-#target_quarterly_table tbody tr td:last-child .btn.loss-btn { background-color:#dc3545; }
+#target_quarterly_table tbody tr td:last-child .btn:not(:last-child) {
+    margin-bottom: 2px;
+}
+
+#target_quarterly_table tbody tr td:last-child .btn {
+    display: block;
+    color: #fff;
+    border: none;
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1;
+}
+
+#target_quarterly_table tbody tr td:last-child .btn.win-btn {
+    background-color: #28a745;
+}
+
+#target_quarterly_table tbody tr td:last-child .btn.loss-btn {
+    background-color: #dc3545;
+}

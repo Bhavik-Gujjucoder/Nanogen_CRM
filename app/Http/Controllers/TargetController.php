@@ -42,7 +42,6 @@ class TargetController extends Controller
         if ($request->ajax()) {
             $records = Target::query();
 
-
             $quarterly = [
                 1 => [Carbon::create(date('Y'), 1, 1), Carbon::create(date('Y'), 3, 31)],
                 2 => [Carbon::create(date('Y'), 4, 1), Carbon::create(date('Y'), 6, 30)],
@@ -51,16 +50,32 @@ class TargetController extends Controller
             ];
 
             /* Filter by Quarter */
-            $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
-
+            /* $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
                 if (isset($quarterly[$request->quarterly])) {
                     [$startDate, $endDate] = $quarterly[$request->quarterly];
-
                     $query->whereBetween('created_at', [
                         $startDate->startOfDay(),
                         $endDate->endOfDay()
                     ]);
                 }
+             }); */
+
+            $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
+                $query->wherehas('target_quarterly', function ($q) use ($request) {
+                    $q->where('quarterly', $request->quarterly);
+                });
+
+                // if (isset($quarterly[$request->quarterly])) {  
+
+                //     [$startDate, $endDate] = $quarterly[$request->quarterly];
+
+                //     $query->whereHas('target_quarterly', function ($q) use ($startDate, $endDate) {
+                //         $q->whereBetween('quarterly', [
+                //             $startDate->startOfDay(),
+                //             $endDate->endOfDay()
+                //         ]);
+                //     });
+                // }
             });
 
             if (auth()->user()->hasRole('sales')) {
@@ -637,14 +652,19 @@ class TargetController extends Controller
 
         /* Filter by Quarter */
         $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
-            if (isset($quarterly[$request->quarterly])) {
-                [$startDate, $endDate] = $quarterly[$request->quarterly];
-                $query->whereBetween('created_at', [
-                    $startDate->startOfDay(),
-                    $endDate->endOfDay()
-                ]);
-            }
+            $query->wherehas('target_quarterly', function ($q) use ($request) {
+                $q->where('quarterly', $request->quarterly);
+            });
         });
+        // $records->when($request->quarterly, function ($query) use ($request, $quarterly) {
+        //     if (isset($quarterly[$request->quarterly])) {
+        //         [$startDate, $endDate] = $quarterly[$request->quarterly];
+        //         $query->whereBetween('created_at', [
+        //             $startDate->startOfDay(),
+        //             $endDate->endOfDay()
+        //         ]);
+        //     }
+        // });
 
         /*** 'Reporting Salesperson' is displayed for Salesperson login ***/
         if (auth()->user()->hasRole('sales')) {

@@ -63,7 +63,6 @@ class SalesPersonController extends Controller
                 $data->where('user_id', $reportingUserId);
             }
             if (auth()->user()->hasRole('reporting manager')) {
-
                 $data->where('reporting_manager_id', auth()->user()->id);
             }
 
@@ -181,6 +180,7 @@ class SalesPersonController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
             'first_name'           => 'required|string|max:255',
@@ -332,7 +332,7 @@ class SalesPersonController extends Controller
                 'phone_no' => $request->phone_number,
             ]);
 
-            $user->assignRole('sales');
+            // $user->assignRole('sales');
             if ($request->filled('password')) {
                 $user->update(['password' => Hash::make($request->password)]);
             }
@@ -403,25 +403,54 @@ class SalesPersonController extends Controller
     }
 
 
+    // public function bulkDelete(Request $request)
+    // {
+    //     $ids = $request->ids;
+    //     if (!empty($ids) && is_array($ids)) {
+    //         $details = SalesPersonDetail::whereIn('id', $ids)->get()->all();
+    //         foreach ($details as $key => $detail) {
+    //             $user = User::where('id', $detail->user_id)->first();
+    //             if ($user && $user->profile_picture !== null) {
+    //                 Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
+    //             }
+    //             // else {
+    //             //     // Handle the case where there is no profile picture
+    //             //     return redirect()->route('user.profile')->with('error', 'Profile picture not found');
+    //             // }
+    //             $user->delete();
+    //             $detail->delete();
+    //         }
+    //         return response()->json(['message' => 'Selected users deleted successfully!']);
+    //     }
+    //     return response()->json(['message' => 'No records selected!'], 400);
+    // }
+
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-        if (!empty($ids) && is_array($ids)) {
-            $details = SalesPersonDetail::whereIn('id', $ids)->get()->all();
-            foreach ($details as $key => $detail) {
-                $user = User::where('id', $detail->user_id)->first();
-                if ($user && $user->profile_picture !== null) {
-                    Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
-                } else {
-                    // Handle the case where there is no profile picture
-                    return redirect()->route('user.profile')->with('error', 'Profile picture not found');
-                }
-                $user->delete();
-                $detail->delete();
-            }
-            return response()->json(['message' => 'Selected users deleted successfully!']);
+
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json(['message' => 'No records selected!'], 400);
         }
-        return response()->json(['message' => 'No records selected!'], 400);
+
+        $details = SalesPersonDetail::whereIn('id', $ids)->get();
+
+        foreach ($details as $detail) {
+
+            if ($user = User::find($detail->user_id)) {
+
+                if ($user->profile_picture) {
+                    Storage::disk('public')
+                        ->delete('profile_pictures/' . $user->profile_picture);
+                }
+
+                $user->delete();
+            }
+
+            $detail->delete();
+        }
+
+        return response()->json(['message' => 'Selected users deleted successfully!']);
     }
 
     public function sales_report(Request $request)
