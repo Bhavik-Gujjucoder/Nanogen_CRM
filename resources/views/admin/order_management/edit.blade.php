@@ -169,12 +169,20 @@
                         <input class="form-check-input advance-payment-discount" type="checkbox"
                             name="advance_payment_discount" id="advance_payment_discount" value="yes"
                             {{ old('advance_payment_discount', $order->advance_payment_discount ?? '') == 'yes' ? 'checked' : '' }}>
+
                         <label class="form-check-label" for="advance_payment_discount">Advance Payment
                             Discount
-                            ({{ $order->payment_discount }}{{ $order->discount_type == 'rupees' ? '₹' : '%' }})</label>
+                            @if ($order->payment_discount > 0)
+                                ({{ $order->payment_discount }}{{ $order->discount_type == 'rupees' ? '₹' : '%' }})
+                            @else
+                                ({{ getSetting('advance_payment_discount') }}{{ getSetting('discount_type') == 'rupees' ? '₹' : '%' }})
+                            @endif
+                        </label>
 
-                        <input type="hidden" name="payment_discount" value="{{ $order->payment_discount }}">
-                        <input type="hidden" name="discount_type" value="{{ $order->discount_type }}">
+                        <input type="hidden" name="payment_discount"
+                            value="{{ $order->payment_discount > 0 ? $order->payment_discount : getSetting('advance_payment_discount') }}">
+                        <input type="hidden" name="discount_type"
+                            value="{{ ($order->payment_discount > 0 ? $order->discount_type : getSetting('discount_type') == 'rupees') ? 'rupees' : 'percentage' }}">
                     </div>
                     <!-- Image Field -->
                 </div>
@@ -834,6 +842,7 @@
         if (isAdvanceChecked) {
             let paymentDiscount = parseFloat($('input[name="payment_discount"]').val()) || 0;
             let discountType = $('input[name="discount_type"]').val(); // rupees / percentage
+            // alert(paymentDiscount + discountType);
 
             let discountAmount = 0;
 
