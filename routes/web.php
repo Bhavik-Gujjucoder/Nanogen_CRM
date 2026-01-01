@@ -218,6 +218,7 @@ Route::middleware(['permission:Distributors & Dealers'])->group(function () {
     Route::get('/distributors_dealers/export/{dealer?}', [DistributorsDealersController::class, 'export'])->name('distributors_dealers.export');
     Route::get('/replaceInWord/{id}/{dealer?}', [DistributorsDealersController::class, 'replaceInWord'])->name('distributors_dealers.replaceInWord');
     Route::delete('/documents_destroy/{id}', [DistributorsDealersController::class, 'documents_destroy'])->name('distributors_dealers.documents_destroy');
+    Route::any('report/{id}', [DistributorsDealersController::class, 'report'])->name('distributors_dealers.report');
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index', 'create']);
 });
 
@@ -232,6 +233,7 @@ Route::middleware(['permission:Targets'])->group(function () {
     Route::post('/target/bulk-delete', [TargetController::class, 'bulkDelete'])->name('target.bulkDelete');
     Route::get('target-quarterly', [TargetController::class, 'target_quarterly'])->name('target.quarterly');
     Route::get('/target/export/{quarterly?}', [TargetController::class, 'export'])->name('target.export');
+    Route::get('target/target_show/{id}', [TargetController::class, 'target_view'])->name('target.view');
     Route::resource('target', TargetController::class);
 });
 

@@ -63,11 +63,15 @@
                         </th>
                         <th hidden>ID</th>
                         <th class="no-sort" scope="col">Sr no</th>
-                        <th scope="col">Target Name</th>
                         <th scope="col">Sales Person Name</th>
+                        <th scope="col">Target Name</th>
                         <th scope="col">Traget Value</th>
+                        <th scope="col">Qurterly 1</th>
+                        <th scope="col">Qurterly 2</th>
+                        <th scope="col">Qurterly 3</th>
+                        <th scope="col">Qurterly 4</th>
                         <th scope="col">Region</th>
-                        <th scope="col">Created Date</th>
+                        {{-- <th scope="col">Created Date</th> --}}
                         {{-- <th scope="col">Start Date</th>
                         <th scope="col">End Date</th> --}}
                         {{-- <th scope="col">Target Result</th> --}}
@@ -132,13 +136,13 @@
                 searchable: false
             }, // Auto-increment number
             {
-                data: 'subject',
-                name: 'subject',
+                data: 'salesman_id',
+                name: 'salesman_id',
                 searchable: true
             },
             {
-                data: 'salesman_id',
-                name: 'salesman_id',
+                data: 'subject',
+                name: 'subject',
                 searchable: true
             },
             {
@@ -146,6 +150,30 @@
                 name: 'target_value',
                 searchable: true,
                 orderable: true
+            },
+            {
+                data: 'qurterly_1',
+                name: 'qurterly_1',
+                searchable: true,
+                orderable: false
+            },
+            {
+                data: 'qurterly_2',
+                name: 'qurterly_2',
+                searchable: true,
+                orderable: false
+            },
+            {
+                data: 'qurterly_3',
+                name: 'qurterly_3',
+                searchable: true,
+                orderable: false
+            },
+            {
+                data: 'qurterly_4',
+                name: 'qurterly_4',
+                searchable: true,
+                orderable: false
             },
             {
                 data: 'city_id',
@@ -164,11 +192,11 @@
             //     searchable: true
             // },
             // { data: 'target_result', name: 'target_result' },
-            {
-                data: 'created_at',
-                name: 'created_at',
-                searchable: true
-            },
+            // {
+            //     data: 'created_at',
+            //     name: 'created_at',
+            //     searchable: true
+            // },
             {
                 data: 'action',
                 name: 'action',
@@ -336,6 +364,50 @@
             }
         });
         // Get the IDs of selected checkboxes
+    });
+
+
+    /*** Target Popup Model ***/
+    $(document).on('click', '.open-popup-model', function(e) {
+        e.preventDefault();
+
+        let target_id = $(this).data('id'); // Data ID passed from the anchor tag
+        let url = target_id ? '{{ route('target.view', ':id') }}'.replace(':id', target_id) : "";
+
+        // Show SweetAlert2 loading spinner while fetching the data
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we load the target details.',
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading(); // Show loading spinner
+            }
+        });
+
+        // Fetch the order data via AJAX
+        $.ajax({
+            url: url, // Use the URL from the 'href' attribute
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    Swal.fire({
+                        title: 'Target Details',
+                        html: response.html,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        width: '80%',
+                        heightAuto: true
+                    });
+                } else {
+                    console.error('No HTML returned:', response);
+                    Swal.fire('Error', 'No content received from server.', 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX error:', xhr.responseText);
+                Swal.fire('Error', 'Could not load target details.', 'error');
+            }
+        });
     });
 </script>
 @endsection

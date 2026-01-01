@@ -44,7 +44,7 @@ class GeneralSettingController extends Controller
             // ]);
 
             // $is_parent = 1;
-            
+
             // Category::create([
             //     'parent_category_id' => $request->parent_category_id,
             //     'category_name' => $request->category_name,
@@ -54,7 +54,6 @@ class GeneralSettingController extends Controller
             // ]);
 
             return response()->json(['success' => true, 'message' => 'Category created successfully']);
-
         } elseif ($request->form_type == 'email-detail') {
             $request->validate([
                 'email_template_header' => 'required',
@@ -71,11 +70,16 @@ class GeneralSettingController extends Controller
             ], [
                 'o_form_docx_file.required' => 'The o form docx file is required.'
             ]);
-        }elseif ($request->form_type == 'principal_certificate') {
+        } elseif ($request->form_type == 'principal_certificate') {
             $request->validate([
                 'principal_certificate_docx_file'  => 'required|file|mimes:docx',
             ], [
                 'principal_certificate_docx_file.required' => 'The Principal Certificate docx file is required.'
+            ]);
+        } elseif ($request->form_type == 'advance-payment-discount') {
+            $request->validate([
+                'advance_payment_discount' => 'required',
+                'discount_type' => 'required',
             ]);
         } else {
             // 

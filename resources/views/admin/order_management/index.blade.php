@@ -69,6 +69,7 @@
                         <th scope="col">Contact Number</th>
                         <th scope="col">Salesman</th>
                         <th scope="col">Total</th>
+                        <th scope="col">Discount</th>
                         <th scope="col">Order Status</th>
                         <th class="" scope="col">Action</th>
                     </tr>
@@ -172,6 +173,12 @@
             {
                 data: 'grand_total',
                 name: 'grand_total',
+                searchable: true,
+                orderable: true
+            },
+            {
+                data: 'payment_discount',
+                name: 'payment_discount',
                 searchable: true,
                 orderable: true
             },

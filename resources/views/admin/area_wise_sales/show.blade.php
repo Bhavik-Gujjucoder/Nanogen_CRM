@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
-                        <label class="col-form-label">Sales Person </label>
+                        <label class="col-form-label">Sales Person</label>
                         <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
                             <option value="">Select sales person</option>
                             <option value="0">All</option>
@@ -93,7 +93,8 @@
                         <th scope="col">Order No</th>
                         <th scope="col">Firm Name</th>
                         <th scope="col">Sales Person</th>
-                        <th scope="col">Product & Quantity</th>
+                        <th scope="col">Product</th> <!-- Product & Quantity -->
+                        <th scope="col">Quantity</th>
                         <th scope="col">Date</th>
                         <th scope="col">Sales Amount</th>
                         <th scope="col">Status</th>
@@ -147,7 +148,6 @@
         area_wise_show.draw();
     });
 
-
     var area_wise_show = $('#area_wise_show').DataTable({
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
@@ -195,6 +195,12 @@
             {
                 data: 'product_qty',
                 name: 'product_qty',
+                searchable: true,
+                orderable: true,
+            },
+            {
+                data: 'qty',
+                name: 'qty',
                 searchable: true,
                 orderable: true,
             },
@@ -272,12 +278,11 @@
     function applyFilter() {
         area_wise_show.ajax.reload();
     }
+
     /***** Search Box *****/
     $('#customSearch').on('keyup', function() {
         area_wise.search(this.value).draw();
     });
-
-
 
     /*** Order Popup Model ***/
     $(document).on('click', '.open-popup-model', function(e) {
@@ -362,7 +367,6 @@
             }
         }
     });
-
     /*** END ***/
 </script>
 @endsection

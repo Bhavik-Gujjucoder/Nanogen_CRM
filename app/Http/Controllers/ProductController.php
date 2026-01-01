@@ -73,6 +73,9 @@ class ProductController extends Controller
                 ->editColumn('category_id', function ($product) {
                     return $product->category ? $product->category->category_name : '-';
                 })
+                ->editColumn('parent_category_id', function ($product) {
+                    return $product->category->parent ? $product->category->parent->category_name : '-';
+                })
                 ->editColumn('grade_id', function ($product) {
                     return $product->grade ? $product->grade->name : '-';
                 })

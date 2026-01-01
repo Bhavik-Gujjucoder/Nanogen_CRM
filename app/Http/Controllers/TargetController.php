@@ -29,15 +29,11 @@ class TargetController extends Controller
     {
         $data['page_title'] = 'Target';
 
-
         $login_user_id = Auth::user()->id;
         $userIds = SalesPersonDetail::where('user_id', $login_user_id)
             ->pluck('reporting_sales_person_id');
         // ->push($login_user_id);
         $data['reporting_user_count'] = SalesPersonDetail::whereIn('user_id', $userIds)->count();
-
-        // dd($data['reporting_user_count']);
-
 
         if ($request->ajax()) {
             $records = Target::query();
@@ -65,17 +61,15 @@ class TargetController extends Controller
                     $q->where('quarterly', $request->quarterly);
                 });
 
-                // if (isset($quarterly[$request->quarterly])) {  
-
-                //     [$startDate, $endDate] = $quarterly[$request->quarterly];
-
-                //     $query->whereHas('target_quarterly', function ($q) use ($startDate, $endDate) {
-                //         $q->whereBetween('quarterly', [
-                //             $startDate->startOfDay(),
-                //             $endDate->endOfDay()
-                //         ]);
-                //     });
-                // }
+                /* if (isset($quarterly[$request->quarterly])) {  
+                     [$startDate, $endDate] = $quarterly[$request->quarterly];
+                     $query->whereHas('target_quarterly', function ($q) use ($startDate, $endDate) {
+                         $q->whereBetween('quarterly', [
+                             $startDate->startOfDay(),
+                             $endDate->endOfDay()
+                         ]);
+                     });
+                 }*/
             });
 
             if (auth()->user()->hasRole('sales')) {
@@ -157,32 +151,77 @@ class TargetController extends Controller
                                 </span>';
                     })->implode('<br>');
                 })
-                // ->editColumn('start_date', function ($row) {
-                //     return $row->start_date->format('d M Y');
-                // })
+                /* ->editColumn('start_date', function ($row) {
+                     return $row->start_date->format('d M Y');
+                }) */
                 ->editColumn('target_value', function ($row) {
                     if ($row->target_value) {
                         return IndianNumberFormat($row->target_value);
                     }
                     return '-';
                 })
-                // ->editColumn('end_date', function ($row) {
-                //     return $row->end_date->format('d M Y');
-                // })
+                /* ->editColumn('end_date', function ($row) {
+                     return $row->end_date->format('d M Y');
+                })*/
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d M Y');
                 })
+                // ->editColumn('salesman_id', function ($row) {
+                //     if ($row->sales_person_detail) {
+                //         return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
+                //     }
+                //     return '-';
+                // })
                 ->editColumn('salesman_id', function ($row) {
-                    if ($row->sales_person_detail) {
-                        return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
-                    }
-                    return '-';
+                    $order_id = $row->sales_person_detail;
+                    return '<a href="' . route('target.show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
+                                <i class="ti ti-eye #1ecbe2"></i>  ' . $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name . '</a>';
                 })
                 ->editColumn('city_id', function ($row) {
                     if ($row->city) {
                         return $row->city->city_name;
                     }
                     return '-';
+                })
+                ->editColumn('qurterly_1', function ($row) {
+                    $data = $row->target_quarterly->where('quarterly', 1);
+                    return $data->isNotEmpty()
+                        ? $data->map(function ($q) {
+                            return '<span class="badge bg-gray me-1 mb-1">
+                        ₹' . number_format($q->quarterly_target_value, 0) . '
+                    </span>';
+                        })->implode('<br>')
+                        : '-';
+                })
+                ->editColumn('qurterly_2', function ($row) {
+                    $data = $row->target_quarterly->where('quarterly', 2);
+                    return $data->isNotEmpty()
+                        ? $data->map(function ($q) {
+                            return '<span class="badge bg-gray me-1 mb-1">
+                        ₹' . number_format($q->quarterly_target_value, 0) . '
+                    </span>';
+                        })->implode('<br>')
+                        : '-';
+                })
+                ->editColumn('qurterly_3', function ($row) {
+                    $data = $row->target_quarterly->where('quarterly', 3);
+                    return $data->isNotEmpty()
+                        ? $data->map(function ($q) {
+                            return '<span class="badge bg-gray me-1 mb-1">
+                        ₹' . number_format($q->quarterly_target_value, 0) . '
+                    </span>';
+                        })->implode('<br>')
+                        : '-';
+                })
+                ->editColumn('qurterly_4', function ($row) {
+                    $data = $row->target_quarterly->where('quarterly', 4);
+                    return $data->isNotEmpty()
+                        ? $data->map(function ($q) {
+                            return '<span class="badge bg-gray me-1 mb-1">
+                        ₹' . number_format($q->quarterly_target_value, 0) . '
+                    </span>';
+                        })->implode('<br>')
+                        : '-';
                 })
                 ->filterColumn('salesman_id', function ($query, $keyword) {
                     $query->whereHas('sales_person_detail', function ($q) use ($keyword) {
@@ -194,10 +233,34 @@ class TargetController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result', 'quarterly']) //'value',
+                ->filterColumn('qurterly_1', fn() => null)
+                ->filterColumn('qurterly_2', fn() => null)
+                ->filterColumn('qurterly_3', fn() => null)
+                ->filterColumn('qurterly_4', fn() => null)
+                ->rawColumns(['checkbox', 'action', 'subject_name', 'target_result', 'quarterly', 'qurterly_1', 'qurterly_2', 'qurterly_3', 'qurterly_4', 'salesman_id']) //'value',
                 ->make(true);
         }
         return view('admin.target.index', $data);
+    }
+
+    public function target_view($id)
+    {
+        try {
+            $data['target'] = Target::findOrFail($id);
+            $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
+            $data['cities'] = CityManagement::whereNull('deleted_at')->where('status', 1)->get();
+            $data['grade'] = GradeManagement::whereNull('deleted_at')->where('status', 1)->get();
+
+            $html = view('admin.target.view', $data)->render(); // Assuming your modal HTML is in target.modal view.
+
+            return response()->json([
+                'html' => $html,  // Return the modal HTML as a string
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['error' => 'Something went wrong!'], 500);
+            // return redirect()->back()->with('error', 'Something is wrong!!');
+        }
     }
 
     /**

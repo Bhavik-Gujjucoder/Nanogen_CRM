@@ -57,6 +57,7 @@
                         <th class="no-sort" scope="col">Sr no</th>
                         <th scope="col">Product Name</th>
                         <th scope="col">Category</th>
+                        <th scope="col">Parent Category</th>
                         <th scope="col">Grade</th>
                         <th scope="col">GST(%)</th>
                         <th scope="col">Status</th>
@@ -126,6 +127,12 @@
             {
                 data: 'category_id',
                 name: 'category_id',
+                searchable: true,
+                orderable: false
+            },
+            {
+                data: 'parent_category_id',
+                name: 'parent_category_id',
                 searchable: true,
                 orderable: false
             },

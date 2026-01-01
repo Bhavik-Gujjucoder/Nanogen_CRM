@@ -14,8 +14,7 @@
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'general-setting' ? 'active' : '' }}" id="GeneralSetting"
                     data-bs-toggle="tab" href="#general-setting" role="tab" aria-controls="general-setting"
-                    aria-selected="true{{-- $activeTab == 'general-setting' ? 'true' : 'false' --}}"
-                    >General Setting</a>
+                    aria-selected="true{{-- $activeTab == 'general-setting' ? 'true' : 'false' --}}">General Setting</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ $activeTab == 'parent-category' ? 'active' : '' }}" id="ParentCategory"
@@ -44,16 +43,25 @@
                     href="#o_form" role="tab" aria-controls="o_form" aria-selected="false">O Form</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link {{ $activeTab == 'principal_certificate' ? 'active' : '' }}" id="principal_certificate_tab" data-bs-toggle="tab"
-                    href="#principal_certificate" role="tab" aria-controls="principal_certificate" aria-selected="false">Principal Certificate</a>
+                <a class="nav-link {{ $activeTab == 'principal_certificate' ? 'active' : '' }}"
+                    id="principal_certificate_tab" data-bs-toggle="tab" href="#principal_certificate" role="tab"
+                    aria-controls="principal_certificate" aria-selected="false">Principal Certificate</a>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ $activeTab == 'advance-payment-discount' ? 'active' : '' }}"
+                    id="AdvancePaymentDiscount" data-bs-toggle="tab" href="#Advance-Payment-Discount" role="tab"
+                    aria-controls="Advance-Payment-Discount"
+                    aria-selected="{{ $activeTab == 'advance-payment-discount' ? 'true' : 'false' }}">Advance Payment
+                    Discount</a>
             </li>
         </ul>
 
         <div class="tab-content mt-3" id="myTabContent">
 
             <!--G E N E R A L   S E T T I N G   T A B-->
-            <div class="tab-pane {{ $activeTab == 'general-setting' ? 'show active' : ''}}" id="general-setting" role="tabpanel"
-                aria-labelledby="GeneralSetting">
+            <div class="tab-pane {{ $activeTab == 'general-setting' ? 'show active' : '' }}" id="general-setting"
+                role="tabpanel" aria-labelledby="GeneralSetting">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="form_type" value="general-setting">
@@ -160,7 +168,7 @@
                                         <label class="col-form-label">Category Name *</span></label>
                                         <input type="text" name="category_name" value=""
                                             class="form-control" placeholder="Enter category name" maxlength="250">
-                                            <input type="hidden" name="parent_category_id" value="0">
+                                        <input type="hidden" name="parent_category_id" value="0">
                                         <span class="category_name_error"></span>
                                     </div>
 
@@ -197,6 +205,7 @@
                     </div>
                 </div>
             </div>
+
             <!--C O M P A N Y   D E T A I L S   T A B-->
             <div class="tab-pane fade {{ $activeTab == 'company-detail' ? 'show active' : '' }}" id="company-details"
                 role="tabpanel" aria-labelledby="CompanyDetails">
@@ -454,8 +463,8 @@
 
 
             <!-- P R I N C I P A L   C E R T I F I C A T E   F O R M-->
-            <div class="tab-pane fade {{ $activeTab == 'principal_certificate' ? 'show active' : '' }}" id="principal_certificate"
-                role="tabpanel" aria-labelledby="principal_certificate">
+            <div class="tab-pane fade {{ $activeTab == 'principal_certificate' ? 'show active' : '' }}"
+                id="principal_certificate" role="tabpanel" aria-labelledby="principal_certificate">
                 <form action="{{ route('admin.generalsetting.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
@@ -464,7 +473,8 @@
                         <div class="mb-3 col-md-6">
                             <label for="docx_file" class="form-label">Upload Docx File</label>
                             <input type="file" name="principal_certificate_docx_file" id="docx_file"
-                                class="form-control @error('principal_certificate_docx_file') is-invalid @enderror" accept=".docx">
+                                class="form-control @error('principal_certificate_docx_file') is-invalid @enderror"
+                                accept=".docx">
 
                             @error('principal_certificate_docx_file')
                                 <div class="invalid-feedback">
@@ -492,13 +502,51 @@
 
                 </form>
             </div>
+
+            <!--A D V A N C E   P A Y M E N T   D I S C O U N T   T A B-->
+            <div class="tab-pane fade {{ $activeTab == 'advance-payment-discount' ? 'show active' : '' }}"
+                id="Advance-Payment-Discount" role="tabpanel" aria-labelledby="AdvancePaymentDiscount">
+                <form action="{{ route('admin.generalsetting.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="form_type" value="advance-payment-discount">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">Advance Payment Discount <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('advance_payment_discount') is-invalid @enderror"
+                                    placeholder="0" name="advance_payment_discount"
+                                    value="{{ old('advance_payment_discount', getSetting('advance_payment_discount')) }}">
+                                <div class="form-input-icon select-2-box">
+                                    <select class="select2" id="discount_type" name="discount_type"
+                                        aria-hidden="true" style="width:100%">
+                                        <option value="rupees"
+                                            {{ old('discount_type', getSetting('discount_type')) == 'rupees' ? 'selected' : '' }}>
+                                            ₹</option>
+                                        <option value="percentage"
+                                            {{ old('discount_type', getSetting('discount_type')) == 'percentage' ? 'selected' : '' }}>
+                                            %</option>
+                                    </select>
+                                </div>
+                                @error('advance_payment_discount')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 @endsection
 @section('script')
-
 <script type="text/javascript">
     $(document).ready(function() {
         $('.summernote').summernote({
@@ -684,7 +732,7 @@
         let categoryId = $(this).data('id');
         let form = $('#delete-form-' + categoryId); // Select the correct form
         console.log(form);
-       let actionUrl = "{{ route('category.destroy', ':id') }}".replace(':id', categoryId);
+        let actionUrl = "{{ route('category.destroy', ':id') }}".replace(':id', categoryId);
         // Submit ajax if confirmed
         confirmDeletion(function() {
             $.ajax({

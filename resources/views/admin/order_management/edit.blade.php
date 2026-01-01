@@ -101,6 +101,8 @@
                     <textarea class="form-control" name="address" placeholder="Address">{{ old('address', $order->address) }}</textarea>
                 </div>
 
+
+
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label d-block">Transport <span class="text-danger">*</span></label>
                     <div class="form-check form-check-inline">
@@ -161,8 +163,34 @@
                     </div>
                 </div>
 
-                {{-- {{dd(asset('lr_uploads'))}} --}}
+                <div class="col-md-4 mb-3">
+                    <label class="col-form-label d-block">Advance Payment Discount </label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input advance-payment-discount" type="checkbox"
+                            name="advance_payment_discount" id="advance_payment_discount" value="yes"
+                            {{ old('advance_payment_discount', $order->advance_payment_discount ?? '') == 'yes' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="advance_payment_discount">Advance Payment
+                            Discount
+                            ({{ $order->payment_discount }}{{ $order->discount_type == 'rupees' ? '₹' : '%' }})</label>
 
+                        <input type="hidden" name="payment_discount" value="{{ $order->payment_discount }}">
+                        <input type="hidden" name="discount_type" value="{{ $order->discount_type }}">
+                    </div>
+                    <!-- Image Field -->
+                </div>
+                <div class="col-md-4 mb-3 advance-payment-discount-image-field" style="display: none;">
+                    <label class="col-form-label"> Upload Image <span class="text-danger">*</span></label>
+                    <input type="file" class="form-control" name="advance_pay_discount_img" accept="image/*">
+                    @if (!empty($order->advance_pay_discount_img))
+                        <small class="text-muted">Current: <a
+                                href="{{ asset('storage/advance_pay_discount_img/' . $order->advance_pay_discount_img) }}"
+                                target="_blank">View Uploaded Image</a></small>
+                        <input type="hidden" name="existing_advance_pay_discount_img"
+                            value="{{ $order->advance_pay_discount_img }}">
+                    @endif
+                </div>
+
+                {{-- {{dd(asset('lr_uploads'))}} --}}
                 {{-- <div class="col-md-4 mb-3">
                     <label class="col-form-label">Order Status <span class="text-danger">*</span></label>
                     <select name="order_status" class="form-control form-select search-dropdown">
@@ -311,6 +339,10 @@
                     </div> --}}
                     <div class="row">
                         <div class="col-md-12">
+                            <label class="col-form-label" id="product_total_order_amount">Total Amount :
+                                {{ $order->total_order_amount }} </label>
+                            <label class="col-form-label" id="discount">Discount : {{ $order->payment_discount }}
+                            </label>
                             <label class="col-form-label" id="grand_total">Grand Total (Incl. GST) :
                                 {{ $order->grand_total }}</label>
                             <input type="hidden" name="grand_total" value="{{ $order->grand_total }}">
@@ -353,11 +385,29 @@
 
         // On page load (keep values when editing)
         toggleTransportFields();
+        advancePaymentDiscount();
 
-        // On radio button change
+        // checkbox On change
         $(document).on('change', '.transport-option', function() {
             toggleTransportFields();
         });
+
+
+        /*** advance payment discount checked or not***/
+        function advancePaymentDiscount() {
+            const advancePaymentDiscount = $('input[name="advance_payment_discount"]:checked').val();
+            if (advancePaymentDiscount === 'yes') {
+                $('.advance-payment-discount-image-field').show();
+            } else {
+                $('.advance-payment-discount-image-field').hide();
+            }
+        }
+        $(document).on('change', '.advance-payment-discount', function() {
+            advancePaymentDiscount();
+            calculateGrandTotal();
+        })
+
+
     });
 
     /*** party name select and phone number auto fillable ***/
@@ -478,6 +528,9 @@
                 transport_type: {
                     required: true,
                 },
+                advance_payment_discount: {
+                    required: false,
+                },
                 vehicle_number: {
                     required: function() {
                         return $('input[name="transport_type"]:checked').val() === 'company';
@@ -501,6 +554,23 @@
                         return isOutside && !existingLR;
 
                         // return $('input[name="transport_type"]:checked').val() === 'outside';
+                    },
+                },
+                advance_pay_discount_img: {
+                    required: function() {
+                        // Check if "Outside Company Transport" selected
+                        const isYes = $('input[name="advance_payment_discount"]:checked')
+                            .val() ===
+                            'yes';
+
+                        // Check if an existing LR file is present (we’ll store it in a hidden input)
+                        const existingImg = $('input[name="existing_advance_pay_discount_img"]')
+                            .val();
+
+                        // Require only if "outside" AND no existing file
+                        return isYes && !existingImg;
+
+                        // return $('input[name="advance_payment_discount"]:checked').val() === 'outside';
                     },
                 },
                 invoice_upload: {
@@ -528,9 +598,11 @@
                 gst_no: "Please enter GST number",
                 address: "Please enter address",
                 transport_type: "Please select transport type",
+                advance_payment_discount: "Please select advance payment discount",
                 vehicle_number: "Please enter vehicle number",
                 name: "Please enter name",
                 lr_upload: "Please upload LR file",
+                advance_pay_discount_img: "Please upload image",
                 invoice_upload: "Please upload invoice file"
             },
             errorElement: 'span',
@@ -727,6 +799,7 @@
 
 
     });
+
     // Calculate Grand Total
     function calculateGrandTotal() {
         $('[name="price[]"]').each(function() {
@@ -754,9 +827,39 @@
         // $('#all_total').text('Total : ' + IndianNumberFormatscript(all_total.toFixed(0)));
         // $('#gstAmount').text(IndianNumberFormatscript(gstAmount.toFixed(0)));
 
+
+        // ✅ CHECK CHECKBOX STATUS
+        let isAdvanceChecked = $('#advance_payment_discount').is(':checked');
+
+        if (isAdvanceChecked) {
+            let paymentDiscount = parseFloat($('input[name="payment_discount"]').val()) || 0;
+            let discountType = $('input[name="discount_type"]').val(); // rupees / percentage
+
+            let discountAmount = 0;
+
+            if (discountType === 'rupees') {
+                discountAmount = paymentDiscount;
+            } else if (discountType === 'percentage') {
+                discountAmount = (grandTotal * paymentDiscount) / 100;
+            }
+            grandTotal = Math.max(0, grandTotal - discountAmount);
+
+            let sign = discountType === 'rupees' ? '₹' : '%';
+            $('#discount').text(
+                'Discount : ' +
+                (sign === '₹' ?
+                    sign + paymentDiscount :
+                    paymentDiscount + sign)
+            );
+        } else {
+            $('#discount').text('Discount : 0');
+        }
+
+
+
+        $('#product_total_order_amount').text('Total Amount : ₹' + all_total.toFixed(2));
         // $('#grand_total').text('Grand Total (Incl. GST) : ' + IndianNumberFormatscript(grandTotal.toFixed(0)));
         $('#grand_total').text('Grand Total (Incl. GST) : ₹' + grandTotal.toFixed(2));
-
         $('input[name="total_order_amount"]').val(all_total.toFixed(2));
         $('input[name="gst_amount"]').val(gstAmount.toFixed(0));
         $('input[name="grand_total"]').val(grandTotal.toFixed(2));

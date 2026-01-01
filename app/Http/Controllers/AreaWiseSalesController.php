@@ -28,8 +28,8 @@ class AreaWiseSalesController extends Controller
         if ($request->ajax()) {
 
             $data = OrderManagement::query()
-                // ->join('sales_person_details', 'sales_person_details.user_id', '=', 'order_management.salesman_id')
-                // ->join('city_management', 'city_management.id', '=', 'sales_person_details.city_id')
+                /* ->join('sales_person_details', 'sales_person_details.user_id', '=', 'order_management.salesman_id')
+                   ->join('city_management', 'city_management.id', '=', 'sales_person_details.city_id') */
                 ->join('distributors_dealers', 'distributors_dealers.id', '=', 'order_management.dd_id')
                 ->join('city_management', 'city_management.id', '=', 'distributors_dealers.city_id')
                 ->select(
@@ -197,9 +197,19 @@ class AreaWiseSalesController extends Controller
                     }
                     return '-';
                 })
-                ->addColumn('product_qty', function ($row) {
+                /* ->addColumn('product_qty', function ($row) {
                     return $row->products->map(function ($orderProduct) {
                         return '⮞ ' . $orderProduct->product->product_name . ' (' . $orderProduct->qty . ') Unit-' . $orderProduct->variation_option->unit;
+                    })->implode('<br> ');
+                }) */
+                ->addColumn('product_qty', function ($row) {
+                    return $row->products->map(function ($orderProduct) {
+                        return '⮞ ' . $orderProduct->product->product_name;
+                    })->implode('<br> ');
+                })
+                ->addColumn('qty', function ($row) {
+                    return $row->products->map(function ($orderProduct) {
+                        return '⮞ (' . $orderProduct->qty . ') ' . $orderProduct->variation_option->unit;
                     })->implode('<br> ');
                 })
                 ->editColumn('order_date', function ($row) {
@@ -233,7 +243,7 @@ class AreaWiseSalesController extends Controller
                 ->filterColumn('order_date', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
                 })
-                ->rawColumns(['unique_order_id', 'status', 'product_qty'])
+                ->rawColumns(['unique_order_id', 'status', 'product_qty', 'qty'])
                 ->make(true);
         }
 

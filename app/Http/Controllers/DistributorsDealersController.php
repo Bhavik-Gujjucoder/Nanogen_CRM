@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Mpdf\Mpdf;
+use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\Country;
@@ -11,23 +12,24 @@ use App\Models\Category;
 use Mpdf\HTMLParserMode;
 use Illuminate\Http\Request;
 use Mpdf\Config\FontVariables;
+use App\Models\OrderManagement;
 use App\Models\StateManagement;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Mpdf\Config\ConfigVariables;
 use Yajra\DataTables\DataTables;
+use App\Models\SalesPersonDetail;
 use App\Models\DealershipCompanies;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\OrderManagementProduct;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\DistributorDealerExport;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\ProprietorPartnerDirector;
-use App\Models\SalesPersonDetail;
 use App\Models\DistributorsDealersDocuments;
-use App\Exports\DistributorDealerExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Carbon\Carbon;
 
 class DistributorsDealersController extends Controller
 {
@@ -85,6 +87,10 @@ class DistributorsDealersController extends Controller
                     class="btn btn-outline-warning btn-sm edit-btn"> <i class="ti ti-trash text-danger"></i> ' . __('Delete') . '</a><form action="' . route('distributors_dealers.destroy', $row->id) . '" method="post" class="delete-form" id="delete-form-' . $row->id . '" >'
                         . csrf_field() . method_field('DELETE') . '</form>';
 
+                    $user_report_btn = '<a href="' . route('distributors_dealers.report', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i>' .
+                        ($request->dealer == 1 ? 'Dealer' : 'Distributor') . ' Report</a>';
+
                     $action_btn = '<div class="dropdown table-action">
                                              <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                              <div class="dropdown-menu dropdown-menu-right">';
@@ -98,6 +104,7 @@ class DistributorsDealersController extends Controller
                     $action_btn .= $o_form_licence_check ? $o_form_download_btn : '';
                     $action_btn .= $pesticide_license_check ? $principal_certificate_download_btn : '';
 
+                    $action_btn .= Auth::user()->hasAnyRole(['super admin', 'admin']) ? $user_report_btn : '';
                     $action_btn .= $edit_btn;
                     // $action_btn .= $o_form_download_btn;
                     // $action_btn .= $principal_certificate_download_btn;
@@ -453,5 +460,186 @@ class DistributorsDealersController extends Controller
             });
         $data = $query->get();
         return Excel::download(new DistributorDealerExport($data), 'distributors_dealers.xlsx');
+    }
+
+    public function report(Request $request, $id)
+    {
+        $d_d = DistributorsDealers::findOrFail($id);
+        $data['dd_id'] = $d_d->id;
+        $data['name'] = ($request->dealer == 1) ? $d_d->firm_shop_name . ' - Dealer' : $d_d->firm_shop_name . ' - (Distributor) ';
+        $data['page_title'] = $data['name'] . ' Report';
+        $data['products']   = Product::where('status', 1)->get();
+
+        $orders = OrderManagement::where('dd_id', $id)
+            ->whereHas('products', function ($sub) use ($request) {
+                $sub->when($request->product_id, function ($q) use ($request) {
+                    $q->where('product_id', $request->product_id);
+                });
+            })
+            ->when($request->start_date && $request->end_date, function ($sub) use ($request) {
+                $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
+                $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
+                $sub->whereBetween('order_date', [$startDate, $endDate]);
+            });
+
+        // dd($orders->withSUM('products', 'total')->get()); 
+        $data['total_order'] = $orders->count();
+        // $data['grand_total'] = $orders->products()->sum('total');
+
+        $data['grand_total']  = OrderManagementProduct::whereHas('order', function ($q) use ($id, $request) {
+            $q->where('dd_id', $id); // filter by distributor/dealer
+
+            if ($request->start_date && $request->end_date) {
+                $q->whereBetween('order_date', [
+                    Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d'),
+                    Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d'),
+                ]);
+            }
+        })
+            ->when($request->product_id, function ($q) use ($request) {
+                $q->where('product_id', $request->product_id);
+            })
+            ->sum('total'); // sum column from order_products table
+
+
+
+        if ($request->ajax() && $request->table === 'orders') {
+            return  $this->orderDataTable($request, $id);
+        }
+        if ($request->ajax() && $request->table === 'products') {
+            return  $this->productsDataTable($request, $id);
+        }
+        return view('admin.distributors_dealers.report', $data);
+    }
+
+    private function orderDataTable($request, $id)
+    {
+        $orders = OrderManagement::where('dd_id', $id)
+
+            ->whereHas('products', function ($sub) use ($request) {
+                $sub->when($request->product_id, function ($q) use ($request) {
+                    $q->where('product_id', $request->product_id);
+                });
+            })
+            ->when($request->start_date && $request->end_date, function ($sub) use ($request) {
+                $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
+                $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
+                $sub->whereBetween('order_date', [$startDate, $endDate]);
+            });
+        return DataTables::of($orders)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $action_btn = '<div class="dropdown table-action">
+                                             <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                             <div class="dropdown-menu dropdown-menu-right">';
+
+                return $action_btn . ' </div></div>';
+            })
+            ->editColumn('unique_order_id', function ($row) {
+                $order_id = $row->unique_order_id;
+                return '<a href="' . route('area_wise_sales.order_show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
+                                <i class="ti ti-eye #1ecbe2"></i>  ' . $order_id . '</a>';
+            })
+            ->editColumn('order_date', function ($row) {
+                return Carbon::parse($row->order_date)->format('d M Y');
+            })
+            ->editColumn('dd_id', function ($row) {
+                if ($row->distributors_dealers) {
+                    $type = $row->distributors_dealers->user_type == 1 ? '(Distributor)' : ($row->distributors_dealers->user_type == 2 ? '(Dealer)' : '');
+                    return $row->distributors_dealers->firm_shop_name . ' ' . $type;
+                }
+                return '-';
+            })
+            ->editColumn('city', function ($row) {
+                if ($row->distributors_dealers) {
+                    return $row->distributors_dealers->city->city_name ?? '-';
+                }
+                return '-';
+            })
+            ->editColumn('salesman_id', function ($row) {
+                if ($row->sales_person_detail) {
+                    return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
+                }
+                return '-';
+            })
+            ->editColumn('grand_total', function ($row) {
+                if ($row->grand_total) {
+                    return IndianNumberFormat($row->grand_total);
+                }
+                return '-';
+            })
+            ->editColumn('payment_discount', function ($row) {
+                if ($row->payment_discount) {
+                    return $row->payment_discount . '' . ($row->discount_type == 'rupees' ? '₹' : '%');
+                }
+                return '0';
+            })
+            ->addColumn('order_status', function ($row) {
+                $order_status = '';
+
+                if ($row->status < 1) {
+                    $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="1">
+                                            <span class="badge bg-warning">Pending</span>
+                                          </a>';
+                }
+                if ($row->status < 2) {
+                    $order_status .= '<a href="javascript:void(0)" class="dropdown-item change-status" data-id="' . $row->id . '" data-status="2">
+                                            <span class="badge bg-success">Complete</span>
+                                          </a>';
+                }
+                if ($row->status < 2 && Auth::user()->hasAnyRole(['admin', 'super admin', 'staff'])) {
+                    $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
+                                        <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
+                                      </div>';
+                    return $action_btn;
+                }
+                return $row->statusBadge();
+            })
+            ->rawColumns(['unique_order_id', 'order_status', 'checkbox', 'action'])
+            ->make(true);
+    }
+
+    private function productsDataTable($request, $id)
+    {
+        $all_products = OrderManagementProduct::whereHas('order', function ($q) use ($id, $request) {
+            $q->where('dd_id', $id);
+        })
+            ->whereHas('order', function ($sub) use ($request) {
+                $sub->when($request->start_date && $request->end_date, function ($q) use ($request) {
+                    $startDate = Carbon::createFromFormat('d-m-Y', $request->start_date)->format('Y-m-d');
+                    $endDate = Carbon::createFromFormat('d-m-Y', $request->end_date)->format('Y-m-d');
+                    $q->whereBetween('order_date', [$startDate, $endDate]);
+                });
+            })
+            ->when($request->product_id, function ($q) use ($request) {
+                return $q->where('product_id', $request->product_id);
+            });
+        return DataTables::of($all_products)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $action_btn = '<div class="dropdown table-action">
+                                             <a href="#" class="action-icon " data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                             <div class="dropdown-menu dropdown-menu-right">';
+
+                return $action_btn . ' </div></div>';
+            })
+            ->editColumn('product_id', function ($row) {
+                return $row->product->product_name ?? '-';
+            })
+            ->editColumn('order_id', function ($row) {
+                return $row->order->unique_order_id ?? '-';
+                /* $order_id = $row->order->unique_order_id;
+                 return '<a href="' . route('area_wise_sales.order_show', $row->order_id) . '" class="show-btn open-popup-model"  data-id="' . $row->order_id . '">
+                                 <i class="ti ti-eye #1ecbe2"></i>  ' . $order_id . '</a>'; */
+            })
+            ->editColumn('price', function ($row) {
+                return IndianNumberFormat($row->price);
+            })
+            ->editColumn('total', function ($row) {
+                return IndianNumberFormat($row->total);
+            })
+            ->rawColumns(['unique_order_id', 'action'])
+            ->make(true);
     }
 }

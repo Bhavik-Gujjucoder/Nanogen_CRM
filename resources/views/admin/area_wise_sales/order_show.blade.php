@@ -53,6 +53,14 @@
         <label class="col-form-label">Address</label>
         <p class="form-control-plaintext">{{ $order->address ?? '-' }}</p>
     </div>
+
+    @if ($order->payment_discount)
+        <div class="col-md-4 mb-3">
+            <label class="col-form-label">Advance Payment Discount</label>
+            <p class="form-control-plaintext">
+                {{ $order->payment_discount }}{{ $order->discount_type == 'rupees' ? '₹' : '%' }}</p>
+        </div>
+    @endif
 </div>
 
 <div class="table-responsive table-data-cls">
@@ -121,8 +129,22 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="price-cls-new">
+                    <label class="col-form-label" id="product_total_order_amount">Total Amount :
+                        {{ IndianNumberFormat($order->total_order_amount) ?? '0' }} </label>
+                </div>
+                <div class="price-cls-new">@php
+                    $sign = $order->discount_type === 'rupees' ? '₹' : '%';
+                    if (!empty($order->payment_discount) && $sign) {
+                        $discount = $sign === '₹' ? $sign . $order->payment_discount : $order->payment_discount . $sign;
+                    } else {
+                        $discount = '0';
+                    }
+                @endphp
+                    <label class="col-form-label" id="discount">Discount : {{ $discount }} </label>
+                </div>
+                <div class="price-cls-new">
                     <label class="col-form-label">Grand Total (Incl. GST) :</label>
-                    <p class="form-control-plaintext">{{ IndianNumberFormat($order->grand_total) ?? '-' }}</p>
+                    <p class="form-control-plaintext">{{ IndianNumberFormat($order->grand_total) ?? '0' }}</p>
                 </div>
             </div>
         </div>

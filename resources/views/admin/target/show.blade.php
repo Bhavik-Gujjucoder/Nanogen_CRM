@@ -55,7 +55,20 @@
                                 <div class="col-md-4">
                                     <div class="d-flex align-items-center gap-2">
                                         <label class="col-form-label flex-shrink-0">Quarterly </label>
-                                        <select class="form-control me-2" name="quarterly[]" disabled>
+                                        <div>
+                                            @if ($quarterly->quarterly == '1')
+                                                Quarterly 1
+                                            @elseif ($quarterly->quarterly == '2')
+                                                Quarterly 2
+                                            @elseif ($quarterly->quarterly == '3')
+                                                Quarterly 3
+                                            @elseif ($quarterly->quarterly == '4')
+                                                Quarterly 4
+                                            @endif
+                                        </div>
+
+
+                                        {{-- <select class="form-control me-2" name="quarterly[]" disabled>
                                             <option value="">Select Quarter</option>
                                             <option value="1" {{ $quarterly->quarterly == '1' ? 'selected' : '' }}>
                                                 Quarterly 1
@@ -69,7 +82,7 @@
                                             <option value="4" {{ $quarterly->quarterly == '4' ? 'selected' : '' }}>
                                                 Quarterly 4
                                             </option>
-                                        </select>
+                                        </select> --}}
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -109,7 +122,7 @@
                                         <!-- Grade Heading -->
                                         <div class="row fw-bold">
                                             <div class="col-md-4">Grade </div>
-                                            <div class="col-md-3">Target Percentage 
+                                            <div class="col-md-3">Target Percentage
                                             </div>
                                             <div class="col-md-3">Target Value </div>
                                         </div>
@@ -133,14 +146,15 @@
                                             </select>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="number" name="grade_percentage[{{ $q }}][]" disabled
+                                            <input type="number" name="grade_percentage[{{ $q }}][]"
+                                                disabled
                                                 value="{{ old('grade_percentage', $tgrade->grade_percentage) }}"
                                                 class="form-control me-2 grade-percentage"
                                                 placeholder="Target Percentage">
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" name="grade_target_value[{{ $q }}][]" disabled
-                                                value="₹{{ number_format($tgrade->grade_target_value, 0) }}"
+                                            <input type="text" name="grade_target_value[{{ $q }}][]"
+                                                disabled value="₹{{ number_format($tgrade->grade_target_value, 0) }}"
                                                 class="input-as-text grade-target-value" placeholder="₹0" readonly>
                                         </div>
                                         {{-- <div class="col-md-2">

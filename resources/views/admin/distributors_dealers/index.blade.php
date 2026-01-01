@@ -7,15 +7,16 @@
 <div class="card">
     <div class="card-header">
         <!-- Search -->
-        <div class="row align-items-center">
-            <div class="col-sm-3">
-                <div class="icon-form mb-4 mb-sm-0">
+        <div class="row align-items-center sale-sec">
+            <div class="col-sm-12 col-lg-2 col-md-12 mb-3">
+                <div class="icon-form mb-4 mb-sm-0 mt-4">
+                  
                     <span class="form-icon"><i class="ti ti-search"></i></span>
                     <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-2 col-md-12">
                 <div class="mb-3">
                     <label class="col-form-label">Sales Person </label>
                     <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
@@ -31,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-2 col-md-12">
                 <div class="mb-3">
                     <label class="col-form-label">Start Date</label>
                     <div class="icon-form">
@@ -42,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-12 col-lg-2 col-md-12">
                 <div class="mb-3">
                     <label class="col-form-label">End Date</label>
                     <div class="icon-form">
@@ -53,8 +54,8 @@
                 </div>
             </div>
 
-            <div class="col-sm-12">
-                <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end">
+            <div class="col-sm-12 col-lg-4 col-md-12">
+                <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end btn-cls">
                     <div class="dropdown me-2 gc-export-menu">
                         <!-- <a href="javascript:void(0);" class="dropdown-toggle"
                       data-bs-toggle="dropdown"><i

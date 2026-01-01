@@ -29,20 +29,33 @@ class TargetExport implements FromCollection, WithHeadings, WithMapping, WithSty
             'Target Name',
             'Sales Person',
             'Target Value',
+            'Quarter 1',
+            'Quarter 2',
+            'Quarter 3',
+            'Quarter 4',
             'Region',
-            'Date',
+            'Created Date',
         ];
     }
 
     public function map($row): array
     {
+        $quarter_1 = $row->target_quarterly->where('quarterly', 1)->pluck('quarterly_target_value')->first() ?? 0;
+        $quarter_2 = $row->target_quarterly->where('quarterly', 2)->pluck('quarterly_target_value')->first() ?? 0;
+        $quarter_3 = $row->target_quarterly->where('quarterly', 3)->pluck('quarterly_target_value')->first() ?? 0;
+        $quarter_4 = $row->target_quarterly->where('quarterly', 4)->pluck('quarterly_target_value')->first() ?? 0;
+
         return [
             $row->subject ?? '',
             trim(
                 ($row->sales_person_detail?->first_name ?? '') . ' ' .
                     ($row->sales_person_detail?->last_name ?? '')
             ),
-            $row->target_value  ?? '0',
+            $row->target_value  ? '₹' . number_format($row->target_value, 0) : '-',
+            $quarter_1 ? '₹' . number_format($quarter_1, 0) : '-',
+            $quarter_2 ? '₹' . number_format($quarter_2, 0) : '-',
+            $quarter_3 ? '₹' . number_format($quarter_3, 0) : '-',
+            $quarter_4 ? '₹' . number_format($quarter_4, 0) : '-',
             $row->city->city_name ?? '',
             $row->created_at->format('d M Y'),
         ];

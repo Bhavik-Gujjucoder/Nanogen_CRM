@@ -142,6 +142,12 @@ class OrderManagementController extends Controller
                     }
                     return '-';
                 })
+                ->editColumn('payment_discount', function ($row) {
+                    if ($row->payment_discount) {
+                        return $row->payment_discount . '' . ($row->discount_type == 'rupees' ? '₹' : '%');
+                    }
+                    return '0';
+                })
                 ->addColumn('order_status', function ($row) {
                     $order_status = '';
 
@@ -155,7 +161,7 @@ class OrderManagementController extends Controller
                                             <span class="badge bg-success">Complete</span>
                                           </a>';
                     }
-                    if ($row->status < 2 && Auth::user()->hasAnyRole(['admin', 'staff'])) {
+                    if ($row->status < 2 && Auth::user()->hasAnyRole(['admin', 'super admin', 'staff'])) {
                         $action_btn = '<div class="dropdown table-action order_drpdown">' . $row->statusBadge() . '
                                         <a href="#" class="action-icon" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-pencil"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">' . $order_status . '</div>
@@ -238,8 +244,6 @@ class OrderManagementController extends Controller
                 ->rawColumns(['checkbox', 'unique_order_id', 'action', 'order_status', 'firm_shop_name', 'unique_ord_id']) //'value',
                 ->make(true);
         }
-
-
         return view('admin.order_management.index', $data);
     }
 
@@ -292,9 +296,7 @@ class OrderManagementController extends Controller
     {
         $data['page_title'] = 'Create Order';
         $data['products'] = Product::where('status', 1)->get();
-        // $data['distributor_dealers'] = DistributorsDealers::get();
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
-
 
         $sales_user_ids = getSalesUserIds();
         $report_manager_sales_user_ids = getReportManagerSalesPersonId();
@@ -308,7 +310,6 @@ class OrderManagementController extends Controller
         }
 
         if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
-
             $data['salesmans'] = SalesPersonDetail::whereIn('user_id', $ids)->where('deleted_at', NULL)->get();
             // $city_ids = explode(',', $data['salesmans']->city_ids);
             $city_ids = explode(
@@ -323,7 +324,6 @@ class OrderManagementController extends Controller
         $latest_order_id = OrderManagement::withTrashed()->max('id');
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
-
         return view('admin.order_management.create', $data);
     }
 
@@ -346,8 +346,20 @@ class OrderManagementController extends Controller
             'total_order_amount',
             // 'gst',
             // 'gst_amount',
-            'grand_total'
+            'grand_total',
+            'advance_payment_discount',
+            'payment_discount',
+            'discount_type'
         ]));
+        if ($request->advance_pay_discount_img) {
+            $file = $request->file('advance_pay_discount_img');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('advance_pay_discount_img', $filename, 'public');
+            $order->update([
+                'advance_pay_discount_img' => $filename
+            ]);
+        }
+
 
         $next_id = $latest_order_id ? $latest_order_id + 1 : 1;
         $data['unique_order_id'] = 'ORD' . str_pad($next_id, max(6, strlen($next_id)), '0', STR_PAD_LEFT);
@@ -439,7 +451,6 @@ class OrderManagementController extends Controller
         }
 
         if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
-
             $data['salesmans'] = SalesPersonDetail::whereIn('user_id', $ids)->where('deleted_at', NULL)->get();
             // $city_ids = explode(',', $data['salesmans']->city_ids);
             $city_ids = explode(',', $data['salesmans']->pluck('city_ids')->implode(','));
@@ -447,8 +458,6 @@ class OrderManagementController extends Controller
         } else {
             $data['distributor_dealers'] = DistributorsDealers::get();
         }
-
-
         return view('admin.order_management.edit', $data);
     }
 
@@ -459,13 +468,35 @@ class OrderManagementController extends Controller
     {
         // dd($request->all());
         $order = OrderManagement::findOrFail($id);
+        // Checkbox checked or not
+        $isAdvance = $request->has('advance_payment_discount') && $request->advance_payment_discount === 'yes';
 
         $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address', 'total_order_amount', 'grand_total']) + [
 
             'transport_type' => $request->transport_type,
             'vehicle_number' => $request->transport_type == 'company' ? $request->vehicle_number : null,
-            'name' => $request->transport_type == 'company' ? $request->name : null,
+            'name'           => $request->transport_type == 'company' ? $request->name : null,
+
+            // 'advance_payment_discount' => $request->advance_payment_discount,
+            'advance_payment_discount'  => $isAdvance ? 'yes' : null,
+            'payment_discount'          => $isAdvance ? $request->payment_discount : 0,
+            'discount_type'             => $isAdvance ? $request->discount_type : null,
         ]);
+
+        if ($request->hasFile('advance_pay_discount_img')) {
+            // Delete old file if exists
+            if ($order->advance_pay_discount_img && Storage::disk('public')->exists('advance_pay_discount_img/' . $order->advance_pay_discount_img)) {
+                Storage::disk('public')->delete('advance_pay_discount_img/' . $order->advance_pay_discount_img);
+            }
+
+            $file = $request->file('advance_pay_discount_img');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('advance_pay_discount_img', $filename, 'public');
+
+            // Save filename in DB
+            $order->advance_pay_discount_img = $filename;
+            $order->save();
+        }
 
         if ($request->hasFile('lr_upload')) {
             // Delete old file if exists
@@ -497,8 +528,6 @@ class OrderManagementController extends Controller
             $order->invoice_upload = $invoiceFileName;
             $order->save();
         }
-
-
 
         // if ($request->only(['product_id', 'gst', 'price', 'qty', 'packing_size_id', 'total'])) {
         if (
@@ -542,6 +571,25 @@ class OrderManagementController extends Controller
     {
         $order = OrderManagement::findOrFail($id);
         OrderManagementProduct::where('order_id', $id)->delete();
+
+        if ($order->advance_pay_discount_img) {
+            if ($order->advance_pay_discount_img && Storage::disk('public')->exists('advance_pay_discount_img/' . $order->advance_pay_discount_img)) {
+                Storage::disk('public')->delete('advance_pay_discount_img/' . $order->advance_pay_discount_img);
+            }
+        }
+
+        if ($order->lr_upload) {
+            if ($order->lr_upload && Storage::disk('public')->exists('lr_uploads/' . $order->lr_upload)) {
+                Storage::disk('public')->delete('lr_uploads/' . $order->lr_upload);
+            }
+        }
+
+        if ($order->invoice_upload) {
+            if ($order->invoice_upload && Storage::disk('public')->exists('invoice_uploads/' . $order->invoice_upload)) {
+                Storage::disk('public')->delete('invoice_uploads/' . $order->invoice_upload);
+            }
+        }
+
         $order->delete();
         return redirect()->route('order_management.index')->with('success', 'Order deleted successfully!');
     }
@@ -550,8 +598,41 @@ class OrderManagementController extends Controller
     {
         $ids = $request->ids;
         if (!empty($ids)) {
-            $order = OrderManagement::whereIn('id', $ids)->delete();
+            // $order = OrderManagement::whereIn('id', $ids)->delete();
+            $orders = OrderManagement::whereIn('id', $ids)->get();
+
+            foreach ($orders as $order) {
+
+                // Advance payment image
+                if (
+                    $order->advance_pay_discount_img &&
+                    Storage::disk('public')->exists('advance_pay_discount_img/' . $order->advance_pay_discount_img)
+                ) {
+                    Storage::disk('public')->delete('advance_pay_discount_img/' . $order->advance_pay_discount_img);
+                }
+
+                // LR upload
+                if (
+                    $order->lr_upload &&
+                    Storage::disk('public')->exists('lr_uploads/' . $order->lr_upload)
+                ) {
+                    Storage::disk('public')->delete('lr_uploads/' . $order->lr_upload);
+                }
+
+                // Invoice upload
+                if (
+                    $order->invoice_upload &&
+                    Storage::disk('public')->exists('invoice_uploads/' . $order->invoice_upload)
+                ) {
+                    Storage::disk('public')->delete('invoice_uploads/' . $order->invoice_upload);
+                }
+            }
+
+            // 🔹 Delete related products
             OrderManagementProduct::whereIn('order_id', $ids)->delete();
+            // 🔹 Delete orders
+            OrderManagement::whereIn('id', $ids)->delete();
+
 
             return response()->json(['message' => 'Selected orders deleted successfully!']);
         }
