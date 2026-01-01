@@ -44492,7 +44492,8 @@ table.gc-manage-table tbody td {
 }
 
 .quarterly-block {
-    padding: 0 !important;padding-bottom: 9px !important;
+    padding: 0 !important;
+    padding-bottom: 9px !important;
 }
 
 .icon-form {
@@ -44500,10 +44501,14 @@ table.gc-manage-table tbody td {
 }
 
 .product-group.product-group-sec.d-flex.align-items-center.mb-2 {
-       padding-top: 10px;
+    padding-top: 10px;
     margin: 0 !important;
 }
-.product-group-sec .form-control-plaintext{padding: 0;}
+
+.product-group-sec .form-control-plaintext {
+    padding: 0;
+}
+
 .quality-sec {
     display: flex;
     justify-content: center;
@@ -44519,7 +44524,7 @@ table.gc-manage-table tbody td {
 
 .quality-sec .form-control-plaintext {
     text-align: left !important;
-    width: 35px;
+    width: auto;
 }
 
 .sub-sec {
@@ -44537,7 +44542,10 @@ table.gc-manage-table tbody td {
 }
 
 @media (max-width: 767px) {
-    .target-sec p.form-control-plaintext{    font-size: 14px;}
+    .target-sec p.form-control-plaintext {
+        font-size: 14px;
+    }
+
     .sub-sec {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -44605,6 +44613,8 @@ table.gc-manage-table tbody td {
         border-bottom: none;
     }
 
-.product-group-sec .col-md-4{ border:none}
+    .product-group-sec .col-md-4 {
+        border: none
+    }
 
 }
