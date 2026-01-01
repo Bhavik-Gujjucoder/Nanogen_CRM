@@ -209,7 +209,12 @@ class AreaWiseSalesController extends Controller
                 })
                 ->addColumn('qty', function ($row) {
                     return $row->products->map(function ($orderProduct) {
-                        return '⮞ (' . $orderProduct->qty . ') ' . $orderProduct->variation_option->unit;
+                        return '⮞ ' . $orderProduct->qty;
+                    })->implode('<br> ');
+                })
+                ->addColumn('unit', function ($row) {
+                    return $row->products->map(function ($orderProduct) {
+                        return '⮞ ' . $orderProduct->variation_option->unit;
                     })->implode('<br> ');
                 })
                 ->editColumn('order_date', function ($row) {
@@ -243,7 +248,7 @@ class AreaWiseSalesController extends Controller
                 ->filterColumn('order_date', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(order_date, '%d-%m-%Y') LIKE ?", ["%{$keyword}%"]);
                 })
-                ->rawColumns(['unique_order_id', 'status', 'product_qty', 'qty'])
+                ->rawColumns(['unique_order_id', 'status', 'product_qty', 'qty', 'unit'])
                 ->make(true);
         }
 

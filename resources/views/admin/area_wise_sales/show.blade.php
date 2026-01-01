@@ -95,6 +95,7 @@
                         <th scope="col">Sales Person</th>
                         <th scope="col">Product</th> <!-- Product & Quantity -->
                         <th scope="col">Quantity</th>
+                        <th scope="col">unit</th>
                         <th scope="col">Date</th>
                         <th scope="col">Sales Amount</th>
                         <th scope="col">Status</th>
@@ -201,6 +202,12 @@
             {
                 data: 'qty',
                 name: 'qty',
+                searchable: true,
+                orderable: true,
+            },
+            {
+                data: 'unit',
+                name: 'unit',
                 searchable: true,
                 orderable: true,
             },
