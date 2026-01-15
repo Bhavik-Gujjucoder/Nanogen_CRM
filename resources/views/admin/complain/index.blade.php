@@ -55,7 +55,8 @@
                             </label>
                         </th>
                         <th class="no-sort" scope="col">Sr no</th>
-                        <th scope="col">Dealer/Distributor</th>
+                        {{-- <th scope="col">Dealer/Distributor</th> --}}
+                        <th scope="col">Firm Name</th>
                         <th scope="col">Date</th>
                         <th scope="col">Products </th>
                         <th scope="col">Status </th>
@@ -101,7 +102,7 @@
                 searchable: false
             }, // Auto-increment number
             {
-                data: 'name',
+                data: 'firm_shop_name',
                 name: 'dd_id',
                 searchable: true
             },

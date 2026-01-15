@@ -67,8 +67,8 @@ class RoleController extends Controller
     public function create()
     {
         $data['page_title']  = 'Add Role & Permission';
-        $data['permissions'] = Permission::where('deleted_at', null)->where('is_dashboard',0)->get()->all();
-                        $data['dashboard_permissions']  = Permission::where('deleted_at', null)->where('is_dashboard',1)->get()->all();
+        $data['permissions'] = Permission::where('deleted_at', null)->where('is_dashboard', 0)->get()->all();
+        $data['dashboard_permissions']  = Permission::where('deleted_at', null)->where('is_dashboard', 1)->get()->all();
 
         return view('roles.create', $data);
     }
@@ -94,8 +94,8 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $data['page_title']   = 'Edit Role & Permission';
-        $data['permissions']  = Permission::where('deleted_at', null)->where('is_dashboard',0)->get()->all();
-        $data['dashboard_permissions']  = Permission::where('deleted_at', null)->where('is_dashboard',1)->get()->all();
+        $data['permissions']  = Permission::where('deleted_at', null)->where('is_dashboard', 0)->get()->all();
+        $data['dashboard_permissions']  = Permission::where('deleted_at', null)->where('is_dashboard', 1)->get()->all();
 
         $data['role']  = $role;
         return view('roles.edit', $data);
@@ -106,8 +106,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        // $request->validate(['name' => 'required|unique:roles,name,' . $role->id],['name.required' => 'The role name field is required.']);
-        // $role->update(['name' => $request->name]);
+        $request->validate(['name' => 'required|unique:roles,name,' . $role->id], ['name.required' => 'The role name field is required.']);
+        $role->update(['name' => $request->name]);
 
         if ($request->permissions) {
             $role->syncPermissions($request->permissions);

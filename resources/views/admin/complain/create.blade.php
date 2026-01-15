@@ -13,10 +13,10 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <div class="profile-pic-upload">
-                              
+
                                 <div class="upload-content">
                                     <div class="upload-btn  @error('complain_image') is-invalid @enderror">
-                                        <input type="file" name="complain_image" {{--accept=".jpg,.jpeg,.gif,.png"--}} 
+                                        <input type="file" name="complain_image" {{-- accept=".jpg,.jpeg,.gif,.png" --}}
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload File
@@ -32,7 +32,7 @@
 
                         <div class="col-md-3 mb-3">
                             <div class="mb-3">
-                                <label class="col-form-label"> Select Dealer/ Distributor <span
+                                <label class="col-form-label"> Select Firm Name<span
                                         class="text-danger">*</span></label>
                                 <select class="form-control form-select search-dropdown" name="dd_id">
                                     <option value="">Select</option>
@@ -41,7 +41,8 @@
                                             <option value="{{ $dd->id }}"
                                                 {{ old('dd_id') == $dd->id ? 'selected' : '' }}
                                                 data-user_type="{{ $dd->user_type }}">
-                                                {{ $dd->applicant_name }}
+                                                {{-- $dd->applicant_name --}}
+                                                {{ $dd->firm_shop_name }}
                                                 {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealer)' : '') }}
                                             </option>
                                         @endforeach
@@ -81,9 +82,12 @@
                                 <label class="col-form-label"> Status <span class="text-danger">*</span></label>
                                 <select class="select" name="status">
                                     <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Pending</option>
-                                    <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>In progress </option>
-                                    <option value="2" {{ old('status') == 2 ? 'selected' : '' }}>Under review </option>
-                                    <option value="3" {{ old('status') == 3 ? 'selected' : '' }}>Completed </option>
+                                    <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>In progress
+                                    </option>
+                                    <option value="2" {{ old('status') == 2 ? 'selected' : '' }}>Under review
+                                    </option>
+                                    <option value="3" {{ old('status') == 3 ? 'selected' : '' }}>Completed
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -108,7 +112,7 @@
                 <!-- <a href="#" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a> -->
                 <button type="submit" class="btn btn-primary">Create</button>
             </div>
-            </form>
+        </form>
     </div>
 </div>
 
@@ -225,7 +229,7 @@
     //     }
     // }
 
-     function previewProfilePicture(event) {
+    function previewProfilePicture(event) {
         const files = event.target.files;
         const previewArea = document.getElementById('previewArea');
         previewArea.innerHTML = ''; // Clear previous previews
@@ -255,7 +259,7 @@
                     element.style.margin = '10px';
                 } else if (
                     file.name.endsWith('.xlsx') ||
-                    file.name.endsWith('.xls') 
+                    file.name.endsWith('.xls')
                     // fileType ===
                     // 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ) {

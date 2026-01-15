@@ -21,8 +21,16 @@
                 @method('PUT')
                 <div class="mb-3 col-md-6">
                     <label>Role Name : </label>
-                    {{-- <input type="text" name="name" class="form-control" value="{{ old('name', $role->name) }}" > --}}
-                    <strong> {{ $role->name }}</strong>
+                    @if (
+                        $role !== null &&
+                            $role->name !== 'admin' &&
+                            $role->name !== 'sales' &&
+                            $role->name !== 'staff' &&
+                            $role->name !== 'reporting manager')
+                        <input type="text" name="name" class="form-control" value="{{ old('name', $role->name) }}">
+                    @else
+                        <strong> {{ $role->name }}</strong>
+                    @endif
                     @error('name')
                         <span class="invalid-feedback d-block">{{ $message }}</span>
                     @enderror

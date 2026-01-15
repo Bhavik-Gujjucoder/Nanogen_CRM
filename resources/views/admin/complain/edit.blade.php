@@ -62,7 +62,7 @@
 
                         <div class="col-md-3 mb-3">
                             <div class="mb-3">
-                                <label class="col-form-label"> Select Dealer/ Distributor <span
+                                <label class="col-form-label"> Select Firm Name <span
                                         class="text-danger">*</span></label>
                                 <select class="form-control form-select search-dropdown" name="dd_id">
                                     <option value="">Select</option>
@@ -74,7 +74,8 @@
                                             <option value="{{ $dd->id }}"
                                                 {{ $selectedDdId == $dd->id ? 'selected' : '' }}
                                                 data-user_type="{{ $dd->user_type }}">
-                                                {{ $dd->applicant_name }}
+                                                {{-- $dd->applicant_name --}}
+                                                {{ $dd->firm_shop_name }}
                                                 {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealer)' : '') }}
                                             </option>
                                         @endforeach
@@ -166,7 +167,8 @@
                             <tbody>
                                 @foreach ($complain_status_history as $history)
                                     <tr>
-                                        <td data-label="Date">{{ \Carbon\Carbon::parse($history->created_at)->format('d-m-Y') }}</td>
+                                        <td data-label="Date">
+                                            {{ \Carbon\Carbon::parse($history->created_at)->format('d-m-Y') }}</td>
                                         <td data-label="Status">
                                             @if ($history->status == 1)
                                                 In progress

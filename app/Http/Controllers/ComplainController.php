@@ -18,7 +18,7 @@ class ComplainController extends Controller
     {
         $data['page_title'] = 'Complain';
         if ($request->ajax()) {
-            $data = Complain::query();
+            $data = Complain::with('distributorsDealers');  ///query();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -49,7 +49,7 @@ class ComplainController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
-                ->editColumn('name', function ($row) {
+                ->editColumn('firm_shop_name', function ($row) {
                     $imagePath = 'storage/complain_images/' . $row->complain_image;
                     // $complainimage = isset($row->complain_image)
                     //     ? asset($imagePath)
@@ -66,13 +66,13 @@ class ComplainController extends Controller
                     <a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                         <img src="' . $profilePic . '" alt="Complain Image">
                     </a>
-                    <span>' . ($row->distributorsDealers?->applicant_name ?? 'N/A') . '</span><br>
+                    <span>' . ($row->distributorsDealers?->firm_shop_name ?? 'N/A') . '</span><br>
                     <small>' . $userLabel . '</small>';
                 })
-
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributorsDealers', function ($q) use ($keyword) {
-                        $q->where('applicant_name', 'like', "%{$keyword}%")
+                        // $q->where('applicant_name', 'like', "%{$keyword}%")
+                        $q->where('firm_shop_name', 'like', "%{$keyword}%")
                             ->orWhereRaw("CASE 
                                             WHEN user_type = 1 THEN '(Distributor)' 
                                             WHEN user_type = 2 THEN '(Dealer)' 
@@ -94,7 +94,7 @@ class ComplainController extends Controller
                 ->editColumn('status', function ($complain) {
                     return $complain->statusBadge(); // Get user roles
                 })
-                ->rawColumns(['checkbox', 'action', 'status', 'name'])
+                ->rawColumns(['checkbox', 'action', 'status', 'firm_shop_name'])
                 ->make(true);
         }
         return view('admin.complain.index', $data);

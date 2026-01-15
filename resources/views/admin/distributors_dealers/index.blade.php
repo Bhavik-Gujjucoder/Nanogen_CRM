@@ -10,7 +10,7 @@
         <div class="row align-items-center sale-sec">
             <div class="col-sm-12 col-lg-2 col-md-12 mb-3">
                 <div class="icon-form mb-4 mb-sm-0 mt-4">
-                  
+
                     <span class="form-icon"><i class="ti ti-search"></i></span>
                     <input type="text" class="form-control" id="customSearch" placeholder="Search">
                 </div>
@@ -56,6 +56,7 @@
 
             <div class="col-sm-12 col-lg-4 col-md-12">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end btn-cls">
+
                     <div class="dropdown me-2 gc-export-menu">
                         <!-- <a href="javascript:void(0);" class="dropdown-toggle"
                       data-bs-toggle="dropdown"><i
@@ -75,17 +76,18 @@
                             </ul>
                         </div>
                     </div>
-
-                    <button type="button" id="exportExcel" class="btn btn-primary">
-                        <i class="ti ti-file-type-xls text-success me-1"></i>
-                        {{ request('dealer') == 1 ? 'Export Dealers' : 'Export Distributors' }}
-                        {{-- Export Excel --}}
-                    </button>
-                    <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}"
-                        class="btn btn-primary">
-                        <i class="ti ti-file-type-xls me-2"></i>
-                        Export Price List
-                    </a>
+                    @if (!auth()->user()->hasRole('sales'))
+                        <button type="button" id="exportExcel" class="btn btn-primary">
+                            <i class="ti ti-file-type-xls text-success me-1"></i>
+                            {{ request('dealer') == 1 ? 'Export Dealers' : 'Export Distributors' }}
+                            {{-- Export Excel --}}
+                        </button>
+                        <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}"
+                            class="btn btn-primary">
+                            <i class="ti ti-file-type-xls me-2"></i>
+                            Export Price List
+                        </a>
+                    @endif
                     <a href="{{ route('distributors_dealers.create', request('dealer')) }}" class="btn btn-primary"><i
                             class="ti ti-square-rounded-plus me-2"></i>
                         {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
@@ -115,7 +117,9 @@
                         <th scope="col">City</th>
                         <th scope="col">Code</th>
                         <th scope="col">Date</th>
-                        <th class="" scope="col">Action</th> {{-- class="text-end" --}}
+                        @if (!auth()->user()->hasRole('sales'))
+                            <th class="" scope="col">Action</th> {{-- class="text-end" --}}
+                        @endif
                     </tr>
                 </thead>
             </table>
@@ -144,7 +148,9 @@
         distributors_dealers_table.draw();
     });
 
+    const isSales = @json(auth()->user()->hasRole('sales'));
     var distributors_dealers_table = $('#distributerTable').DataTable({
+
         "pageLength": 10,
         deferRender: true, // Prevents unnecessary DOM rendering
         processing: true,
@@ -215,7 +221,8 @@
                 data: 'action',
                 name: 'action',
                 orderable: false,
-                searchable: false
+                searchable: false,
+                visible: !isSales // hides for sales
             },
         ],
         columnDefs: [{

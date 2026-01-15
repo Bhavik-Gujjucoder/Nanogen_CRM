@@ -161,7 +161,7 @@ class SalesPersonController extends Controller
 
         $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
         $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
-        $data['employeeId'] = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
+        $data['employeeId'] = 'NG' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
         return view('admin.sales_person.create', $data);
     }
@@ -227,7 +227,7 @@ class SalesPersonController extends Controller
 
             $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
             $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
-            $employee_id        = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
+            $employee_id        = 'NG' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
             $cityIds = implode(',', $request->city_ids);
 

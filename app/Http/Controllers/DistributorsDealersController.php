@@ -18,6 +18,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Mpdf\Config\ConfigVariables;
 use Yajra\DataTables\DataTables;
 use App\Models\SalesPersonDetail;
+use Illuminate\Support\Facades\DB;
 use App\Models\DealershipCompanies;
 use App\Models\DistributorsDealers;
 use App\Http\Controllers\Controller;
@@ -38,6 +39,7 @@ class DistributorsDealersController extends Controller
      */
     public function index(Request $request)
     {
+        // dd(auth()->user()->hasRole('sales'));
         $this->authorize('Distributors & Dealers');
         // if ($request->dealer == 1) {
         //     $this->authorize('Dealers'); // or use: Gate::authorize('Dealer Access');
@@ -153,6 +155,10 @@ class DistributorsDealersController extends Controller
         $data['states']     = StateManagement::where('status', 1)->get()->all();
         $data['countries']  = Country::where('status', 1)->get()->all();
         $data['sales_persons'] = SalesPersonDetail::get();
+
+        $latest_dd_id    = DistributorsDealers::max('id');
+        $nextId          = $latest_dd_id ? $latest_dd_id + 1 : 1;
+        $data['code_no'] = 'NG' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
         return view('admin.distributors_dealers.create', $data);
     }
 
@@ -163,8 +169,14 @@ class DistributorsDealersController extends Controller
     {
         // dd($request->all());
         try {
+
+            $dd_id = DistributorsDealers::max('id');
+            $nextId  = $dd_id ? $dd_id + 1 : 1;
+            $code_no = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
+
             $d_d = new DistributorsDealers();
             $d_d->fill($request->all());
+            $d_d->code_no = $code_no;
 
             if ($request->hasFile('profile_image')) {
                 $file     = $request->file('profile_image');
@@ -422,7 +434,7 @@ class DistributorsDealersController extends Controller
 
     public function replaceInWord(Request $request, $id, $dealer = null)
     {
-        // dd($request->all);
+        // dd('yess');
         $d_d = DistributorsDealers::findOrFail($id);
         // Load the template
         // $templatePath = storage_path('app\public\NANOGEN_O_FORM.docx');
@@ -438,7 +450,8 @@ class DistributorsDealersController extends Controller
         $name = ($request->dealer == 1) ? $d_d->applicant_name . '(Dealer)' : $d_d->applicant_name . '(Distributor)';
 
         $fileName = $name . 'O-Form.docx';
-        $savePath = storage_path("app/public/{$fileName}");
+        // $savePath = storage_path("app/public/{$fileName}");
+        $savePath = storage_path("app/public/distributors_dealers_o_form/{$fileName}");
         $templateProcessor->saveAs($savePath);
 
         return response()->download($savePath);
@@ -485,7 +498,7 @@ class DistributorsDealersController extends Controller
         // dd($orders->withSUM('products', 'total')->get()); 
         $data['total_order'] = $orders->count();
         // $data['grand_total'] = $orders->products()->sum('total');
-
+    
         $data['grand_total']  = OrderManagementProduct::whereHas('order', function ($q) use ($id, $request) {
             $q->where('dd_id', $id); // filter by distributor/dealer
 

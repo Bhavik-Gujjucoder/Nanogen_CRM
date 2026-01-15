@@ -44104,8 +44104,11 @@ select.select.addfileddrop {
 }
 
 .radio-group-tab input[type="radio"]:checked+label {
-    background-color: #fff;
-    color: #343434;
+    /* background-color: #fff;
+    color: #343434; */
+
+    background-color: #014e9c;
+    color: #fff;
     transition: all 0.3s;
 }
 

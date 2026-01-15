@@ -81,8 +81,8 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="col-form-label">Code No <span class="text-danger">*</span></label>
-                                <input type="text" name="code_no" value="{{ old('code_no') }}" class="form-control"
-                                    placeholder="Code No" maxlength="255">
+                                <input type="text" name="code_no" value="{{ $code_no }}" class="form-control"
+                                    readonly placeholder="Code No" maxlength="255">
                                 <span id="code_no_error" class="text-danger"></span>
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Aadhar Card No </label>
                                 <input type="number" name="aadhar_card" value="{{ old('aadhar_card') }}"
-                                    class="form-control" placeholder="Aadhar Card No"
+                                    class="form-control" placeholder="Aadhar Card No" maxlength="12"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
                                 <span id="aadhar_card_error" class="text-danger"></span>
                             </div>
@@ -268,16 +268,20 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="col-form-label">Cheque No.1 </label>
+                                    <label class="col-form-label">Cheque No.1 <span
+                                            class="text-danger">*</span></label>
                                     <input type="number" name="cheque_1" value="{{ old('cheque_1') }}"
                                         class="form-control" placeholder="Cheque No.1" maxlength="255">
+                                    <span id="cheque_1_error" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label class="col-form-label">Cheque No.2 </label>
+                                    <label class="col-form-label">Cheque No.2 <span
+                                            class="text-danger">*</span></label>
                                     <input type="number" name="cheque_2" value="{{ old('cheque_2') }}"
                                         class="form-control" placeholder="Cheque No.2" maxlength="255">
+                                    <span id="cheque_2_error" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -353,8 +357,9 @@
                                     <label class="col-form-label d-flex align-items-center">
                                         <input type="checkbox" name="fertilizer_license_check"
                                             id="fertilizer_license_check" value="1" class="me-2">
-                                        Fertilizer License No
+                                        Fertilizer License No <br><span class="text-danger">*</span>
                                     </label>
+                                    <span id="fertilizer_license_check_error" class="text-danger"></span>
 
                                     <div id="fertilizer_input_wrapper" style="display: none;">
                                         <input type="text" name="fertilizer_license"
@@ -1063,14 +1068,24 @@
                     minlength: 10,
                     maxlength: 10
                 },
-                pancard: "required",
+                // pancard: "required",
+                pancard: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10
+                },
                 // gstin: "required",
-                // aadhar_card: {
-                //     required: true,
-                //     digits: true,
-                //     minlength: 12,
-                //     maxlength: 12
-                // },
+                gstin: {
+                    required: false,
+                    minlength: 15,
+                    maxlength: 15
+                },
+                aadhar_card: {
+                    required: false,
+                    digits: true,
+                    minlength: 12,
+                    maxlength: 12
+                },
                 state_id: "required",
                 city_id: "required",
                 postal_code: "required",
@@ -1080,8 +1095,11 @@
                 account_no: "required",
                 ifsc_code: "required",
                 security_cheque_detail: "required",
+                cheque_1: "required",
+                cheque_2: "required",
                 name_authorised_signatory: "required",
                 // fertilizer_license: "required",
+                fertilizer_license_check: "required",
                 fertilizer_license: {
                     required: function() {
                         return $("input[name='fertilizer_license_check']:checked");
@@ -1113,14 +1131,26 @@
                     minlength: "Mobile number must be 10 digits.",
                     maxlength: "Mobile number must be 10 digits."
                 },
-                pancard: "The pan card No field is required.",
+
+                // pancard: "The pan card No field is required.",
+
+                pancard: {
+                    required: "The pan card No field is required.",
+                    minlength: "Pan card No must be 10 digits.",
+                    maxlength: "Pan card No must be 10 digits."
+                },
+
                 // gstin: "The gstin field is required.",
-                // aadhar_card: {
-                //     required: "The aadhar card no field is required.",
-                //     digits: "Aadhar card No must be numeric.",
-                //     minlength: "Aadhar card No must be 12 digits.",
-                //     maxlength: "Aadhar card No must be 12 digits."
-                // },
+                gstin: {
+                    minlength: "GSTIN must be 15 digits.",
+                    maxlength: "GSTIN must be 15 digits."
+                },
+                aadhar_card: {
+                    // required: "The aadhar card no field is required.",
+                    digits: "Aadhar card No must be numeric.",
+                    minlength: "Aadhar card No must be 12 digits.",
+                    maxlength: "Aadhar card No must be 12 digits."
+                },
                 state_id: "Please select a state.",
                 city_id: "Please select a city.",
                 postal_code: "Postal code is required.",
@@ -1130,7 +1160,10 @@
                 account_no: "The account no field is required.",
                 ifsc_code: "The ifsc code field is required.",
                 security_cheque_detail: "The security cheque details field is required.",
+                cheque_1: "The cheque no.1 field is required.",
+                cheque_2: "The cheque no.2 field is required.",
                 name_authorised_signatory: "The name of authorised signatory field is required.",
+                fertilizer_license_check: "The fertilizer license no field is required.",
                 fertilizer_license: "The fertilizer license no field is required.",
                 pesticide_license: "The pesticide license no field is required.",
                 // seed_license: "The seed license no field is required.",
