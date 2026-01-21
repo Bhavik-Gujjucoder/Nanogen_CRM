@@ -184,10 +184,10 @@ class ComplainController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request->all());
-        $request->validate([
-            'complain_image'   => 'nullable|array',
-            'complain_image.*' => 'file|max:2048',
-        ]);
+        // $request->validate([
+        //     'complain_image'   => 'nullable|array',
+        //     'complain_image.*' => 'file|max:2048',
+        // ]);
         // $request->validate([
         //     'complain_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         // ], [

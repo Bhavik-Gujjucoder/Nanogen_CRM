@@ -72,59 +72,62 @@
                                     </div>
                                     <!-- New File Preview -->
                                     <div id="previewArea" class="d-flex flex-wrap gap-2 mt-2"></div>
-                                    @error('complain_image')
+                                    {{-- @error('complain_image')
                                         <span class="invalid-feedback d-block">
                                             <strong>{{ $message }}</strong>
                                         </span>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                 <!-- Existing Uploaded Files -->
                                 @if ($complain->complain_image)
                                     @php
-                                        $files = json_decode($complain->complain_image, true);
+                                        $files = json_decode($complain->complain_image, true) ?? [];
                                     @endphp
-                                    <div class="mt-3">
-                                        <label class="fw-bold">Existing Files</label>
-                                        <div class="d-flex flex-wrap gap-2" id="existingFiles">
-                                            @foreach ($files as $file)
-                                                @php
-                                                    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                                                    $fileUrl = asset('storage/complain_images/' . $file);
-                                                @endphp
-                                                <div class="position-relative border" style="width:120px;height:120px">
-                                                    <!-- Remove -->
-                                                    <span class="remove-old" data-file="{{ $file }}"
-                                                        style="position:absolute;top:2px;right:6px;
+                                    @if ($files)
+                                        <div class="mt-3">
+                                            <label class="fw-bold">Existing Files</label>
+                                            <div class="d-flex flex-wrap gap-2" id="existingFiles">
+                                                @foreach ($files as $file)
+                                                    @php
+                                                        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                                                        $fileUrl = asset('storage/complain_images/' . $file);
+                                                    @endphp
+                                                    <div class="position-relative border"
+                                                        style="width:120px;height:120px">
+                                                        <!-- Remove -->
+                                                        <span class="remove-old" data-file="{{ $file }}"
+                                                            style="position:absolute;top:2px;right:6px;
                                                             cursor:pointer;background:red;color:#fff;
                                                             border-radius:50%;width:18px;height:18px;
                                                             display:flex;align-items:center;justify-content:center;">
-                                                        ×
-                                                    </span>
-                                                    <!-- Image Preview -->
-                                                    @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
-                                                        <a href="{{ $fileUrl }}" target="_blank"> <img
-                                                                src="{{ $fileUrl }}"
-                                                                style="width:100%;height:100%;object-fit:cover;border:1px solid #ddd"></a>
-                                                        <!-- PDF Preview -->
-                                                    @elseif ($ext === 'pdf')
-                                                        <a href="{{ $fileUrl }}" target="_blank"
-                                                            class="d-flex flex-column align-items-center justify-content-center border h-100 text-decoration-none">
-                                                            📄 <small>PDF</small>
-                                                        </a>
-                                                        <!-- Word / Excel / Others -->
-                                                    @else
-                                                        <a href="{{ $fileUrl }}" target="_blank"
-                                                            class="d-flex flex-column align-items-center justify-content-center h-100 text-decoration-none text-center p-1">
-                                                            📁
-                                                            <small
-                                                                style="word-break:break-all;">{{ $file }}</small>
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            @endforeach
+                                                            ×
+                                                        </span>
+                                                        <!-- Image Preview -->
+                                                        @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
+                                                            <a href="{{ $fileUrl }}" target="_blank"> <img
+                                                                    src="{{ $fileUrl }}"
+                                                                    style="width:100%;height:100%;object-fit:cover;border:1px solid #ddd"></a>
+                                                            <!-- PDF Preview -->
+                                                        @elseif ($ext === 'pdf')
+                                                            <a href="{{ $fileUrl }}" target="_blank"
+                                                                class="d-flex flex-column align-items-center justify-content-center border h-100 text-decoration-none">
+                                                                📄 <small>PDF</small>
+                                                            </a>
+                                                            <!-- Word / Excel / Others -->
+                                                        @else
+                                                            <a href="{{ $fileUrl }}" target="_blank"
+                                                                class="d-flex flex-column align-items-center justify-content-center h-100 text-decoration-none text-center p-1">
+                                                                📁
+                                                                <small
+                                                                    style="word-break:break-all;">{{ $file }}</small>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endif
                                 <!-- Removed files -->
                                 <input type="hidden" name="removed_files" id="removed_files">
@@ -309,7 +312,9 @@
                     required: true
                 },
                 "complain_image[]": {
-                    extension: "jpg|jpeg|png|gif|pdf|doc|docx"
+                    // extension: "jpg|jpeg|png|gif|pdf|doc|docx"
+                    required: true,
+                    filesize: 2048 * 1024
                 },
                 date: {
                     required: true,
@@ -332,6 +337,7 @@
             },
             messages: {
                 "complain_image[]": {
+                    required: "Complain file is required.",
                     extension: "Only image, PDF or document files are allowed."
                 },
                 dd_id: "Please select dealer/distributor",
@@ -352,6 +358,7 @@
             errorElement: 'span',
             errorPlacement: function(error, element) {
                 if (element.attr("name") === "complain_image[]") {
+                    error.addClass('text-danger');
                     error.insertAfter("#previewArea");
                 } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');

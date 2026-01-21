@@ -41,11 +41,11 @@
                                         </span>
                                     </div>
                                     <div id="previewArea" class="d-flex flex-wrap gap-2 mt-2"></div>
-                                    @error('complain_image')
+                                    {{-- @error('complain_image')
                                         <span class="invalid-feedback d-block">
                                             <strong>{{ $message }}</strong>
                                         </span>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,6 @@
     /*** validation  ***/
     $.validator.addMethod("filesize", function(value, element, param) {
         if (element.files.length === 0) return true;
-
         for (let i = 0; i < element.files.length; i++) {
             if (element.files[i].size > param) {
                 return false;
@@ -187,13 +186,13 @@
         $("#complainForm").validate({
             ignore: [],
             rules: {
-                dd_id: {
-                    required: true
-                },
                 "complain_image[]": {
                     required: true,
-                    extension: "jpg|jpeg|png|gif|pdf|doc|docx",
+                    // extension: "jpg|jpeg|png|gif|pdf|doc|docx",
                     filesize: 2048 * 1024
+                },
+                dd_id: {
+                    required: true
                 },
                 date: {
                     required: true,
@@ -237,6 +236,7 @@
             errorElement: 'span',
             errorPlacement: function(error, element) {
                 if (element.attr("name") === "complain_image[]") {
+                    error.addClass('text-danger');
                     error.insertAfter("#previewArea");
                 } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');
@@ -434,7 +434,7 @@
             preview.appendChild(div);
         });
         document.querySelector('input[name="complain_image[]"]').files = dt.files;
-        $("#complainForm").validate().element('input[name="complain_image[]"]');
+        // $("#complainForm").validate().element('input[name="complain_image[]"]');
     }
 
     // after add ${content}
