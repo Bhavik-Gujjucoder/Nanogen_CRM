@@ -447,7 +447,7 @@ class DistributorsDealersController extends Controller
         $templateProcessor->setValue('Firm_Name', $d_d->firm_shop_name);
         $templateProcessor->setValue('Firm_Address', $d_d->firm_shop_address);
 
-        $name = ($request->dealer == 1) ? $d_d->applicant_name . '(Dealer)' : $d_d->applicant_name . '(Distributor)';
+        $name = ($request->dealer == 1) ? $d_d->firm_shop_name . '(Dealer)' : $d_d->firm_shop_name . '(Distributor)';
 
         $fileName = $name . 'O-Form.docx';
         // $savePath = storage_path("app/public/{$fileName}");
@@ -498,7 +498,7 @@ class DistributorsDealersController extends Controller
         // dd($orders->withSUM('products', 'total')->get()); 
         $data['total_order'] = $orders->count();
         // $data['grand_total'] = $orders->products()->sum('total');
-    
+
         $data['grand_total']  = OrderManagementProduct::whereHas('order', function ($q) use ($id, $request) {
             $q->where('dd_id', $id); // filter by distributor/dealer
 

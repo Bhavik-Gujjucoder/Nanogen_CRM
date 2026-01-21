@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="col-form-label">Email <span class="text-danger">*</span></label>
+                            <label class="col-form-label">Email </label>
                             <input type="text" name="email"
                                 class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
                                 placeholder="Email" maxlength="255">
@@ -201,14 +201,26 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="col-form-label">Reporting Sales Person</label>
-                            <select name="reporting_sales_person_id" class="select">
-                                <option value="">Select Sales Person</option>
-                                @foreach ($sales_person as $person)
-                                    <option value="{{ $person->user_id }}"
-                                        {{ old('reporting_sales_person_id') == $person->user_id ? 'selected' : '' }}>
-                                        {{ $person->first_name . ' ' . $person->last_name }}</option>
-                                @endforeach
-                            </select>
+
+                            @if (!auth()->user()->hasRole('sales'))
+                                <select name="reporting_sales_person_id" class="select">
+                                    <option value="">Select Sales Person</option>
+                                    @foreach ($sales_person as $person)
+                                        <option value="{{ $person->user_id }}"
+                                            {{ old('reporting_sales_person_id') == $person->user_id ? 'selected' : '' }}>
+                                            {{ $person->first_name . ' ' . $person->last_name }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <select name="reporting_sales_person_id" class="select">
+                                    <option value="">Select Sales Person</option>
+                                    @foreach ($reporting_sales_person as $person)
+                                        <option value="{{ $person->user_id }}"
+                                            {{ old('reporting_sales_person_id') == $person->user_id ? 'selected' : '' }}>
+                                            {{ $person->first_name . ' ' . $person->last_name }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
                         </div>
                     </div>
                 </div>

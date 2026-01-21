@@ -110,13 +110,20 @@ class ComplainController extends Controller
 
     public function store(Request $request)
     {
+        // $request->validate([
+        //     'complain_image' => 'required|max:2048',
+        // ], [
+        //     'complain_image.required' => 'Complain file is required.',
+        //     'complain_image.max' => 'Complain file may not be greater than 2MB',
+        // ]);
 
-        $request->validate([
-            'complain_image' => 'required|max:2048',
-        ], [
-            'complain_image.required' => 'Complain file is required.',
-            'complain_image.max' => 'Complain file may not be greater than 2MB',
-        ]);
+        // $request->validate([
+        //     'complain_image'   => 'required|array',
+        //     'complain_image.*' => 'file|max:2048', // each file max 2MB
+        // ], [
+        //     'complain_image.required' => 'Complain file is required.',
+        //     'complain_image.*.max'    => 'Each file may not be greater than 2MB.',
+        // ]);
 
         $data = [
             'dd_id' => $request->dd_id,
@@ -127,14 +134,29 @@ class ComplainController extends Controller
             'remark' => $request->remark,
         ];
 
+
+        $uploadedImages = [];
+
         if ($request->hasFile('complain_image')) {
+            foreach ($request->file('complain_image') as $file) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('complain_images', $filename, 'public');
+                $uploadedImages[] = $filename;
+            }
+        }
+
+        // Store as JSON
+        $data['complain_image'] = json_encode($uploadedImages);
+
+        /*if ($request->hasFile('complain_image')) {
             $file     = $request->file('complain_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('complain_images', $filename, 'public'); // Save to storage/app/public/complain_images
             $data['complain_image'] = $filename;
         } else {
             $data['complain_image'] = null;
-        }
+        }*/
+
         $complain = Complain::create($data);
 
         if (isset($request->status)) {
@@ -146,8 +168,6 @@ class ComplainController extends Controller
             ];
             $status_history->create($history_data);
         }
-
-
         return redirect()->route('complain.index')->with('success', 'Complain created successfully.');
     }
 
@@ -163,10 +183,10 @@ class ComplainController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $request->validate([
-            'complain_image' => 'max:2048',
-        ], [
-            'complain_image.max' => 'Complain image may not be greater than 2MB',
+            'complain_image'   => 'nullable|array',
+            'complain_image.*' => 'file|max:2048',
         ]);
         // $request->validate([
         //     'complain_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -177,6 +197,8 @@ class ComplainController extends Controller
         // ]);
 
         $complain = Complain::findOrFail($id);
+
+
         if ((int) $complain->status !== (int) $request->status) {
             $complain_status_history = new ComplainStatusHistory();
             $complain_status_history_data = [
@@ -196,20 +218,54 @@ class ComplainController extends Controller
             'remark' => $request->remark,
         ];
 
-        if ($request->hasFile('complain_image')) {
-            // Delete old complain image if exists
-            if ($complain->complain_image) {
-                Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
-            }
+        // if ($request->hasFile('complain_image')) {
+        //     // Delete old complain image if exists
+        //     if ($complain->complain_image) {
+        //         Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+        //     }
 
-            $file     = $request->file('complain_image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('complain_images', $filename, 'public'); // Save to storage/app/public/complain_images
-            $data['complain_image'] = $filename;
+        //     $file     = $request->file('complain_image');
+        //     $filename = time() . '.' . $file->getClientOriginalExtension();
+        //     $file->storeAs('complain_images', $filename, 'public'); // Save to storage/app/public/complain_images
+        //     $data['complain_image'] = $filename;
+        // }
+
+
+        /* -----------------------------
+            Existing files from DB
+        ----------------------------- */
+        $existingFiles = json_decode($complain->complain_image, true) ?? [];
+
+        /* -----------------------------
+            REMOVE DELETED OLD FILES
+        ----------------------------- */
+        if ($request->removed_files) {
+            $removedFiles = explode(',', $request->removed_files);
+
+            foreach ($removedFiles as $file) {
+                if (in_array($file, $existingFiles)) {
+                    Storage::disk('public')->delete('complain_images/' . $file);
+                    $existingFiles = array_diff($existingFiles, [$file]);
+                }
+            }
         }
 
-        $complain->update($data);
+        /* -----------------------------
+            ADD NEW UPLOADED FILES
+        ----------------------------- */
+        if ($request->hasFile('complain_image')) {
+            foreach ($request->file('complain_image') as $file) {
+                // if ($file->isValid()) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('complain_images', $filename, 'public');
+                $existingFiles[] = $filename;
+                // }
+            }
+        }
+        /***  Save files back as JSON ***/
+        $data['complain_image'] = json_encode(array_values($existingFiles));
 
+        $complain->update($data);
         return redirect()->route('complain.index')->with('success', 'Complain updated successfully.');
     }
 

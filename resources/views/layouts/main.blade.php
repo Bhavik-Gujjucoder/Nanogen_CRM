@@ -40,7 +40,7 @@
         <div class="header">
             <!-- Logo -->
             <div class="header-left active">
-                <a href="javascript:void(0)" class="logo logo-normal">
+                <a href="{{ route('admin.dashboard') }}" class="logo logo-normal">
                     @if (getSetting('company_logo') && !empty(getSetting('company_logo')))
                         <img src="{{ asset('storage/company_logo/' . getSetting('company_logo')) }}" alt="Logo">
                     @else

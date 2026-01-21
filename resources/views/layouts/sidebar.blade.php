@@ -23,18 +23,27 @@
             </ul>
             <ul>
                 <li>
-                    <ul>
+                    {{-- <ul>
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <i class="ti ti-layout-2"></i><span>Dashboard</span><span class="menu-arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ route('admin.dashboard') }}" class="active">Dashboard</a></li>
-                            </ul>
-                        </li>
+                            </a> --}}
+
+                    <ul>
+                        <li><a href="{{ route('admin.dashboard') }}"><i
+                                    class="ti ti-layout-2"></i><span>Dashboard</span></a></li>
                     </ul>
+
                 </li>
-                @canany(['Order Management', 'Sales Persons', 'Targets', 'Area Wise Sales','Sales Position', 'Sales Department'])
+                @canany([
+                    'Order Management',
+                    'Sales Persons',
+                    'Targets',
+                    'Area Wise Sales',
+                    'Sales Position',
+                    'Sales
+                    Department',
+                    ])
                     <li>
                         <h6 class="submenu-hdr">Sales Management</h6>
                         <ul>
@@ -79,7 +88,7 @@
                                 <ul>
                                     @can('Distributors & Dealers')
                                         <li><a href="{{ route('distributors_dealers.index') }}">Distributors</a></li>
-                                    {{-- @endcan
+                                        {{-- @endcan
                                     @can('Dealers') --}}
                                         <li><a href="{{ route('distributors_dealers.index', 1) }}">Dealers</a></li>
                                     @endcan

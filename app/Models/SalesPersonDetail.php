@@ -33,12 +33,9 @@ class SalesPersonDetail extends Model
     }
 
 
+
     public function reportingUser()
     {
         return $this->belongsTo(User::class, 'reporting_sales_person_id', 'id');
     }
-    // public function reporting_manager()
-    // {
-    //     return $this->hasMany(User::class, 'id','reporting_manager_id');
-    // }
 }

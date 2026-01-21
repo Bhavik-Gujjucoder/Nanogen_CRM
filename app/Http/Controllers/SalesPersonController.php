@@ -148,6 +148,7 @@ class SalesPersonController extends Controller
      */
     public function create()
     {
+        // dd(auth()->user()->id);
         $data['page_title']         = 'Basic Information';
         $data['reporting_managers'] = User::role(['reporting manager'])->where('status', 1)->get();
         // $data['departments']        = SalesPersonDepartment::where('status', 1)->get()->all();
@@ -158,6 +159,8 @@ class SalesPersonController extends Controller
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
         $data['countries']          = Country::where('status', 1)->get()->all();
         $data['sales_person']       = SalesPersonDetail::get();
+        $data['reporting_sales_person'] = SalesPersonDetail::whereIn('user_id', getSalesUserIds())->get();
+        // dd(getSalesUserIds());
 
         $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
         $nextId             = $latest_employee_id ? $latest_employee_id + 1 : 1;
@@ -185,7 +188,7 @@ class SalesPersonController extends Controller
             'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
             'first_name'           => 'required|string|max:255',
             'last_name'            => 'required|string|max:255',
-            'email'                => 'required|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+            'email'                => 'nullable|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
             'phone_number'         => 'required|numeric|digits_between:10,15|unique:users,phone_no,NULL,id,deleted_at,NULL',
             'password'             => 'required|string|min:6|confirmed',     /*use password_confirmation field too*/
             // 'employee_id'          => 'required|string|max:255|unique:sales_person_details,employee_id,NULL,id,deleted_at,NULL',
@@ -220,7 +223,7 @@ class SalesPersonController extends Controller
             }
 
             $user->name     = $request->first_name . ' ' . $request->last_name;
-            $user->email    = $request->email;
+            $user->email    = $request->email ?? null;
             $user->phone_no = $request->phone_number;
             $user->password = Hash::make($request->password);
             $user->save();
@@ -253,10 +256,10 @@ class SalesPersonController extends Controller
 
             $data = [
                 'name'  => $request->first_name . ' ' . $request->last_name,
-                'email' => $request->email,
+                'email' => $request->email ?? null,
                 'password' => $request->password,
             ];
-            if ($request->email) {
+            if ($request->email != null) {
                 Mail::send('email.sales_person_email.create', ['data' => $data], fn($message) => $message->to($request->email)->subject('Sales Person Account Created'));
             }
             $user->assignRole('sales');
@@ -285,6 +288,7 @@ class SalesPersonController extends Controller
         $data['states']             = StateManagement::where('status', 1)->get()->all();
         $data['cities']             = CityManagement::where('status', 1)->get()->all();
         $data['sales_person']       = SalesPersonDetail::where('id', '!=', $id)->get();
+        $data['reporting_sales_person'] = SalesPersonDetail::whereIn('user_id', getSalesUserIds())->get();
 
         return view('admin.sales_person.edit', $data);
     }
@@ -301,7 +305,7 @@ class SalesPersonController extends Controller
             'profile_picture'      => 'nullable|image|mimes:jpg,jpeg,gif,png|max:2048',
             'first_name'           => 'required|string|max:255',
             'last_name'            => 'required|string|max:255',
-            'email'                => 'required|email|max:255|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
+            'email'                => 'nullable|email|max:255|unique:users,email,' . $user->id . ',id,deleted_at,NULL',
             'phone_number'         => 'required|numeric|digits_between:10,15|unique:users,phone_no,' . $user->id . ',id,deleted_at,NULL',
             'password'             => 'nullable|string|min:6|confirmed',   /* use password_confirmation field too */
             'department_id'        => 'required|exists:sales_departments,id',
@@ -328,7 +332,7 @@ class SalesPersonController extends Controller
         try {
             $user->update([
                 'name'     => $request->first_name . ' ' . $request->last_name,
-                'email'    => $request->email,
+                'email'    => $request->email ?? null,
                 'phone_no' => $request->phone_number,
             ]);
 
@@ -428,28 +432,21 @@ class SalesPersonController extends Controller
     public function bulkDelete(Request $request)
     {
         $ids = $request->ids;
-
         if (!is_array($ids) || empty($ids)) {
             return response()->json(['message' => 'No records selected!'], 400);
         }
-
         $details = SalesPersonDetail::whereIn('id', $ids)->get();
 
         foreach ($details as $detail) {
-
             if ($user = User::find($detail->user_id)) {
-
                 if ($user->profile_picture) {
                     Storage::disk('public')
                         ->delete('profile_pictures/' . $user->profile_picture);
                 }
-
                 $user->delete();
             }
-
             $detail->delete();
         }
-
         return response()->json(['message' => 'Selected users deleted successfully!']);
     }
 

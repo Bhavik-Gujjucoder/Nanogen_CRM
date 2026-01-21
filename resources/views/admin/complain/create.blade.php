@@ -11,12 +11,12 @@
                 <!-- Basic Info -->
                 <div class="applicationdtl">
                     <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <div class="profile-pic-upload">
 
+                        {{-- <div class="col-md-12 mb-3">
+                            <div class="profile-pic-upload">
                                 <div class="upload-content">
                                     <div class="upload-btn  @error('complain_image') is-invalid @enderror">
-                                        <input type="file" name="complain_image" {{-- accept=".jpg,.jpeg,.gif,.png" --}}
+                                        <input type="file" name="complain_image"  accept=".jpg,.jpeg,.gif,.png"
                                             onchange="previewProfilePicture(event)">
                                         <span>
                                             <i class="ti ti-file-broken"></i>Upload File
@@ -25,6 +25,26 @@
                                     <div id="previewArea"></div>
                                     @error('complain_image')
                                         <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="col-md-12 mb-3">
+                            <div class="profile-pic-upload">
+                                <div class="upload-content">
+                                    <div class="upload-btn @error('complain_image') is-invalid @enderror">
+                                        <input type="file" name="complain_image[]" multiple
+                                            onchange="previewProfilePicture(event)">
+                                        <span>
+                                            <i class="ti ti-file-broken"></i> Upload Files
+                                        </span>
+                                    </div>
+                                    <div id="previewArea" class="d-flex flex-wrap gap-2 mt-2"></div>
+                                    @error('complain_image')
+                                        <span class="invalid-feedback d-block">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
                                     @enderror
                                 </div>
                             </div>
@@ -76,7 +96,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="col-md-3 mb-3">
                             <div class="mb-3">
                                 <label class="col-form-label"> Status <span class="text-danger">*</span></label>
@@ -105,7 +124,6 @@
                         </div>
                     </div>
                 </div>
-
 
             </div>
             <div class="d-flex align-items-center justify-content-end">
@@ -151,13 +169,31 @@
     $.validator.addMethod("noSpace", function(value, element) {
         return $.trim(value).length > 0;
     }, "This field cannot be empty or just spaces.");
+
     /*** validation  ***/
+    $.validator.addMethod("filesize", function(value, element, param) {
+        if (element.files.length === 0) return true;
+
+        for (let i = 0; i < element.files.length; i++) {
+            if (element.files[i].size > param) {
+                return false;
+            }
+        }
+        return true;
+    }, "File size must be less than 2MB.");
+
+
     $(document).ready(function() {
         $("#complainForm").validate({
             ignore: [],
             rules: {
                 dd_id: {
                     required: true
+                },
+                "complain_image[]": {
+                    required: true,
+                    extension: "jpg|jpeg|png|gif|pdf|doc|docx",
+                    filesize: 2048 * 1024
                 },
                 date: {
                     required: true,
@@ -179,13 +215,16 @@
                 },
             },
             messages: {
+                "complain_image[]": {
+                    required: "Complain file is required.",
+                    extension: "Only image, PDF or document files are allowed."
+                },
                 dd_id: "Please select dealer/distributor",
                 date: "Please enter a valid date",
                 product_id: "Please select a product",
                 status: "Please select a status",
                 // description: "Please enter a description",
                 // remark: "Please enter a remark",
-
                 description: {
                     required: "Please enter a description",
                     noSpace: "Description cannot be just spaces"
@@ -197,7 +236,9 @@
             },
             errorElement: 'span',
             errorPlacement: function(error, element) {
-                if (element.hasClass('select2-hidden-accessible')) {
+                if (element.attr("name") === "complain_image[]") {
+                    error.insertAfter("#previewArea");
+                } else if (element.hasClass('select2-hidden-accessible')) {
                     error.addClass('text-danger');
                     error.insertAfter(element.next(
                         '.select2')); // This targets the Select2 container
@@ -217,19 +258,7 @@
     });
 
     /*** Image ***/
-    // function previewProfilePicture(event) {
-    //     const file = event.target.files[0]; // Get the selected file
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = function(e) {
-    //             document.getElementById('profilePreview').src = e.target
-    //                 .result; // Set image preview source
-    //         }
-    //         reader.readAsDataURL(file); // Read the file as a Data URL
-    //     }
-    // }
-
-    function previewProfilePicture(event) {
+    /*function previewProfilePicture(event) {
         const files = event.target.files;
         const previewArea = document.getElementById('previewArea');
         previewArea.innerHTML = ''; // Clear previous previews
@@ -283,6 +312,145 @@
                 reader.onload(); // Direct call for name-based preview
             }
         });
+    }*/
+
+    /**** Multy Images preview ****/
+    // function previewProfilePicture(event) {
+    //     const files = event.target.files;
+    //     const previewArea = document.getElementById('previewArea');
+    //     previewArea.innerHTML = '';
+
+    //     Array.from(files).forEach(file => {
+    //         const fileType = file.type;
+    //         const reader = new FileReader();
+
+    //         reader.onload = function(e) {
+    //             let element;
+
+    //             if (fileType.startsWith('image/')) {
+    //                 element = document.createElement('img');
+    //                 element.src = e.target.result;
+    //                 element.style.height = '150px';
+    //                 element.style.width = '150px';
+    //                 element.style.objectFit = 'cover';
+    //                 element.classList.add('rounded', 'border');
+
+    //             } else if (fileType === 'application/pdf') {
+    //                 element = document.createElement('iframe');
+    //                 element.src = e.target.result;
+    //                 element.style.height = '150px';
+    //                 element.style.width = '150px';
+    //                 element.classList.add('border');
+
+    //             } else if (
+    //                 file.name.endsWith('.xlsx') ||
+    //                 file.name.endsWith('.xls')
+    //             ) {
+    //                 element = document.createElement('div');
+    //                 element.innerHTML = `<p class="m-0">📊 <strong>${file.name}</strong></p>`;
+    //                 element.classList.add('border', 'p-2');
+
+    //             } else {
+    //                 element = document.createElement('div');
+    //                 element.innerHTML = `<p class="m-0">📁 <strong>${file.name}</strong></p>`;
+    //                 element.classList.add('border', 'p-2');
+    //             }
+
+    //             previewArea.appendChild(element);
+    //         };
+
+    //         if (fileType.startsWith('image/') || fileType === 'application/pdf') {
+    //             reader.readAsDataURL(file);
+    //         } else {
+    //             reader.onload();
+    //         }
+    //     });
+    // }
+</script>
+
+<script>
+    let filesArr = [];
+
+    function previewProfilePicture(e) {
+        filesArr = filesArr.concat([...e.target.files]);
+        e.target.value = '';
+        render();
+    }
+
+    function render() {
+        const preview = document.getElementById('previewArea');
+        preview.innerHTML = '';
+        const dt = new DataTransfer();
+
+        filesArr.forEach((file, i) => {
+            dt.items.add(file);
+            const div = document.createElement('div');
+            div.style.position = 'relative';
+            div.style.width = '120px';
+            div.style.height = '120px';
+
+
+
+            let content = '';
+
+            if (file.type.startsWith('image/')) {
+                content = `
+                <img src="${URL.createObjectURL(file)}"
+                     style="width:100%;height:100%;object-fit:cover;">
+            `;
+            } else if (file.type === 'application/pdf') {
+                content = `
+                <div style="width:100%;height:100%;
+                            display:flex;flex-direction:column;
+                            align-items:center;justify-content:center;">
+                    📄
+                    <small>PDF</small>
+                </div>
+            `;
+            } else {
+                // Word / Excel / Other files
+                content = `
+                <div style="width:100%;height:100%;
+                            display:flex;flex-direction:column;
+                            align-items:center;justify-content:center;
+                            text-align:center;font-size:11px;padding:5px;">
+                    📁
+                    <small style="word-break:break-all">${file.name}</small>
+                </div>
+            `;
+            }
+
+
+            div.innerHTML = `
+            <span onclick="removeFile(${i})"
+                  style="position:absolute;top:2px;right:6px;cursor:pointer;
+                         color:#fff;background:red;border-radius:50%;
+                         width:18px;height:18px;display:flex;
+                         align-items:center;justify-content:center;font-size:14px;">×</span>
+
+            ${content}
+         
+        `;
+            preview.appendChild(div);
+        });
+        document.querySelector('input[name="complain_image[]"]').files = dt.files;
+        $("#complainForm").validate().element('input[name="complain_image[]"]');
+    }
+
+    // after add ${content}
+    // ${
+    //     file.type.startsWith('image/')
+    //     ? `<img src="${URL.createObjectURL(file)}"
+    //            style="width:100%;height:100%;object-fit:cover;border:1px solid #ddd;border-radius:4px;">`
+    //     : `<div style="width:100%;height:100%;border:1px solid #ddd;
+    //                  display:flex;align-items:center;justify-content:center;
+    //                  font-size:12px;text-align:center;padding:5px;">
+    //            ${file.name}
+    //        </div>`
+    // }
+    function removeFile(i) {
+        filesArr.splice(i, 1);
+        render();
     }
 </script>
 @endsection

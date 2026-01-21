@@ -78,7 +78,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|unique:roles,name,NULL,id'], ['name.required' => 'The role name field is required.']);
+        $request->validate(['name' => 'required|unique:roles,name,NULL,id'], [
+            'name.required' => 'The role name field is required.',
+            'name.unique'   => 'The role name has already been taken.',
+        ]);
         $role = Role::create(['name' => $request->name]);
 
         if ($request->permissions) {
@@ -106,9 +109,24 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $request->validate(['name' => 'required|unique:roles,name,' . $role->id], ['name.required' => 'The role name field is required.']);
-        $role->update(['name' => $request->name]);
+        $rules = [
+            'name' => 'unique:roles,name,' . ($role->id ?? 'NULL'),
+        ];
+        if (
+            $role !== null &&
+            !in_array($role->name, ['admin', 'sales', 'staff', 'reporting manager'])
+        ) {
+            $rules['name'] = 'required|' . $rules['name'];
+        }
 
+        $request->validate($rules, [
+            'name.required' => 'The role name field is required.',
+            'name.unique'   => 'The role name has already been taken.',
+        ]);
+
+        if (!in_array($role->name, ['admin', 'sales', 'staff', 'reporting manager'])) {
+            $role->update(['name' => $request->name]);
+        }
         if ($request->permissions) {
             $role->syncPermissions($request->permissions);
         }
