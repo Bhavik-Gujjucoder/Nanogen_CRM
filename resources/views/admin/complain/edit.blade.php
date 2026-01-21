@@ -303,7 +303,18 @@
     $.validator.addMethod("noSpace", function(value, element) {
         return $.trim(value).length > 0;
     }, "This field cannot be empty or just spaces.");
+
+
     /*** validation  ***/
+    $.validator.addMethod("filesize", function(value, element, param) {
+        if (element.files.length === 0) return true;
+
+        for (let i = 0; i < element.files.length; i++) {
+            if (element.files[i].size > param) return false;
+        }
+        return true;
+    }, "File size must be less than 2MB");
+
     $(document).ready(function() {
         $("#complainForm").validate({
             ignore: [],
@@ -312,8 +323,16 @@
                     required: true
                 },
                 "complain_image[]": {
-                    // extension: "jpg|jpeg|png|gif|pdf|doc|docx"
-                    required: true,
+                    required: function() {
+                        // existing files count
+                        let existingCount = $('#existingFiles').children().length;
+
+                        // new selected files count
+                        let newFilesCount = $('input[name="complain_image[]"]')[0].files.length;
+
+                        // required ONLY if both are zero
+                        return existingCount === 0 && newFilesCount === 0;
+                    },
                     filesize: 2048 * 1024
                 },
                 date: {
