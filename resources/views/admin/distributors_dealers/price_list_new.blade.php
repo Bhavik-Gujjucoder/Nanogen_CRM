@@ -596,7 +596,7 @@
                                                     <span class="first-count">{{ $gst_amount }}</span>
                                                     {{-- GST % --}}
                                                 </td>
-                                                <td>--!!--</td>
+                                                <td>{{ $mrp }}</td>
                                                 <td>
                                                     <span class="first-count">{{ $mrp }}</span>
                                                     {{-- MRP --}}
