@@ -19,32 +19,12 @@
                             </div>
                         </div>
                     @endif
-                    {{--
-         <div class="radio-group-bg">
-            <div class="radio-group-flex">
-               @can('Distributors & Dealers')
-               <div class="radio-group-tab">
-                  <input type="radio" name="user_type" value="1"
-                  {{ old('user_type', $distributor_dealers->user_type) == '1' ? 'checked' : '' }}
-                    id="distributor-radio" class="create-deitr" />
-                    <label for="distributor-radio">Distributor</label>
-                </div>
-                <div class="radio-group-tab">
-                    <input type="radio" name="user_type" value="2"
-                        {{ old('user_type', $distributor_dealers->user_type) == '2' ? 'checked' : '' }}
-                        id="dealers-radio" class="create-deitr" />
-                    <label for="dealers-radio">Dealers</label>
-                </div>
-                @endcan
-            </div>
-        </div>
-        --}}
                     @if (!empty($distributor_dealers->sales_person_id))
                         <div class="info-row">
                             <div class="mb-3">
                                 <label class="col-form-label">Sales Person : </label>
                                 <span
-                                    class="info-value">{{ $distributor_dealers->sales_person->first_name . ' ' . $distributor_dealers->sales_person->last_name }}</span>
+                                    class="info-value">{{ ($distributor_dealers->sales_person->first_name ?? '') . ' ' . ($distributor_dealers->sales_person->last_name ?? '') }}</span>
                             </div>
                         </div>
                     @endif
@@ -125,7 +105,7 @@
                         <div class="info-row">
                             <div class="mb-3">
                                 <label class="col-form-label">State/Province :</label>
-                                <span class="info-value">{{ $distributor_dealers->state->state_name }}</span>
+                                <span class="info-value">{{ $distributor_dealers->state->state_name ?? '-' }}</span>
                             </div>
                         </div>
                     @endif
@@ -133,7 +113,8 @@
                         <div class="info-row">
                             <div class="mb-3">
                                 <label class="col-form-label">City :</label>
-                                <span class="info-value"></span>{{ $distributor_dealers->city->city_name }}</span>
+                                <span
+                                    class="info-value"></span>{{ $distributor_dealers->city->city_name ?? '-' }}</span>
                             </div>
                         </div>
                     @endif
@@ -234,14 +215,14 @@
                     @if ($distributor_dealers->ac_type == 3)
                         <div class="info-row">
                             <label class=" col-form-label" for="other">Specify Other Account Type :</label>
-                            <span class="info-value">{{ $distributor_dealers->other_ac_type }}</span>
+                            <span class="info-value">{{ $distributor_dealers->other_ac_type ?? '-' }}</span>
                         </div>
                     @endif
                     @if ($distributor_dealers->fertilizer_license_check == 1 && !empty($distributor_dealers->fertilizer_license))
                         <div class="info-row">
                             <div class="mb-3">
                                 <label class="col-form-label"> Fertilizer License No :</label>
-                                <span class="info-value">{{ $distributor_dealers->fertilizer_license }}</span>
+                                <span class="info-value">{{ $distributor_dealers->fertilizer_license ?? '-' }}</span>
                             </div>
                         </div>
                     @endif
@@ -249,7 +230,7 @@
                         <div class="info-row">
                             <div class="mb-3">
                                 <label class="col-form-label">Pesticide License No :</label>
-                                <span class="info-value">{{ $distributor_dealers->pesticide_license }}</span>
+                                <span class="info-value">{{ $distributor_dealers->pesticide_license ?? '-' }}</span>
                             </div>
                         </div>
                     @endif
@@ -366,7 +347,8 @@
                                     <div class="mb-3">
                                         <label class="col-form-label">Indicate number of people employed in your firm
                                             (including active partners) :</label>
-                                        <span class="info-value">{{ $distributor_dealers->indicate_number }}</span>
+                                        <span
+                                            class="info-value">{{ $distributor_dealers->indicate_number ?? '-' }}</span>
                                     </div>
                                 </div>
                             @endif
@@ -675,12 +657,6 @@
                                                             </a>
                                                         @endif
                                                     @endif
-                                                    {{-- <button type="button"
-                                    class="btn btn-sm btn-danger delete_document"
-                                    data-id="{{ $document->id }}"
-                                data-url="{{ route('distributors_dealers.documents_destroy', $document->id) }}">
-                                <i class="ti ti-trash text-white"></i> Delete
-                                </button> --}}
                                                 </div>
                                             </div>
                                         @endforeach
@@ -693,10 +669,4 @@
                     </div>
                 </div>
             </div>
-            {{--
-      <div class="d-flex align-items-center justify-content-end">
-         <button type="submit" class="btn btn-primary">Update</button>
-      </div>
-      --}}
-
         </div>

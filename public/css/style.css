@@ -44867,3 +44867,22 @@ label.section-title.fw-bold {
     background: #f8f9fa !important;
     border-radius: 16px;
 }
+
+.img-box{background: #f8f9fa !important;    border: 1px solid #FDFDFE !important;border-radius: 4px !important;
+ padding: 1rem 13px !important;}
+
+ .order-form-clss .mt-3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+ .order-form-clss .col-form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #262A2A;
+    padding: 0 0 5px;
+}
+.order-form-clss .form-control-plaintext {
+    font-size: 15px;
+    color: #424848 !important;
+    margin-bottom: 0;
+}
