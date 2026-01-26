@@ -816,6 +816,17 @@
 
     });
 
+
+    // $('#advance_payment_discount').on('change', function() {
+    //     if ($(this).is(':checked')) {
+    //         $('input[name="payment_discount"]').val(getSetting('discount_type')); // or whatever value you want
+
+    //     } else {
+    //         $('input[name="payment_discount"]').val(0);
+    //     }
+    //     calculateGrandTotal()
+    // });
+
     // Calculate Grand Total
     function calculateGrandTotal() {
         $('[name="price[]"]').each(function() {

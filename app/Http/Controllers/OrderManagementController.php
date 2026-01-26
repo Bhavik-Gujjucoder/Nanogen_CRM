@@ -338,6 +338,7 @@ class OrderManagementController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $latest_order_id = OrderManagement::withTrashed()->max('id');
         $order = OrderManagement::create($request->only([
             'dd_id',

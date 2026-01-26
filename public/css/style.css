@@ -44868,7 +44868,9 @@ label.section-title.fw-bold {
     border-radius: 16px;
 }
 
-.img-box{background: #f8f9fa !important;    border: 1px solid #FDFDFE !important;border-radius: 4px !important;
+.img-box{background: #f8f9fa !important;      justify-content: center;
+    width: fit-content;
+    margin: auto;  border: 1px solid #FDFDFE !important;border-radius: 4px !important;
  padding: 1rem 13px !important;}
 
  .order-form-clss .mt-3 {
@@ -44876,13 +44878,16 @@ label.section-title.fw-bold {
     padding-bottom: 10px;
 }
  .order-form-clss .col-form-label {
+       display: block;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     color: #262A2A;
     padding: 0 0 5px;
 }
-.order-form-clss .form-control-plaintext {
+.order-form-clss strong {
     font-size: 15px;
     color: #424848 !important;
     margin-bottom: 0;
+    margin-top: 10px;
+    display: block;
 }
