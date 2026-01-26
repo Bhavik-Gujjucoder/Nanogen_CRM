@@ -494,8 +494,8 @@ class DistributorsDealersController extends Controller
         $filename = $name . '-price-list-new' . now()->year . '.pdf';
         // Save to storage/app/public/price-lists/
         Storage::disk('public')->put('distributors-price-lists-new/' . $filename, $pdf->output());
-        // return $pdf->download($filename);
-        return $pdf->stream($filename);   //only pdf view perpose with live update 
+        return $pdf->download($filename);
+        // return $pdf->stream($filename);   //only pdf view perpose with live update 
     }
 
     public function replaceInWord(Request $request, $id, $dealer = null)
