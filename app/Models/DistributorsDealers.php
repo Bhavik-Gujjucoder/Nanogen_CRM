@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProprietorPartnerDirector;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mpdf\Tag\S;
 
 class DistributorsDealers extends Model
 {
@@ -97,6 +98,10 @@ class DistributorsDealers extends Model
     public function city()
     {
         return $this->hasOne(CityManagement::class, 'id', 'city_id');
+    }
+    public function state()
+    {
+        return $this->hasOne(StateManagement::class, 'id', 'state_id');
     }
 
     public function sales_person()

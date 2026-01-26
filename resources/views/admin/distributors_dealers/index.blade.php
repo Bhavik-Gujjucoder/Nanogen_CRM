@@ -16,43 +16,45 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-lg-2 col-md-12">
-                <div class="mb-3">
-                    <label class="col-form-label">Sales Person </label>
-                    <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
-                        <option value="">Select sales person</option>
-                        @foreach ($sales_persons as $s)
-                            <option value="{{ $s->user_id }}"
-                                {{ old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
-                                {{ $s->first_name . ' ' . $s->last_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <span id="sales_person_id_error" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="col-sm-12 col-lg-2 col-md-12">
-                <div class="mb-3">
-                    <label class="col-form-label">Start Date</label>
-                    <div class="icon-form">
-                        <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                        <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
-                            class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+            @if (!auth()->user()->hasRole('sales'))
+                <div class="col-sm-12 col-lg-2 col-md-12">
+                    <div class="mb-3">
+                        <label class="col-form-label">Sales Person </label>
+                        <select class="form-select select search-dropdown" name="sales_person_id" id="sales_person_id">
+                            <option value="">Select sales person</option>
+                            @foreach ($sales_persons as $s)
+                                <option value="{{ $s->user_id }}"
+                                    {{ old('sales_person_id') == $s->user_id ? 'selected' : '' }}>
+                                    {{ $s->first_name . ' ' . $s->last_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <span id="sales_person_id_error" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-sm-12 col-lg-2 col-md-12">
-                <div class="mb-3">
-                    <label class="col-form-label">End Date</label>
-                    <div class="icon-form">
-                        <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
-                        <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"
-                            class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                <div class="col-sm-12 col-lg-2 col-md-12">
+                    <div class="mb-3">
+                        <label class="col-form-label">Start Date</label>
+                        <div class="icon-form">
+                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                            <input type="text" name="start_date" value="{{ old('start_date') }}" id="startDate"
+                                class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="col-sm-12 col-lg-2 col-md-12">
+                    <div class="mb-3">
+                        <label class="col-form-label">End Date</label>
+                        <div class="icon-form">
+                            <span class="form-icon"><i class="ti ti-calendar-check"></i></span>
+                            <input type="text" name="end_date" value="{{ old('end_date') }}" id="endDate"
+                                class="form-control" placeholder="DD/MM/YY" onchange="applyFilter()">
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="col-sm-12 col-lg-4 col-md-12">
                 <div class="d-flex align-items-center flex-wrap row-gap-2 column-gap-1 justify-content-sm-end btn-cls">
@@ -82,7 +84,7 @@
                             {{ request('dealer') == 1 ? 'Export Dealers' : 'Export Distributors' }}
                             {{-- Export Excel --}}
                         </button>
-                        <a href="{{ route('distributors_dealers.export_price_list', request('dealer')) }}"
+                        <a href="{{ route('distributors_dealers.export_price_list_new', request('dealer')) }}"
                             class="btn btn-primary">
                             <i class="ti ti-file-type-xls me-2"></i>
                             Export Price List
@@ -368,5 +370,49 @@
         }
     });
     /*** END ***/
+
+
+    /*** distributors_dealers show Popup Model ***/
+    $(document).on('click', '.open-popup-model', function(e) {
+        e.preventDefault();
+
+        let dd_id = $(this).data('id'); // Data ID passed from the anchor tag
+        let url = dd_id ? '{{ route('distributors_dealers.show', ':id') }}'.replace(':id', dd_id) : "";
+
+        // Show SweetAlert2 loading spinner while fetching the data
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we load the details.',
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading(); // Show loading spinner
+            }
+        });
+
+        // Fetch the order data via AJAX
+        $.ajax({
+            url: url, // Use the URL from the 'href' attribute
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    Swal.fire({
+                        // title: 'Details',
+                        html: response.html,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        width: '80%',
+                        heightAuto: true
+                    });
+                } else {
+                    console.error('No HTML returned:', response);
+                    Swal.fire('Error', 'No content received from server.', 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX error:', xhr.responseText);
+                Swal.fire('Error', 'Could not load details.', 'error');
+            }
+        });
+    });
 </script>
 @endsection

@@ -39,7 +39,7 @@ class DistributorsDealersController extends Controller
      */
     public function index(Request $request)
     {
-        // dd(auth()->user()->hasRole('sales'));
+        // dd(auth()->user()->id);
         $this->authorize('Distributors & Dealers');
         // if ($request->dealer == 1) {
         //     $this->authorize('Dealers'); // or use: Gate::authorize('Dealer Access');
@@ -52,11 +52,17 @@ class DistributorsDealersController extends Controller
 
         if ($request->ajax()) {
 
-            $data = DistributorsDealers::where('user_type', $request->dealer ? 2 : 1)
+
+            $data = DistributorsDealers::query()
+                ->where('user_type', $request->dealer ? 2 : 1)
+
+                ->when(auth()->user()->hasRole('sales'), function ($query) {
+                    $query->where('sales_person_id', auth()->user()->id);
+                })
+
                 ->when($request->sales_person_id, function ($query, $sales_person_id) {
                     return $query->where('sales_person_id', $sales_person_id);
                 })
-
                 /* Filter by start_date & end_date */
                 ->when($request->start_date, function ($query) use ($request) {
                     $query->whereDate('created_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
@@ -77,6 +83,9 @@ class DistributorsDealersController extends Controller
                 ->addColumn('action', function ($row) use ($request) {
                     // $payment_history = '<a href="' . route('distributors_dealers.payment_history', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     // class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Payment History</a>';
+
+                    // $show_btn = '<a href="' . route('distributors_dealers.show', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    // class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i> Show</a>';
 
                     $edit_btn = '<a href="' . route('distributors_dealers.edit', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
@@ -107,6 +116,7 @@ class DistributorsDealersController extends Controller
                     $action_btn .= $pesticide_license_check ? $principal_certificate_download_btn : '';
 
                     $action_btn .= Auth::user()->hasAnyRole(['super admin', 'admin']) ? $user_report_btn : '';
+                    // $action_btn .= $show_btn;
                     $action_btn .= $edit_btn;
                     // $action_btn .= $o_form_download_btn;
                     // $action_btn .= $principal_certificate_download_btn;
@@ -114,6 +124,12 @@ class DistributorsDealersController extends Controller
 
                     return $action_btn . ' </div></div>';
                 })
+                ->editColumn('firm_shop_name', function ($row) {
+                    $name = $row->firm_shop_name;
+                    return '<a href="' . route('distributors_dealers.show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
+                                <i class="ti ti-eye #1ecbe2"></i>' . $name . '</a>';
+                })
+
                 ->editColumn('applicant_name', function ($row) {
                     $profilePic = isset($row->profile_image)
                         ? asset('storage/distributor_dealer_profile_image/' . $row->profile_image)
@@ -138,7 +154,7 @@ class DistributorsDealersController extends Controller
                         $q->where('city_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['action', 'applicant_name'])
+                ->rawColumns(['action', 'applicant_name', 'firm_shop_name'])
                 ->make(true);
         }
         return view('admin.distributors_dealers.index', $data);
@@ -167,12 +183,10 @@ class DistributorsDealersController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
-
             $dd_id = DistributorsDealers::max('id');
             $nextId  = $dd_id ? $dd_id + 1 : 1;
-            $code_no = 'ES' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
+            $code_no = 'NG' . str_pad($nextId, max(6, strlen($nextId)), '0', STR_PAD_LEFT);
 
             $d_d = new DistributorsDealers();
             $d_d->fill($request->all());
@@ -185,7 +199,6 @@ class DistributorsDealersController extends Controller
                 $d_d->profile_image = $filename;
             }
             $d_d->save();
-
             // if ($request->has(['company_name', 'product_id', 'quantity', 'company_remarks'])) {
 
             $company_name    = $request->input('company_name');
@@ -260,6 +273,47 @@ class DistributorsDealersController extends Controller
         ];
         return view('admin.distributors_dealers.edit', $data);
     }
+
+    public function show(Request $request, $id)
+    {
+        try {
+            $distributor_dealers = DistributorsDealers::findOrFail($id);
+            $data['page_title'] = $request->dealer == 1 ? 'Show Dealers' : 'Show Distributors';
+            $data = [
+                'page_title'          =>  $distributor_dealers->user_type == 1 ? 'Show Distributor' : 'Show Dealer',
+                'distributor_dealers' => $distributor_dealers,
+                'products'            => Product::where('status', 1)->get()->all(),
+                'states'              => StateManagement::where('status', 1)->get()->all(),
+                'countries'           => Country::where('status', 1)->get()->all(),
+                'sales_persons'       => SalesPersonDetail::get(),
+            ];
+
+            $html = view('admin.distributors_dealers.show', $data)->render(); // Assuming your modal HTML is in order.modal view.
+
+            return response()->json([
+                'html' => $html,  // Return the modal HTML as a string
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['error' => 'Something went wrong!'], 500);
+            // return redirect()->back()->with('error', 'Something is wrong!!');
+        }
+    }
+
+    // public function show(string $id)
+    // {
+    //     $distributor_dealers = DistributorsDealers::findOrFail($id);
+    //     // $data['page_title'] = $request->dealer == 1 ? 'Create Dealers' : 'Create Distributors'; firm_shop_name
+    //     $data = [
+    //         'page_title'          =>  $distributor_dealers->user_type == 1 ? 'Show Distributor' : 'Show Dealer',
+    //         'distributor_dealers' => $distributor_dealers,
+    //         'products'            => Product::where('status', 1)->get()->all(),
+    //         'states'              => StateManagement::where('status', 1)->get()->all(),
+    //         'countries'           => Country::where('status', 1)->get()->all(),
+    //         'sales_persons'       => SalesPersonDetail::get(),
+    //     ];
+    //     return view('admin.distributors_dealers.show', $data);
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -416,21 +470,33 @@ class DistributorsDealersController extends Controller
             ->has('products')
             /***  Only get categories with products ***/
             ->get();
-
         // return view('admin.distributors_dealers.price_list', $data);  //only web view perpose 
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list', $data);
-
         $name = $request->dealer == 1 ? 'Dealers' : 'Distributors';
         $filename = $name . '-price-list-' . now()->year . '.pdf';
-
         // Save to storage/app/public/price-lists/
         Storage::disk('public')->put('distributors-price-lists/' . $filename, $pdf->output());
-
         return $pdf->download($filename);
-        //  return $pdf->stream($filename);   //only pdf view perpose  
-
+        //  return $pdf->stream($filename);   //only pdf view perpose with live update
     }
 
+
+    public function export_price_list_new(Request $request)  // right function
+    {
+        // $data['products'] = Product::with('category', 'product_variations.variation_option_value')->where('status', 1)->get();
+        $data['category'] = Category::with('products')->where('status', 1)
+            ->has('products')
+            /***  Only get categories with products ***/
+            ->get();
+        // return view('admin.distributors_dealers.price_list_new', $data);  //only web view perpose 
+        $pdf = Pdf::loadView('admin.distributors_dealers.price_list_new', $data);
+        $name = $request->dealer == 1 ? 'Dealers' : 'Distributors';
+        $filename = $name . '-price-list-new' . now()->year . '.pdf';
+        // Save to storage/app/public/price-lists/
+        Storage::disk('public')->put('distributors-price-lists-new/' . $filename, $pdf->output());
+        // return $pdf->download($filename);
+        return $pdf->stream($filename);   //only pdf view perpose with live update 
+    }
 
     public function replaceInWord(Request $request, $id, $dealer = null)
     {

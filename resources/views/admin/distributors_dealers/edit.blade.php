@@ -213,14 +213,14 @@
 
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Postal Code <span class="text-danger">*</span></label>
+                                <label class="col-form-label">Postal Code</label>
                                 <input type="text" name="postal_code"
                                     value="{{ old('postal_code', $distributor_dealers->postal_code) }}"
                                     class="form-control " placeholder="Postal/Zip code">
                                 <span id="postal_code_error" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <label class="col-form-label">Country <span class="text-danger">*</span></label>
                             <select id="inputState" class="form-control " name="country_id">
                                 <option value="">Select country</option>
@@ -232,7 +232,7 @@
                                 @endforeach
                             </select>
                             <span id="country_id_error" class="text-danger"></span>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="applicationdtl delerbox-border-b">
@@ -250,7 +250,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Account No <span class="text-danger">*</span></label>
+                                <label class="col-form-label">Account No </label>
                                 <input type="number" name="account_no"
                                     value="{{ old('account_no', $distributor_dealers->account_no) }}"
                                     class="form-control" placeholder="Account No" maxlength="20">
@@ -259,7 +259,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">IFSC Code <span class="text-danger">*</span></label>
+                                <label class="col-form-label">IFSC Code </label>
                                 <input type="text" name="ifsc_code"
                                     value="{{ old('ifsc_code', $distributor_dealers->ifsc_code) }}"
                                     class="form-control" placeholder="IFSC Code" maxlength="11">
@@ -305,8 +305,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="col-form-label">Name of Authorised Signatory <span
-                                        class="text-danger">*</span></label>
+                                <label class="col-form-label">Name of Authorised Signatory </label>
                                 <input type="text" name="name_authorised_signatory"
                                     value="{{ old('name_authorised_signatory', $distributor_dealers->name_authorised_signatory) }}"
                                     class="form-control" placeholder="Name of Authorised Signatory" maxlength="255">
@@ -931,7 +930,7 @@
                                         sales/month) </label>
                                     <input type="text" name="business_potential" class="form-control"
                                         placeholder="Estimated sales/month"
-                                        value="{{ old('business_potential', $distributor_dealers->market_potential) }}"
+                                        value="{{ old('business_potential', $distributor_dealers->business_potential) }}"
                                         maxlength="255">
                                 </div>
                             </div>
@@ -1349,16 +1348,16 @@
                 },
                 state_id: "required",
                 city_id: "required",
-                postal_code: "required",
-                country_id: "required",
+                // postal_code: "required",
+                // country_id: "required",
 
                 bank_name_address: "required",
-                account_no: "required",
-                ifsc_code: "required",
+                // account_no: "required",
+                // ifsc_code: "required",
                 security_cheque_detail: "required",
                 cheque_1: "required",
                 cheque_2: "required",
-                name_authorised_signatory: "required",
+                // name_authorised_signatory: "required",
                 // fertilizer_license: "required",
                 fertilizer_license_check: "required",
                 fertilizer_license: {
@@ -1404,8 +1403,8 @@
                 },
                 state_id: "Please select a state.",
                 city_id: "Please select a city.",
-                postal_code: "Postal code is required.",
-                country_id: "Please select a country.",
+                // postal_code: "Postal code is required.",
+                // country_id: "Please select a country.",
 
                 pancard: {
                     required: "The pan card No field is required.",
@@ -1417,12 +1416,12 @@
                     maxlength: "GSTIN must be 15 digits."
                 },
                 bank_name_address: "The bank name and address field is required.",
-                account_no: "The account no field is required.",
-                ifsc_code: "The ifsc code field is required.",
+                // account_no: "The account no field is required.",
+                // ifsc_code: "The ifsc code field is required.",
                 security_cheque_detail: "The security cheque details field is required.",
                 cheque_1: "The cheque no.1 field is required.",
                 cheque_2: "The cheque no.2 field is required.",
-                name_authorised_signatory: "The name of authorised signatory field is required.",
+                // name_authorised_signatory: "The name of authorised signatory field is required.",
                 fertilizer_license_check: "The fertilizer license no field is required.",
                 fertilizer_license: "The fertilizer license no field is required.",
                 pesticide_license: "The pesticide license no field is required.",

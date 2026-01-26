@@ -22,10 +22,12 @@
                             @foreach ($distributor_dealers as $dd)
                                 <option value="{{ $dd->id }}" {{ old('dd_id') == $dd->id ? 'selected' : '' }}
                                     data-user_type="{{ $dd->user_type }}" data-mobile_no="{{ $dd->mobile_no }}"
-                                    data-gst_no="{{ $dd->gstin }}" data-address="{{ $dd->firm_shop_address }}"
+                                    data-gst_no="{{ $dd->gstin }}" data-pancard="{{ $dd->pancard }}"
+                                    data-address="{{ $dd->firm_shop_address }}"
                                     data-salesperson_id="{{ $dd->sales_person_id }}">
                                     {{ $dd->firm_shop_name }}
                                     {{ $dd->user_type == 1 ? '(Distributor)' : ($dd->user_type == 2 ? '(Dealers)' : '') }}
+                                    - {{ $dd->city->city_name ?? '' }}
                                 </option>
                             @endforeach
                         @else
@@ -81,10 +83,16 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="col-form-label">GST No. <span class="text-danger">*</span></label>
+                    <label class="col-form-label">GST No. </label>
                     <input type="text" name="gst_no" value="{{ old('gst_no') }}" class="form-control"
                         placeholder="GST No" maxlength="255" readonly>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <label class="col-form-label">Pan Card No.</label>
+                    <input type="text" name="pancard" value="{{ old('pancard') }}" class="form-control"
+                        placeholder="Pan Card No" maxlength="255" readonly>
+                </div>
+
                 <div class="col-md-4 mb-3">
                     <label class="col-form-label">Address <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="address" placeholder="Address" readonly>{{ old('address') }}</textarea>
@@ -232,7 +240,7 @@
         })
     });
 
-    /*** party name select and phone number auto fillable ***/
+    /*** party name select and phone number|gst|address|pancard auto fillable ***/
     $(function() {
         $('[name="dd_id"]').change(function() {
             let selected = $(this).find('option:selected');
@@ -240,6 +248,7 @@
 
             $('[name="mobile_no"]').val(selected.data('mobile_no') || '');
             $('[name="gst_no"]').val(selected.data('gst_no') || '');
+            $('[name="pancard"]').val(selected.data('pancard') || '');
             $('[name="address"]').val(selected.data('address') || '');
             // console.log(selected.data('salesperson_id'));
             var salsmen_id = selected.data('salesperson_id');
@@ -333,9 +342,9 @@
                 freight: {
                     required: true
                 },
-                gst_no: {
-                    required: true
-                },
+                // gst_no: {
+                //     required: true
+                // },
                 address: {
                     required: true
                 },
@@ -376,7 +385,7 @@
                 salesman_id: "Please select salesman name",
                 transport: "Please enter transport details",
                 freight: "Please enter freight value",
-                gst_no: "Please enter GST number",
+                // gst_no: "Please enter GST number",
                 address: "Please enter address",
                 advance_payment_discount: "Please select advance payment discount",
                 advance_pay_discount_img: "Please upload image",

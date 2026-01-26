@@ -277,5 +277,49 @@
             }
         });
     });
+
+
+    /*** distributors_dealers show Popup Model ***/
+    $(document).on('click', '.open-popup-model', function(e) {
+        e.preventDefault();
+
+        let dd_id = $(this).data('id'); // Data ID passed from the anchor tag
+        let url = dd_id ? '{{ route('complain.show', ':id') }}'.replace(':id', dd_id) : "";
+
+        // Show SweetAlert2 loading spinner while fetching the data
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we load the details.',
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading(); // Show loading spinner
+            }
+        });
+
+        // Fetch the order data via AJAX
+        $.ajax({
+            url: url, // Use the URL from the 'href' attribute
+            type: 'GET',
+            success: function(response) {
+                if (response.html) {
+                    Swal.fire({
+                        // title: 'Details',
+                        html: response.html,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        width: '80%',
+                        heightAuto: true
+                    });
+                } else {
+                    console.error('No HTML returned:', response);
+                    Swal.fire('Error', 'No content received from server.', 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX error:', xhr.responseText);
+                Swal.fire('Error', 'Could not load details.', 'error');
+            }
+        });
+    });
 </script>
 @endsection

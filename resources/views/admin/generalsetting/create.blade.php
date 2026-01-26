@@ -55,6 +55,12 @@
                     aria-selected="{{ $activeTab == 'advance-payment-discount' ? 'true' : 'false' }}">Advance Payment
                     Discount</a>
             </li>
+
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ $activeTab == 'pdf-price-list' ? 'active' : '' }}" id="PdfPriceList"
+                    data-bs-toggle="tab" href="#Pdf-Price-List" role="tab" aria-controls="Pdf-Price-List"
+                    aria-selected="{{ $activeTab == 'pdf-price-list' ? 'true' : 'false' }}">PDF Price List</a>
+            </li>
         </ul>
 
         <div class="tab-content mt-3" id="myTabContent">
@@ -535,6 +541,195 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="d-flex align-items-center justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!--P D F   P R I C E   L I S T   T A B-->
+            <div class="tab-pane fade {{ $activeTab == 'pdf-price-list' ? 'show active' : '' }}" id="Pdf-Price-List"
+                role="tabpanel" aria-labelledby="PdfPriceList">
+                <form action="{{ route('admin.generalsetting.store') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="form_type" value="pdf-price-list">
+                    <h5>PRICELIST – {{ date('Y') }}</h5>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">ADVANCE</label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('advance') is-invalid @enderror" placeholder="0"
+                                    name="advance" value="{{ old('advance', getSetting('advance')) }}">
+                                @error('advance')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">15 Day's</label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('15_days') is-invalid @enderror" placeholder="0"
+                                    name="15_days" value="{{ old('15_days', getSetting('15_days')) }}">
+                                @error('15_days')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">30 Day's</label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('30_days') is-invalid @enderror" placeholder="0"
+                                    name="30_days" value="{{ old('30_days', getSetting('30_days')) }}">
+                                @error('30_days')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">45 Day's</label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('45_days') is-invalid @enderror" placeholder="0"
+                                    name="45_days" value="{{ old('45_days', getSetting('45_days')) }}">
+                                @error('45_days')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">60 Day's</label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('60_days') is-invalid @enderror" placeholder="0"
+                                    name="60_days" value="{{ old('60_days', getSetting('60_days')) }}">
+                                @error('60_days')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="col-form-label">90 Day's</label>
+                            <div class="form-input-icon input-group gropinginput box-bordernone">
+                                <input type="number" step="any"
+                                    class="form-control @error('90_days') is-invalid @enderror" placeholder="0"
+                                    name="90_days" value="{{ old('90_days', getSetting('90_days')) }}">
+                                @error('90_days')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <h5>Terms & Conditions</h5>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="mb-3">
+                                <textarea class="form-control summernote @error('terms_and_condition') is-invalid @enderror"
+                                    name="terms_and_condition">{{ old('terms_and_condition', getSetting('terms_and_condition')) }}</textarea>
+                                @error('terms_and_condition')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <h5>Disclaimer</h5>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="mb-3">
+                                <textarea class="form-control summernote @error('disclaimer') is-invalid @enderror" name="disclaimer">{{ old('disclaimer', getSetting('disclaimer')) }}</textarea>
+                                @error('disclaimer')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <h5>PDF Footer </h5>
+                        <div class="row mt-3">
+                            <div class="col-md-4 mb-3">
+                                <div class="profile-pic-upload">
+                                    <div class="profile-pic">
+                                        @if (getSetting('pdf_logo') && !empty(getSetting('pdf_logo')))
+                                            <img id="PDFlogoPreview"
+                                                src="{{ getSetting('pdf_logo') ? asset('storage/pdf_logo/' . getSetting('pdf_logo')) : asset('images/default-user.png') }} "
+                                                alt="Profile Picture"class="img-thumbnail mb-2" width="96.36px"
+                                                height="100px" style="object-fit: contain" alt="Profile Picture">
+                                        @endif
+                                    </div>
+
+                                    <div class="upload-content">
+                                        <div class="upload-btn  @error('pdf_logo') is-invalid @enderror">
+                                            <input type="file" name="pdf_logo" accept=".jpg,.jpeg,.gif,.png"
+                                                onchange="previewProfilePicture(event, 'PDFlogoPreview')">
+                                            <span>
+                                                <i class="ti ti-file-broken"></i>PDF Logo
+                                            </span>
+                                        </div>
+                                        <p>JPG, JPEG, GIF or PNG. Max size of 2MB</p>
+                                        @error('pdf_logo')
+                                            <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="col-form-label">Name </label>
+                                <input type="text"
+                                    class="form-control @error('pdf_footer_name') is-invalid @enderror"
+                                    name="pdf_footer_name"
+                                    value="{{ old('pdf_footer_name', getSetting('pdf_footer_name')) }}">
+                                @error('pdf_footer_name')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="col-form-label">Mobile </label>
+                                <input type="number"
+                                    class="form-control @error('pdf_footer_mobile') is-invalid @enderror"
+                                    name="pdf_footer_mobile"
+                                    value="{{ old('pdf_footer_mobile', getSetting('pdf_footer_mobile')) }}">
+                                @error('pdf_footer_mobile')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="col-form-label"> Email </label>
+                                <input type="email"
+                                    class="form-control @error('pdf_footer_email') is-invalid @enderror"
+                                    name="pdf_footer_email"
+                                    value="{{ old('pdf_footer_email', getSetting('pdf_footer_email')) }}">
+                                @error('pdf_footer_email')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="col-form-label">Address </label>
+                                <textarea class="form-control @error('pdf_footer_address') is-invalid @enderror" name="pdf_footer_address">{{ old('pdf_footer_address', getSetting('pdf_footer_address')) }}</textarea>
+
+                                @error('pdf_footer_address')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="col-form-label">Website URL </label>
+                                <input type="text"
+                                    class="form-control @error('pdf_footer_url') is-invalid @enderror"
+                                    name="pdf_footer_url"
+                                    value="{{ old('pdf_footer_url', getSetting('pdf_footer_url')) }}">
+                                @error('pdf_footer_url')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+
+                        </div>
+
                         <div class="d-flex align-items-center justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>

@@ -29,6 +29,9 @@ class ComplainController extends Controller
                 })
                 ->addColumn('action', function ($row) {
 
+                    $show_btn = '<a href="' . route('complain.show', $row->id) . '" class="dropdown-item"  data-id="' . $row->id . '"
+                    class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-eye text-warning"></i> Show</a>';
+
                     $edit_btn = '<a href="' . route('complain.edit', $row->id) . '" class="dropdown-item edit-btn"  data-id="' . $row->id . '"
                     class="btn btn-outline-warning btn-sm edit-btn"><i class="ti ti-edit text-warning"></i> Edit</a>';
 
@@ -44,16 +47,17 @@ class ComplainController extends Controller
                     // Auth::user()->can('manage users') ? $action_btn .= $edit_btn : '';
                     // Auth::user()->can('manage users') ? $action_btn .= $delete_btn : '';
 
+                    $action_btn .= $show_btn;
                     $action_btn .= $edit_btn;
                     $action_btn .= $delete_btn;
 
                     return $action_btn . ' </div></div>';
                 })
                 ->editColumn('firm_shop_name', function ($row) {
-                    $imagePath = 'storage/complain_images/' . $row->complain_image;
-                    // $complainimage = isset($row->complain_image)
-                    //     ? asset($imagePath)
-                    //     : asset('images/default-user.png');
+                    // $imagePath = 'storage/complain_images/' . $row->complain_image;
+                    /* $complainimage = isset($row->complain_image)
+                         ? asset($imagePath)
+                         : asset('images/default-user.png');*/
 
                     $profilePic = isset($row->distributorsDealers->profile_image)
                         ? asset('storage/distributor_dealer_profile_image/' . $row->distributorsDealers->profile_image)
@@ -66,8 +70,9 @@ class ComplainController extends Controller
                     <a href="' . $profilePic . '" target="_blank" class="avatar avatar-sm border rounded p-1 me-2">
                         <img src="' . $profilePic . '" alt="Complain Image">
                     </a>
-                    <span>' . ($row->distributorsDealers?->firm_shop_name ?? 'N/A') . '</span><br>
-                    <small>' . $userLabel . '</small>';
+                    <span>  <a href="' . route('complain.show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
+                                <i class="ti ti-eye #1ecbe2"></i>' . ($row->distributorsDealers?->firm_shop_name ?? 'N/A') . '</span><br>
+                    <small>' . $userLabel . '</a></small>';
                 })
                 ->filterColumn('dd_id', function ($query, $keyword) {
                     $query->whereHas('distributorsDealers', function ($q) use ($keyword) {
@@ -180,6 +185,37 @@ class ComplainController extends Controller
         $data['complain_status_history'] = ComplainStatusHistory::where('complain_id', $id)->orderBy('created_at', 'desc')->get();
         return view('admin.complain.edit', $data);
     }
+    // public function show($id)
+    // {
+    //     // dd($id);
+    //     $data['page_title'] = 'Show Complain';
+    //     $data['dds'] = DistributorsDealers::get();
+    //     $data['products'] = Product::where('status', 1)->get();
+    //     $data['complain'] = Complain::findOrFail($id);
+    //     $data['complain_status_history'] = ComplainStatusHistory::where('complain_id', $id)->orderBy('created_at', 'desc')->get();
+    //     return view('admin.complain.show', $data);
+    // }
+
+    public function show($id)
+    {
+        try {
+            $data['page_title'] = 'Show Complain';
+            $data['dds'] = DistributorsDealers::get();
+            $data['products'] = Product::where('status', 1)->get();
+            $data['complain'] = Complain::findOrFail($id);
+            $data['complain_status_history'] = ComplainStatusHistory::where('complain_id', $id)->orderBy('created_at', 'desc')->get();
+
+            $html = view('admin.complain.show', $data)->render(); // Assuming your modal HTML is in order.modal view.
+
+            return response()->json([
+                'html' => $html,  // Return the modal HTML as a string
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['error' => 'Something went wrong!'], 500);
+            // return redirect()->back()->with('error', 'Something is wrong!!');
+        }
+    }
 
     public function update(Request $request, $id)
     {
@@ -272,8 +308,20 @@ class ComplainController extends Controller
     public function destroy(Complain $complain)
     {
         $complain = Complain::findOrFail($complain->id);
-        if ($complain->complain_image) {
-            Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+
+        // if ($complain->complain_image) {
+        //     Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+        // }
+
+        // Decode images from DB
+        $images = json_decode($complain->complain_image, true);
+
+        if (!empty($images)) {
+            foreach ($images as $image) {
+                if (Storage::disk('public')->exists('complain_images/' . $image)) {
+                    Storage::disk('public')->delete('complain_images/' . $image);
+                }
+            }
         }
 
         $complain->delete();
@@ -299,8 +347,17 @@ class ComplainController extends Controller
                 }
 
                 if ($complain->complain_image) {
-                    Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+                    //     Storage::disk('public')->delete('complain_images/' . $complain->complain_image);
+                    $images = json_decode($complain->complain_image, true);
+                    if (is_array($images)) {
+                        foreach ($images as $image) {
+                            if (Storage::disk('public')->exists('complain_images/' . $image)) {
+                                Storage::disk('public')->delete('complain_images/' . $image);
+                            }
+                        }
+                    }
                 }
+
                 $complain->delete();
             }
             return response()->json(['message' => 'Selected Complains deleted successfully!']);

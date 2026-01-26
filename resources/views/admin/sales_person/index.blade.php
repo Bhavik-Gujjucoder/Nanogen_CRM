@@ -14,13 +14,15 @@
                     <input type="text" class="form-control" id="customSearch" placeholder="Search User">
                 </div>
             </div>
-            <div class="col-sm-8">
-                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
 
-                    <a href="{{ route('sales_person.create') }}" class="btn btn-primary"><i
-                            class="ti ti-square-rounded-plus me-2"></i>Add Sales Person</a>
+            @if (auth()->user()->hasAnyRole(['admin', 'super admin']))
+                <div class="col-sm-8">
+                    <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                        <a href="{{ route('sales_person.create') }}" class="btn btn-primary"><i
+                                class="ti ti-square-rounded-plus me-2"></i>Add Sales Person</a>
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
         <!-- /Search -->
     </div>

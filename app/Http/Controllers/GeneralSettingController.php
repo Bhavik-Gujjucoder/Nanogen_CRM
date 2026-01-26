@@ -85,11 +85,13 @@ class GeneralSettingController extends Controller
             // 
         }
 
+
         $data = $request->except('_token');
         $data = $request->except('company_logo');
         $data = $request->except('login_page_image');
         $data = $request->except('o_form_docx_file');
         $data = $request->except('principal_certificate_docx_file');
+        $data = $request->except('pdf_logo');
 
         if (!$data) {
             return redirect()->back()->with('error', 'Request data is empty.');
@@ -102,6 +104,22 @@ class GeneralSettingController extends Controller
                     ['key' => $key],         /* Search by key */
                     ['value' => $value]      /* Update or set value */
                 );
+            }
+
+            if ($request->hasFile('pdf_logo')) {
+                $general_setting = GeneralSetting::where('key', 'pdf_logo')->first();
+                /* Delete old profile picture if exists */
+                if ($request->pdf_logo) {
+                    Storage::disk('public')->delete('pdf_logo/' . $general_setting->pdf_logo);
+                }
+                /* Upload new profile picture */
+                $file = $request->file('pdf_logo');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('pdf_logo', $filename, 'public');  /* Save in storage/app/public/pdf_logo */
+
+                /* Save new filename in database */
+                $general_setting->value = $filename;
+                $general_setting->save();
             }
 
             if ($request->hasFile('company_logo')) {

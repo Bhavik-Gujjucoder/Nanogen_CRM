@@ -299,25 +299,31 @@ class OrderManagementController extends Controller
         $data['salesmans'] = SalesPersonDetail::where('deleted_at', NULL)->get();
 
         $sales_user_ids = getSalesUserIds();
-        $report_manager_sales_user_ids = getReportManagerSalesPersonId();
 
+        /* $report_manager_sales_user_ids = getReportManagerSalesPersonId();
         if (auth()->user()->hasRole('sales')) {
             $ids = $sales_user_ids;
         } elseif (auth()->user()->hasRole('reporting manager')) {
             $ids = $report_manager_sales_user_ids;
         } else {
-            $ids = []; // admin / others
-        }
+            $ids = [];
+        }*/
 
-        if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
+
+        $reporting_sales_person_ids =  SalesPersonDetail::where('reporting_sales_person_id', auth()->id())->pluck('user_id')->toArray();
+        // dd($reporting_sales_person_ids);
+        if (auth()->user()->hasRole('sales')) {
+            $data['distributor_dealers'] = DistributorsDealers::where('sales_person_id', auth()->id())->orWhereIn('sales_person_id', $reporting_sales_person_ids)->get();
+            // dd($data['distributor_dealers']->pluck('id')->toArray());
+        }
+        /* if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
             $data['salesmans'] = SalesPersonDetail::whereIn('user_id', $ids)->where('deleted_at', NULL)->get();
-            // $city_ids = explode(',', $data['salesmans']->city_ids);
             $city_ids = explode(
                 ',',
                 $data['salesmans']->pluck('city_ids')->implode(',')
             );
             $data['distributor_dealers'] = DistributorsDealers::whereIn('city_id', $city_ids)->get();
-        } else {
+        } */ else {
             $data['distributor_dealers'] = DistributorsDealers::get();
         }
 
@@ -332,7 +338,6 @@ class OrderManagementController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $latest_order_id = OrderManagement::withTrashed()->max('id');
         $order = OrderManagement::create($request->only([
             'dd_id',
@@ -342,6 +347,7 @@ class OrderManagementController extends Controller
             'transport',
             'freight',
             'gst_no',
+            'pancard',
             'address',
             'total_order_amount',
             // 'gst',
@@ -440,22 +446,28 @@ class OrderManagementController extends Controller
         ];
 
         $sales_user_ids = getSalesUserIds();
-        $report_manager_sales_user_ids = getReportManagerSalesPersonId();
 
+        /* $report_manager_sales_user_ids = getReportManagerSalesPersonId();
         if (auth()->user()->hasRole('sales')) {
             $ids = $sales_user_ids;
         } elseif (auth()->user()->hasRole('reporting manager')) {
             $ids = $report_manager_sales_user_ids;
         } else {
-            $ids = []; // admin / others
-        }
+            $ids = [];
+        }*/
 
-        if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
+        $reporting_sales_person_ids =  SalesPersonDetail::where('reporting_sales_person_id', auth()->id())->pluck('user_id')->toArray();
+        // dd($reporting_sales_person_ids);
+        if (auth()->user()->hasRole('sales')) {
+            $data['distributor_dealers'] = DistributorsDealers::where('sales_person_id', auth()->id())->orWhereIn('sales_person_id', $reporting_sales_person_ids)->get();
+            // dd($data['distributor_dealers']->pluck('id')->toArray());
+        }
+        /*if (auth()->user()->hasRole('sales') || auth()->user()->hasRole('reporting manager')) {
             $data['salesmans'] = SalesPersonDetail::whereIn('user_id', $ids)->where('deleted_at', NULL)->get();
             // $city_ids = explode(',', $data['salesmans']->city_ids);
             $city_ids = explode(',', $data['salesmans']->pluck('city_ids')->implode(','));
             $data['distributor_dealers'] = DistributorsDealers::whereIn('city_id', $city_ids)->get();
-        } else {
+        } */ else {
             $data['distributor_dealers'] = DistributorsDealers::get();
         }
         return view('admin.order_management.edit', $data);
@@ -471,7 +483,7 @@ class OrderManagementController extends Controller
         // Checkbox checked or not
         $isAdvance = $request->has('advance_payment_discount') && $request->advance_payment_discount === 'yes';
 
-        $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'address', 'total_order_amount', 'grand_total']) + [
+        $order->update($request->only(['dd_id', 'order_date', 'mobile_no', 'salesman_id', 'transport', 'freight', 'gst_no', 'pancard', 'address', 'total_order_amount', 'grand_total']) + [
 
             'transport_type' => $request->transport_type,
             'vehicle_number' => $request->transport_type == 'company' ? $request->vehicle_number : null,

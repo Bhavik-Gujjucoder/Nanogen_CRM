@@ -110,7 +110,8 @@
                             <div class="icon-form-end">
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    name="password" placeholder="Password" maxlength="255">
+                                    name="password" placeholder="Password" maxlength="255"
+                                    value="{{ $detail->user->real_password }}">
                                 @error('password')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
@@ -124,7 +125,8 @@
                                 <span class="form-icon"><i class="ti ti-eye-off"></i></span>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
-                                    name="password_confirmation" placeholder="Confirm Password" maxlength="255">
+                                    name="password_confirmation" placeholder="Confirm Password" maxlength="255"
+                                    value="{{ $detail->user->real_password }}">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror

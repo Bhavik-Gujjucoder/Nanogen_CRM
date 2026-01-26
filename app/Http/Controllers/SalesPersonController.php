@@ -226,6 +226,7 @@ class SalesPersonController extends Controller
             $user->email    = $request->email ?? null;
             $user->phone_no = $request->phone_number;
             $user->password = Hash::make($request->password);
+            $user->real_password = $request->password ?? null;
             $user->save();
 
             $latest_employee_id = SalesPersonDetail::withTrashed()->max('id');
@@ -299,6 +300,7 @@ class SalesPersonController extends Controller
 
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
         $salesDetail = SalesPersonDetail::findOrFail($id);
         $user        = User::where('id', $salesDetail->user_id)->first();
         $request->validate([
@@ -338,7 +340,10 @@ class SalesPersonController extends Controller
 
             // $user->assignRole('sales');
             if ($request->filled('password')) {
-                $user->update(['password' => Hash::make($request->password)]);
+                $user->update([
+                    'password' => Hash::make($request->password),
+                    'real_password' => $request->password
+                ]);
             }
 
             if ($request->hasFile('profile_picture')) {
