@@ -128,7 +128,7 @@
             left: 0;
             text-align: left;
             padding-left: 30px;
-            padding-right: 30px;
+            padding-right: 30px;margin-bottom: 20px;
             position: absolute;
         }
 
@@ -196,7 +196,7 @@
             width: 100%;
             /* border-collapse: collapse; */
             text-align: left;
-            margin-top: 30px;
+            margin-top: 40px;
             /* page-break-inside: avoid; */
             table-layout: fixed;
             margin-bottom: 30px;
