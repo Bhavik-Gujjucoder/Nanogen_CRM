@@ -87,7 +87,7 @@
             display: block;
             min-height: 100vh;
             /* overflow: hidden; */
-            height: 92%;
+            height: 95%;
         }
 
         .header {
@@ -207,7 +207,7 @@
         }
 
         table {
-            border-spacing: 10px;
+            border-spacing: 10px; text-align: left;
         }
 
         .table-cls thead th {
@@ -217,7 +217,7 @@
             padding: 10px;
             /* font-weight: lighter; */
             font-size: 14px;
-            text-align: center;
+            text-align: left;
         }
 
         .product-name {
