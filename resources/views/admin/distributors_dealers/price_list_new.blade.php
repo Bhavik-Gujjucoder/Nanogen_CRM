@@ -85,9 +85,8 @@
             padding: 30px 10px !important;
             margin: 0 15px;
             display: block;
-            min-height: 100vh;
             /* overflow: hidden; */
-            height: 95%;
+            min-height: 95%;
         }
 
         .header {
@@ -124,7 +123,7 @@
             font-weight: bold;
             padding: 3px 10px;
             font-size: 24px;
-            margin-top: 10px;
+            margin-top: 0px;
             display: inline-block;
             left: 0;
             text-align: left;
@@ -133,10 +132,6 @@
             position: absolute;
         }
 
-        .header-table {
-            width: 100%;
-            margin-bottom: 30px;
-        }
 
 
 
@@ -147,7 +142,7 @@
 
         .header-table {
             width: 100%;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-collapse: collapse;
             background-color: transparent;
             /* Ensure no background */
@@ -201,13 +196,15 @@
             width: 100%;
             /* border-collapse: collapse; */
             text-align: left;
-            margin-top: 70px;
+            margin-top: 30px;
             /* page-break-inside: avoid; */
             table-layout: fixed;
+            margin-bottom: 30px;
         }
 
         table {
-            border-spacing: 10px; text-align: left;
+            border-spacing: 10px;
+            text-align: left;
         }
 
         .table-cls thead th {
@@ -217,7 +214,7 @@
             padding: 10px;
             /* font-weight: lighter; */
             font-size: 14px;
-            text-align: left;
+            text-align: center;
         }
 
         .product-name {
@@ -357,7 +354,7 @@
         }
 
         .note-box {
-            margin-top: 30px;
+            margin-top: 40px;
             line-height: 1.8;
 
         }
@@ -366,20 +363,71 @@
             padding-left: 20px;
         }
 
-        .note-box li {
+        .terms-and-condition {
             margin-bottom: 0px;
             list-style: auto;
             font-size: 12px;
+            line-height: 14px;
+            display: block;
         }
+
+        .terms-and-condition {
+            font-size: 12px;
+            color: #000;
+            line-height: 1.8;
+        }
+
+        /* Force ordered list style */
+        .terms-and-condition ol {
+            margin: 0;
+            padding-left: 28px;
+        }
+
+        .terms-and-condition ol li {
+            margin-bottom: 0px;
+            padding-left: 6px;
+        }
+
+        /* If content comes as <p> instead of <li> */
+        .terms-and-condition p {
+            margin: 0 0 0px 0;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        /* Manual numbering fallback (PDF-safe) */
+        .terms-and-condition p::before {
+            counter-increment: terms;
+            content: counter(terms) ". ";
+            position: absolute;
+            left: 0;
+            font-weight: 500;
+        }
+
+        /* Reset counter */
+        .terms-and-condition {
+            counter-reset: terms;
+        }
+
+        /* NOTE styling */
+        .terms-and-condition strong,
+        .terms-and-condition b {
+            display: block;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
 
         .footer-cls-new .header-logo {
             text-align: center;
             margin: auto;
+            margin-bottom: 0;
             width: 75%;
         }
 
         .header-logo img {
             margin-left: 40px;
+            margin-bottom: 0;
         }
 
         .footer-content {
@@ -410,7 +458,7 @@
         }
 
         .contact-cls {
-            margin-top: 20px;
+            margin-top: 10px;
 
         }
 
@@ -445,6 +493,7 @@
             background-color: #84bd00;
             color: #ffffff;
             text-align: left;
+            font-size: 20px;
         }
 
         .note-sec {
@@ -481,7 +530,7 @@
         .footer-left p {
             margin: 0 0 0px;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         .contact-cls span {
@@ -520,15 +569,19 @@
             font-weight: 700;
         }
 
-        @page {
-            margin-bottom: 18mm;
-            /* top right bottom lef
-            t */
+        .manage-cls {
+            font-size: 14px;
+            line-height: 18px;
         }
-        
 
-
+        .footer-col {
+            /* height: auto; */
+            min-height: 90% !important;
+            position: relative;
+        }
+        .note-clss{font-weight: bold;font-size: 14px;margin-bottom: 10px;}
     </style>
+
 </head>
 {{-- {{dd(public_path('fonts\NotoSansGujarati-Regular.ttf'))}} --}}
 
@@ -654,7 +707,7 @@
 
     {{-- gujrati content --}}
     <div style="padding-top: 40px;">
-        <div class="container">
+        <div class="container footer-col">
             <table class="header-table">
                 <tr>
                     <td class="header-logo">
@@ -706,62 +759,65 @@
                     </td>
                 </tr>
             </table>
-            <div class="note-box">
+            <div class="note-box terms-and-condition">
                 {!! getSetting('terms_and_condition') !!}
+
+                
             </div>
+<div class="note-box note-clss"><b>NOTE :</b> {{ getSetting('note') }}</div>
 
             {{-- <p style="font-family: noto_sans_gujarati; font-size: 14px;">{!! $gujaratiText !!}</p> --}}
 
-            <table class="price-lst-section" style="padding-top: 40px;">
+            <table class="price-lst-section" style="padding-top: 0px;">
                 <tr>
                     <td>
                         <div class="section-title">Disclaimer:</div>
                     </td>
                 </tr>
             </table>
-            <div class="note-box" style="padding-top: 30px;">
+            <div class="note-box manage-cls" style="padding-top: 0px;">
                 {{-- <strong>Management reserves the right to
                     change/modify/withdraw the price-list and its products at any
                     time without any prior notice.</strong> --}}
                 {!! getSetting('disclaimer') !!}
             </div>
 
-        </div>
 
+            <table class="footer-table" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="footer-left">
+                        <h4>{{ getSetting('pdf_footer_name') ?? '-' }}</h4>
+                        <p>
+                            {{ getSetting('pdf_footer_address') ?? '-' }}
+                        </p>
+
+                        <div class="contact-cls">
+                            <span>
+                                <img src="images/price-list-pdf-img/call-footer.png" alt="">
+                                {{ getSetting('pdf_footer_mobile') ?? '-' }}
+                            </span>
+                            <span>
+                                <img src="images/price-list-pdf-img/mail-footer.png" alt="">
+                                {{ getSetting('pdf_footer_email') ?? '-' }}
+                            </span>
+                        </div>
+                    </td>
+
+                    <td class="footer-right">
+                        <p class="unit-text">A Unit of</p>
+                        <img src="{{ public_path('storage/pdf_logo/' . getsetting('pdf_logo')) ?? '-' }}"
+                            class="mayank-logo" alt="Mayank Logo">
+
+                        <div class="web-cls">
+                            <strong>{{ getSetting('pdf_footer_url') ?? '-' }}</strong>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     {{-- end --}}
 
-    <table class="footer-table" width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td class="footer-left">
-                <h4>{{ getSetting('pdf_footer_name') ?? '-' }}</h4>
-                <p>
-                    {{ getSetting('pdf_footer_address') ?? '-' }}
-                </p>
-
-                <div class="contact-cls">
-                    <span>
-                        <img src="images/price-list-pdf-img/call-footer.png" alt="">
-                        {{ getSetting('pdf_footer_mobile') ?? '-' }}
-                    </span>
-                    <span>
-                        <img src="images/price-list-pdf-img/mail-footer.png" alt="">
-                        {{ getSetting('pdf_footer_email') ?? '-' }}
-                    </span>
-                </div>
-            </td>
-
-            <td class="footer-right">
-                <p class="unit-text">A Unit of</p>
-                <img src="{{ public_path('storage/pdf_logo/' . getsetting('pdf_logo')) ?? '-' }}" class="mayank-logo"
-                    alt="Mayank Logo">
-
-                <div class="web-cls">
-                    <strong>{{ getSetting('pdf_footer_url') ?? '-' }}</strong>
-                </div>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>

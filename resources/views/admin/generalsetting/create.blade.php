@@ -637,6 +637,17 @@
                             </div>
                         </div>
 
+                        <h5>NOTE</h5>
+                        <div class="col-md-12 mb-3 mt-3">
+                            {{-- <label class="col-form-label"> --}}
+                            {{-- </label> --}}
+                            <textarea class="form-control @error('note') is-invalid @enderror" name="note">{{ old('note', getSetting('note')) }}</textarea>
+
+                            @error('note')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <h5>Disclaimer</h5>
 
                         <div class="col-md-12 mt-3">

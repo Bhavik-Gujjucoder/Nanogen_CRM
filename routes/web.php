@@ -215,7 +215,7 @@ Route::middleware(['permission:Distributors & Dealers'])->group(function () {
     Route::get('distributors_dealers/create/{dealer?}', [DistributorsDealersController::class, 'create'])->name('distributors_dealers.create');
     // Route::get('/distributors_dealers/payment_history/{id}', [DistributorsDealersController::class, 'payment_history'])->name('distributors_dealers.payment_history');
     Route::get('/distributors_dealers/export-price-list/{dealer?}', [DistributorsDealersController::class, 'export_price_list'])->name('distributors_dealers.export_price_list');
-    Route::get('/distributors_dealers/export-price-list-new', [DistributorsDealersController::class, 'export_price_list_new'])->name('distributors_dealers.export_price_list_new');
+    Route::get('/distributors_dealers/export-price-list-new/{dealer?}', [DistributorsDealersController::class, 'export_price_list_new'])->name('distributors_dealers.export_price_list_new');
     Route::get('/distributors_dealers/export/{dealer?}', [DistributorsDealersController::class, 'export'])->name('distributors_dealers.export');
     Route::get('/replaceInWord/{id}/{dealer?}', [DistributorsDealersController::class, 'replaceInWord'])->name('distributors_dealers.replaceInWord');
     Route::delete('/documents_destroy/{id}', [DistributorsDealersController::class, 'documents_destroy'])->name('distributors_dealers.documents_destroy');
