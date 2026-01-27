@@ -490,6 +490,11 @@
         .web-cls strong {
             font-weight: 700;
         }
+
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 {{-- {{dd(public_path('fonts\NotoSansGujarati-Regular.ttf'))}} --}}
