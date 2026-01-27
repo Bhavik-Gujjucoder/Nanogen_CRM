@@ -494,7 +494,11 @@ class DistributorsDealersController extends Controller
             ->has('products')
             /***  Only get categories with products ***/
             ->get();
-        // return view('admin.distributors_dealers.price_list_new', $data);  //only web view perpose 
+
+        /*********only web view perpose ************************************
+        // return view('admin.distributors_dealers.price_list_new', $data);
+         ************************************************************************/
+
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list_new', $data);
         $name = $request->dealer == 1 ? 'Dealers' : 'Distributors';
         $filename = $name . '-price-list-new' . now()->year . '.pdf';

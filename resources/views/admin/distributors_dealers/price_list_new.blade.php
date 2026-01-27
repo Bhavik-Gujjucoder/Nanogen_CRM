@@ -7,7 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-
         .note-box {
             padding-left: 15px;
         }
@@ -175,7 +174,7 @@
             width: 100%;
             /* border-collapse: collapse; */
             text-align: left;
-            page-break-inside: avoid;
+            /* page-break-inside: avoid; */
         }
 
         table {
@@ -492,7 +491,6 @@
             font-weight: 700;
         }
     </style>
-
 </head>
 {{-- {{dd(public_path('fonts\NotoSansGujarati-Regular.ttf'))}} --}}
 
@@ -526,8 +524,6 @@
             @php $gst = getSetting('gst'); @endphp
             @if ($category)
                 @foreach ($category as $c)
-                    {{-- <div class="section-title section-ribbon">{{ $c->category_name }}
-        </div> --}}
                     <table>
                         <tr>
                             <td>
@@ -618,7 +614,6 @@
         </div>
     </div>
 
-
     {{-- gujrati content --}}
     <div style="padding-top: 40px;">
         <div class="container">
@@ -673,61 +668,8 @@
                     </td>
                 </tr>
             </table>
-            {{-- <div class="section-title section-ribbon">Quantity scheme</div>
-                <div class="sub-heading">WATER SOLUBLE FERTILISERS</div>
-                <table class="table-cls second-table-cls">
-                    <tbody>
-                        <tr class="tbody-cls">
-                            <td class="product-namec-cls product-id">calcium nitrate</td>
-                            <td class="product-name product-id">
-                                <span class="count-name bag-cls">BAG (25KG)</span>
-                                <span class="count-name">RS.</span>
-                            </td>
-                            <td class="product-wrap">
-                                <span class="first-count">1 kg</span>
-                                <span class="second-count">25</span>
-                            </td>
-                            <td class="product-wrap">
-                                <span class="first-count">1 kg</span>
-                                <span class="second-count">25</span>
-                            </td>
-                            <td class="product-wrap">
-                                <span class="first-count">1 kg</span>
-                                <span class="second-count">25</span>
-                            </td>
-                            <td class="product-wrap">
-                                <span class="first-count">1 kg</span>
-                                <span class="second-count">25</span>
-                            </td>
-                            <td class="product-wrap" style=visibility:hidden;>
-                                <span class="first-count"></span>
-                                <span class="second-count">25</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table> --}}
-
             <div class="note-box">
                 {!! getSetting('terms_and_condition') !!}
-
-                {{-- <ul>
-                    <li>The Above-mentioned Prices Are From <strong>Nanogen Agrochem Godown</strong> </li>
-                    <li>FOR (Freight on Road) Will Be Provided On Orders of 5 Tons or More. (unloading Will Not Be
-                        Provided.)</li>
-                    <li>As Soon As The Goods/material Reach Your Godown, The Quality Must Be Checked Immediately. If
-                        There Is Any Problem, It
-                        Must Be Reported Within 24 Hours Of Receipt. After That, No Complaints Will Be Entertained.
-                    </li>
-
-                    <li>If The Stock Remains In Your Godown For A Long Time And Any Issue Arises, The Company Will Not
-                        Be Held Responsible</li>
-                    <li>If The Credit Period Exceeds 90 Days, An Additional 18% Interest Will Be Charged</li>
-                    <li>All Material Supply Is Subjected To Availability Of Stock And Confirmation By The Company</li>
-                    <li>Material Once Supplied Will Not Be Taken Back Under Any Circumstances.</li>
-                    <li>All The Disputes Are Subject To Rajkot Jurisdiction Only.</li>
-                </ul>
-                <div class="note-sec"><strong>Note </strong> : Magnesium Sulphate and Bentonite Sulphur are not
-                    applicable under the advance booking scheme</div> --}}
             </div>
 
             {{-- <p style="font-family: noto_sans_gujarati; font-size: 14px;">{!! $gujaratiText !!}</p> --}}
@@ -782,8 +724,6 @@
             </td>
         </tr>
     </table>
-
-
 </body>
 
 </html>
