@@ -161,20 +161,49 @@
             border: none;
         }
 
-        /* .logo-img {
-            width: 140px;
-            height: auto;
-        } */
 
-        .table-cls {
-            margin-top: 70px;
+        .table-cls th:nth-child(1),
+        .table-cls td:nth-child(1) {
+            width: 32%;
+        }
+
+        .table-cls th:nth-child(2),
+        .table-cls td:nth-child(2) {
+            width: 10%;
+            
+        }
+
+        .table-cls th:nth-child(3),
+        .table-cls td:nth-child(3) {
+            width: 16%;
+            
+        }
+
+        .table-cls th:nth-child(4),
+        .table-cls td:nth-child(4) {
+            width: 8%;
+            
+        }
+
+        .table-cls th:nth-child(5),
+        .table-cls td:nth-child(5) {
+            width: 16%;
+            
+        }
+
+        .table-cls th:nth-child(6),
+        .table-cls td:nth-child(6) {
+            width: 8%;
+            
         }
 
         .table-cls {
             width: 100%;
             /* border-collapse: collapse; */
             text-align: left;
-            /* page-break-inside: avoid; */
+            margin-top: 70px;
+            page-break-inside: avoid;
+            table-layout: fixed;
         }
 
         table {
@@ -185,7 +214,7 @@
             background-color: #0B4FA9;
             color: white;
             font-weight: bold;
-            padding: 10px 0;
+            padding: 10px;
             /* font-weight: lighter; */
             font-size: 14px;
             text-align: center;
@@ -491,9 +520,9 @@
             font-weight: 700;
         }
 
-
-        .page-break {
-            page-break-after: always;
+        @page {
+            margin-bottom: 18mm;
+            /* top right bottom left */
         }
     </style>
 </head>
@@ -528,93 +557,93 @@
             </table>
             @php $gst = getSetting('gst'); @endphp
             @if ($category)
-                @foreach ($category as $c)
-                    <table>
-                        <tr>
-                            <td>
-                                <div class="section-title section-ribbon">{{ $c->category_name }}</div>
-                            </td>
-                            <td class="header-tag-cell">
-                                <!-- <div class="pricelist-tag">PRICELIST – {{ now()->year }}</div> -->
-                                <div class="pricelist-tag"></div>
-                            </td>
-                        </tr>
-                    </table>
+            @foreach ($category as $c)
+            <table>
+                <tr>
+                    <td>
+                        <div class="section-title section-ribbon">{{ $c->category_name }}</div>
+                    </td>
+                    <td class="header-tag-cell">
+                        <!-- <div class="pricelist-tag">PRICELIST – {{ now()->year }}</div> -->
+                        <div class="pricelist-tag"></div>
+                    </td>
+                </tr>
+            </table>
 
-                    <table class="table-cls ">
-                        <thead>
-                            <tr>
-                                <th>PRODUCT NAME</th>
-                                <th>WEIGHT</th>
-                                {{-- <th> {{ request()->dealer == 1 ? 'DEALER' : 'DISTRIBUTOR' }}<br> RATE <br> <span
-                                        class="gst-cls">(without GST)</span></th> --}}
-                                <th>PRICE<br> PER UNIT<br> (without GST) </th>
-                                {{-- <th>GST {{ $gst }}%</th> --}}
-                                <th>GST %</th>
-                                <th>PRICE<br> PER UNIT<br> (With GST) </th>
-                                <th class="tablespace-bottom">MRP</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($c->products && count($c->products))
-                                @foreach ($c->products as $p)
-                                    @php $variations = $p->product_variations; @endphp
-                                    @if ($variations && count($variations))
-                                        @foreach ($variations as $index => $variation)
-                                            @php
-                                                // dd($p->gst);
-                                                $price =
-                                                    request()->dealer == 1
-                                                        ? $variation->dealer_price
-                                                        : $variation->distributor_price;
-                                                // $gst_amount = ($price * $gst) / 100;
-                                                $product_gst = (float) ($p->gst ?? 0);
-                                                $gst_amount = ($price * $product_gst) / 100;
-                                                $price_per_unit_with_gst = $price + $gst_amount;
-                                                $mrp = $variation->mrp;
-                                            @endphp
-                                            <tr class="spacing-cls">
-                                                @if ($index === 0)
-                                                    <td class="product-name " rowspan="{{ $variations->count() }}">
-                                                        <div class="count-name">{{ $p->product_name }}<br>
-                                                            @if ($p->gst)
-                                                                <small>{{ 'GST (' . $p->gst . '%)' }}</small>
-                                                            @endif
-                                                        </div>
-                                                        {{-- PRODUCT NAME --}}
-                                                    </td>
-                                                @else
-                                                @endif
-                                                <td>
-                                                    <span
-                                                        class="first-count">{{ $variation->variation_option_value->value }}
-                                                        {{ $variation->variation_option_value->unit }}</span>{{-- WEIGHT --}}
-                                                </td>
-                                                <td>
-                                                    <span class="first-count">{{ $price ?? '-' }}</span>
-                                                    {{-- DEALER RATE --}}
-                                                </td>
-                                                <td>
-                                                    <span class="first-count">{{ $gst_amount ?? '-' }}</span>
-                                                    {{-- GST % --}}
-                                                </td>
-                                                <td>{{ $price_per_unit_with_gst ?? '-' }}</td>
-                                                <td>
-                                                    <span class="first-count">{{ $mrp ?? '-' }}</span>
-                                                    {{-- MRP --}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="5">No product available</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                @endforeach
+            <table class="table-cls ">
+                <thead>
+                    <tr>
+                        <th>PRODUCT NAME</th>
+                        <th>WEIGHT</th>
+                        {{-- <th> {{ request()->dealer == 1 ? 'DEALER' : 'DISTRIBUTOR' }}<br> RATE <br> <span
+                            class="gst-cls">(without GST)</span></th> --}}
+                        <th>PRICE<br> PER UNIT<br> (without GST) </th>
+                        {{-- <th>GST {{ $gst }}%</th> --}}
+                        <th>GST %</th>
+                        <th>PRICE<br> PER UNIT<br> (With GST) </th>
+                        <th class="tablespace-bottom">MRP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if ($c->products && count($c->products))
+                    @foreach ($c->products as $p)
+                    @php $variations = $p->product_variations; @endphp
+                    @if ($variations && count($variations))
+                    @foreach ($variations as $index => $variation)
+                    @php
+                    // dd($p->gst);
+                    $price =
+                    request()->dealer == 1
+                    ? $variation->dealer_price
+                    : $variation->distributor_price;
+                    // $gst_amount = ($price * $gst) / 100;
+                    $product_gst = (float) ($p->gst ?? 0);
+                    $gst_amount = ($price * $product_gst) / 100;
+                    $price_per_unit_with_gst = $price + $gst_amount;
+                    $mrp = $variation->mrp;
+                    @endphp
+                    <tr class="spacing-cls">
+                        @if ($index === 0)
+                        <td class="product-name " rowspan="{{ $variations->count() }}">
+                            <div class="count-name">{{ $p->product_name }}<br>
+                                @if ($p->gst)
+                                <small>{{ 'GST (' . $p->gst . '%)' }}</small>
+                                @endif
+                            </div>
+                            {{-- PRODUCT NAME --}}
+                        </td>
+                        @else
+                        @endif
+                        <td>
+                            <span
+                                class="first-count">{{ $variation->variation_option_value->value }}
+                                {{ $variation->variation_option_value->unit }}</span>{{-- WEIGHT --}}
+                        </td>
+                        <td>
+                            <span class="first-count">{{ $price ?? '-' }}</span>
+                            {{-- DEALER RATE --}}
+                        </td>
+                        <td>
+                            <span class="first-count">{{ $gst_amount ?? '-' }}</span>
+                            {{-- GST % --}}
+                        </td>
+                        <td>{{ $price_per_unit_with_gst ?? '-' }}</td>
+                        <td>
+                            <span class="first-count">{{ $mrp ?? '-' }}</span>
+                            {{-- MRP --}}
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+                    @endforeach
+                    @else
+                    <tr>
+                        <td colspan="5">No product available</td>
+                    </tr>
+                    @endif
+                </tbody>
+            </table>
+            @endforeach
             @endif
         </div>
     </div>
