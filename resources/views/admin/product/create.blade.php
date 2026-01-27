@@ -112,8 +112,6 @@
                                     </div>
                                 </div>
                                 <div class="field-group field-group-new">
-
-                                    {{-- <div class="field-group"> --}}
                                     <div>
                                         <label class="col-form-label">Dealer Price <span
                                                 class="text-danger">*</span></label>
@@ -144,12 +142,15 @@
                                             <option value="">Select Variation Value</option>
                                         </select>
                                     </div>
+                                    <div>
+                                        <label class="col-form-label">MRP <span class="text-danger">*</span></label>
+                                        <input type="number" name="mrp[]" value="{{ old('mrp') }}"
+                                            placeholder="MRP" class="form-control">
+                                    </div>
                                     <button type="button" class="add-btn btn btn-primary mb-1"
                                         onclick="addField('yes')">Add New</button>
                                     <div>
                                     </div>
-                                    {{-- </div> --}}
-
                                 </div>
                             </div>
                         </div>
@@ -249,7 +250,7 @@
                 $("#grade_id_error").html("Please select a grade.");
                 valid = false;
             }
-            
+
             /* Validate GST */
             let gst_field = $("input[name='gst']");
             if (!gst_field.val() || gst_field.val().trim() === "") {
@@ -296,11 +297,15 @@
                         variationValid = true;
                     }
                 });
+                // Check MRP
+                $("input[name='mrp[]']").each(function() {
+                    if (!$(this).val()) {
+                        variationValid = true;
+                    }
+                });
 
                 if (variationValid) {
-                    $("#not_count_match").html(
-                        // "All dealer prices, distributor prices, and size fields are required.");
-                        "All fields are required.");
+                    $("#not_count_match").html("All fields are required.");
                     valid = false;
                 } else {
                     $("#not_count_match").html(""); // Clear error message if all fields are filled
@@ -454,6 +459,7 @@
                     <select class="select form-control addfileddrop load_variation_value" name="variation_option_id[]">
                         <option>Select Variation Value</option>
                     </select>
+                     <input type="number" name="mrp[]" placeholder="MRP" class="form-control">
 
                     <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>
                 </div>

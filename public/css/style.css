@@ -17110,21 +17110,29 @@ button:focus {
     text-overflow: ellipsis;
 }
 
-@media (max-width: 991px) {  body .view-page .distributer-cls {
+@media (max-width: 991px) {
+    body .view-page .distributer-cls {
         grid-template-columns: repeat(1, 1fr) !important;
-    }}
+    }
+}
+
 @media (max-width: 767px) {
-     .view-page .gc-dd-document .col-md-2{width: 100%;}
-  
+    .view-page .gc-dd-document .col-md-2 {
+        width: 100%;
+    }
+
 }
 
 @media (max-width: 575px) {
-    
-    .info-row{margin-bottom: 15px;
 
-    flex-direction: column;
-    border-bottom: 1px solid #1b4f9e38;
-    padding-bottom: 15px;}
+    .info-row {
+        margin-bottom: 15px;
+
+        flex-direction: column;
+        border-bottom: 1px solid #1b4f9e38;
+        padding-bottom: 15px;
+    }
+
     .view-page .mb-3 {
         flex-direction: column;
         align-items: flex-start;
@@ -43909,7 +43917,7 @@ p.smallnote {
 #fields-container .field-group {
     display: grid;
     align-items: end;
-    grid-template-columns: 190px 190px 244px 226px 150px;
+    grid-template-columns: 190px 190px 244px 226px 150px 150px;
     column-gap: 8px;
     margin-bottom: 8px;
 }
@@ -44868,22 +44876,29 @@ label.section-title.fw-bold {
     border-radius: 16px;
 }
 
-.img-box{background: #f8f9fa !important;      justify-content: center;
+.img-box {
+    background: #f8f9fa !important;
+    justify-content: center;
     width: fit-content;
-    margin: auto;  border: 1px solid #FDFDFE !important;border-radius: 4px !important;
- padding: 1rem 13px !important;}
+    margin: auto;
+    border: 1px solid #FDFDFE !important;
+    border-radius: 4px !important;
+    padding: 1rem 13px !important;
+}
 
- .order-form-clss .mt-3 {
+.order-form-clss .mt-3 {
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
 }
- .order-form-clss .col-form-label {
-       display: block;
+
+.order-form-clss .col-form-label {
+    display: block;
     font-size: 14px;
     font-weight: 500;
     color: #262A2A;
     padding: 0 0 5px;
 }
+
 .order-form-clss strong {
     font-size: 15px;
     color: #424848 !important;

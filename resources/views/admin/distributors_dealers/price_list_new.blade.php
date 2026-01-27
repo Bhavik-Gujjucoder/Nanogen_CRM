@@ -569,7 +569,8 @@
                                                 // $gst_amount = ($price * $gst) / 100;
                                                 $product_gst = (float) ($p->gst ?? 0);
                                                 $gst_amount = ($price * $product_gst) / 100;
-                                                $mrp = $price + $gst_amount;
+                                                $price_per_unit_with_gst = $price + $gst_amount;
+                                                $mrp = $variation->mrp;
                                             @endphp
                                             <tr class="spacing-cls">
                                                 @if ($index === 0)
@@ -589,16 +590,16 @@
                                                         {{ $variation->variation_option_value->unit }}</span>{{-- WEIGHT --}}
                                                 </td>
                                                 <td>
-                                                    <span class="first-count">{{ $price }}</span>
+                                                    <span class="first-count">{{ $price ?? '-' }}</span>
                                                     {{-- DEALER RATE --}}
                                                 </td>
                                                 <td>
-                                                    <span class="first-count">{{ $gst_amount }}</span>
+                                                    <span class="first-count">{{ $gst_amount ?? '-' }}</span>
                                                     {{-- GST % --}}
                                                 </td>
-                                                <td>{{ $mrp }}</td>
+                                                <td>{{ $price_per_unit_with_gst ?? '-' }}</td>
                                                 <td>
-                                                    <span class="first-count">{{ $mrp }}</span>
+                                                    <span class="first-count">{{ $mrp ?? '-' }}</span>
                                                     {{-- MRP --}}
                                                 </td>
                                             </tr>

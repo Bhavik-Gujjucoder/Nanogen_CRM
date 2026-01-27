@@ -73,7 +73,7 @@ class ProductController extends Controller
                 ->editColumn('category_id', function ($product) {
                     return $product->category ? $product->category->category_name : '-';
                 })
-                ->editColumn('parent_category_id', function ($product) {
+                ->addColumn('parent_category_id', function ($product) {
                     return $product->category->parent ? $product->category->parent->category_name : '-';
                 })
                 ->editColumn('grade_id', function ($product) {
@@ -85,6 +85,13 @@ class ProductController extends Controller
                 ->editColumn('status', function ($product) {
                     return $product->statusBadge();
                 })
+                ->filterColumn('parent_category_id', function ($query, $keyword) {
+                    $query->whereHas('category', function ($q) use ($keyword) {
+                        $q->where('parent_category_id', 'LIKE', "%{$keyword}%");
+                    });
+                })
+
+
                 ->filterColumn('category_id', function ($query, $keyword) {
                     $query->whereHas('category', function ($q) use ($keyword) {
                         $q->where('category_name', 'like', "%{$keyword}%");
@@ -129,11 +136,14 @@ class ProductController extends Controller
         }
         $product->save();
 
-        if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id'])) {
+        if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id', 'mrp'])) {
             $dealer_prices       = $request->input('dealer_price');
             $distributor_price   = $request->input('distributor_price');
             $variation_id        = $request->input('variation_id');
             $variation_option_id = $request->input('variation_option_id');
+            $mrp                 = $request->input('mrp');
+
+            // dd($request->all());
 
             foreach ($dealer_prices as $key => $dealer_price) {
                 ProductVariation::create([
@@ -142,6 +152,7 @@ class ProductController extends Controller
                     'distributor_price'   => $distributor_price[$key],
                     'variation_id'        => $variation_id[$key],
                     'variation_option_id' => $variation_option_id[$key],
+                    'mrp'                 => $mrp[$key],
                 ]);
             }
         }
@@ -185,13 +196,14 @@ class ProductController extends Controller
             $product->save();
         }
 
-        if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id'])) {
+        if ($request->has(['dealer_price', 'distributor_price', 'variation_id', 'variation_option_id', 'mrp'])) {
             ProductVariation::where('product_id', $id)->delete();
 
             $dealer_prices        = $request->input('dealer_price');
             $distributor_prices   = $request->input('distributor_price');
             $variation_ids        = $request->input('variation_id');
             $variation_option_ids = $request->input('variation_option_id');
+            $mrps                 = $request->input('mrp');
 
             foreach ($dealer_prices as $key => $dealer_price) {
                 ProductVariation::create([
@@ -200,6 +212,7 @@ class ProductController extends Controller
                     'distributor_price'   => $distributor_prices[$key],
                     'variation_id'        => $variation_ids[$key],
                     'variation_option_id' => $variation_option_ids[$key],
+                    'mrp'                 => $mrps[$key],
                 ]);
             }
         }

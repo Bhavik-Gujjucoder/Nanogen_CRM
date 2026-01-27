@@ -243,7 +243,7 @@
                         <div class="section-title">Name of firm/company under which dealership exist </div>
                     </div>
                     <div class="row">
-                        @if (!empty($distributor_dealers->dealership_companies))
+                        @if ($distributor_dealers->dealership_companies->isNotEmpty())
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table table-view addnewfield" id="dealership_companies">
@@ -301,7 +301,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="section-title">Details of Proprietor/Partners/Directors:</div>
-                            @if (!empty($distributor_dealers->proprietor_partner_director))
+                            @if ($distributor_dealers->proprietor_partner_director->isNotEmpty())
                                 <div class="table-responsive">
                                     <table class="table table-view addnewfield" id="propertiesdataTable">
                                         <thead>

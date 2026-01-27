@@ -54,10 +54,16 @@ class DistributorsDealersController extends Controller
 
 
             $data = DistributorsDealers::query()
+
                 ->where('user_type', $request->dealer ? 2 : 1)
 
                 ->when(auth()->user()->hasRole('sales'), function ($query) {
-                    $query->where('sales_person_id', auth()->user()->id);
+                    // $query->where('sales_person_id', auth()->user()->id); 
+
+                    $reporting_sales_person_ids =  SalesPersonDetail::where('reporting_sales_person_id', auth()->id())->pluck('user_id')->toArray();
+                    $query->where(function ($query) use ($reporting_sales_person_ids) {
+                        $query->where('sales_person_id', auth()->id())->orWhereIn('sales_person_id', $reporting_sales_person_ids);
+                    });
                 })
 
                 ->when($request->sales_person_id, function ($query, $sales_person_id) {
@@ -494,8 +500,8 @@ class DistributorsDealersController extends Controller
         $filename = $name . '-price-list-new' . now()->year . '.pdf';
         // Save to storage/app/public/price-lists/
         Storage::disk('public')->put('distributors-price-lists-new/' . $filename, $pdf->output());
-        return $pdf->download($filename);
-        // return $pdf->stream($filename);   //only pdf view perpose with live update 
+        // return $pdf->download($filename);
+        return $pdf->stream($filename);   //only pdf view perpose with live update 
     }
 
     public function replaceInWord(Request $request, $id, $dealer = null)

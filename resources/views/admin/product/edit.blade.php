@@ -99,11 +99,11 @@
                         </div>
                     </div>
 
-                     <div class="col-md-4">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label class="col-form-label">GST(%) <span class="text-danger">*</span></label>
                             <input type="number" name="gst" class="form-control @error('gst') is-invalid @enderror"
-                                value="{{ old('gst',$product->gst) }}">
+                                value="{{ old('gst', $product->gst) }}">
                             <div id="gst_error" class="error-message text-danger"></div>
                         </div>
                     </div>
@@ -123,6 +123,8 @@
                             <label for="col-form-label" class="col-form-label">Variation Name <span
                                     class="text-danger">*</span></label>
                             <label for="col-form-label" class="col-form-label">Variation Value <span
+                                    class="text-danger">*</span></label>
+                            <label for="col-form-label" class="col-form-label">MRP <span
                                     class="text-danger">*</span></label>
                             <button type="button" class="add-btn btn btn-primary" onclick="addField('yes')">Add
                                 New</button>
@@ -155,11 +157,15 @@
                                                     {{ $item->value }} {{ $item->unit }}</option>
                                             @endforeach
                                         </select>
+                                        <input type="number" name="mrp[]" value="{{ $variation->mrp }}"
+                                            class="form-control" placeholder="MRP">
 
-                                        @if ( !in_array($variation->variation_option_value->id,
-                                                App\Models\OrderManagementProduct::where('product_id',$product->id)->pluck('packing_size_id')->all()))
+                                        @if (
+                                            !in_array(
+                                                $variation->variation_option_value->id,
+                                                App\Models\OrderManagementProduct::where('product_id', $product->id)->pluck('packing_size_id')->all()))
                                             <button type="button" class="remove-btn btn btn-danger mb-1"
-                                                onclick="removeField(this)">Remove</button> 
+                                                onclick="removeField(this)">Remove</button>
                                         @endif
 
                                     </div>
@@ -201,7 +207,8 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            let sizeOptions = '<option value="">Select Variation Value</option>';
+                            let sizeOptions =
+                                '<option value="">Select Variation Value</option>';
                             $.each(response.variations, function(index, size) {
                                 sizeOptions +=
                                     `<option value="${size.id}">${size.value} ${size.unit}</option>`;
@@ -240,8 +247,8 @@
                     </select>
                 <select class="select form-control addfileddrop load_variation_value" name="variation_option_id[]">
                     <option>Select Variation Value</option>
-
                 </select>
+                <input type="number" name="mrp[]" placeholder="MRP" class="form-control">
                 <button type="button" class="remove-btn btn btn-danger mb-1" onclick="removeField(this)">Remove</button>
             </div>
         `);
@@ -325,7 +332,7 @@
                 valid = false;
             }
 
-             /* Validate GST */
+            /* Validate GST */
             let gst_field = $("input[name='gst']");
             if (!gst_field.val() || gst_field.val().trim() === "") {
                 $("#gst_error").html("The GST field is required.");
@@ -336,7 +343,7 @@
             } else {
                 $("#gst_error").html(""); // clear error if valid
             }
-            
+
             /*** Get selected variation type ****/
             let variationType = $("input[name='variation']:checked").val();
 
@@ -361,6 +368,12 @@
             // Check Size Selection
             $("select[name='variation_option_id[]']").each(function() {
                 if (!$(this).val()) {
+                    variationValid = true;
+                }
+            });
+            // Check MRP
+            $("input[name='mrp[]']").each(function() {
+                if (!$(this).val().trim()) {
                     variationValid = true;
                 }
             });

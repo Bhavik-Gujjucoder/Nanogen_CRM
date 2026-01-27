@@ -128,19 +128,19 @@
                 data: 'category_id',
                 name: 'category_id',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'parent_category_id',
                 name: 'parent_category_id',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'grade_id',
                 name: 'grade_id',
                 searchable: true,
-                orderable: false
+                orderable: true
             },
             {
                 data: 'gst',
