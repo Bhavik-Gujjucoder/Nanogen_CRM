@@ -495,17 +495,24 @@ class DistributorsDealersController extends Controller
             /***  Only get categories with products ***/
             ->get();
 
-        /*********only web view perpose ************************************
-        // return view('admin.distributors_dealers.price_list_new', $data);
+        /****************** only web view perpose ***************************
+            return view('admin.distributors_dealers.price_list_new', $data);
          ************************************************************************/
 
         $pdf = Pdf::loadView('admin.distributors_dealers.price_list_new', $data);
         $name = $request->dealer == 1 ? 'Dealers' : 'Distributors';
         $filename = $name . '-price-list-new' . now()->year . '.pdf';
-        // Save to storage/app/public/price-lists/
+        /**  Save to storage/app/public/price-lists-new/   */
         Storage::disk('public')->put('distributors-price-lists-new/' . $filename, $pdf->output());
-        // return $pdf->download($filename); /* PDF Download */
-        return $pdf->stream($filename);   //only pdf view perpose with live update 
+
+        /****************** PDF Download ***************************/
+        return $pdf->download($filename);
+        /****************** only web view perpose ***************************/
+
+
+        /****************** only pdf view perpose with live update ***************************/
+        // return $pdf->stream($filename);   
+        /************************************************************************/
     }
 
     public function replaceInWord(Request $request, $id, $dealer = null)

@@ -522,8 +522,12 @@
 
         @page {
             margin-bottom: 18mm;
-            /* top right bottom left */
+            /* top right bottom lef
+            t */
         }
+        
+
+
     </style>
 </head>
 {{-- {{dd(public_path('fonts\NotoSansGujarati-Regular.ttf'))}} --}}
