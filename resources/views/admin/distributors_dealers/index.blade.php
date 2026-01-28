@@ -89,10 +89,10 @@
                             <i class="ti ti-file-type-xls me-2"></i>
                             Export Price List
                         </a>
+                        <a href="{{ route('distributors_dealers.create', request('dealer')) }}"
+                            class="btn btn-primary"><i class="ti ti-square-rounded-plus me-2"></i>
+                            {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
                     @endif
-                    <a href="{{ route('distributors_dealers.create', request('dealer')) }}" class="btn btn-primary"><i
-                            class="ti ti-square-rounded-plus me-2"></i>
-                        {{ request('dealer') == 1 ? 'Add Dealers' : 'Add Distributors' }}</a>
                 </div>
             </div>
         </div>
