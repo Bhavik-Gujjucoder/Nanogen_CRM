@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Exports\DistributorDealerExport;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\ProprietorPartnerDirector;
+use App\Imports\DistributorsDealersImport;
 use App\Models\DistributorsDealersDocuments;
 
 class DistributorsDealersController extends Controller
@@ -307,18 +308,18 @@ class DistributorsDealersController extends Controller
     }
 
     // public function show(string $id)
-    // {
-    //     $distributor_dealers = DistributorsDealers::findOrFail($id);
-    //     // $data['page_title'] = $request->dealer == 1 ? 'Create Dealers' : 'Create Distributors'; firm_shop_name
-    //     $data = [
-    //         'page_title'          =>  $distributor_dealers->user_type == 1 ? 'Show Distributor' : 'Show Dealer',
-    //         'distributor_dealers' => $distributor_dealers,
-    //         'products'            => Product::where('status', 1)->get()->all(),
-    //         'states'              => StateManagement::where('status', 1)->get()->all(),
-    //         'countries'           => Country::where('status', 1)->get()->all(),
-    //         'sales_persons'       => SalesPersonDetail::get(),
-    //     ];
-    //     return view('admin.distributors_dealers.show', $data);
+        // {
+        //     $distributor_dealers = DistributorsDealers::findOrFail($id);
+        //     // $data['page_title'] = $request->dealer == 1 ? 'Create Dealers' : 'Create Distributors'; firm_shop_name
+        //     $data = [
+        //         'page_title'          =>  $distributor_dealers->user_type == 1 ? 'Show Distributor' : 'Show Dealer',
+        //         'distributor_dealers' => $distributor_dealers,
+        //         'products'            => Product::where('status', 1)->get()->all(),
+        //         'states'              => StateManagement::where('status', 1)->get()->all(),
+        //         'countries'           => Country::where('status', 1)->get()->all(),
+        //         'sales_persons'       => SalesPersonDetail::get(),
+        //     ];
+        //     return view('admin.distributors_dealers.show', $data);
     // }
 
     /**
@@ -442,7 +443,6 @@ class DistributorsDealersController extends Controller
         return redirect()->route('distributors_dealers.index', ($d_d->user_type == 2))->with('success', 'Record deleted successfully!');
     }
 
-
     public function documents_destroy(string $id)
     {
         $document = DistributorsDealersDocuments::findOrFail($id);
@@ -455,8 +455,6 @@ class DistributorsDealersController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Document deleted successfully.']);
     }
-
-
 
     public function payment_history(Request $request, string $id)
     {
@@ -738,4 +736,19 @@ class DistributorsDealersController extends Controller
             ->rawColumns(['unique_order_id', 'action'])
             ->make(true);
     }
+
+
+    // public function import(Request $request)
+    // {
+    //     $data['page_title'] = 'Import Distributors / Dealers';
+    //     $request->validate([
+    //         'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+    //     ]);
+    //     // dd('yes');
+    //     return view('admin.distributors_dealers.import', $data);
+
+    //     // Excel::import(new DistributorsDealersImport, $request->file('file'));
+
+    //     // return back()->with('success', 'Distributors / Dealers imported successfully.');
+    // }
 }

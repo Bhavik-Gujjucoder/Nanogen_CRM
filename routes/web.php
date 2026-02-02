@@ -2,6 +2,7 @@
 
 use App\Models\Product;
 use App\Models\Variation;
+use App\Services\SendGridService;
 use App\Models\DistributorsDealers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -12,24 +13,24 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TrendAnalysisController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComplainController;
+use App\Http\Controllers\DDImportController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SalesPersonController;
 use App\Http\Controllers\AreaWiseSalesController;
+use App\Http\Controllers\SalesPositionController;
+use App\Http\Controllers\TrendAnalysisController;
 use App\Http\Controllers\CityManagementController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GradeManagementController;
 use App\Http\Controllers\OrderManagementController;
+use App\Http\Controllers\SalesDepartmentController;
 use App\Http\Controllers\StateManagementController;
 use App\Http\Controllers\DistributorsDealersController;
-use App\Http\Controllers\SalesPositionController;
-use App\Http\Controllers\SalesDepartmentController;
-use App\Services\SendGridService;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -220,8 +221,13 @@ Route::middleware(['permission:Distributors & Dealers'])->group(function () {
     Route::get('/replaceInWord/{id}/{dealer?}', [DistributorsDealersController::class, 'replaceInWord'])->name('distributors_dealers.replaceInWord');
     Route::delete('/documents_destroy/{id}', [DistributorsDealersController::class, 'documents_destroy'])->name('distributors_dealers.documents_destroy');
     Route::any('report/{id}', [DistributorsDealersController::class, 'report'])->name('distributors_dealers.report');
+
     Route::resource('distributors_dealers', DistributorsDealersController::class)->except(['index', 'create']);
 });
+
+/* Import Distributors & Dealers */
+// Route::get('import', [DDImportController::class, 'import'])->name('dd.import');
+// Route::post('dd_import', [DDImportController::class, 'import_store'])->name('dd.import_store');
 
 /* Order Management */
 Route::middleware(['permission:Order Management'])->group(function () {
