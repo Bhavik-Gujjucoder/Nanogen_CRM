@@ -145,7 +145,7 @@
                             <div class="ms-2 flex-fill">
                                 <h6 class="fs-medium text-truncate mb-1">
                                     <a href="{{ route('order_management.edit', $order->id) }}">
-                                        {{ $order->distributors_dealers->firm_shop_name }}
+                                        {{ $order->distributors_dealers?->firm_shop_name }}
                                     </a>
                                 </h6>
                                 <p class="fs-13 d-inline-flex align-items-center">
