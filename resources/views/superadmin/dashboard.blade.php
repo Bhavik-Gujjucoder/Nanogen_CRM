@@ -132,13 +132,13 @@
                 @foreach ($latest_orders as $order)
                     <div class="d-flex justify-content-between flex-wrap mb-3">
                         <div class="d-flex align-items-center mb-2">
-                            <a href="{{ $order->distributors_dealers->profile_image
-                                ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                            <a href="{{ $order->distributors_dealers?->profile_image
+                                ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers?->profile_image)
                                 : asset('images/default-user.png') }}"
                                 class="avatar avatar-sm border flex-shrink-0" target="_blank">
                                 <img id="profilePreview"
-                                    src="{{ $order->distributors_dealers->profile_image
-                                        ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers->profile_image)
+                                    src="{{ $order->distributors_dealers?->profile_image
+                                        ? asset('storage/distributor_dealer_profile_image/' . $order->distributors_dealers?->profile_image)
                                         : asset('images/default-user.png') }}"
                                     alt="Profile Image" class="img-thumbnail mb-2">
                             </a>
