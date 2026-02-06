@@ -175,7 +175,7 @@ class TargetController extends Controller
                 ->editColumn('salesman_id', function ($row) {
                     $order_id = $row->sales_person_detail;
                     return '<a href="' . route('target.show', $row->id) . '" class="show-btn open-popup-model"  data-id="' . $row->id . '">
-                                <i class="ti ti-eye #1ecbe2"></i>  ' . $row->sales_person_detail->first_name ?? '' . ' ' . $row->sales_person_detail->last_name ?? '' . '</a>';
+                                <i class="ti ti-eye #1ecbe2"></i>  ' . $row->sales_person_detail?->first_name ?? '' . ' ' . $row->sales_person_detail?->last_name ?? '' . '</a>';
                 })
                 ->editColumn('city_id', function ($row) {
                     if ($row->city) {
@@ -415,7 +415,7 @@ class TargetController extends Controller
 
                 ->editColumn('salesman_id', function ($row) {
                     if ($row->sales_person_detail) {
-                        return $row->sales_person_detail->first_name . ' ' . $row->sales_person_detail->last_name;
+                        return $row->sales_person_detail?->first_name . ' ' . $row->sales_person_detail?->last_name;
                     }
                     return '-';
                 })
